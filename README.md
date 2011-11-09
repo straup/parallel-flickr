@@ -10,6 +10,8 @@ To do:
 
 * write files to S3 (see also: [flamework-aws](https://github.com/straup/flamework-aws))
 
+* make sure video files are actually being fetched properly
+
 * API hooks (see also: [flamework-api](https://github.com/straup/flamework-api))
 
 * account deletion
