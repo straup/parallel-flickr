@@ -1,0 +1,5 @@
+{include file="inc_head.txt"}
+
+The site is currently disabled. This is not a feature.
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,18 @@
+{include file="inc_god_head.txt"}
+
+<h2>God</h2>
+
+<ul>
+	<li><a href="{$cfg.abs_root_url}god/users.php">Users</a></li>
+</ul>
+
+<ul>
+	<li><a href="{$cfg.abs_root_url}god/invites.php">Invites</a></li>
+	<li><a href="{$cfg.abs_root_url}god/generate_invite.php">Invite generator</a></li>
+</ul>
+
+<ul>
+	<li><a href="{$cfg.abs_root_url}god/recent_activity.php">Recent Activity</a></li>
+</ul>
+
+{include file="inc_god_foot.txt"}

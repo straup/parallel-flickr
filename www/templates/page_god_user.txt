@@ -1,0 +1,15 @@
+{include file="inc_god_head.txt"}
+
+{if !$user.id}
+
+{else}
+
+<h2>{$user.username|escape} ({$user.id|escape})</h2>
+
+<p>Account created: {$user.created|date_format:"%b %d, %Y at %l:%M %p"|escape}</p>
+
+[subscriptions go here]
+
+{/if}
+
+{include file="inc_god_foot.txt"}

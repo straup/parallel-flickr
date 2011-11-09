@@ -1,0 +1,32 @@
+{include file="inc_head.txt"}
+
+{if $error|@count}
+
+<p class="error">
+
+{if $error.missing_frob}
+Hrm. Your request is missing some of the required data we need to cross the river. It's not clear what the problem is but it is currently unsafe to proceed.
+
+{elseif $error.missing_token}
+There was a problem getting the required auth-y bits (specifically an <code>auth token</code>) from Flickr!
+
+{elseif $error.dberr_user}
+There was a problem creating your account.
+
+{elseif $error.dberr_flickuser}
+There was a problem creating your account, specifically associating it with your Flickr account.
+
+{elseif $error.dberr_flickuser_update}
+There was a database-related problem updating your Flickr information. Blargh...
+
+{else}
+Ack! The INVISIBLE ERROR CAT hisses at you...
+{/if}
+</p>
+
+{else}
+{* you should never get here *}
+<!-- something is very wrong -->
+{/if}
+
+{include file="inc_foot.txt"}

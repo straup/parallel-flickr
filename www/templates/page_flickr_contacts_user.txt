@@ -1,0 +1,25 @@
+{include file="inc_head.txt"}
+
+<h2>{if $is_own}your contacts{else}contacts from {$owner.username|escape}{/if}</h2>
+
+{foreach from=$contacts item="row"}
+
+<div>
+
+<h3>{if $row.count_photos}<a href="{$row|@flickr_urls_photos_user}">{$row.username|escape}</a>{else}{$row.username|escape}{/if}</h3>
+
+{if $row.count_photos == 0}
+<span style="font-style:italic;">There aren't any photos by {$row.username|escape} yet. <a href="">Try Flickr?</a></span>
+{elseif $row.count_photos == 1}
+There's <a href="{$row|@flickr_urls_photos_user}">one photo</a> by {$row.username|escape} so far.
+{else}
+There are <a href="{$row|@flickr_urls_photos_user}">{$row.count_photos|escape} photos</a> by {$row.username|escape} to see.
+{/if}
+
+</div>
+
+{/foreach}
+
+{include file="inc_pagination.txt"}
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,13 @@
+{assign var="page_title" value="Your account"}
+{include file="inc_head.txt"}
+
+<h1>Your account</h1>
+
+{if $smarty.get.password}<p class="message">Your password has been updated.</p>{/if}
+
+<ul>
+	<li><a href="/account/password/">Change your password</a></li>
+	<li><a href="/account/delete/">Delete your account</a></li>
+</ul>
+
+{include file="inc_foot.txt"}

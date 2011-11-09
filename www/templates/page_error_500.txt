@@ -1,0 +1,13 @@
+{"HTTP/1.1 500 Server Error"|header}{include file='inc_head.txt' page_title='Server Error'}
+
+<h1>Something went very wrong</h1>
+
+<p>That's not right and we are busy working to make it better!</p>
+
+{if 'staff'|@auth_has_role}
+<div class="admin-section">
+	<pre class="admin-debug">{$debug_block}</pre>
+</div>
+{/if}
+
+{include file='inc_foot.txt'}

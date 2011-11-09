@@ -1,0 +1,59 @@
+{capture assign="photo_title"}{if $photo.title}{$photo.title}{else}(Untitled){/if}{/capture}
+{capture assign="page_title"}{$owner.username} | {$photo_title}{/capture}
+{include file="inc_head.txt"}
+
+<div class="photo">
+<h2 class="photo_title">{if $is_own}<a href="{$photo|@flickr_urls_photo_original}">{$photo_title|escape}</a>{else}{$photo_title|escape}{/if}</h2>
+
+<a href="{$photo|@flickr_urls_photo_page_flickr}"><img src="{$photo|@flickr_urls_photo_static}" /></a>
+
+<div class="photo_cite">
+by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.username|escape}{/if}</a> {if $photo.str_perms != 'public'}<span style="font-style:italic;"> &#8212; this photo can only be seen by {if $photo.str_perms=='private'}you{else}{$photo.str_perms|escape}{/if}</span>{/if}
+
+
+</div>
+</div>
+
+<div class="photo_navi">
+
+{if $before|@count}
+<a href="{$owner|@flickr_urls_photos_user}{$before.0.id|escape}" title="before: {$before.0.title|escape}"><img src="{$before.0|@flickr_urls_photo_thumb_flickr}" alt="{$before.0.title|escape}"/></a>
+{/if}
+
+<br />
+
+{if $after|@count}
+<a href="{$owner|@flickr_urls_photos_user}{$after.0.id|escape}" title="after: {$after.0.title|escape}"><img src="{$after.0|@flickr_urls_photo_thumb_flickr}" alt="{$after.0.title|escape}" /></a>
+{/if}
+
+</div>
+
+<br clear="all" />
+
+<script type="text/javascript">
+
+var next = {if $after|@count}'{$owner|@flickr_urls_photos_user}{$after.0.id|escape}'{else}null{/if};
+var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|escape}'{else}null{/if};
+
+{literal}
+
+$(document).ready(function(){
+
+	$(document).keypress(function(e){
+
+		if ((e.keyCode == 37) && (prev)){
+			location.href = prev;
+		}
+
+		else if ((e.keyCode == 39) && (next)){
+			location.href = next;
+		}
+
+		else {}
+	});
+});
+
+{/literal}
+</script>
+
+{include file="inc_foot.txt"}

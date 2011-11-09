@@ -1,0 +1,14 @@
+{assign var='page_title' value="Delete your account"}
+{include file="inc_head.txt"}
+
+{if $error_deleting}<p class="error">Something went wrong. Try again later pls.</p>{/if}
+
+<p>Are you sure you want to delete your account?</p>
+
+<form action="/account/delete/" method="post">
+	<input type="hidden" name="delete" value="1" />
+	{$crumb_key|crumb_input}
+	<input type="SUBMIT" value="DELETE MY ACCOUNT" />
+</form>
+	
+{include file="inc_foot.txt"}

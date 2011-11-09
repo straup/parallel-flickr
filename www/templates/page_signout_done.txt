@@ -1,0 +1,6 @@
+{assign var='page_title' value='Sign out'}
+{include file='inc_head.txt'}
+
+<p>You are signed out!</p>
+
+{include file='inc_foot.txt'}

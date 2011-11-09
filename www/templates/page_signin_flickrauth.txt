@@ -1,0 +1,14 @@
+{include file="inc_head.txt"}
+
+{if $error|@count}
+
+<p class="error">
+Ack! The INVISIBLE ERROR CAT hisses at you...
+</p>
+
+{/if}
+
+{* you should never get here *}
+<!-- something is very wrong -->
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,122 @@
+<?
+	#
+	# $Id$
+	#
+
+	# Basic stuff
+	# Things you need to tweak
+	# Things you may want to tweak
+	# Things you can probably not worry about
+
+	$GLOBALS['cfg'] = array();
+
+	#
+	# Basic stuff
+	#
+
+	$GLOBALS['cfg']['environment'] = 'prod';
+	$GLOBALS['cfg']['site_disabled'] = 0;
+
+	$GLOBALS['cfg']['enable_feature_signup'] = 1;
+	$GLOBALS['cfg']['enable_feature_signin'] = 1;
+	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;
+	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
+
+	# See this? It assumes everything is running on a single
+	# (read: not federated) database.
+
+	$GLOBALS['cfg']['db_enable_poormans_federation'] = 1;
+	$GLOBALS['cfg']['db_enable_poormans_ticketing'] = 1;
+
+	$GLOBALS['cfg']['abs_root_url']		= 'http://'.($_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : 'fake.com').'/';
+	$GLOBALS['cfg']['safe_abs_root_url']	= $GLOBALS['cfg']['abs_root_url'];
+
+	$GLOBALS['cfg']['smarty_template_dir'] = realpath(dirname(__FILE__) . '/../templates/');
+	$GLOBALS['cfg']['smarty_compile_dir'] = realpath(dirname(__FILE__) . '/../templates_c/');
+
+	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
+	$GLOBALS['cfg']['auth_cookie_name'] = 'a';
+
+	$GLOBALS['cfg']['auth_cookie_secure'] = 0;		# see also: http://github.com/blog/737-sidejack-prevention
+	$GLOBALS['cfg']['auth_cookie_httponly'] = 0;
+
+	$GLOBALS['cfg']['crumb_ttl_default'] = 300;		# seconds
+
+	#
+	# Things you need to tweak
+	#
+
+	$GLOBALS['cfg']['db_main'] = array(
+		'host'	=> 'localhost',
+		'name'	=> 'flamework',
+		'user'	=> 'flickr',
+		'pass'	=> 'TWEAK ME',	# see also: bin/generate_secret.php
+		'auto_connect' => 1,
+	);
+
+	# http://www.flickr.com/services/apps/create/apply/
+
+	$GLOBALS['cfg']['flickr_api_key'] = 'TWEAK ME';
+	$GLOBALS['cfg']['flickr_api_secret'] = 'TWEAK ME';
+	$GLOBALS['cfg']['flickr_api_perms'] = 'read';
+
+	# see also: bin/generate_secret.php
+
+	$GLOBALS['cfg']['crypto_cookie_secret'] = 'TWEAK ME';
+	$GLOBALS['cfg']['crypto_password_secret'] = 'TWEAK ME';
+	$GLOBALS['cfg']['crypto_crumb_secret'] = 'TWEAK ME';
+
+	# this needs to match the path in you apache config
+
+	$GLOBALS['cfg']['flickr_static_path'] = "TWEAK ME";
+	$GLOBALS['cfg']['flickr_static_url'] = $GLOBALS['cfg']['abs_root_url'] . "static/";
+
+	#
+	# Things you may want to tweak
+	#
+
+	$GLOBALS['cfg']['rewrite_static_urls'] = array(
+		# '/foo' => '/bar/',
+	);
+
+	$GLOBALS['cfg']['email_from_name']	= 'flamework app';
+	$GLOBALS['cfg']['email_from_email']	= 'admin@ourapp.com';
+	$GLOBALS['cfg']['auto_email_args']	= '-fadmin@ourapp.com';
+
+	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 0;
+
+	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
+
+		# poormans god auth is keyed off a user's UID
+		#
+		# xxx => array(
+		# 	'roles' => array( 'staff' ),
+		# ),
+	);
+
+	#
+	# Things you can probably not worry about
+	#
+
+	$GLOBALS['cfg']['user'] = null;
+
+	$GLOBALS['cfg']['smarty_compile'] = 1;
+
+	$GLOBALS['cfg']['http_timeout'] = 3;
+
+	$GLOBALS['cfg']['check_notices'] = 1;
+
+	$GLOBALS['cfg']['db_profiling'] = 0;
+
+	$GLOBALS['cfg']['pagination_assign_smarty_variable'] = 1;
+	$GLOBALS['cfg']['pagination_per_page'] = 10;
+	$GLOBALS['cfg']['pagination_spill'] = 2;
+
+	#
+	# enable this flag to show a full call chain (instead of just the
+	# immediate caller) in database query log messages and embedded in
+	# the actual SQL sent to the server.
+	#
+
+	$GLOBALS['cfg']['db_full_callstack'] = 0;
+?>

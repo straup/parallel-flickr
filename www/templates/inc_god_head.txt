@@ -1,0 +1,25 @@
+{utf8_headers}
+<html>
+	<head>
+		<title>thisicantt.at | god{if $page_title} | {$page_title|escape}{/if}</title>
+
+		<meta content='width=device-width,maximum-scale=1.0,initial-scale=1.0,user-scalable=0' name='viewport'>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</head>
+
+	<body>
+
+	<div id="nav">
+		<div id="login" style="float: right;">
+
+		{if 0}<a href="{$cfg.abs_root_url}"><img src="{$cfg.abs_root_url}favicon.ico" style="margin-right:10px;border:none;" /></a>{/if}
+
+		<a href="{$cfg.abs_root_url}god/">this is <strong>GOD</strong></a> | 
+{if $cfg.user.id}
+			you are signed in with your <strong>{$cfg.user.username|escape}</strong> account |
+{/if}
+
+		</div>
+	</div>
+
+	<div id="god">

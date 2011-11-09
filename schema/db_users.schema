@@ -1,0 +1,45 @@
+DROP TABLE IF EXISTS `FlickrPhotos`;
+
+CREATE TABLE `FlickrPhotos` (
+  `id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `perms` TINYINT(3) UNSIGNED NOT NULL,
+  `secret` CHAR(10) NOT NULL,
+  `server` MEDIUMINT(8) UNSIGNED NOT NULL,
+  `farm` TINYINT(3) UNSIGNED NOT NULL,
+  `originalsecret` CHAR(10) NOT NULL,
+  `originalformat` CHAR(10) NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `tags` TEXT NOT NULL,
+  `media` TINYINT(3) UNSIGNED NOT NULL,
+  `dateupload` DATETIME,
+  `datetaken` DATETIME,
+  `datetakengranularity` TINYINT(3) UNSIGNED NOT NULL,
+  `hasgeo` TINYINT(3) UNSIGNED NOT NULL,
+  `latitude` DECIMAL(9,6) DEFAULT NULL,
+  `longitude` DECIMAL(9,6) DEFAULT NULL,
+  `accuracy` TINYINT(3) UNSIGNED NOT NULL,
+  `woeid` INT(11) UNSIGNED NOT NULL,
+  `geoperms` TINYINT(3) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrFaves`;
+
+CREATE TABLE `FlickrFaves` (
+   `user_id` INT(11) UNSIGNED NOT NULL,
+   `photo_id` BIGINT(20) UNSIGNED NOT NULL,
+   `owner_id` INT(11) UNSIGNED NOT NULL,
+   `date_faved` INT(11) UNSIGNED NOT NULL,
+   UNIQUE KEY `by_fave` (`photo_id`, `user_id`),
+   KEY `by_user` (`user_id`, `date_faved`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrContacts`;
+
+CREATE TABLE `FlickrContacts` (
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `contact_id` INT(11) UNSIGNED NOT NULL,
+  `contact_nsid` VARCHAR(20) NOT NULL,
+  `rel` TINYINT(3) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

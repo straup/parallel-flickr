@@ -1,0 +1,79 @@
+{assign var="page_title" value="this is the part where we do the invitation code dance"}
+{capture assign="extra_head"}
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.6.2.min.js"></script>
+{/capture}
+{include file="inc_head.txt"}
+
+<div id="invite">
+
+<h2>{$page_title|@ucfirst|escape}</h2>
+
+{if $step=='request_ok'}
+
+{if $error|@count}
+<p class="error">Well this is embarrasing. There was a problem registering your request for an invite. We'll look in to it. Sorry...</p>
+{elseif $invite_resent}
+<p>Your invite has been resent.</p>
+{else}
+<p>Okay, thanks for your request! We'll send you an email when the next round of invites go out.</p>
+{/if}
+
+{else}
+
+{if $error|@count}
+<p class="error">
+{if $error.invalid_code}
+That's not a valid invite code.
+{elseif $error.invalid_email}
+That's not a valid email address.
+{else}
+Ack! The Invisible Error Cat hisses at you.
+{/if}
+</p>
+{/if}
+
+<form method="POST" action="{$cfg.abs_root_url}invite/" style="margin-left:0px;">
+	{$crumb_key|crumb_input}
+
+	<p>This website is not open to everyone, just yet, so you'll need an invite code to get started. If you've received on enter it below (you should only need to do this once) and you'll be on your way!</p>
+	
+	<input type="text" name="code" size="30" value="3x4mpl3c0d3" style="color:#adadad;" />
+	<input type="submit" value="LET ME IN, NOW!" />
+
+	<br /><br /><br />
+
+	<p>Don't have an invite code? If you submit your email address below we'll send you an invite code during the next round of testing. (We will not send you spam or give your email address to <em>anyone</em>. We just need to it to send you an invite code.)</p>
+
+	<input type="text" name="email" size="30" value="you@example.com" style="color:#adadad;" />
+	<input type="submit" value="LET ME IN, SOON" />
+
+</form>
+
+{/if}
+
+</div>
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function(){
+
+	var reset = function(){
+		$("input[name=email]").val("");
+		$("input[name=code]").val("");
+	};
+
+	$("input[name=code]").click(function(){
+		reset();
+	});
+
+	$("input[name=email]").click(function(){
+		reset();
+	});
+
+});
+
+{/literal}
+</script>
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,35 @@
+{capture assign="page_title"}invite code {$invite.code|escape}{/capture}
+{include file="inc_god_head.txt"}
+
+<h2>Invite Code {$invite.code|escape}</h2>
+
+{if $sent}
+{if $sent.ok}
+<p class="success">Yay! That invite code email has been sent to <strong>{$invite.email|escape}</strong>!</p>
+{else}
+<p class="error"}>
+Blargh, there was a problem sending the invite email: {$error|escape}</p>
+{/if}
+
+{/if}
+
+<p>this is an invite code for {$invite.email|escape}</p>
+
+<p>created {$invite.created|date_format:"%b %d, %Y (at %l:%M %p)"|escape}</p>
+
+{if $invite.sent}
+<p>sent {$invite.sent|date_format:"%b %d, %Y (at %l:%M %p)"|escape}</p>
+{/if}
+
+{if $invite.redeemed}
+<p>redeemed {$invite.redeemed|date_format:"%b %d, %Y (at %l:%M %p)"|escape}</p>
+{/if}
+
+<form method="POST" action="{$cfg.abs_root_url}god/invite.php">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="code" value="{$invite.code|escape}" />
+	<input type="hidden" name="send" value="1" />
+	<input type="submit" value="{if $invite.sent}RE-SEND{else}SEND{/if}" />
+</form>
+
+{include file="inc_god_foot.txt"}

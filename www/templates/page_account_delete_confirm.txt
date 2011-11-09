@@ -1,0 +1,13 @@
+{assign var='page_title' value="Delete your account"}
+{include file="inc_head.txt"}
+
+<p>Are you <strong>really sure</strong> you want to delete your account?</p>
+
+<form action="/account/delete/" method="post">
+	<input type="checkbox" name="confirm" /><label for="confirm">Yes, I want to delete my account.</label><br />
+	<input type="hidden" name="delete" value="1" />
+	{$crumb_key|crumb_input}
+	<input type="SUBMIT" value="DELETE MY ACCOUNT" />
+</form>
+
+{include file="inc_foot.txt"}

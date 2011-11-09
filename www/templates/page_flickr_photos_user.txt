@@ -1,0 +1,17 @@
+{include file="inc_head.txt"}
+
+<h2>{if $is_own}your photos{else}photos from {$owner.username|escape}{/if}</h2>
+
+{foreach from=$photos item="row"}
+
+<div class="photos_user_photo">
+<a href="{$row|@flickr_urls_photo_page}"><img src="{$row|@flickr_urls_photo_static}" /></a>
+
+<div class="photo_when">{$row.datetaken|@flickr_dates_verbosify_iso8601}</div>
+</div>
+
+{/foreach}
+
+{include file="inc_pagination.txt"}
+
+{include file="inc_foot.txt"}

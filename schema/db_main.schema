@@ -1,0 +1,63 @@
+DROP TABLE IF EXISTS `Users`;
+
+CREATE TABLE `Users` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `deleted` int(10) unsigned NOT NULL,
+  `created` int(10) unsigned NOT NULL,
+  `password` char(64) DEFAULT NULL,
+  `conf_code` char(24) DEFAULT NULL,
+  `confirmed` int(10) unsigned NOT NULL,
+  `cluster_id` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `by_email` (`email`),
+  UNIQUE KEY `by_username` (`username`,`deleted`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `UsersPasswordReset`;
+
+CREATE TABLE `UsersPasswordReset` (
+  `user_id` int(10) unsigned NOT NULL,
+  `reset_code` char(32) DEFAULT NULL,
+  `created` int(10) unsigned NOT NULL,
+  UNIQUE KEY `by_code` (`reset_code`),
+  KEY `by_user` (`user_id`),
+  KEY `by_timestamp` (`created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrUsers`;
+
+CREATE TABLE `FlickrUsers` (
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `nsid` varchar(20) NOT NULL,
+  `path_alias` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `auth_token` char(34) NOT NULL,
+  `oauth_token` char(34) NOT NULL,
+  `oauth_secret` char(34) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `by_nsid` (`nsid`),
+  KEY `by_path_alias` (`path_alias`)
+)  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrPhotosLookup`;
+
+CREATE TABLE `FlickrPhotosLookup` (
+  `photo_id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`photo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrBackups`;
+
+CREATE TABLE `FlickrBackups` (
+  `user_id` int(11) unsigned NOT NULL,
+  `type_id` tinyint(3) unsigned NOT NULL,
+  `date_created` int(11) unsigned NOT NULL,
+  `date_firstupdate` int(11) unsigned NOT NULL,
+  `date_lastupdate` int(11) unsigned NOT NULL,
+  `disabled` tinyint(3) unsigned NOT NULL,
+  `details` tinytext NOT NULL,
+  UNIQUE KEY `by_user` (`user_id`,`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

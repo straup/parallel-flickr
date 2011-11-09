@@ -1,0 +1,6 @@
+{assign var='page_title' value="Delete your account"}
+{include file="inc_head.txt"}
+
+<p>Your account has been deleted.</p>
+
+{include file="inc_foot.txt"}

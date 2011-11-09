@@ -1,0 +1,101 @@
+
+body {
+	text-align: center;
+	background-color: #fff;
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}
+
+#main {
+	margin: 10%;
+	margin-top: 0px;
+	text-align: left;
+	background-color: #fff;
+	padding: 0;
+}
+
+#nav {
+    display:none;
+}
+
+#footer {
+    position:fixed;
+    right: 0;
+    bottom: 0;
+    font-size:small;
+    text-align:right;
+    background-color: #fff;
+    padding: 20px;
+    padding-bottom:30px;
+    padding-right:40px;
+    border-top:1px dotted #ccc;
+    color: #999;
+    width:100%;
+    background-color:#fff;
+}
+
+#content {
+	padding: 2em;
+}
+
+h1 {
+	margin-top: 0;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.admin-section {
+	background-image: url("/images/stripes_bg.gif");
+	border-top: 1px solid #BECCCC;
+	border-bottom: 1px solid #BECCCC;
+	padding: 40px;
+	position: relative;
+	text-align: left;
+}
+
+pre.admin-debug {
+	background: none repeat scroll 0 0 #000000;
+	color: #00FF00;
+	font-size: 14px;
+	margin: 0;
+	padding: 1em;
+}
+
+p.error {
+	background-color: #f99;
+}
+
+p.message {
+	background-color: #9f9;
+}
+
+.photo {
+    width: 670px;
+    max-width: 670px;
+    float:left;
+}
+
+.photo_cite {
+    font-size:small;
+}
+
+.photo_when {
+    font-size:small;
+}
+
+.photos_user_photo {
+    margin-bottom: 30px;
+    color:#999;
+}
+
+.photo_navi {
+    margin-top: 45px;
+}
+
+.photo_title a {
+    color:#000;
+    text-decoration: none;
+}

@@ -1,0 +1,86 @@
+#
+# Hey! Everything in here is better suited to httpd.conf, since
+# we get a performance boost if we can turn off AllowOverride and
+# not have to stat the webroot for every request. On the other
+# hand, this means we never have to touch apache once it's up.
+# Flexibility over performance.
+#
+# In an ideal world, you'd stick it in here on dev and your build
+# system would bundle the changes into (a file included in) httpd.conf
+# for your production deployment. Yeah. Do that.
+#
+
+# ETags are a bad idea if you have multiple web servers. We'll do
+# more explicit caching with Expires headers anyway.
+FileETag none
+
+# The base set of sensible PHP options. You could put these in your
+# php.ini file too, but having them in your Apache config puts
+# everything in one place. Magic quotes off because they are stupid.
+# Register globals off for the same reason. Track errors is so that
+# we can at least get at the error messages we hide using @func().
+# last_modified is a bad idea if we have any dynamic content. Short
+# tags make for a few saved bytes of cruft and are fine unless you're
+# running another XML preprocessor over your code (wtf?).
+php_value magic_quotes_gpc 0
+php_value register_globals 0
+php_value magic_quotes_runtime 0
+php_value track_errors 1
+php_value last_modified off
+php_value short_open_tag on
+
+php_flag display_errors on
+
+# this sets all current and future error flags on, except for E_NOTICE
+# which can go fuck itself. we have some separate code for checking the
+# one notice we do care about.
+php_value error_reporting 2147483639
+
+# Some basic pointers to php files
+DirectoryIndex index.php
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+ErrorDocument 500 /500.php
+
+# Get mod_rewrite fired up
+RewriteEngine on
+
+# Login stuff
+
+RewriteRule ^invite/?$						invite.php?%{QUERY_STRING} [L]
+RewriteRule ^invite(?:/([^/]+))?/?$				invite.php?code=$1&%{QUERY_STRING} [L]
+
+RewriteRule  ^auth/$			/auth_callback_flickr_flickrauth.php?%{QUERY_STRING}	[L]
+RewriteRule  ^signin/$			/signin_flickr_flickrauth.php?%{QUERY_STRING}		[L]
+
+RewriteRule  ^signup/$			/signup.php		[L]
+
+RewriteRule  ^signout/$			/signout.php		[L]
+RewriteRule  ^checkcookie/$		/checkcookie.php	[L]
+
+RewriteRule  ^activity/?$		/recent_activity.php	[L]
+
+# Password retrieval stuff
+
+RewriteRule ^forgot/$			/forgot.php		[L]
+RewriteRule ^reset/([a-zA-Z0-9]+)/$	/reset.php?reset=$1	[L,QSA]
+
+# Account stuff
+
+RewriteRule  ^account/?$		/account.php		[L]
+RewriteRule  ^account/backups/?$		/account_backups.php		[L]
+RewriteRule  ^account/password/?$	/account_password.php	[L]
+RewriteRule  ^account/delete/?$		/account_delete.php	[L]
+
+# Flickr stuff
+
+RewriteRule ^photo.gne$							/flickr_photo.php?%{QUERY_STRING} [L]
+
+RewriteRule ^photos/me(/(faves))?/?$					/flickr_photos_me.php?context=$2&%{QUERY_STRING} [L]
+
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flickr_photos_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/?$	/flickr_photo.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
+
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/faves(/page([0-9]+))?/?$	/flickr_faves_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]
+
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/contacts(/page([0-9]+))?/?$	/flickr_contacts_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]

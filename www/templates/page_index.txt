@@ -1,0 +1,5 @@
+{include file='inc_head.txt'}
+
+<p>You are here.</p>
+
+{include file='inc_foot.txt'}

@@ -1,0 +1,5 @@
+{include file="inc_head.txt"}
+
+<p class="error">Signing up for new accounts is currently disabled. Sorry!</p>
+
+{include file="inc_foot.txt"}

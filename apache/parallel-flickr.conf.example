@@ -1,0 +1,35 @@
+<VirtualHost *:80>
+	# ServerName example.com
+	# ServerAdmin webmaster@localhost
+
+	DocumentRoot /usr/local/parallel-flickr/www
+
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+	<Directory /usr/local/parallel-flickr/www>
+		Options FollowSymLinks Indexes
+		# AllowOverride FileInfo Limit
+		AllowOverride All
+		Order allow,deny
+		allow from all
+	</Directory>
+
+	Alias /static/ /usr/local/parallel-flickr-static/
+
+	<Directory /usr/local/parallel-flickr-static/>
+		Options None
+		AllowOverride None
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>

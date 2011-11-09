@@ -1,0 +1,22 @@
+{include file="inc_head.txt"}
+
+<h2>{if $is_own}your faves{else}faves from {$owner.username|escape}{/if}</h2>
+
+{foreach from=$photos item="row"}
+
+<div class="photos_user_photo">
+
+{if $row.canview}
+<a href="{$row|@flickr_urls_photo_page}"><img src="{$row|@flickr_urls_photo_static}" /></a>
+<div class="photo_why">by <a href ="{$row.owner|@flickr_urls_photos_user}">{$row.owner.username|escape}</a></div>
+{else}
+<img src="{$cfg.abs_root_url}images/fuzz.jpg" height="431" width="600" />
+<div class="photo_why">by [redacted]</div>
+{/if}
+</div>
+
+{/foreach}
+
+{include file="inc_pagination.txt"}
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,12 @@
+{assign var='page_title' value='Sign out'}
+{include file='inc_head.txt'}
+
+<p>This is an intermediate page so that we can generate and check a crumb. We will inline this into the URL shortly.</p>
+
+<form action="/signout/" method="post" accept-encoding="UTF-8">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="done" value="1" />
+	<input type="submit" value="SIGN OUT" />
+</form>
+
+{include file='inc_foot.txt'}

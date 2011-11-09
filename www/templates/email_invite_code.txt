@@ -1,0 +1,8 @@
+{assign var="email_subject" value="You have been sent an invite code!"}
+Hello! 
+
+Your invite code is:
+
+	{$cfg.abs_root_url}invite/{$invite.code|escape}/
+
+Enjoy!
