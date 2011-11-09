@@ -17,6 +17,9 @@
 		allow from all
 	</Directory>
 
+	# see also: the 'flickr_static_path' config
+	# in www/include/config.php(.example)
+
 	Alias /static/ /usr/local/parallel-flickr-static/
 
 	<Directory /usr/local/parallel-flickr-static/>
