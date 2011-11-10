@@ -5,6 +5,8 @@ parallel-flickr is a tool for backing up your Flickr photos and generating a dat
 
 parallel-flickr is still a work in progress. It ain't pretty or classy yet but it works. It still needs to be documented properly.
 
+In the meantime, [here's a blog post](http://www.aaronland.info/weblog/2011/10/14/pixelspace/#parallel-flickr).
+
 To do:
 --
 
@@ -13,6 +15,10 @@ To do:
 * make sure video files are actually being fetched properly
 
 * API hooks (see also: [flamework-api](https://github.com/straup/flamework-api))
+
+* sets, galleries, groups
+
+* uploads (and then re-uploading to Flickr)
 
 * account deletion
 
