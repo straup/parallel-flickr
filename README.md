@@ -1,9 +1,9 @@
 parallel-flickr
 ==
 
-parallel-flickr is **not** a replacement for Flickr.
+parallel-flickr is a tool for backing up your Flickr photos and generating a database backed website that honours the viewing permissions you've chosen on Flickr. parallel-flickr is **not** a replacement for Flickr.
 
-**THIS PROBABLY HAS BUGS (OR AT LEAST STUPID MISTAKES) BUT GENERALLY SEEMS TO WORK** It also needs to be documented.
+parallel-flickr is still a work in progress. It ain't pretty or classy yet but it works. It still needs to be documented properly.
 
 To do:
 --
