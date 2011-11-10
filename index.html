@@ -22,12 +22,21 @@
     h2 { font-size: 1.5em; color: #000000; }
     h3 { text-align: center; color: #000000; }
     a { color: #000000; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .description { font-size: 1.0em; line-height: 20px; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
     pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { padding-top:30px; font-style: italic; }
-    .splash { border: none; padding:10px; margin-bottom: 20px;}
+    .splash { border: none; margin-bottom: 20px;}
+
+    .features {
+    margin-bottom: 40px;
+    }
+
+    .features li {
+    line-height: 25px;
+    font-size: small;
+    }
   </style>
 </head>
 
@@ -36,38 +45,29 @@
 
   <div id="container">
 
-    <!--
-    <div class="download">
-      <a href="https://github.com/straup/parallel-flickr/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/straup/parallel-flickr/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
-    -->
-
-    <h1><a href="https://github.com/straup/parallel-flickr">parallel-flickr</a>
-      <!-- <span class="small">by <a href="https://github.com/straup">straup</a></span> --></h1>
+    <h1><a href="https://github.com/straup/parallel-flickr">parallel-flickr</a></h1>
 
     <div class="description">
-      
+      <p>parallel-flickr is a tool for backing up your Flickr photos and generating a database backed website that honours the viewing permissions you've chosen on Flickr.</p>
+
+      <p>parallel-flickr is still a work in progress. It ain't pretty or classy yet but it works.</p>
     </div>
 
-    
+    <img src="parallel-flickr.jpg" width="640" height="572" class="splash" />
 
-    
+		<ul class="features">
+		  <li>It downloads and stores your original photos and their "640x" versions. Currently photos are stored locally but there's a plan to add support for S3.</li>
 
-    
+		  <li>For each photo it downloads and stores the contents of the <a href="http://www.flickr.com/services/api/flickr.photos.getInfo.html">flickr.photos.getInfo</a> API method as a JSON file. (None of that data is displayed yet but at least it's there.)</li>
 
-    
+		  <li>It stores enough data about each photo in a database so that it can reconstruct your photostream and create a webpage for each photo. With the same photo ID. And the same URL structure. With Flickr-style path aliases and everything.</li>
 
-    <!--
-      <h2>Authors</h2>
-      <p>straup </p>
-      -->
+		  <li>It uses the Flickr API as a single sign-on and validation service, which means that the site can fetch and store your contact list and relationship which each person in it.</li>
+		</ul>
 
-    <img src="parallel-flickr.jpg" class="splash" />
+    <img src="parallel-flickr-2.jpg" width="640" height="502" class="splash" />
 
-    <img src="parallel-flickr-2.jpg" class="splash" />
+    <p style="font-style:italic;">Currently parallel-flickr lacks any useful documentation or installation instructions. That will change.</p>
 
     <h2>Download</h2>
     <p>
