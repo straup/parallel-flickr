@@ -53,7 +53,9 @@
 		$enc_contact = AddSlashes($contact_id);
 
 		$sql = "SELECT * FROM FlickrContacts WHERE user_id='{$enc_user}' AND contact_id='{$enc_contact}'";
-		return db_single(db_fetch_users($cluster_id, $sql));
+		$rsp = db_fetch_users($cluster_id, $sql);
+
+		return db_single($rsp);
 	}
 
 	#################################################################
@@ -99,7 +101,7 @@
 		$rel = 0;
 
 		if (($family) && ($friend)){
-			$rel = $map['frfa'];
+			$rel = $map['friends and family'];
 		}
 
 		else if ($family){
@@ -107,7 +109,7 @@
 		}
 
 		else if ($friend){
-			$rel = $map['friend'];
+			$rel = $map['friends'];
 		}
 
 		else {

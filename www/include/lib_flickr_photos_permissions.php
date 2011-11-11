@@ -32,16 +32,21 @@
 		$perms_map = flickr_photos_permissions_map();
 		$perms = $perms_map[$photo['perms']];
 
-		if ((! $viewer_id) || ($perms == 'public')){
+		if ((! $viewer_id) && ($perms == 'public')){
 			return 1;
 		}
 
 		if ($contact = flickr_contacts_get_contact($photo['user_id'], $viewer_id)){
 
-			# TODO: check this is actually correct...
+			$rel_map = flickr_contacts_relationship_map();
+			$str_rel = $rel_map[$contact['rel']];
 
-			if ($photo['perms'] <= $contact['rel']){
-				return 1;
+			if (($perms == 'friends') || ($perms == 'family')){
+				return ($str_rel == $perms) ? 1 : 0;
+			}
+
+			if ($perms == 'friends and family'){
+				return (in_array($str_rel, array('friends', 'family'))) ? 1 : 0;
 			}
 		}
 
@@ -59,22 +64,35 @@
 		$perms_map = flickr_photos_permissions_map('string keys');
 
 		if ($viewer_id == 0){
-			$perms = $perms_map['public'];
+			$perms = array($perms_map['public']);
 		}
 
 		else if ($contact = flickr_contacts_get_contact($owner_id, $viewer_id)){
 
 			$rel_map = flickr_contacts_relationship_map();
 			$str_rel = $rel_map[$contact['rel']];
+			$perms = array($perms_map['public']);
 
-			$perms = $perms_map[$str_rel];
+			if ($str_rel == 'friends'){
+				$perms[] = $perms_map['friends'];
+				$perms[] = $perms_map['friends and family'];
+			}
+
+			else if ($str_rel == 'family'){
+				$perms[] = $perms_map['family'];
+				$perms[] = $perms_map['friends and family'];
+			}
+
+			else { }
+
 		}
 
 		else {
-			$perms = $perms_map['public'];
+			$perms = array($perms_map['public']);
 		}
 
-		return "perms={$perms}";
+		$str_perms = implode(",", $perms);
+		return "perms IN ({$str_perms})";
 	}
 
 	#################################################################

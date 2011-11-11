@@ -108,7 +108,6 @@
 		}
 
 		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' {$extra} ORDER BY dateupload DESC";
-
 		return db_fetch_paginated_users($cluster_id, $sql, $more);
 	}
 

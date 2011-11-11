@@ -79,6 +79,7 @@
 				}
 
 				$rel = flickr_contacts_calculate_relationship($contact);
+				# echo "{$contact_username} : {$rel} ({$contact['friend']} {$contact['family']})\n";
 
 				$insert = array(
 					'user_id' => $user['id'],
