@@ -99,3 +99,39 @@ p.message {
     color:#000;
     text-decoration: none;
 }
+
+/*pagination*/
+#pagination{
+
+}
+
+/* pagination header */
+.pag_head{margin:0 0 10px;text-align:center;border: 1px solid #fff;display:none;}
+
+/* pagination active items */
+.ds_pag{
+    text-decoration: none;
+    border: 1px solid #AAA;
+    padding: 0.3em 0.5em;
+    color: #0BBDFF;
+    margin: 0 2px;
+    background:#fff;
+}
+
+/* pagination inactive items */
+.pag_inactive{
+    border: 1px solid #AAA;
+    padding: 0.3em 0.5em;
+    color: #999;
+    margin: 0 2px;
+    background:#fff;
+}
+/* pagination ellipses */
+.pag_ellipses{
+    text-decoration: none;
+    border: 1px solid #fff;
+    padding: 0.1em 0.1em;
+    color: #999;
+    margin: 0;
+    background:#fff;
+}

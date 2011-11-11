@@ -111,6 +111,7 @@
 	$GLOBALS['cfg']['pagination_assign_smarty_variable'] = 1;
 	$GLOBALS['cfg']['pagination_per_page'] = 10;
 	$GLOBALS['cfg']['pagination_spill'] = 2;
+	$GLOBALS['cfg']['pagination_style'] = 'plain';
 
 	#
 	# enable this flag to show a full call chain (instead of just the
