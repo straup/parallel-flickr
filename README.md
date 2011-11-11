@@ -10,9 +10,9 @@ In the meantime, [here's a blog post](http://www.aaronland.info/weblog/2011/10/1
 Installing parallel-flickr
 --
 
-_These instructions are incomplete. They'll probably work but I have tested them from scratch yet. The following assumes you're running on a brand new vanilla Ubuntu machine:_
+_These instructions are incomplete. They'll probably work but I have tested them from scratch yet. The following assumes you're running on a brand new vanilla Ubuntu machine._
 
-* First, some basic OS-level setup
+* First, some basic OS-level setup:
 
 	$> sudo apt-get install git-core
 
@@ -36,7 +36,7 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	TO DO: updating the config file, see also: https://github.com/straup/flamework-tools/blob/master/bin/make-project.sh 
 
-* That it's
+* That's it.
 
 To do:
 --
