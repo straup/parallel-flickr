@@ -24,17 +24,17 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	$> sudo chown -R www-data templaces_c
 
-	# TO DO: apache configs
+	TO DO: apache configs
 
-	# TO DO: database setup, see also: https://github.com/straup/flamework-tools/blob/master/bin/setup-db.sh
+	TO DO: database setup, see also: https://github.com/straup/flamework-tools/blob/master/bin/setup-db.sh
 
-	# TO DO: read in schema/*.schema
+	TO DO: read in schema/*.schema
 
 * Now set up the application config file:
 
 	$> cp www/include/config.php.example www/include/config.php
 
-	# TO DO: updating the config file, see also: https://github.com/straup/flamework-tools/blob/master/bin/make-project.sh 
+	TO DO: updating the config file, see also: https://github.com/straup/flamework-tools/blob/master/bin/make-project.sh 
 
 * That it's
 
