@@ -3,7 +3,9 @@ parallel-flickr
 
 parallel-flickr is a tool for backing up your Flickr photos and generating a database backed website that honours the viewing permissions you've chosen on Flickr. parallel-flickr is **not** a replacement for Flickr.
 
-parallel-flickr is still a work in progress. It ain't pretty or classy yet but it works. It still needs to be documented properly.
+parallel-flickr is still a work in progress. It ain't pretty or classy yet but it works. **It almost certainly still contains bugs, some of them really stupid.**
+
+It still needs to be documented properly.
 
 In the meantime, [here's a blog post](http://www.aaronland.info/weblog/2011/10/14/pixelspace/#parallel-flickr).
 
