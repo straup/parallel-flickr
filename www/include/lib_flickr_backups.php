@@ -1,6 +1,7 @@
 <?php
 
 	loadlib("flickr_users");
+	loadlib("flickr_contacts_import");
 	loadlib("flickr_photos_import");
 	loadlib("flickr_faves_import");
 
@@ -213,6 +214,44 @@
 		}
 
 		#
+
+		if ($rsp['ok']){
+			$update['date_lastupdate'] = $start_time;
+			$update['details'] = "count: {$rsp['count_imported']}";
+		}
+
+		else {
+			$update['details'] = "update failed ($start_time) : {$rsp['error']}";
+		}
+
+		flickr_backups_update($backup, $update);
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_backups_get_contacts(&$user){
+
+		$backups = flickr_backups_for_user($user);
+
+		if (! isset($backups['contacts'])){
+
+			return array(
+				'ok' => 0,
+				'error' => 'backups not registered',
+			);
+		}
+
+		$start_time = time();
+
+		$rsp = flickr_contacts_purge_contacts($user);
+
+		if ($rsp['ok']){
+
+			$flickr_user = flickr_users_get_by_user_id($user['id']);
+			$rsp = flickr_contacts_import_for_nsid($flickr_user['nsid']);
+		}
 
 		if ($rsp['ok']){
 			$update['date_lastupdate'] = $start_time;
