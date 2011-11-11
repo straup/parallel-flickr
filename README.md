@@ -7,6 +7,37 @@ parallel-flickr is still a work in progress. It ain't pretty or classy yet but i
 
 In the meantime, [here's a blog post](http://www.aaronland.info/weblog/2011/10/14/pixelspace/#parallel-flickr).
 
+Installing parallel-flickr
+--
+
+_These instructions are incomplete. They'll probably work but I have tested them from scratch yet. The following assumes you're running on a brand new vanilla Ubuntu machine:_
+
+* First, some basic OS-level setup
+
+	$> sudo apt-get install git-core
+
+	$> git clone git@github.com:straup/parallel-flickr.git
+
+	$> cd parallel-flickr
+
+	$> sudo sh ./ubuntu/install.sh
+
+	$> sudo chown -R www-data templaces_c
+
+	# TO DO: apache configs
+
+	# TO DO: database setup, see also: https://github.com/straup/flamework-tools/blob/master/bin/setup-db.sh
+
+	# TO DO: read in schema/*.schema
+
+* Now set up the application config file:
+
+	$> cp www/include/config.php.example www/include/config.php
+
+	# TO DO: updating the config file, see also: https://github.com/straup/flamework-tools/blob/master/bin/make-project.sh 
+
+* That it's
+
 To do:
 --
 
@@ -51,3 +82,5 @@ See also:
 * [flamework-api](https://github.com/straup/flamework-api)
 
 * [flamework-invitecodes](https://github.com/straup/flamework-invitecodes)
+
+* [flamework-tools](https://github.com/straup/flamework-tools)
