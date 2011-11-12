@@ -15,6 +15,8 @@
 	#
 
 	$GLOBALS['cfg']['environment'] = 'prod';
+
+	$GLOBALS['cfg']['site_name'] = 'parallel-flickr';
 	$GLOBALS['cfg']['site_disabled'] = 0;
 
 	$GLOBALS['cfg']['enable_feature_signup'] = 1;
