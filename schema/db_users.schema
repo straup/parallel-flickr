@@ -35,6 +35,16 @@ CREATE TABLE `FlickrFaves` (
    KEY `by_user` (`user_id`, `date_faved`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `FlickrFavesUsers`;
+
+CREATE TABLE `FlickrFavesUsers` (
+  `user_id` int(11) unsigned NOT NULL,
+  `photo_id` bigint(20) unsigned NOT NULL,
+  `viewer_id` int(11) unsigned NOT NULL,
+  UNIQUE KEY `by_viewer` (`viewer_id`,`photo_id`),
+  UNIQUE KEY `by_owner` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `FlickrContacts`;
 
 CREATE TABLE `FlickrContacts` (
