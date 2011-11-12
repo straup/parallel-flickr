@@ -151,6 +151,7 @@
 		$local_orig = "{$path}/" . basename($orig);
 
 		$local_info = str_replace("_o.{$photo['originalformat']}", "_i.json", $local_orig);
+		$local_comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $local_orig);
 
 		#
 
@@ -166,7 +167,12 @@
 
 		# fetch the metadata
 
+		# see below
+		# if (($more['force']) || (! file_exists($local_info)) || (! file_exists($local_comments))){
+
 		if (($more['force']) || (! file_exists($local_info))){
+
+			# basic photo info
 
 			# viewer id and not photo owner?
 			$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
@@ -182,6 +188,25 @@
 			$api_call = $url . "?". http_build_query($args);
 
 			$req[] = array($api_call, "json_encode:{$local_info}");
+
+			# now comments - TODO: do not write files if there are
+			# no comments for a photo; this needs to be done below
+			# but there is currently no mechanism for testing whether
+			# an api response "contains" something...
+			# https://github.com/straup/parallel-flickr/issues/3
+
+			/*
+			$method = 'flickr.photos.comments.getList';
+
+			$args = array(
+				'photo_id' => $photo['id'],
+			);
+
+			list($url, $args) = flickr_api_call_build($method, $args);
+			$api_call = $url . "?". http_build_query($args);
+
+			$req[] = array($api_call, "json_encode:{$local_comments}");
+			*/
 		}
 
 		# fetch all the bits using http_multi()
