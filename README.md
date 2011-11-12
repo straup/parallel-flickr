@@ -57,9 +57,9 @@ To do:
 
 * account deletion
 
-* sync/update contacts
-
 * cron jobs for backups
+
+* consider moving all the backup jobs (fetching data for individual photos) in to a proper queuing system - this should probably be a feature flag so that the whole thing can still be run in "stupid" mode and not spiral in to astronaut territory.
 
 * display metadata
 
