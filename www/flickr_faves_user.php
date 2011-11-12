@@ -61,8 +61,8 @@
 		# going to leave this disable until I figure out what to
 		# do about reciprical contacts hoohah...
 
-		if ($owner['id'] == $GLOBALS['cfg']['user']['id']){
-#			$photo['canview'] = 1;
+		if ($is_own){
+			$photo['canview'] = 1;
 		}
 
 		$photos[] = $photo;

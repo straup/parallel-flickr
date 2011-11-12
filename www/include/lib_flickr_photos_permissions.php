@@ -36,6 +36,10 @@
 			return 1;
 		}
 
+		if ($perms == 'public'){
+			return 1;
+		}
+
 		if ($contact = flickr_contacts_get_contact($photo['user_id'], $viewer_id)){
 
 			$rel_map = flickr_contacts_relationship_map();
