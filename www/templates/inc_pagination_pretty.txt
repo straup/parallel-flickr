@@ -1,0 +1,99 @@
+<p class="pag_head">Page {$pagination.page} of {$pagination.page_count}</p>
+{if $pagination.page_count > 1}
+    {* previous button *}
+    {if $pagination.page > 1}
+		{if $pagination_page_as_queryarg}
+		<a href="{$pagination_url}&page={$pagination.page-1}" class="ds_pag">Previous page</a>
+		{else}
+		<a href="{$pagination_url}page{$pagination.page-1}" class="ds_pag">Previous page</a>
+		{/if}
+	{else}
+	     <span class="pag_inactive">Previous page</span>
+	{/if}
+	
+	{* middle *}
+
+	{if $pagination.page_count > 10}
+	    {assign var=range_mid value=7}
+	    {assign var=rfloor value=$range_mid/2|@floor}
+	    
+	    {assign var=range_min value=$pagination.page-$rfloor}
+	    {assign var=range_max value=$pagination.page+$rfloor}
+    	    	
+    	{if $range_min <= 0}
+    	    {assign var=adjmin value=$range_min|@abs}
+    	    {assign var=range_max value=$range_max+$adjmin+1}
+    	    {assign var=range_min value=1}
+    	{/if}
+    	
+    	{if $range_max > $pagination.page_count}
+    	    {assign var=adjmax value=$range_max-$pagination.page_count}
+    	    {assign var=range_min value=$range_min-$adjmax}
+    	    {assign var=range_max value=$pagination.page_count}
+    	{/if}
+    	
+    	{assign var=range value=$range_min|range:$range_max}
+        {assign var=rlen value=$range|@count}
+        {assign var=rlen value=$rlen-1}
+    	{section name=paglp start=1 loop=$pagination.page_count+1}
+    	    {assign var=i value=$smarty.section.paglp.index}
+   
+    	    {if $range.0 > 2 && $i == $range.0}
+    	        <span class="pag_ellipses">...</span>
+    	    {/if}
+    	    
+    	    {if $i == 1 || $i == $pagination.page_count || $i|in_array:$range}
+   	        {if $i == $pagination.page}
+    	                <span class="pag_inactive">{$i}</span>
+    	        {elseif $pagination_page_as_queryarg}
+        		<a href="{$pagination_url}&page={$i}" class="ds_pag">{$i}</a>
+       		{else}
+        		<a href="{$pagination_url}page{$i}" class="ds_pag">{$i}</a>
+       		{/if}
+    	    {/if}
+    	    
+    	    {if $range.$rlen < $pagination.page_count-1 && $i == $range.$rlen}
+    	    <span class="pag_ellipses">...</span>
+    	    {/if}
+    	    
+    	{/section}
+	
+	{else}
+	
+    	{section name=paglp start=1 loop=$pagination.page_count+1}
+    	    {assign var=i value=$smarty.section.paglp.index}
+    	    {if $i == $pagination.page}
+    	         <span class="pag_inactive">{$i}</span>
+    	    {else}
+    	        {if $pagination_page_as_queryarg}
+        		<a href="{$pagination_url}&page={$i}" class="ds_pag">{$i}</a>
+        		{else}
+        		<a href="{$pagination_url}page{$i}" class="ds_pag">{$i}</a>
+        		{/if}
+    	    {/if}
+    	
+    	    
+    	{/section}
+	
+	{/if}
+
+	
+	
+    
+    
+    {* next button *}
+    {if $pagination.page < $pagination.page_count}
+		{if $pagination_page_as_queryarg}
+		<a href="{$pagination_url}&page={$pagination.page+1}" class="ds_pag">Next page</a>
+		{else}
+		<a href="{$pagination_url}page{$pagination.page+1}" class="ds_pag">Next page</a>
+		{/if}
+	{else}
+	    <span class="pag_inactive">Next page</span>
+	{/if}
+    
+    
+    
+
+	
+{/if}

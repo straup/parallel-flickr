@@ -1,0 +1,23 @@
+<p>Page {$pagination.page} of {$pagination.page_count}</p>
+
+{if $pagination.page_count > 1}
+	<p>
+	{if $pagination.page > 1}
+		{if $pagination_page_as_queryarg}
+		<a href="{$pagination_url}&page={$pagination.page-1}">Previous page</a>
+		{else}
+		<a href="{$pagination_url}page{$pagination.page-1}">Previous page</a>
+		{/if}
+	{/if}
+	
+	{if $pagination.page < $pagination.page_count}
+		{if $pagination_page_as_queryarg}
+		<a href="{$pagination_url}&page={$pagination.page+1}">Next page</a>
+		{else}
+		<a href="{$pagination_url}page{$pagination.page+1}">Next page</a>
+		{/if}
+	{/if}
+
+	</p>
+{/if}
+
