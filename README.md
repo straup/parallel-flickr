@@ -65,7 +65,7 @@ To do:
 
 * permission checks for geo (currently not displayed)
 
-* search (solr?)
+* search, see also: [parallel-flickr-solr](https://github.com/straup/parallel-flickr-solr)
 
 * duplicate key errors fetching faves
 
