@@ -12,6 +12,9 @@
 
 	#################################################################
 
+	# Note: this doesn't do any magic with 'q' query parameters yet
+	# so you'll need to do that before you get here
+
 	function solr_select($params, $more=array()){
 
 		$url = $GLOBALS['cfg']['solr_endpoint'] . "select/";
@@ -31,11 +34,17 @@
 
 		$str_params = implode('&', $_params);
 
-		#
-
 		$http_rsp = http_post($url, $str_params);
 
-		return _solr_parse_response($http_rsp);
+		$rsp = _solr_parse_response($http_rsp);
+
+		# TO DO: figure out how / whether to include responseHeader
+
+		if ($rsp['ok']){
+			$rsp['data'] = $rsp['data']['response'];
+		}
+
+		return $rsp;
 	}
 
 	#################################################################
@@ -57,13 +66,26 @@
 
 	function solr_add($docs, $more=array()){
 
-		$url = $GLOBALS['cfg']['solr_endpoint'] . "update/json?commit=true";
+		$url = $GLOBALS['cfg']['solr_endpoint'] . "update/json";
+
+		$params = array(
+			'commit' => 'true',
+			'wt' => 'json',
+		);
+
+		$str_params = http_build_query($params);
+		$url = implode("?", array($url, $str_params));
 
 		$body = json_encode($docs);
 
-		$http_rsp = http_post($url, $body);
+		$headers = array(
+			'Content-type' => 'application/json',
+		);
 
-		return _solr_parse_response($http_rsp);
+		$http_rsp = http_post($url, $body, $headers);
+
+		$rsp = _solr_parse_response($http_rsp);
+		return $rsp;
 	}
 
 	#################################################################
