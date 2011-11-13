@@ -82,7 +82,7 @@
 	# https://github.com/straup/parallel-flickr-solr
 
 	$GLOBALS['cfg']['enable_feature_solr'] = 0;
-	$GLOBALS['cfg']['solr_endpoint'] = http://localhost:8993/solr/parallel-flickr/';
+	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:8993/solr/parallel-flickr/';
 
 	$GLOBALS['cfg']['rewrite_static_urls'] = array(
 		# '/foo' => '/bar/',
