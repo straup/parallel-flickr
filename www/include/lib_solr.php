@@ -5,13 +5,16 @@
 	#
 
 	# This is *not* a general purpose wrapper library for talking to Solr.
-	# This is the just the stuff to wrap arguments in to a POST string and
-	# to json_decodify the results when they come back. It assumes you've
-	# already loaded Flamework's lib_http by the time you get here.
 
 	#################################################################
 
-	function solr_select($url, $params=array(), $more=array()){
+	loadlib("http");
+
+	#################################################################
+
+	function solr_select($params, $more=array()){
+
+		$url = $GLOBALS['cfg']['solr_endpoint'] . "select/";
 
 		$params['wt'] = 'json';
 
@@ -30,19 +33,49 @@
 
 		#
 
-		if (function_exists('cache_get')){
+		$http_rsp = http_post($url, $str_params);
 
-			$cache_key = "solr_select_" . md5($str_params);
-			$cache = cache_get($cache_key);
+		return _solr_parse_response($http_rsp);
+	}
 
-			if ($cache['ok']){
-				return $cache['data'];
-			}
+	#################################################################
+
+	function solr_facet($params, $more=array()){
+
+		$rsp = solr_select($params, $more);
+
+		if (! $rsp['ok']){
+			return $rsp;
 		}
 
-		#
+		# please write me...
+	}
 
-		$http_rsp = http_post($url, $str_params);
+	#################################################################
+
+	# https://wiki.apache.org/solr/UpdateJSON
+
+	function solr_add($docs, $more=array()){
+
+		$url = $GLOBALS['cfg']['solr_endpoint'] . "update/json?commit=true";
+
+		$body = json_encode($docs);
+
+		$http_rsp = http_post($url, $body);
+
+		return _solr_parse_response($http_rsp);
+	}
+
+	#################################################################
+
+	function solr_delete(){
+
+		# please write me
+	}
+
+	#################################################################
+
+	function _solr_parse_response($http_rsp){
 
 		if (! $http_rsp['ok']){
 			return $http_rsp;
@@ -61,10 +94,6 @@
 			'ok' => 1,
 			'data' => $json,
 		);
-
-		if (function_exists('cache_set')){
-			cache_set($cache_key, $rsp);
-		}
 
 		return $rsp;
 	}
