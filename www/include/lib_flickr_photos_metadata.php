@@ -29,6 +29,15 @@
 
 		$data = json_decode($data, "as hash");
 
+		# guh... just in case stuff has been double
+		# json encoded; this was a by-product of moving
+		# over to the http_multi stuff and not realizing
+		# what I was doing (20111114/straup)
+
+		if (($data) && (! is_array($data))){
+			$data = json_decode($data, "as hash");
+		}
+
 		if (! $data){
 			return array(
 				'ok' => 0,

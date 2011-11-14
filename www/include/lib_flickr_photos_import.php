@@ -187,7 +187,7 @@
 			list($url, $args) = flickr_api_call_build($method, $args);
 			$api_call = $url . "?". http_build_query($args);
 
-			$req[] = array($api_call, "json_encode:{$local_info}");
+			$req[] = array($api_call, "json:{$local_info}");
 
 			# now comments - TODO: do not write files if there are
 			# no comments for a photo; this needs to be done below
@@ -205,7 +205,7 @@
 			list($url, $args) = flickr_api_call_build($method, $args);
 			$api_call = $url . "?". http_build_query($args);
 
-			$req[] = array($api_call, "json_encode:{$local_comments}");
+			$req[] = array($api_call, "json:{$local_comments}");
 			*/
 		}
 
@@ -234,8 +234,13 @@
 
 				list($remote, $local) = $_req;
 
-				if (preg_match("/^json_encode:(.*)$/", $local, $m)){
-					$data = json_encode($_rsp['body']);
+				# see above: eventually there will be some known syntax
+				# for decoding the JSON blob checking the contents before
+				# we write to disk (comments, for example) but for now
+				# we just pull out of filename (20111114/straup)
+
+				if (preg_match("/^json:(.*)$/", $local, $m)){
+					$data = $_rsp['body'];
 					$local = $m[1];
 				}
 
