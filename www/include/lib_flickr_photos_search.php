@@ -80,9 +80,6 @@
 				$doc['timezone'] = $place['timezone'];
 				$doc['place'] = $place['place_url'];
 			}
-
-			# TO DO: get timezone and places URL and continent
-			# just call flickr.places.getInfo for $photo['woeid'] ?
 		}
 
 		$docs = array(
