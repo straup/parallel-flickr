@@ -6,6 +6,7 @@
 	loadlib("solr_machinetags");
 	loadlib("solr_dates");
 	loadlib("flickr_photos_metadata");
+	loadlib("flickr_places");
 
 	#################################################################
 
@@ -73,6 +74,11 @@
 				if (isset($meta['location'][$place])){
 					$doc[$place] = $meta['location'][$place]['woeid'];
 				}
+			}
+
+			if ($place = flickr_places_get_by_woeid($photo['woeid'])){
+				$doc['timezone'] = $place['timezone'];
+				$doc['place'] = $place['place_url'];
 			}
 
 			# TO DO: get timezone and places URL and continent
