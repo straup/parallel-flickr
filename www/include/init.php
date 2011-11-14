@@ -224,6 +224,34 @@
 		return intval(1000 * ((float)$usec + (float)$sec));
 	}
 
+	function filter_strict($str){
+
+		$filter = new lib_filter();
+		$filter->allowed = array();
+		return $filter->go($str);
+	}
+
+	function ok($more=null){
+
+		$out = array('ok' => 1);
+
+		if (is_array($more)){
+			$out = array_merge($more, $out);
+		}
+
+		return $out;
+	}
+
+	function not_ok($msg='Your call could not be completed as dialed', $code=null){
+
+		$out = array('ok' => 0,	'error' => $msg);
+
+		if ($code){
+			$out['error_code'] = $code;
+		}
+
+		return $out;
+	}
 
 	#
 	# this timer stores the end of core library loading
