@@ -14,20 +14,16 @@
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
 
-			return array(
-				'ok' => 0,
-				'error' => 'search indexing is disabled',
-			);
+			return not_ok('search indexing is disabled');
 		}
 
 		$meta = flickr_photos_metadata_load($photo);
 
+		# really exit or just ignore all the $meta stuff below?
+
 		if (! $meta['ok']){
 
-			return array(
-				'ok' => 0,
-				'error' => 'failed to load photo metadata',
-			);
+			return not_ok('failed to load photo metadata');
 		}
 
 		$meta = $meta['data']['photo'];

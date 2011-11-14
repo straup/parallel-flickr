@@ -4,6 +4,7 @@
 
 	loadlib("flickr_photos");
 	loadlib("flickr_photos_lookup");
+	loadlib("flickr_photos_search");
 	loadlib("flickr_api");
 	loadlib("flickr_users");
 
@@ -105,6 +106,10 @@
 		}
 
 		flickr_photos_import_photo_files($photo, $more);
+
+		if ($GLOBALS['cfg']['enable_feature_solr']){
+			flickr_photos_search_index_photo($photo);
+		}
 
 		return array(
 			'ok' => 1,
