@@ -158,7 +158,10 @@
 		$local_info = str_replace("_o.{$photo['originalformat']}", "_i.json", $local_orig);
 		$local_comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $local_orig);
 
-		#
+		# god how I wished we had implemented a system to pass back
+		# to the API *what* had actually changed; for now we'll just
+		# assume that the photo hasn't been rotated or replaced...
+		# (2011115/straup)
 
 		$req = array();
 
@@ -170,12 +173,10 @@
 			$req[] = array($orig, $local_orig);
 		}
 
-		# fetch the metadata
+		# for now, just always fetch meta files because who knows
+		# whether anything has changed...
 
-		# see below
-		# if (($more['force']) || (! file_exists($local_info)) || (! file_exists($local_comments))){
-
-		if (($more['force']) || (! file_exists($local_info))){
+		if (! isset($more['skip_meta'])){
 
 			# basic photo info
 
@@ -192,31 +193,38 @@
 			list($url, $args) = flickr_api_call_build($method, $args);
 			$api_call = $url . "?". http_build_query($args);
 
-			$req[] = array($api_call, "json:{$local_info}");
+			$req[] = array($api_call, "json:info:{$local_info}");
 
-			# now comments - TODO: do not write files if there are
-			# no comments for a photo; this needs to be done below
-			# but there is currently no mechanism for testing whether
-			# an api response "contains" something...
-			# https://github.com/straup/parallel-flickr/issues/3
+			# fetch comments
 
-			/*
-			$method = 'flickr.photos.comments.getList';
+			$fetch_comments = 1;
 
-			$args = array(
-				'photo_id' => $photo['id'],
-			);
+			if ($more['min_comment_date']){
 
-			list($url, $args) = flickr_api_call_build($method, $args);
-			$api_call = $url . "?". http_build_query($args);
+			}
 
-			$req[] = array($api_call, "json:{$local_comments}");
-			*/
+			if ($fetch_comments){
+
+				$method = 'flickr.photos.comments.getList';
+
+				$args = array(
+					'photo_id' => $photo['id'],
+				);
+
+				list($url, $args) = flickr_api_call_build($method, $args);
+				$api_call = $url . "?". http_build_query($args);
+
+				$req[] = array($api_call, "json:comments:{$local_comments}");
+			}
 		}
+
+		# now go!
 
 		# fetch all the bits using http_multi()
 
 		if ($count = count($req)){
+
+			dumper("fetching {$count} URIs for photo {$photo['id']}");
 
 			$multi = array();
 
@@ -239,14 +247,34 @@
 
 				list($remote, $local) = $_req;
 
-				# see above: eventually there will be some known syntax
-				# for decoding the JSON blob checking the contents before
-				# we write to disk (comments, for example) but for now
-				# we just pull out of filename (20111114/straup)
+				# if $source then check to ensure we have something
+				# worth writing to disk
 
-				if (preg_match("/^json:(.*)$/", $local, $m)){
+				if (preg_match("/^json:(\w+):(.*)$/", $local, $m)){
+
 					$data = $_rsp['body'];
-					$local = $m[1];
+					$source = $m[1];
+					$local = $m[2];
+
+					$to_check = array(
+						'comments',
+					);
+
+					if (in_array($source, $to_check)){
+
+						$json = json_decode($data, "as hash");
+
+						if (! $json){
+							continue;
+						}
+					}
+
+					if ($source == 'comments'){
+
+						if (! count($json['comments']['comment'])){
+							continue;
+						}
+					}
 				}
 
 				else {
