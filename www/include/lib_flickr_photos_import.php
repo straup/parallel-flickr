@@ -57,7 +57,7 @@
 
 			foreach ($photos as $photo){
 
-				flickr_photos_import_photo($photo);
+				flickr_photos_import_photo($photo, $more);
 			}
 
 			$args['page'] += 1;
@@ -158,9 +158,9 @@
 		$local_info = str_replace("_o.{$photo['originalformat']}", "_i.json", $local_orig);
 		$local_comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $local_orig);
 
-		# god how I wished we had implemented a system to pass back
-		# to the API *what* had actually changed; for now we'll just
-		# assume that the photo hasn't been rotated or replaced...
+		# god how I wished we had implemented a system to records and pass back
+		# to the API *what* had actually changed when a photo was updated; for
+		# now we'll just assume that the photo hasn't been rotated or replaced...
 		# (2011115/straup)
 
 		$req = array();
@@ -174,7 +174,10 @@
 		}
 
 		# for now, just always fetch meta files because who knows
-		# whether anything has changed...
+		# whether anything has changed; note the "json:foo:path"
+		# syntax which are hints to tell the code to handle http_multi
+		# responses (below) whether to inspect the contents of the
+		# data returned by the flickr API
 
 		if (! isset($more['skip_meta'])){
 
@@ -195,12 +198,25 @@
 
 			$req[] = array($api_call, "json:info:{$local_info}");
 
-			# fetch comments
+			# fetch comments, which is to say check to see if there
+			# are any new photos worth storing
 
 			$fetch_comments = 1;
 
-			if ($more['min_comment_date']){
+			if ($more['min_date']){
 
+				$method = 'flickr.photos.comments.getList';
+
+				$args = array(
+					'photo_id' => $photo['id'],
+					'min_comment_date' => $more['min_date'],
+				);
+
+				$rsp = flickr_api_call($method, $args);
+
+				if (($rsp['ok']) && (! isset($rsp['rsp']['comments']['comment']))){
+					$fetch_comments = 0;
+				}
 			}
 
 			if ($fetch_comments){
