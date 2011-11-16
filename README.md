@@ -55,6 +55,8 @@ To do:
 
 * uploads (and then re-uploading to Flickr)
 
+* timezones (sad face)
+
 * account deletion
 
 * cron jobs for backups
