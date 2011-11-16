@@ -21,13 +21,18 @@
 
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
 
-	# get the date, today
+	$ymd = gmdate("Y-m-d", time());
+	list($this_year, $this_month, $this_day) = explode("-", $ymd, 3);
 
-	# get the date, last year
+	$last_year = $this_year - 1;
 
-	# get photos for a date
+	$more = array(
+		'ymd' => "{$last_year}-{$this_month}-{$this_day}",
+	);
 
-	$photos = array();
+	$photos = flickr_photos_for_user($owner, $GLOBALS['cfg']['user']['id'], $more);
+
+dumper($photos);
 
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos['rows']);
