@@ -143,3 +143,12 @@ p.message {
     background-color: #ccc;
     margin: 0;
 }
+
+.marker {
+    background-color: #999;
+    border:2px solid #000;
+    padding:5px;
+    font-size:11px;
+    font-weight:700;
+    color:#fff;
+}

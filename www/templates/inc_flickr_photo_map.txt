@@ -1,7 +1,8 @@
 {* see this: it's not finished, only show maps for things with public geoperms *}
 {if $photo.hasgeo and $photo.geoperms == 0}
 <div class="photo_map">
-	<div class="map" data-provider="toner" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" id="map_{$photo.id|escape}">
+	{* to do: make provider and stuff part of $cfg *}
+	<div class="map" data-provider="toner" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" data-zoom="{$photo.accuracy|escape}" id="map_{$photo.id|escape}">
 		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">{$photo.title|escape}</div>
 	</div>
 </div>
