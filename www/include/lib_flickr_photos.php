@@ -105,6 +105,10 @@
 
 		$extra = array();
 
+		# TO DO: first of all this bit is probably wrong (and should
+		# be in a separate function) but if it stays the "_count"
+		# function needs to be updated (20111117/straup)
+		
 		if (isset($more['ymd'])){
 
 			$enc_ymd = AddSlashes($more['ymd']);
@@ -115,8 +119,9 @@
 			$extra[] = $perms;
 		}
 
-		if (count($extra)){
-			$extra = implode(" AND ", $extra);
+		$extra = implode(" AND ", $extra);
+
+		if (strlen($extra)){
 			$extra = " AND {$extra}";
 		}
 

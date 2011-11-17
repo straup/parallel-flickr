@@ -13,16 +13,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 </div>
 </div>
 
-{* htmapl isn't even loaded yet *}
-{* http://htmapl.com/examples/providers.html *}
-
-{if 0 and $photo.has_geo and $photo.can_view_geo}
-<div class="photo_map">
-	<div class="map" data-provider="toner" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" id="map_{$photo.id|escape}">
-		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">{$photo.title|escape}</div>
-	</div>
-</div>
-{/if}
+{include file="inc_flickr_photo_map.txt"}
 
 <div class="photo_navi">
 
@@ -61,6 +52,8 @@ $(document).ready(function(){
 
 		else {}
 	});
+
+	$("div.map").htmapl();
 });
 
 {/literal}
