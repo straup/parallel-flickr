@@ -2,8 +2,9 @@
 {if $photo.hasgeo and $photo.geoperms == 0}
 <div class="photo_map">
 	{* to do: make provider and stuff part of $cfg *}
-	<div class="map" data-provider="toner" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" data-zoom="{$photo.accuracy|escape}" id="map_{$photo.id|escape}">
+	<div class="map" data-provider="toner" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" data-zoom="{$photo.accuracy-2|escape}" id="map_{$photo.id|escape}">
 		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">{$photo.title|escape}</div>
 	</div>
+	<div class="coords">{$photo.latitude|escape},{$photo.longitude|escape}</div>
 </div>
 {/if}

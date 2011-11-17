@@ -152,3 +152,7 @@ p.message {
     font-weight:700;
     color:#fff;
 }
+
+.coords {
+    font-size:11px;
+}
