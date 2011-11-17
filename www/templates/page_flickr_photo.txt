@@ -10,9 +10,19 @@
 <div class="photo_cite">
 by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.username|escape}{/if}</a> {if $photo.str_perms != 'public'}<span style="font-style:italic;"> &#8212; this photo can only be seen by {if $photo.str_perms=='private'}you{else}{$photo.str_perms|escape}{/if}</span>{/if}
 
+</div>
+</div>
 
+{* htmapl isn't even loaded yet *}
+{* http://htmapl.com/examples/providers.html *}
+
+{if 0 and $photo.has_geo and $photo.can_view_geo}
+<div class="photo_map">
+	<div class="map" data-provider="toner" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" id="map_{$photo.id|escape}">
+		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">{$photo.title|escape}</div>
+	</div>
 </div>
-</div>
+{/if}
 
 <div class="photo_navi">
 
