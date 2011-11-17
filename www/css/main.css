@@ -135,3 +135,11 @@ p.message {
     margin: 0;
     background:#fff;
 }
+
+.map {
+    float: left;
+    width: 200px;
+    height: 200px;
+    background-color: #ccc;
+    margin: 0;
+}
