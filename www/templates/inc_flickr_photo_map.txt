@@ -1,3 +1,5 @@
+{if $cfg.enable_feature_slippymaps}
+
 {* see this: it's not finished, only show maps for things with public geoperms *}
 {if $photo.hasgeo and $photo.geoperms == 0}
 <div class="photo_map">
@@ -7,4 +9,6 @@
 	{* this assumes that the detailed place data in the PHP; some day it may have to be scrumjaxed *}
 	<div class="coords">{if $place}taken in {$place.name|escape} {/if}{$photo.latitude|escape},{$photo.longitude|escape}</div>
 </div>
+{/if}
+
 {/if}

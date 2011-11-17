@@ -1,0 +1,7 @@
+{if $cfg.enable_feature_slippymaps}
+{literal}
+	$(document).ready(function(){
+		$("div.map").htmapl();
+	});
+{/literal}
+{/if}

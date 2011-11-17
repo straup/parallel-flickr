@@ -58,14 +58,6 @@ $(document).ready(function(){
 
 {/literal}
 
-{if $cfg.enable_feature_slippymaps}
-{literal}
-	$(document).ready(function(){
-		$("div.map").htmapl();
-	});
-{/literal}
-{/if}
-
-</script>
+{include file="inc_flickr_photo_map_load.txt"}
 
 {include file="inc_foot.txt"}
