@@ -9,7 +9,10 @@
 
 <div class="photo_when">{$row.datetaken|@flickr_dates_verbosify_iso8601}</div>
 
+{* needs positioning *}
+{if 0}
 {include file="inc_flickr_photo_map.txt" photo=$row}
+{/if}
 
 </div>
 
