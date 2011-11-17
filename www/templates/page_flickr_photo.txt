@@ -13,7 +13,9 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 </div>
 </div>
 
+{if $cfg.enable_feature_slippymaps}
 {include file="inc_flickr_photo_map.txt"}
+{/if}
 
 <div class="photo_navi">
 
@@ -52,11 +54,18 @@ $(document).ready(function(){
 
 		else {}
 	});
-
-	$("div.map").htmapl();
 });
 
 {/literal}
+
+{if $cfg.enable_feature_slippymaps}
+{literal}
+	$(document).ready(function(){
+		$("div.map").htmapl();
+	});
+{/literal}
+{/if}
+
 </script>
 
 {include file="inc_foot.txt"}
