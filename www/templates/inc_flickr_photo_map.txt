@@ -2,8 +2,9 @@
 {if $photo.hasgeo and $photo.geoperms == 0}
 <div class="photo_map">
 	<div class="map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" data-zoom="{$photo.accuracy-2|escape}" id="map_{$photo.id|escape}">
-		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">{$photo.title|escape}</div>
+		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}"><!--{$photo.title|escape}--></div>
 	</div>
-	<div class="coords">{$photo.latitude|escape},{$photo.longitude|escape}</div>
+	{* this assumes that the detailed place data in the PHP; some day it may have to be scrumjaxed *}
+	<div class="coords">{if $place}taken in {$place.name|escape} {/if}{$photo.latitude|escape},{$photo.longitude|escape}</div>
 </div>
 {/if}
