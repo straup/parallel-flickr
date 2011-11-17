@@ -1,6 +1,8 @@
 parallel-flickr
 ==
 
+**NOTE: the current master build is broken for logged-in users. I will fix this shortly. (20111117/straup) **
+  
 parallel-flickr is a tool for backing up your Flickr photos and generating a database backed website that honours the viewing permissions you've chosen on Flickr. parallel-flickr is **not** a replacement for Flickr.
 
 parallel-flickr is still a work in progress. It ain't pretty or classy yet but it works. **It almost certainly still contains bugs, some of them really stupid.**
