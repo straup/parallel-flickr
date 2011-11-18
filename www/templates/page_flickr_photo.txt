@@ -35,9 +35,20 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 
 </div>
 
-</div>
-
 <br clear="all" />
+
+{if $is_own}
+<div class="photo_meta">
+<h3>Details</h3>
+
+<ul>
+{if $photo.has_exif}<li>This photo has <a href="{$photo|@flickr_urls_photo_page}exif/">EXIF data</a>.</li>{/if}
+</ul>
+
+</div>
+{/if}
+
+</div>
 
 <script type="text/javascript">
 

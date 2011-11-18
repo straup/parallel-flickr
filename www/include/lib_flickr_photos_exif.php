@@ -6,6 +6,19 @@
 	
 	#################################################################
 
+	function flickr_photos_exif_has_exif(&$photo){
+
+		# THIS IS NOT IDEAL. Maybe store a hasexif flag against
+		# the database on import? (20111118/straup) Anyway, for
+		# now it's just for photo owners. Or at least caching or
+		# something...
+ 
+		$rsp = flickr_photos_exif_read($photo);
+		return $rsp['ok'];
+	}
+
+	#################################################################
+
 	function flickr_photos_exif_read(&$photo){
 
 		$map = flickr_photos_media_map();
@@ -19,9 +32,15 @@
 
 		$path = "{$froot}/{$fname}";
 
+		if (! preg_match("/\.jpe?g$/i", $path)){
+			return not_ok("not a JPEG photo");
+		}
+
 		if (! file_exists($path)){
 			return not_ok("original photo not found");
 		}
+
+		# TO DO: cache me?
 
 		$exif = exif_read_data($path);
 

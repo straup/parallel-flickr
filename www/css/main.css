@@ -103,12 +103,39 @@ p.message {
     height: 100px;
 }
 
+.photo_meta {
+    margin-top: 20px;
+    font-size: 11px;
+}
+
+.photo_meta ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.photo_meta ul li {
+    list-style-type: none;
+}
+
 .photo_cite {
     font-size:small;
 }
 
 .photo_when {
     font-size:small;
+}
+
+.photo_exif {
+    width: 50%;
+}
+
+.photo_exif td {
+    padding: 5px;
+    font-size:small;
+}
+
+.photo_exif_tag {
+    border: solid thin;
 }
 
 .photos_user_photo {

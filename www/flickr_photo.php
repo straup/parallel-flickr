@@ -4,6 +4,7 @@
 
 	loadlib("flickr_photos");
 	loadlib("flickr_photos_metadata");
+	loadlib("flickr_photos_exif");
 	loadlib("flickr_photos_permissions");
 	loadlib("flickr_geo_permissions");
 
@@ -49,6 +50,11 @@
 
 	# $meta = flickr_photos_metadata_load($photo);
 	# $GLOBALS['smarty']->assign_by_ref("metadata", $meta['data']);
+
+	if ($is_own){
+
+		$photo['has_exif'] = flickr_photos_exif_has_exif($photo);
+	}
 
 	$photo['can_view_geo'] = ($photo['hasgeo'] && flickr_geo_permissions_can_view_photo($photo, $GLOBALS['cfg']['user']['id'])) ? 1 : 0;
 

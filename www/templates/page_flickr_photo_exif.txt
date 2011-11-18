@@ -2,21 +2,20 @@
 
 <h2>EXIF data for <a href="{$photo|@flickr_urls_photo_page}">{if $photo.title}<q>{$photo.title|escape}</q>{else}photo ID #{$photo.id|escape}{/if}</a></h2>
 
-<div style="float:right;">
-<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_thumb_flickr}" alt="{$photo.title|escape}"/></a>
-</div>
-
 {if $exif}
 
+<div style="float:right; margin-right:10%;">
+<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_static}" alt="{$photo.title|escape}" width="300"/></a>
+</div>
 
-<table>
+<table class="photo_exif">
 
 {foreach from=$exif item="value" key="tag"}
 	{if $tag=='COMPUTED' or $tag=='THUMBNAIL' or $tag == 'SectionsFound'}
 		{* pass *}
 	{else}
 	<tr>
-		<td><strong>{$tag|escape}</strong></td>
+		<td class="photo_exif_tag"><strong>{$tag|escape}</strong></td>
 		<td>
 		{if $cfg.enable_feature_solr}
 			{if $tag=='Make'}<a href="">{$value|escape}</a>
