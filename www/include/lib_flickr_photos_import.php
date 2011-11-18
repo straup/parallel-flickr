@@ -74,6 +74,9 @@
 
 	function flickr_photos_import_photo($photo, $more=array()){
 
+		# TO DO (maybe?) : check to see whether the photo has
+		# EXIF and set $photo['hasexif'] ... (201111/18/straup)
+
 		$user = flickr_users_ensure_user_account($photo['owner'], $photo['ownername']);
 
 		if ((! $user) || (! $user['id'])){

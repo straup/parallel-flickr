@@ -6,6 +6,7 @@
 	loadlib("solr_machinetags");
 	loadlib("solr_dates");
 	loadlib("flickr_photos_metadata");
+	loadlib("flickr_photos_exif");
 	loadlib("flickr_places");
 
 	#################################################################
@@ -77,6 +78,41 @@
 				$doc['place'] = $place['place_url'];
 			}
 		}
+
+		# pull in some EXIF data (if present)
+
+		$rsp = flickr_photos_exif_read($photo);
+
+		if ($rsp['ok']){
+
+			$exif = $rsp['rows'];
+
+			if (isset($exif['Model'])){
+				$doc['camera_model'] = $exif['Model'];
+			}
+
+			if (isset($exif['Make'])){
+				$doc['camera_make'] = $exif['Make'];
+			}
+
+			# TO DO: what else?
+			# FocalLength
+			# ShutterSpeedValue
+			# ApertureValue
+
+			if (isset($exif['GPSAltitude'])){
+				# TO DO: massage?
+				# $doc['altitude'] = $exif['GPSAltitude'];
+			}
+
+			if (isset($exif['GPSDirection'])){
+				# TO DO: massage?
+				# $doc['direction'] = $exif['GPSDirection'];
+			}
+		}
+
+
+		# go!
 
 		$docs = array(
 			$doc,
