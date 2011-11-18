@@ -45,12 +45,11 @@
 
 		foreach ($meta['tags']['tag'] as $tag){
 
-			if (! $tag['machinetag']){
-				$tags[] = $tag['raw'];
-				continue;
-			}		
+			$tags[] = $tag['raw'];
 
-			$machinetags = array_merge($machinetags, solr_machinetags_explode($tag['raw']));
+			if ($tag['machinetag']){
+				$machinetags = array_merge($machinetags, solr_machinetags_explode($tag['raw']));
+			}
 		}
 
 		if (count($tags)){
@@ -117,7 +116,8 @@
 			}
 		}
 
-
+dumper($doc);
+exit;
 		# go!
 
 		$docs = array(
