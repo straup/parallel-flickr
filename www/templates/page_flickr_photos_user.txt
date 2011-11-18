@@ -11,7 +11,9 @@
 
 {* needs positioning *}
 
+{if 0}
 {include file="inc_flickr_photo_map.txt" photo=$row}
+{/if}
 
 </div>
 
