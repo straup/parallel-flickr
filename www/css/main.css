@@ -8,7 +8,8 @@ body {
 }
 
 #main {
-	margin: 10%;
+	margin: 5%;
+	margin-bottom: 10%;
 	margin-top: 0px;
 	text-align: left;
 	background-color: #fff;
@@ -36,7 +37,7 @@ body {
 }
 
 #content {
-	padding: 2em;
+	 padding-top: 2em;
 }
 
 h1 {
@@ -78,6 +79,30 @@ p.message {
     float:left;
 }
 
+.photo_sidebar {
+    float:left;
+    /* border:solid thin; */
+    /* this can't be the correct way to do this... */
+    margin-top: 3em;
+    width:210px;
+}
+
+.photo_navi {
+}
+
+.photo_before {
+    float: left;
+    margin-right: 10px;
+    width: 100px;
+    height: 100px;
+}
+
+.photo_after {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
 .photo_cite {
     font-size:small;
 }
@@ -89,10 +114,6 @@ p.message {
 .photos_user_photo {
     margin-bottom: 30px;
     color:#999;
-}
-
-.photo_navi {
-    margin-top: 45px;
 }
 
 .photo_title a {
@@ -137,18 +158,22 @@ p.message {
 }
 
 .photo_map {
-/*
-    width: 200px;
-    max-width: 200px;
-*/
+    float: left;
+    margin-bottom: 20px;
+}
+
+.photo_map_blurb {
+    width:200px;
+    font-size:11px;
 }
 
 .map {
-    float: left;
-    width: 200px;
-    height: 200px;
+    width: 210px;
+    height: 210px;
+    border: solid thin;
     background-color: #ccc;
     margin: 0;
+    margin-bottom:10px;
 }
 
 /* sudo finish this */
@@ -180,8 +205,4 @@ p.message {
 
 .marker:hover .marker_text {
     display: block;
-}
-
-.coords {
-    font-size:11px;
 }

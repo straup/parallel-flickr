@@ -13,6 +13,8 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 </div>
 </div>
 
+<div class="photo_sidebar">
+
 {if $cfg.enable_feature_slippymaps}
 {include file="inc_flickr_photo_map.txt"}
 {/if}
@@ -20,14 +22,18 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 <div class="photo_navi">
 
 {if $before|@count}
+<div class="photo_before">
 <a href="{$owner|@flickr_urls_photos_user}{$before.0.id|escape}" title="before: {$before.0.title|escape}"><img src="{$before.0|@flickr_urls_photo_thumb_flickr}" alt="{$before.0.title|escape}"/></a>
+</div>
 {/if}
-
-<br />
 
 {if $after|@count}
+<div class="photo_after">
 <a href="{$owner|@flickr_urls_photos_user}{$after.0.id|escape}" title="after: {$after.0.title|escape}"><img src="{$after.0|@flickr_urls_photo_thumb_flickr}" alt="{$after.0.title|escape}" /></a>
+</div>
 {/if}
+
+</div>
 
 </div>
 
