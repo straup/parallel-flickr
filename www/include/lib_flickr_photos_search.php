@@ -60,7 +60,7 @@
 			$doc['machinetags'] = $machinetags;
 		}
 
-		if ($photo['latitude'] && $photo['longitude']){
+		if ($photo['hasgeo']){
 
 			$doc['location'] = "{$photo['latitude']},{$photo['longitude']}";
 			$doc['accuracy'] = $photo['accuracy'];
