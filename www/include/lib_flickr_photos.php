@@ -5,6 +5,22 @@
 
 	#################################################################
 
+	function flickr_photos_media_map($string_keys=0){
+
+		$map = array(
+			0 => 'photo',
+			1 => 'video',
+		);
+
+		if ($string_keys){
+			$map = array_flip($map);
+		}
+
+		return $map;
+	}
+
+	#################################################################
+
 	function flickr_photos_get_by_id($id){
 
 		$cache_key = "photo_{$id}";

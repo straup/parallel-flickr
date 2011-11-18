@@ -83,6 +83,7 @@ RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flic
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/timecapsule?/?$		/flickr_photos_user_time_capsule.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/?$	/flickr_photo.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/exif/?$	/flickr_photo_exif.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/faves(/page([0-9]+))?/?$	/flickr_faves_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]
 
