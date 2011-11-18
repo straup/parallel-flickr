@@ -6,8 +6,10 @@
 	loadlib("solr_machinetags");
 	loadlib("solr_dates");
 	loadlib("flickr_photos_metadata");
-	loadlib("flickr_photos_exif");
 	loadlib("flickr_places");
+
+	loadlib("flickr_photos_exif");
+	loadlib("exif_tools");
 
 	#################################################################
 
@@ -100,14 +102,30 @@
 			# ShutterSpeedValue
 			# ApertureValue
 
+			# http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/GPS.html
+
 			if (isset($exif['GPSAltitude'])){
-				# TO DO: massage?
-				# $doc['altitude'] = $exif['GPSAltitude'];
+
+				$altitude = exif_tools_rational2float($exif['GPSAltitude']);
+
+				# 1 = Below Sea Level
+
+				if ($exif['GPSAltitudeRef']){
+					$altitude = - $altitude;
+				}
+
+				$doc['altitude'] = $altitude;
 			}
 
-			if (isset($exif['GPSDirection'])){
-				# TO DO: massage?
-				# $doc['direction'] = $exif['GPSDirection'];
+			if (isset($exif['GPSImgDirection'])){
+
+				$direction = exif_tools_rational2float($exif['GPSImgDirection']);
+
+				if ($exif['GPSImgDirectionRef'] == 'M'){
+					# uh...
+				}
+
+				$doc['direction'] = $direction;
 			}
 		}
 
