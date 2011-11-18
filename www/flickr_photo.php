@@ -55,7 +55,7 @@
 	if ($photo['can_view_geo']){
 
 		$geo_perms_map = flickr_geo_permissions_map();
-		$photo['str_geo_perms'] = $geo_perms_map[$photo['geoperms']];
+		$photo['str_geoperms'] = $geo_perms_map[$photo['geoperms']];
 
 		# NOTE: this has the potential to slow things down if the
 		# Flickr API is being wonky. On the other hand if you're

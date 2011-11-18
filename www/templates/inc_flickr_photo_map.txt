@@ -6,7 +6,14 @@
 		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}"><!--{$photo.title|escape}--></div>
 	</div>
 	{* this assumes that the detailed place data in the PHP; some day it may have to be scrumjaxed *}
-	<div class="coords">{if $place}taken in {$place.name|escape} {/if}{$photo.latitude|escape},{$photo.longitude|escape}</div>
+	<div class="coords">
+	{if 0}{$photo.latitude|escape},{$photo.longitude|escape}<br />{/if}
+
+	{* note: this violates everything we learned about template strings and translations at flickr... *}
+
+	This photo was taken in {if $place}{$place.name|escape}{else}a place with no name{/if} and its location {if $photo.str_geoperms=='private'}can only be seen by <strong>you</strong>{elseif $photo.str_geoperms=='public'}can be seen by <strong>anyone</strong>{else}can only be seen by <strong>{if $is_own}you and {/if}{$photo.str_geoperms|escape}</strong>{/if}.
+
+	</div>
 </div>
 {/if}
 
