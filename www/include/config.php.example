@@ -21,6 +21,9 @@
 	$GLOBALS['cfg']['site_disabled'] = 0;
 	$GLOBALS['cfg']['site_disabled_retry_after'] = 0;	# seconds; if set will return HTTP Retry-After header
 
+	$GLOBALS['cfg']['enable_feature_slippymaps'] = 1;
+	$GLOBALS['cfg']['slippymap_provider'] = 'toner';	// assumes canned htmapl provider strings
+
 	$GLOBALS['cfg']['enable_feature_signup'] = 1;
 	$GLOBALS['cfg']['enable_feature_signin'] = 1;
 	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;

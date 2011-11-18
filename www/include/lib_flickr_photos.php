@@ -103,7 +103,25 @@
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
-		if ($extra = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
+		$extra = array();
+
+		# TO DO: first of all this bit is probably wrong (and should
+		# be in a separate function) but if it stays the "_count"
+		# function needs to be updated (20111117/straup)
+		
+		if (isset($more['ymd'])){
+
+			$enc_ymd = AddSlashes($more['ymd']);
+			$extra[] = "DATE_FORMAT(datetaken, '%Y-%m-%d') = '{$enc_ymd}'";
+		}
+
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
+			$extra[] = $perms;
+		}
+
+		$extra = implode(" AND ", $extra);
+
+		if (strlen($extra)){
 			$extra = " AND {$extra}";
 		}
 

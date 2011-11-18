@@ -8,7 +8,8 @@ body {
 }
 
 #main {
-	margin: 10%;
+	margin: 5%;
+	margin-bottom: 10%;
 	margin-top: 0px;
 	text-align: left;
 	background-color: #fff;
@@ -36,7 +37,7 @@ body {
 }
 
 #content {
-	padding: 2em;
+	 padding-top: 2em;
 }
 
 h1 {
@@ -78,6 +79,30 @@ p.message {
     float:left;
 }
 
+.photo_sidebar {
+    float:left;
+    /* border:solid thin; */
+    /* this can't be the correct way to do this... */
+    margin-top: 3em;
+    width:210px;
+}
+
+.photo_navi {
+}
+
+.photo_before {
+    float: left;
+    margin-right: 10px;
+    width: 100px;
+    height: 100px;
+}
+
+.photo_after {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
 .photo_cite {
     font-size:small;
 }
@@ -89,10 +114,6 @@ p.message {
 .photos_user_photo {
     margin-bottom: 30px;
     color:#999;
-}
-
-.photo_navi {
-    margin-top: 45px;
 }
 
 .photo_title a {
@@ -134,4 +155,54 @@ p.message {
     color: #999;
     margin: 0;
     background:#fff;
+}
+
+.photo_map {
+    float: left;
+    margin-bottom: 20px;
+}
+
+.photo_map_blurb {
+    width:200px;
+    font-size:11px;
+}
+
+.map {
+    width: 210px;
+    height: 210px;
+    border: solid thin;
+    background-color: #ccc;
+    margin: 0;
+    margin-bottom:10px;
+}
+
+/* sudo finish this */
+/* http://jonraasch.com/blog/css-rounded-corners-in-all-browsers */
+
+.marker {
+    background-color: #0bbdff;
+    border:2px solid #000;
+    padding:5px;
+    font-size:11px;
+    font-weight:700;
+    color:#fff;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+}
+
+.marker_text {
+    display: none;
+}
+
+.marker:hover {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -khtml-border-radius: 0px;
+    border-radius: 0px;
+}
+
+.marker:hover .marker_text {
+    display: block;
 }

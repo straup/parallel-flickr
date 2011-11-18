@@ -7,6 +7,8 @@
 	loadlib("flickr_urls");
 	loadlib("flickr_dates");
 
+	loadlib("flickr_geo_permissions");
+
 	#
 
 	if ($path = get_str("path")){
@@ -33,6 +35,14 @@
 	$GLOBALS['smarty']->assign("is_own", $is_own);
 
 	$photos = flickr_photos_for_user($owner, $GLOBALS['cfg']['user']['id'], $more);
+
+	$count = count($photos['rows']);
+
+	for ($i=0; $i < $count; $i++){
+		$ph = $photos['rows'][$i];
+		$ph['can_view_geo'] = ($ph['hasgeo'] && flickr_geo_permissions_can_view_photo($ph, $GLOBALS['cfg']['user']['id'])) ? 1 : 0;
+		$photos['rows'][$i] = $ph;
+	}
 
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos['rows']);
