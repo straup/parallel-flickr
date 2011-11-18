@@ -96,15 +96,27 @@
 				$doc['camera_make'] = $exif['Make'];
 			}
 
-			# TO DO: what else?
-			# FocalLength
-			# ShutterSpeedValue
-			# ApertureValue
+			# EXIF: what else?
+
+			if (isset($exif['FocalLength'])){
+				$doc['focal_length'] = exif_tools_rational2float($exif['FocalLength']);
+			}
+
+			if (isset($exif['ApetureValue'])){
+				$doc['apeture'] = exif_tools_rational2float($exif['ApetureValue']);
+			}
+
+			if (isset($exif['ShutterSpeedValue'])){
+				$doc['shutter_speed'] = exif_tools_rational2float($exif['ShutterSpeedValue']);
+			}
+
+			if (isset($exif['ISOSpeedRatings'])){
+				$doc['iso_speed'] = intval($exif['ISOSpeedRatings']);
+			}
 
 			# http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/GPS.html
 
 			if (isset($exif['GPSAltitude'])){
-
 				$altitude = exif_tools_explode_gps_altitude($exif['GPSAltitude'], $exif['GPSAltitudeRef']);
 				$doc['altitude'] = $altitude;
 			}
