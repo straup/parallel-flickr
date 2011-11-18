@@ -137,8 +137,10 @@ p.message {
 }
 
 .photo_map {
+/*
     width: 200px;
     max-width: 200px;
+*/
 }
 
 .map {
@@ -163,6 +165,21 @@ p.message {
     -webkit-border-radius: 20px;
     -khtml-border-radius: 20px;
     border-radius: 20px;
+}
+
+.marker_text {
+    display: none;
+}
+
+.marker:hover {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -khtml-border-radius: 0px;
+    border-radius: 0px;
+}
+
+.marker:hover .marker_text {
+    display: block;
 }
 
 .coords {
