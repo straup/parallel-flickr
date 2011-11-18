@@ -136,6 +136,11 @@ p.message {
     background:#fff;
 }
 
+.photo_map {
+    width: 200px;
+    max-width: 200px;
+}
+
 .map {
     float: left;
     width: 200px;

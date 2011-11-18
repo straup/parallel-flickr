@@ -11,10 +11,13 @@
 
 	{* note: this violates everything we learned about template strings and translations at flickr... *}
 
+	{if $photo.str_geoperms}
 	This photo was taken in {if $place}{$place.name|escape}{else}a place with no name{/if} and its location {if $photo.str_geoperms=='private'}can only be seen by <strong>you</strong>{elseif $photo.str_geoperms=='public'}can be seen by <strong>anyone</strong>{else}can only be seen by <strong>{if $is_own}you and {/if}{$photo.str_geoperms|escape}</strong>{/if}.
+	{/if}
 
 	</div>
 </div>
+
 {/if}
 
 {/if}
