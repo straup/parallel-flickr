@@ -1,15 +1,16 @@
 <?php
 
-	# THIS DOES NOT WORK YET
-
 	loadlib("flickr_contacts");
 
 	#################################################################
+
+	# TO DO: update lib_flickr_photos_import
 
 	function flickr_geo_permissions_map($string_keys=0){
 
 		$map = array(
 			0 => 'public',
+			1 => 'contacts',
 			2 => 'friends',
 			3 => 'family',
 			4 => 'friends and family',
@@ -54,6 +55,8 @@
 			if ($perms == 'friends and family'){
 				return (in_array($str_rel, array('friends', 'family'))) ? 1 : 0;
 			}
+
+			return ($perms == 'contacts') ? 1 : 0;
 		}
 
 		return 0;
@@ -77,7 +80,11 @@
 
 			$rel_map = flickr_contacts_relationship_map();
 			$str_rel = $rel_map[$contact['rel']];
-			$perms = array($perms_map['public']);
+
+			$perms = array(
+				$perms_map['public'],
+				$perms_map['contacts'],
+			);
 
 			if ($str_rel == 'friends'){
 				$perms[] = $perms_map['friends'];

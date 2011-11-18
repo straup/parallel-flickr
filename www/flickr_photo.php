@@ -5,6 +5,7 @@
 	loadlib("flickr_photos");
 	loadlib("flickr_photos_metadata");
 	loadlib("flickr_photos_permissions");
+	loadlib("flickr_geo_permissions");
 
 	loadlib("flickr_users");
 	loadlib("flickr_urls");
@@ -49,9 +50,12 @@
 	# $meta = flickr_photos_metadata_load($photo);
 	# $GLOBALS['smarty']->assign_by_ref("metadata", $meta['data']);
 
-	# TODO: check geo permissions here
+	$photo['can_view_geo'] = ($photo['hasgeo'] && flickr_geo_permissions_can_view_photo($photo, $GLOBALS['cfg']['user']['id'])) ? 1 : 0;
 
-	if ($photo['hasgeo']){
+	if ($photo['can_view_geo']){
+
+		$geo_perms_map = flickr_geo_permissions_map();
+		$photo['str_geo_perms'] = $geo_perms_map[$photo['geoperms']];
 
 		# NOTE: this has the potential to slow things down if the
 		# Flickr API is being wonky. On the other hand if you're
