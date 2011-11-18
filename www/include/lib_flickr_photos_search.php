@@ -116,8 +116,6 @@
 			}
 		}
 
-dumper($doc);
-exit;
 		# go!
 
 		$docs = array(
