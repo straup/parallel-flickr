@@ -2,6 +2,10 @@
 
 	include("include/init.php");
 
+	# This is not part of 'master' yet. It accidentally got merged in...
+
+	error_404();
+
 	loadlib("flickr_users");
 	loadlib("flickr_photos");
 
@@ -31,8 +35,6 @@
 	);
 
 	$photos = flickr_photos_for_user($owner, $GLOBALS['cfg']['user']['id'], $more);
-
-dumper($photos);
 
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos['rows']);
