@@ -17,6 +17,9 @@
 	</div>
 </div>
 
+{else}
+	{include file="inc_flickr_photo_map_nullisland.txt"}
+
 {/if}
 
 {/if}

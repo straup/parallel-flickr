@@ -1,0 +1,8 @@
+<div class="photo_map">
+	<div class="map" data-provider="acetate" data-center="0,0" data-zoom="18" data-interactive="false"map_{$photo.id|escape}">
+		<!-- <div class="marker" data-location="0,0"><span class="marker_text">Null Island</span></div> -->
+	</div>
+	<div class="photo_map_blurb">
+		This photo has <a href="http://woe.spum.org/id/0">not been geotagged</a>.
+	</div>
+</div>
