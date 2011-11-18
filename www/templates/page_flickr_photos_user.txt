@@ -5,15 +5,17 @@
 {foreach from=$photos item="row"}
 
 <div class="photos_user_photo">
+
+<div class="photo">
 <a href="{$row|@flickr_urls_photo_page}"><img src="{$row|@flickr_urls_photo_static}" /></a>
-
 <div class="photo_when">{$row.datetaken|@flickr_dates_verbosify_iso8601}</div>
+</div>
 
-{* needs positioning *}
-
-{if 0}
+<div class="photo_sidebar" style="margin-top:0px;">
 {include file="inc_flickr_photo_map.txt" photo=$row}
-{/if}
+</div>
+
+<br clear="all" />
 
 </div>
 
