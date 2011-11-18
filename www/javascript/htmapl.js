@@ -83,6 +83,7 @@ if (typeof HTMAPL === "undefined") var HTMAPL = {};
             this.parseOptions(options, this.parent, ATTRIBUTES.map);
 
             // if the "interactive" option is set, include the MouseHandler
+
             if (options.interactive) {
                 var mouseHandler = new MM.MouseHandler();
                 this.eventHandlers.push(mouseHandler);
@@ -483,8 +484,11 @@ if (typeof HTMAPL === "undefined") var HTMAPL = {};
         parseOptions: function(options, element, parsers) {
             // console.log("parsing:", element, "into:", options, "with:", parsers);
             for (var key in parsers) {
-                var value = (element ? this.getData(element, key) : null) || options[key];
+
+                var value = (element) ? this.getData(element, key) : null;
+		value = (typeof(value) === 'undefined') ? options[key] : value;
                 // console.log(" +", key, "=", value);
+
                 // if it's a string, parse it
                 if (typeof value === "string" && parsers[key] !== String) {
                     options[key] = PARSE[parsers[key]].call(element, value);
