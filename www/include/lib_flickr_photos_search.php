@@ -106,25 +106,13 @@
 
 			if (isset($exif['GPSAltitude'])){
 
-				$altitude = exif_tools_rational2float($exif['GPSAltitude']);
-
-				# 1 = Below Sea Level
-
-				if ($exif['GPSAltitudeRef']){
-					$altitude = - $altitude;
-				}
-
+				$altitude = exif_tools_explode_gps_altitude($exif['GPSAltitude'], $exif['GPSAltitudeRef']);
 				$doc['altitude'] = $altitude;
 			}
 
 			if (isset($exif['GPSImgDirection'])){
 
-				$direction = exif_tools_rational2float($exif['GPSImgDirection']);
-
-				if ($exif['GPSImgDirectionRef'] == 'M'){
-					# uh...
-				}
-
+				$direction = exif_tools_explode_gps_img_direction($exif['GPSImgDirection'], $exif['GPSImgDirectionRef']);
 				$doc['direction'] = $direction;
 			}
 		}

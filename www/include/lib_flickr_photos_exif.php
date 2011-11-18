@@ -3,6 +3,7 @@
 	#################################################################
 
 	loadlib("flickr_photos");
+	loadlib("exif_tools");
 	
 	#################################################################
 
@@ -64,9 +65,41 @@
 			}
 		}
 
+		# TO DO: work out how/where individual EXIF tags get
+		# "prettified" ...
+
+		ksort($exif);
+
 		return ok(array("rows" => $exif));
 	}
 
 	#################################################################
 
+	function exif_tools_explode_gps_altitude($altitude, $ref=null){
+
+		$altitude = exif_tools_rational2float($altitude);
+
+		# 1 = Below Sea Level
+
+		if ($ref){
+			$altitude = - $altitude;
+		}
+
+		return $altitude;
+	}
+
+	#################################################################
+
+	function exif_tools_explode_gps_img_direction($direction, $ref=null){
+
+		$direction = exif_tools_rational2float($direction);
+
+		if ($ref == 'M'){
+			# uh...
+		}
+
+		return $direction;
+	}
+
+	#################################################################
 ?>
