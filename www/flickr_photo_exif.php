@@ -6,7 +6,7 @@
 
 	# ensure logged in; parse out photo url
 
-	$photo_id = get_int32("id");
+	$photo_id = get_int64("id");
 	$path = get_str("path");
 
 	$url = "/photos/$path/$photo_id/";
