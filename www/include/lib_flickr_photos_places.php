@@ -11,7 +11,6 @@
 
 	function flickr_photos_places_for_user(&$user, &$place, $viewer_id=0, $more=array()){
 
-$viewer_id = 0;
 		# put me in a function...
 
 		$valid_placetypes = array(
@@ -64,6 +63,7 @@ $viewer_id = 0;
 		$params = array(
 			'q' => $q,
 			'rows' => 10,
+			# TO DO: figure out why this results in ordering weirdness...
 			'sort' => 'date_taken desc',
 		);
 
