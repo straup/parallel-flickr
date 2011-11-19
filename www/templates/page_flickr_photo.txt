@@ -19,6 +19,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 {include file="inc_flickr_photo_map.txt"}
 {/if}
 
+{if $before|@count or $after|@count}
 <div class="photo_navi">
 
 <div class="photo_before">
@@ -40,6 +41,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 </div>
 
 <br clear="all" />
+{/if}
 
 {if $is_own}
 <div class="photo_meta">
