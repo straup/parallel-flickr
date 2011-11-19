@@ -43,12 +43,14 @@
 		$tags = array();
 		$machinetags = array();
 
-		foreach ($meta['tags']['tag'] as $tag){
+		if (isset($meta['tags']['tag'])){
+			foreach ($meta['tags']['tag'] as $tag){
 
-			$tags[] = $tag['raw'];
+				$tags[] = $tag['raw'];
 
-			if ($tag['machinetag']){
-				$machinetags = array_merge($machinetags, solr_machinetags_explode($tag['raw']));
+				if ($tag['machinetag']){
+					$machinetags = array_merge($machinetags, solr_machinetags_explode($tag['raw']));
+				}
 			}
 		}
 

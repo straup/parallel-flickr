@@ -16,7 +16,7 @@
 		}
 
 		else {
-			$ret = floatval($parts[0]) / floatval($parts[1]);	
+			$ret = ($parts[1]) ? floatval($parts[0]) / floatval($parts[1]) : $parts[0];	
 		}
 
 		return floatval($ret);

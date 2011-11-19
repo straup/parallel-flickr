@@ -18,11 +18,13 @@
 		exit();
 	}
 
-	function index_photo(&$row, $more=array()){
+	function index_photo($row, $more=array()){
 		$photo = flickr_photos_get_by_id($row['id']);
 		$rsp = flickr_photos_search_index_photo($photo);
 	}
 
-	echo "HEY LOOK! THIS TOTALLY DOESN'T WORK YET";
+	$sql = "SELECT * FROM FlickrPhotos";
+	backfill_db_users($sql, 'index_photo');
+
 	exit();
 ?>
