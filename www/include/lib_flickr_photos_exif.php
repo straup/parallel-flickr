@@ -41,6 +41,10 @@
 			return not_ok("original photo not found");
 		}
 
+		if (! filesize($path)){
+			return not_ok("original photo is empty");
+		}
+
 		# TO DO: cache me?
 
 		$exif = exif_read_data($path);

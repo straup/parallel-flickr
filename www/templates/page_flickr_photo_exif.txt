@@ -11,7 +11,7 @@
 <table class="photo_exif">
 
 {foreach from=$exif item="value" key="tag"}
-	{if $tag=='COMPUTED' or $tag=='THUMBNAIL' or $tag == 'SectionsFound'}
+	{if $tag=='COMPUTED' or $tag=='THUMBNAIL' or $tag == 'SectionsFound' or $tag=='MakerNote'}
 		{* pass *}
 	{else}
 	<tr>
