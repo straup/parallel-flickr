@@ -90,12 +90,14 @@
 
 			$exif = $rsp['rows'];
 
+			# TO DO: normalize (and probably sanitize)
+
 			if (isset($exif['Model'])){
-				$doc['camera_model'] = $exif['Model'];
+				$doc['camera_model'] = trim($exif['Model']);
 			}
 
 			if (isset($exif['Make'])){
-				$doc['camera_make'] = $exif['Make'];
+				$doc['camera_make'] = trim($exif['Make']);
 			}
 
 			# EXIF: what else?
