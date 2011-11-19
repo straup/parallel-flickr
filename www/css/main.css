@@ -203,6 +203,23 @@ p.message {
     margin-bottom:10px;
 }
 
+.place_map {
+    width: 100% !important;
+    margin-bottom: 30px;
+}
+
+.place_map h2 {
+    background-color:#fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    width: auto !important;
+    border-bottom: solid thin;
+    border-right: solid thin;
+    opacity: .95;
+}
+
 /* sudo finish this */
 /* http://jonraasch.com/blog/css-rounded-corners-in-all-browsers */
 
@@ -221,6 +238,7 @@ p.message {
 
 .marker_text {
     display: none;
+    z-index:0;
 }
 
 .marker:hover {
@@ -232,4 +250,5 @@ p.message {
 
 .marker:hover .marker_text {
     display: block;
+    z-index:400;
 }

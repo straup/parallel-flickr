@@ -1,6 +1,20 @@
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}your photos from {$place.name|escape}{else}{$owner.username|escape} from {$place.name|escape}{/if}</h2>
+{* TO DO: either get place extent or calculate zoom by place type... *}
+{* TO DO: figure out why safari doesn't honour the .place_map css definition... *}
+
+<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$place.latitude|escape},{$place.longitude|escape}" data-zoom="12" data-interactive="false" id="map_{$photo.id|escape}" style="width:100%;">
+
+{foreach from=$photos item="photo"}
+	<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">
+		<span class="marker_text">{$photo.datetaken|@flickr_dates_verbosify_iso8601}</span>
+	</div>
+{/foreach}
+
+{* TO DO: write a bloody possess modifier... *}
+
+<h2>{if $is_own}your photos from {$place.name|escape}{else}{$owner.username|escape}'s photos from {$place.name|escape}{/if}</h2>
+</div>
 
 {foreach from=$photos item="row"}
 
