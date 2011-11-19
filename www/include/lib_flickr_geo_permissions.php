@@ -104,8 +104,7 @@
 			$perms = array($perms_map['public']);
 		}
 
-		$str_perms = implode(",", $perms);
-		return "geoperms IN ({$str_perms})";
+		return $perms;
 	}
 
 	#################################################################

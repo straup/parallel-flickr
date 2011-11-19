@@ -102,8 +102,9 @@
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
-		if ($extra = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
-			$extra = " AND {$extra}";
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
+			$str_perms = implode(",", $perms);
+			$extra = " AND perms IN ({$str_perms})";
 		}
 
 		$sql = "SELECT COUNT(id) AS cnt FROM FlickrPhotos WHERE user_id='{$enc_user}' {$extra}";
@@ -132,7 +133,8 @@
 		}
 
 		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
-			$extra[] = $perms;
+			$str_perms = implode(",", $perms);
+			$extra[] = "perms IN ({$str_perms})";
 		}
 
 		$extra = implode(" AND ", $extra);
@@ -177,8 +179,9 @@
 		$enc_id = AddSlashes($photo['id']);
 		$enc_user = AddSlashes($photo['user_id']);
 
-		if ($extra = flickr_photos_permissions_photos_where($photo['user_id'], $viewer_id)){
-			$extra = " AND {$extra}";
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
+			$str_perms = implode(",", $perms);
+			$extra = " AND perms IN ({$str_perms})";
 		}
 
 		# FIX ME: INDEXES

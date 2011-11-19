@@ -17,9 +17,19 @@
 
 	function solr_select($params, $more=array()){
 
-		$url = $GLOBALS['cfg']['solr_endpoint'] . "select/";
+		# defaults (to do: spill)
 
+		$page = isset($more['page']) ? max(1, $more['page']) : 1;
+		$per_page = isset($more['per_page']) ? max(1, $more['per_page']) : $GLOBALS['cfg']['pagination_per_page'];
+
+		$start = ($page - 1) * $per_page;
+		$rows = $per_page;
+
+		$params['rows'] = $rows;
+		$params['start'] = $start;
 		$params['wt'] = 'json';
+
+		# build query
 
 		$_params = array();
 
@@ -34,16 +44,41 @@
 
 		$str_params = implode('&', $_params);
 
-		$http_rsp = http_post($url, $str_params);
+		# go!
 
+		$url = $GLOBALS['cfg']['solr_endpoint'] . "select/";
+
+		$http_rsp = http_post($url, $str_params);
 		$rsp = _solr_parse_response($http_rsp);
 
-		# TO DO: figure out how / whether to include responseHeader
-
-		if ($rsp['ok']){
-			$rsp['data'] = $rsp['data']['response'];
+		if (! $rsp['ok']){
+			return $rsp;
 		}
 
+		# pagination
+
+		$total_count = $rsp['data']['response']['numFound'];
+		$page_count = ceil($total_count / $per_page);
+		$last_page_count = $total_count - (($page_count - 1) * $per_page);
+
+		$rsp = array(
+			'ok' => 1,
+			'rows' => $rsp['data']['response']['docs'],
+			'pagination' => array(
+				'total_count' => $total_count,
+				'page' => $page,
+				'per_page' => $per_page,
+				'page_count' => $page_count,
+			)
+		);
+
+		# TO DO: put this someplace common (like not here or lib_db)
+
+		if ($GLOBALS['cfg']['pagination_assign_smarty_variable']) {
+			$GLOBALS['smarty']->assign('pagination', $rsp['pagination']);
+			$GLOBALS['smarty']->register_function('pagination', 'smarty_function_pagination');
+		}
+		
 		return $rsp;
 	}
 

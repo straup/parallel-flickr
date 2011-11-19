@@ -95,8 +95,7 @@
 			$perms = array($perms_map['public']);
 		}
 
-		$str_perms = implode(",", $perms);
-		return "perms IN ({$str_perms})";
+		return $perms;
 	}
 
 	#################################################################

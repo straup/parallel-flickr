@@ -75,6 +75,14 @@
 
 	#################################################################
 
+	function flickr_urls_photos_user_place(&$user, &$place){
+
+		$user_url = flickr_urls_photos_user($user);
+		return "{$user_url}places/{$place['woeid']}/";	
+	}
+
+	#################################################################
+
 	function flickr_urls_contacts_user(&$user){
 
 		return flickr_urls_photos_user($user) . "contacts/";
