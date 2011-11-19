@@ -12,7 +12,7 @@
 	loadlib("flickr_urls");
 	loadlib("flickr_places");
 
-	$photo_id = get_int32("id");
+	$photo_id = get_int64("id");
 
 	if (! $photo_id){
 		error_404();
