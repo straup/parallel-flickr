@@ -31,6 +31,7 @@
 </li>
 </ul>
 
+{if $photos|@count}
 {foreach from=$photos item="row"}
 
 <div class="photos_user_photo">
@@ -51,6 +52,22 @@
 {/foreach}
 
 {include file="inc_pagination.txt"}
+
+{else}
+
+{if $error}
+	<p class="error">Hrmph. There was a problem fetching photos!</p>
+{else}
+
+{if $is_own}
+<p>You haven't taken any photos here!</p>
+{else}
+<p>{$owner.username|escape} hasn't taken any photos you can see here.</p>
+{/if}
+
+{/if}
+
+{/if}
 
 {include file="inc_flickr_photo_map_load.txt"}
 

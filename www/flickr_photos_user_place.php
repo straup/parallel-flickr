@@ -67,6 +67,9 @@
 
 	$GLOBALS['smarty']->assign_by_ref("place", $place);
 	$GLOBALS['smarty']->assign_by_ref("hierarchy", $hier);
+
+	# now get the photos
+
 	$more = array();
 
 	if ($page = get_int32("page")){
@@ -75,15 +78,18 @@
 
 	$viewer_id = $GLOBALS['cfg']['user']['id'];
 
-	# TO DO: check for errors
-
 	$rsp = flickr_photos_places_for_user($owner, $place, $viewer_id, $more);
-	$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
 
-	# pagination stuff
+	if (! $rsp['ok']){
+		$GLOBALS['cfg']['error'] = $rsp['error'];
+	}
 
-	$pagination_url = flickr_urls_photos_user_place($owner, $place);
-	$GLOBALS['smarty']->assign("pagination_url", $pagination_url);
+	else {
+		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
+
+		$pagination_url = flickr_urls_photos_user_place($owner, $place);
+		$GLOBALS['smarty']->assign("pagination_url", $pagination_url);
+	}
 
 	# go!
 
