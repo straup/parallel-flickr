@@ -21,6 +21,14 @@
 
 	#################################################################
 
+	function flickr_places_is_valid_placetype($type){
+
+		$valid = flickr_places_valid_placetypes();
+		return (in_array($type, $valid)) ? 1 : 0;
+	}
+
+	#################################################################
+
 	function flickr_places_get_by_woeid($woeid){
 
 		# sudo memcache me...

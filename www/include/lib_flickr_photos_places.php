@@ -3,6 +3,8 @@
 	loadlib("solr");
 	loadlib("solr_utils");
 
+	loadlib("flickr_places");
+
 	loadlib("flickr_photos");
 	loadlib("flickr_photos_permissions");
 	loadlib("flickr_geo_permissions");
@@ -11,17 +13,7 @@
 
 	function flickr_photos_places_for_user(&$user, &$place, $viewer_id=0, $more=array()){
 
-		# put me in a function...
-
-		$valid_placetypes = array(
-			'neighbourhood',
-			'locality',
-			'county',
-			'region',
-			'country',
-		);
-
-		if (! in_array($place['place_type'], $valid_placetypes)){
+		if (! flickr_places_is_valid_placetype($place['place_type'])){
 			return not_ok("not a valid placetype");
 		}
 
