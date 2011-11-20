@@ -81,10 +81,9 @@ RewriteRule ^photos/me(/(faves))?/?$					/flickr_photos_me.php?context=$2&%{QUER
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flickr_photos_user.php?path=$2&nsid=$3&page=$5&%{QUERY_STRING} [L]
 
 # places
-# TO DO: /places landing page
-# TO DO: /places/pretty/urls
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)(/page([0-9]+))?/?$		/flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&page=$6%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/?$		/flickr_photos_user_places.php?path=$2&nsid=$3&6%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)(/page([0-9]+))?/?$		/flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&page=$6&%{QUERY_STRING} [L]
 
 # timecapsule
 # TO DO: finish

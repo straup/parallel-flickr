@@ -157,6 +157,22 @@
 
 	###############################################################################
 
+	# TO DO: work out how to use this for when the site is disabled
+	# in include/init.php (
+
+	function error_disabled($feature=''){
+
+		header("HTTP/1.1 503 Service Temporarily Unavailable");
+		header("Status: 503 Service Temporarily Unavailable");
+
+		$GLOBALS['smarty']->assign("feature", $feature);
+
+		$GLOBALS['smarty']->display("page_feature_disabled.txt");
+		exit();
+	}
+
+	###############################################################################
+
 	function error_smart_trace(){
 
 		$root_path = realpath(dirname(__FILE__)."/..");

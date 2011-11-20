@@ -6,8 +6,7 @@
 	loadlib("flickr_photos_places");
 
 	if (! $GLOBALS['cfg']['enable_feature_solr']){
-		$GLOBALS['smarty']->display("page_feature_disabled.txt");
-		exit();
+		error_disabled();
 	}
 
 	if ($path = get_str("path")){
