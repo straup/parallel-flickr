@@ -19,6 +19,8 @@
 
 <ul class="place_hierarchy">
 
+<li><a href="{$owner|@flickr_urls_photos_user}places/">Places</a> /</li>
+
 {foreach from=$hierarchy item="row"}
 <li>
 {if $row.woeid == $place.woeid}
