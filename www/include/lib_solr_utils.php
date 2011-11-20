@@ -9,7 +9,10 @@
 		foreach ($hash as $k => $v){
 
 			$k = urlencode($k);
-			$v = urlencode($v);
+
+			# allow foo:[* TO *] queries
+
+			$v = (preg_match("/^raw:(.*)$/", $v, $m)) ? $m[1] : urlencode($v);
 
 			$q[] = "{$k}:{$v}";
 		}

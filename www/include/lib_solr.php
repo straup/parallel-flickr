@@ -27,29 +27,8 @@
 
 		$params['rows'] = $rows;
 		$params['start'] = $start;
-		$params['wt'] = 'json';
 
-		# build query
-
-		$_params = array();
-
-		foreach ($params as $k => $v){
-
-			$v = (is_array($v)) ? $v : array($v);
-
-			foreach ($v as $_v){
-				$_params[] = "$k=" . urlencode($_v);
-			}
-		}
-
-		$str_params = implode('&', $_params);
-
-		# go!
-
-		$url = $GLOBALS['cfg']['solr_endpoint'] . "select/";
-
-		$http_rsp = http_post($url, $str_params);
-		$rsp = _solr_parse_response($http_rsp);
+		$rsp = _solr_select($params);
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -84,15 +63,48 @@
 
 	#################################################################
 
+	# https://wiki.apache.org/solr/SimpleFacetParameters
+	# https://wiki.apache.org/solr/SolrFacetingOverview
+
 	function solr_facet($params, $more=array()){
 
-		$rsp = solr_select($params, $more);
+		$params['rows'] = 0;
+		$params['facet'] = "on";
+
+		$params['facet.mincount'] = (isset($more['mincount'])) ? $more['mincount'] : 1;
+
+		# TO DO: pagination...
+		$params['facet.limit'] = -1;
+
+		$rsp = _solr_select($params);
 
 		if (! $rsp['ok']){
 			return $rsp;
 		}
 
-		# please write me...
+		$fields = $rsp['data']['facet_counts']['facet_fields'];
+		$facets = array();
+
+	 	# I suppose at some point we'll need to deal with multiple
+		# facets but for now we don't  (20111120/straup)
+
+		$facet = $params['facet.field'];
+		$count_facet = count($fields[$facet]) - 1;
+
+		foreach (range(0, $count_facet, 2) as $i){
+
+			$woeid = $fields[$facet][$i];
+			$count = $fields[$facet][$i + 1];
+
+			$facets[$woeid] = $count;
+		}
+
+		arsort($facets);
+
+		return array(
+			'ok' => 1,
+			'facets' => $facets,
+		);
 	}
 
 	#################################################################
@@ -132,6 +144,21 @@
 
 	#################################################################
 
+	# this is called by both solr_select and solr_facet
+
+	function _solr_select($params){
+
+		$params['wt'] = 'json';
+
+		$url = $GLOBALS['cfg']['solr_endpoint'] . "select/";
+		$str_params = _solr_build_query($params, "stringify");
+
+		$http_rsp = http_post($url, $str_params);
+		return _solr_parse_response($http_rsp);
+	}
+
+	#################################################################
+
 	function _solr_parse_response($http_rsp){
 
 		if (! $http_rsp['ok']){
@@ -153,6 +180,28 @@
 		);
 
 		return $rsp;
+	}
+
+	#################################################################
+
+	function _solr_build_query(&$params, $stringify=0){
+
+		$query = array();
+
+		foreach ($params as $k => $v){
+
+			$v = (is_array($v)) ? $v : array($v);
+
+			foreach ($v as $_v){
+				$query[] = "$k=" . urlencode($_v);
+			}
+		}
+
+		if ($stringify){
+			$query = implode("&", $query);
+		}
+
+		return $query;
 	}
 
 	#################################################################

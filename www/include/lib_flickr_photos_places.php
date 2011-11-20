@@ -24,6 +24,77 @@
 
 		$q = solr_utils_hash2query($q, " AND ");
 
+		$params = array(
+			'q' => $q,
+			# TO DO: figure out why this results in ordering weirdness...
+			'sort' => 'date_taken desc',
+		);
+
+		if ($fq = _flickr_photos_places_perms_fq($user, $viewer_id)){
+			$params['fq'] = $fq;
+		}
+
+		$rsp = solr_select($params, $more);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$photos = array();
+
+		foreach ($rsp['rows'] as $row){
+			$photo = flickr_photos_get_by_id($row['photo_id']);
+
+			# TO DO: make sure this is safe; it should be by the
+			# time we get here (20111119/straup)
+
+			$photo['can_view_geo'] = 1;
+			$photos[] = $photo;
+	
+			# TO DO: solr properties?	
+		}
+
+		$rsp['rows'] = $photos;
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_photos_places_for_user_facet(&$user, $facet, $viewer_id=0, $more=array()){
+
+		$q = array(
+			"photo_owner" => $user['id'],
+		);
+
+		$q = solr_utils_hash2query($q, " AND ");
+
+		$params = array(
+			'q' => $q,
+			"facet" => "on",
+			"facet.field" => $facet,
+		);
+
+		if ($fq = _flickr_photos_places_perms_fq($user, $viewer_id)){
+			$params['fq'] = $fq;
+		}
+
+		$rsp = solr_facet($params, $more);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function _flickr_photos_places_perms_fq(&$user, $viewer_id){
+
+		if (($user['id']) && ($user['id'] == $viewer_id)){
+			return;
+		}
+
 		# THIS IS NOT AWESOME. PERMISSIONS IN SOLR SHOULD
 		# PROBABLY JUST ALL BE PRE-COMPUTED AND STORED THE
 		# SAME WAY MACHINETAGS ARE.... (20111119/straup)
@@ -52,39 +123,7 @@
 			$fq[] = implode(" OR ", $perms);
 		}
 
-		$params = array(
-			'q' => $q,
-			'rows' => 10,
-			# TO DO: figure out why this results in ordering weirdness...
-			'sort' => 'date_taken desc',
-		);
-
-		if (count($fq)){
-			$params['fq'] = $fq;
-		}
-
-		$rsp = solr_select($params, $more);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		$photos = array();
-
-		foreach ($rsp['rows'] as $row){
-			$photo = flickr_photos_get_by_id($row['photo_id']);
-
-			# TO DO: make sure this is safe; it should be by the
-			# time we get here (20111119/straup)
-
-			$photo['can_view_geo'] = 1;
-			$photos[] = $photo;
-	
-			# TO DO: solr properties?	
-		}
-
-		$rsp['rows'] = $photos;
-		return $rsp;
+		return $fq;
 	}
 
 	#################################################################
