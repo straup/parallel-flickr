@@ -264,3 +264,9 @@ p.message {
 .place_hierarchy li {
     display: inline;
 }
+
+.crying_cat_face {
+    float:right;
+    font-size: 10em;
+    color:#ccc;
+}

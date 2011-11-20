@@ -1,5 +1,8 @@
 {include file="inc_head.txt"}
 
-<p class="error">This part of the site is currently disabled. Sad face.</p>
+{* http://stosberg.net/unicode/crying-cat-face/codepoint/128575/ *}
+<div class="crying_cat_face">😿</div>
+
+<p>This part of the site is currently disabled. Sad face.</p>
 
 {include file="inc_foot.txt"}
