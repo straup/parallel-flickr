@@ -8,6 +8,19 @@
 
 	#################################################################
 
+	function flickr_places_valid_placetypes(){
+
+		return array(
+			'neighbourhood',
+			'locality',
+			'county',
+			'region',
+			'country',
+		);
+	}
+
+	#################################################################
+
 	function flickr_places_get_by_woeid($woeid){
 
 		# sudo memcache me...

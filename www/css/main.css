@@ -205,7 +205,7 @@ p.message {
 
 .place_map {
     width: 100% !important;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 }
 
 .place_map h2 {
@@ -251,4 +251,16 @@ p.message {
 .marker:hover .marker_text {
     display: block;
     z-index:400;
+}
+
+.place_hierarchy {
+    padding: 0px;
+    margin: 0px;
+    font-size: small;
+    margin-bottom: 25px !important;
+    color:#ccc;
+}
+
+.place_hierarchy li {
+    display: inline;
 }

@@ -41,8 +41,32 @@
 		error_404();
 	}
 
-	$GLOBALS['smarty']->assign_by_ref("place", $place);
+	$placetypes = flickr_places_valid_placetypes();
+	$hier = array();
 
+	# put this in _get_by_woeid? probably...
+
+	foreach ($placetypes as $type){
+
+		if (isset($place[$type])){
+
+			$woeid = $place[$type]['woeid'];
+
+			$parts = explode(",", $place[$type]['_content']);
+			$name = trim($parts[0]);
+
+			$hier[] = array(
+				'woeid' => $woeid,
+				'placetype' => $type,
+				'name' => $name,
+			);
+		}
+	}
+
+	$hier = array_reverse($hier);
+
+	$GLOBALS['smarty']->assign_by_ref("place", $place);
+	$GLOBALS['smarty']->assign_by_ref("hierarchy", $hier);
 	$more = array();
 
 	if ($page = get_int32("page")){

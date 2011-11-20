@@ -16,6 +16,20 @@
 <h2>{if $is_own}your photos from {$place.name|escape}{else}{$owner.username|escape}'s photos from {$place.name|escape}{/if}</h2>
 </div>
 
+<ul class="place_hierarchy">
+
+{foreach from=$hierarchy item="row"}
+<li>
+{if $row.woeid == $place.woeid}
+<strong>{$row.name|escape}</strong>
+{else}
+<a href="{$owner|@flickr_urls_photos_user}places/{$row.woeid|escape}/" title="photos from {$row.name|escape} ({$row.placetype|escape})">{$row.name|escape}</a> / 
+{/if}
+</li>
+{/foreach}
+</li>
+</ul>
+
 {foreach from=$photos item="row"}
 
 <div class="photos_user_photo">
