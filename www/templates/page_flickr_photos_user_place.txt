@@ -1,3 +1,4 @@
+{capture assign="page_title"}{$owner.username} | photos from {$place.name}{/capture}
 {include file="inc_head.txt"}
 
 {* TO DO: either get place extent or calculate zoom by place type... *}
