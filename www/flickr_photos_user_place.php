@@ -5,7 +5,7 @@
 	loadlib("flickr_places");
 	loadlib("flickr_photos_places");
 
-	if (! $GLOBALS['cfg']['enable_feature_solr']){
+	if ((! $GLOBALS['cfg']['enable_feature_solr']) || (! $GLOBALS['cfg']['enable_feature_places'])){
 		error_disabled();
 	}
 
