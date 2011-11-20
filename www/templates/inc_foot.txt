@@ -7,6 +7,10 @@
 			|
 			<a href="{$cfg.abs_root_url}photos/me/">photos</a>
 			|
+{if $cfg.enable_feature_solr}
+			<a href="{$cfg.user|@flickr_urls_photos_user}places/">places</a>
+			|
+{/if}
 			<a href="{$cfg.abs_root_url}photos/me/faves/">faves</a>
 			|
 			<a href="{$cfg.abs_root_url}signout/">signout</a>
