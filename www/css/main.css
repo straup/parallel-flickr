@@ -270,3 +270,17 @@ p.message {
     font-size: 10em;
     color:#ccc;
 }
+
+.placetypes {
+    margin-bottom: 25px;
+}
+
+.placetypes ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.placetypes ul li {
+    list-style-type: none;
+    display:inline;
+}

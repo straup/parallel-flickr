@@ -1,6 +1,52 @@
+{capture assign="facet_plural"}{include file="inc_places_pluralize_placetype.txt" type=$facet}{/capture}
+{capture assign="page_title"}{$owner.username} | places | {$facet_plural}{/capture}
 {include file="inc_head.txt"}
 
+<h2>
+{if $is_own}
+Your most geotagged {$facet_plural|escape}
+{else}
+{$owner.username|escape}'s most geotagged {$facet_plural|escape}
+{/if}
+</h2>
 
-{* include file="inc_flickr_photo_map_load.txt" *}
+<div class="placetypes">
+
+<ul>
+{foreach from=$placetypes|@array_reverse item="type" name="placetypes"}
+{capture assign="type_plural"}{include file="inc_places_pluralize_placetype.txt" type=$type}{/capture}
+
+<li>
+{if $type==$facet}
+<strong>{$facet_plural|escape}</strong>
+{else}
+<a href="?facet={$type|escape}">{$type_plural}</a>
+{/if}
+{if !$smarty.foreach.placetypes.last} / {/if}
+</li>
+{/foreach}
+<li> or just pick a <a href="">place at random</a>.</li>
+<ul>
+</div>
+
+{foreach from=$facets item="count" key="woeid"}
+
+<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}" data-zoom="11" data-interactive="false" style="width:100%;">
+
+	<div class="marker" style="border-radius:0 !important;" data-location="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}">{$locations.$woeid.name|escape}</div>
+
+</div>
+
+<p style="font-size:small; margin-bottom:20px;">
+{if $is_own}
+You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}">{$locations.$woeid.name|escape}</a>.
+{else}
+{$owner.username|escape} has taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}">{$locations.$woeid.name|escape}</a>.
+{/if}
+</p>
+
+{/foreach}
+
+{include file="inc_flickr_photo_map_load.txt"}
 
 {include file="inc_foot.txt"}

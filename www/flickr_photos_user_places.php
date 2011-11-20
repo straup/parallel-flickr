@@ -38,7 +38,7 @@
 		$facet = $placetypes[$rand - 1];
 	}
 
-	$mincount = 10;
+	$mincount = 20;
 
 	$GLOBALS['smarty']->assign_by_ref("placetypes", $placetypes);
 	$GLOBALS['smarty']->assign("facet", $facet);
@@ -56,8 +56,12 @@
 
 	if ($rsp['ok']){
 
-		# TO DO: fill me in...
 		$locations = array();
+
+		foreach ($rsp['facets'] as $woeid => $ignore){
+			$loc = flickr_places_get_by_woeid($woeid);
+			$locations[$woeid] = $loc;
+		}
 
 		$GLOBALS['smarty']->assign_by_ref("facets", $rsp['facets']);
 		$GLOBALS['smarty']->assign_by_ref("locations", $locations);
