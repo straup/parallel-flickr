@@ -43,9 +43,26 @@
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
 	$GLOBALS['smarty']->assign("is_own", $is_own);
 
-	$bookends = flickr_photos_get_bookends($photo, $GLOBALS['cfg']['user']['id']);
+	# context (next and previous)
+
+	$context = get_str("context");
+
+	if ($context == 'faves'){
+		# please write me
+	}
+
+	else if ($context == 'place'){
+		# please write me
+	}
+
+	else {
+		$bookends = flickr_photos_get_bookends($photo, $GLOBALS['cfg']['user']['id']);
+	}
+
 	$GLOBALS['smarty']->assign_by_ref("before", $bookends['before']);
 	$GLOBALS['smarty']->assign_by_ref("after", $bookends['after']);
+
+	# meta, geo, etc.
 
 	# $meta = flickr_photos_metadata_load($photo);
 	# $GLOBALS['smarty']->assign_by_ref("metadata", $meta['data']);
