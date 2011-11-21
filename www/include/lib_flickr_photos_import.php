@@ -3,6 +3,7 @@
 	#################################################################
 
 	loadlib("flickr_photos");
+	loadlib("flickr_places");
 	loadlib("flickr_photos_lookup");
 	loadlib("flickr_photos_search");
 	loadlib("flickr_api");
@@ -112,6 +113,13 @@
 
 		if ($GLOBALS['cfg']['enable_feature_solr']){
 			flickr_photos_search_index_photo($photo);
+		}
+
+		if (($GLOBALS['cfg']['enable_feature_solr']) && ($GLOBALS['cfg']['enable_feature_places'])){
+
+			if (($photo['woeid']) && ($GLOBALS['cfg']['places_prefetch_data'])){
+				flickr_places_get_by_woeid($photo['woeid']);
+			}
 		}
 
 		return array(
@@ -440,6 +448,9 @@
 		$photo['media'] = ($photo['media'] == 'photo') ? 0 : 1;
 		unset($photo['media_status']);
 
+		# Strictly speaking, I am probably most responsible for
+		# the need to do this. I'm sorry... (20111121/straup)
+
 		$photo['hasgeo'] = ($photo['accuracy']) ? 1 : 0;
 
 		if (! $photo['hasgeo']){
@@ -486,6 +497,9 @@
 		if (isset($photo['date_faved'])){
 			unset($photo['date_faved']);
 		}
+
+		# TO DO: check for EXIF data and set $photo['hasexif']
+		# required db alter (20111121/straup)
 
 		return $photo;
 	}
