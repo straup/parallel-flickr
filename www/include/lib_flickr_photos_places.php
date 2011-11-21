@@ -24,10 +24,20 @@
 
 		$q = solr_utils_hash2query($q, " AND ");
 
+		# OMGWTF: When sorting by date_taken|posted the results
+		# are basically anything but sorted. It's unclear to me
+		# whether this is a known Lucene thing or ... what? I
+		# suppose it might make sense to store dates as INTs but
+		# then we lose the ability to do date facteing, for calendar
+		# pages sometime in the future. So for now we'll just sort
+		# by photo ID since it accomplishes the same thing...
+		# (20111121/straup)
+		#
+		# see also: http://phatness.com/2009/11/sorting-by-date-with-solr/
+
 		$params = array(
 			'q' => $q,
-			# TO DO: figure out why this results in ordering weirdness...
-			'sort' => 'date_taken desc',
+			'sort' => 'photo_id desc',
 		);
 
 		if ($fq = _flickr_photos_places_perms_fq($user, $viewer_id)){
