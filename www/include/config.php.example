@@ -94,6 +94,8 @@
 	$GLOBALS['cfg']['enable_feature_places'] = 0;
 	$GLOBALS['cfg']['places_prefetch_data'] = 1;
 
+	$GLOBALS['cfg']['enable_feature_cameras'] = 0;
+
 	#
 
 	$GLOBALS['cfg']['rewrite_static_urls'] = array(
