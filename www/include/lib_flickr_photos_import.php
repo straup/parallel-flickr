@@ -3,6 +3,7 @@
 	#################################################################
 
 	loadlib("flickr_photos");
+	loadlib("flickr_photos_permissions");
 	loadlib("flickr_places");
 	loadlib("flickr_photos_lookup");
 	loadlib("flickr_photos_search");
@@ -415,24 +416,26 @@
 		$isfamily = ($photo['isfamily']) ? 1 : 0;
 		$isfriend = ($photo['isfriend']) ? 1 : 0;
 
+		$perms_map = flickr_photos_permissions_map("string keys");
+
 		if ($ispublic){
-			$perms = 0;
+			$perms = $perms_map['public'];
 		}
 
 		else if (($isfamily) && ($isfriend)){
-			$perms = 4;
+			$perms = $perms_map['friends and family'];
 		}
 
 		else if ($isfamily){
-			$perms = 3;
+			$perms = $perms_map['family'];
 		}
 
 		else if ($isfriend){
-			$perms = 2;
+			$perms = $perms_map['friends'];
 		}
 
 		else {
-			$perms = 5;
+			$perms = $perms_map['private'];
 		}
 
 		$photo['perms'] = $perms;

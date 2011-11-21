@@ -63,6 +63,8 @@ To do:
 
 * consider moving all the backup jobs (fetching data for individual photos) in to a proper queuing system - this should probably be a feature flag so that the whole thing can still be run in "stupid" mode and not spiral in to astronaut territory.
 
+* context-specific URLs (e.g. in-faves or in-WOEID)
+
 * display metadata
 
 * search, see also: [parallel-flickr-solr](https://github.com/straup/parallel-flickr-solr)
