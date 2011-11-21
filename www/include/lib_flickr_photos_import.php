@@ -76,9 +76,6 @@
 
 	function flickr_photos_import_photo($photo, $more=array()){
 
-		# TO DO (maybe?) : check to see whether the photo has
-		# EXIF and set $photo['hasexif'] ... (201111/18/straup)
-
 		$user = flickr_users_ensure_user_account($photo['owner'], $photo['ownername']);
 
 		if ((! $user) || (! $user['id'])){
@@ -112,6 +109,30 @@
 
 		flickr_photos_import_photo_files($photo, $more);
 
+		# exif data
+
+		$more = array(
+			'force' => 1,
+		);
+
+		if ($hasexif = flickr_photos_exif_has_exif($photo, $more)){
+
+			$update = array(
+				'hasexif' => 1
+			);
+
+			$rsp = flickr_photos_update_photo($photo, $update);
+
+			# technically we'll have the old last_update date
+			# but that shouldn't be a problem (20111121/straup)
+
+			if ($rsp['ok']){
+				$photo = array_merge($photo, $update);
+			}
+		}
+
+		# things that depend on solr (move to a separate function?)
+
 		if ($GLOBALS['cfg']['enable_feature_solr']){
 			flickr_photos_search_index_photo($photo);
 		}
@@ -122,6 +143,8 @@
 				flickr_places_get_by_woeid($photo['woeid']);
 			}
 		}
+
+		# go!
 
 		return array(
 			'ok' => 1,
@@ -500,9 +523,6 @@
 		if (isset($photo['date_faved'])){
 			unset($photo['date_faved']);
 		}
-
-		# TO DO: check for EXIF data and set $photo['hasexif']
-		# required db alter (20111121/straup)
 
 		return $photo;
 	}

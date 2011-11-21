@@ -7,12 +7,11 @@
 	
 	#################################################################
 
-	function flickr_photos_exif_has_exif(&$photo){
+	function flickr_photos_exif_has_exif(&$photo, $more=array()){
 
-		# THIS IS NOT IDEAL. Maybe store a hasexif flag against
-		# the database on import? (20111118/straup) Anyway, for
-		# now it's just for photo owners. Or at least caching or
-		# something...
+		if ((isset($photo['hasexif'])) && (! isset($more['force']))){
+			return $photo['hasexif'];
+		}
  
 		$rsp = flickr_photos_exif_read($photo);
 		return $rsp['ok'];

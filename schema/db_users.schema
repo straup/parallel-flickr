@@ -16,6 +16,7 @@ CREATE TABLE `FlickrPhotos` (
   `datetaken` DATETIME,
   `datetakengranularity` TINYINT(3) UNSIGNED NOT NULL,
   `hasgeo` TINYINT(3) UNSIGNED NOT NULL,
+  `hasexif` TINYINT(3) UNSIGNED NOT NULL,
   `latitude` DECIMAL(9,6) DEFAULT NULL,
   `longitude` DECIMAL(9,6) DEFAULT NULL,
   `accuracy` TINYINT(3) UNSIGNED NOT NULL,

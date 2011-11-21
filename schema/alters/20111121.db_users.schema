@@ -1,0 +1,1 @@
+ALTER TABLE `FlickrPhotos` ADD `hasexif` TINYINT(3) UNSIGNED NOT NULL;
