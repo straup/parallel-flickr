@@ -61,3 +61,12 @@ CREATE TABLE `FlickrBackups` (
   `details` tinytext NOT NULL,
   UNIQUE KEY `by_user` (`user_id`,`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `Places`;
+
+CREATE TABLE `Places` (
+  `woeid` INT(11) UNSIGNED NOT NULL,
+  `flickr_data` TEXT NOT NULL,
+  `date_created` INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`woeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
