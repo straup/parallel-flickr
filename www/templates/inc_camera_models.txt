@@ -1,0 +1,21 @@
+<div class="camera_models">
+<ul>
+
+{if ! $no_parent_links}
+<li><a href="{$owner|@flickr_urls_photos_user_cameras}">Cameras</a> /</li>
+<li><a href="{$owner|@flickr_urls_photos_user_cameras}{$camera_make|escape}">{$camera_make|escape}</a> /</li>
+{/if}
+
+{foreach from=$models item="count" key="model" name="camera_models"}
+<li>
+{if $model == $camera_model}
+<strong>{$model|escape}</strong>
+{else}
+<a href="{$owner|@flickr_urls_photos_user_cameras}{$camera_make|escape}/{$model|escape}/" title="{if $count > 1}you have taken {$count|escape} photos with this camera{else}you have taken one photo with this camera{/if}">{$model|escape}</a>
+{/if}
+{if ! $smarty.foreach.camera_models.last} / {/if}
+</li>
+{/foreach}
+</li>
+</ul>
+</div>

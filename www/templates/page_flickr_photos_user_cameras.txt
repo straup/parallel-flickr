@@ -3,16 +3,30 @@
 
 <h2>
 {if $is_own}
-The cameras you've taken photos with
+Your cameras
 {else}
-The cameras {$owner.username|escape}'s taken photos with
+{$owner.username|escape}'s cameras
 {/if}
 </h2>
 
-{if $cameras|@count}
-{$cameras|@dumper}
-{else}
+{foreach from=$cameras item="data" key="camera_make"}
 
-{/if}
+<div class="camerafinder_widget">
+
+<div class="camerafinder_header">
+
+	<img src="{$cfg.abs_root_url}images/camera.png" height="85" width="100" alt="" />
+
+	<h3><a href="{$owner|@flickr_urls_photos_user_cameras}{$camera_make|escape}/" style="color:#000;text-decoration:none;" title="{if $data.total > 1}you have taken {$data.total|escape} photos with this make of camera{else}you have taken one photo with this make of camera{/if}">{$camera_make|escape}</a></h3>
+</div>
+
+{include file="inc_camera_models.txt" models=$data.models no_parent_links=1}
+
+<br clear="all">
+
+</div>
+{/foreach}
+
+<br clear="all" />
 
 {include file="inc_foot.txt"}

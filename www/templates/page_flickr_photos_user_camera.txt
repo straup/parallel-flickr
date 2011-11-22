@@ -5,30 +5,22 @@
 
 <h2>
 {if $is_own}
-Photos you've taken with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if} camera
+{if $pagination.total_count==0}
+You've haven't taken any photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if} camera
+{elseif $pagination.total_count==1}
+You've taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+{else}You've taken {$pagination.total_count|escape} photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}{/if}
 {else}
-{$owner.username|escape}'s photos taken with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if} camera
+{if $pagination.total_count==0}
+{$owner.username|escape} hasn't taken any photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+{elseif $pagination.total_count==1}
+{$owner.username|escape} has taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+{else}{$owner.username|escape} has taken {$pagination.total_count|escape} photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}{/if}
+
 {/if}
 </h2>
 
-<div class="camera_models">
-<ul>
-
-<li><a href="{$owner|@flickr_urls_photos_user}cameras/">Cameras</a> /</li>
-
-{foreach from=$models item="count" key="model" name="camera_models"}
-<li>
-{if $model == $camera_model}
-<strong>{$model|escape}</strong>
-{else}
-<a href="{$owner|@flickr_urls_photos_user}cameras/{$camera_make|escape}/{$model|escape}/" title="{if $count > 1}you have taken {$count|escape} photos with this camera{else}you have taken one photo with this camera{/if}">{$model|escape}</a>
-{/if}
-{if ! $smarty.foreach.camera_models.last} / {/if}
-</li>
-{/foreach}
-</li>
-</ul>
-</div>
+{include file="inc_camera_models.txt"}
 
 {if $photos|@count}
 {foreach from=$photos item="row"}
@@ -41,7 +33,7 @@ Photos you've taken with a {$camera_make|escape}{if $camera_model} {$camera_mode
 </div>
 
 <div class="photo_sidebar" style="margin-top:0px;">
-{include file="inc_flickr_photo_map.txt" photo=$row}
+{include file="inc_flickr_photo_map.txt" photo=$row skip_nullisland=1}
 </div>
 
 <br clear="all" />
