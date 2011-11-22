@@ -1,5 +1,9 @@
 <?php
 
+	# TO DO: replace all the solr_search_ calls with their corresponding
+	# flickr_photos_search functions, once their done and tested.
+	# (20111121/straup)
+
 	loadlib("solr");
 	loadlib("solr_utils");
 
