@@ -91,15 +91,15 @@
 		$facet = $params['facet.field'];
 		$count_facet = count($fields[$facet]) - 1;
 
-		foreach (range(0, $count_facet, 2) as $i){
+		if ($count_facet >= 2){
+			foreach (range(0, $count_facet, 2) as $i){
+				$woeid = $fields[$facet][$i];
+				$count = $fields[$facet][$i + 1];
+				$facets[$woeid] = $count;
+			}
 
-			$woeid = $fields[$facet][$i];
-			$count = $fields[$facet][$i + 1];
-
-			$facets[$woeid] = $count;
+			arsort($facets);
 		}
-
-		arsort($facets);
 
 		return array(
 			'ok' => 1,

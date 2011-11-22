@@ -1,63 +1,51 @@
 <?php
 
-	loadlib("solr");
-	loadlib("solr_utils");
-
-	loadlib("flickr_photos");
-	loadlib("flickr_photos_permissions");
+	loadlib("flickr_photos_search");
 
 	#################################################################
 
 	function flickr_photos_cameras_for_user(&$user, $viewer_id=0, $more=array()){
 
-		$q = array(
-			"photo_owner" => $user['id'],
+		$query = array(
+			'photo_owner' => $user['id']
 		);
 
-		$q = solr_utils_hash2query($q, " AND ");
-
-		$params = array(
-			'q' => $q,
-			"facet" => "on",
-			"facet.field" => 'camera_make',
-		);
-
-		if ($fq = _flickr_photos_cameras_perms_fq($user, $viewer_id)){
-			$params['fq'] = $fq;
-		}
-
-		$rsp = solr_facet($params, $more);
+		# what we really want are "pivot facets" but those are not
+		# available until solr 4.0; see also:
+		# https://wiki.apache.org/solr/SimpleFacetParameters#Pivot_.28ie_Decision_Tree.29_Faceting
+ 
+		$rsp = flickr_photos_search_facet($query, "camera_make", $viewer_id);
 
 		if (! $rsp['ok']){
 			return $rsp;
 		}
 
-		return $rsp;
-	}
+		$facets = $rsp['facets'];
+		$cameras = array();
 
-	#################################################################
+		foreach ($facets as $make => $count){
 
-	function _flickr_photos_cameras_perms_fq(&$user, $viewer_id){
+			$query['camera_make'] = $make;
+			$rsp = flickr_photos_search_facet($query, "camera_model", $viewer_id);
 
-		if (($user['id']) && ($user['id'] == $viewer_id)){
-			return;
-		}
+			# throw an error?
 
-		$fq = array();
-
-		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
-
-			$count = count($perms);
-
-			for ($i=0; $i < $count; $i++){
-				$perms[$i] = "photo_perms:" . urlencode($perms[$i]);
+			if (! $rsp['ok']){
+				continue;
 			}
 
-			$fq[] = implode(" OR ", $perms);
+			$cameras[$make] = array(
+				'total' => $count,
+				'models' => $rsp['facets'],
+			);
 		}
 
-		return $fq;
+		return array(
+			'ok' => 1,
+			'cameras' => $cameras,
+		);
 	}
 
 	#################################################################
+
 ?>

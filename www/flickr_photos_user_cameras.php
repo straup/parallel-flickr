@@ -41,7 +41,7 @@
 
 	if ($rsp['ok']){
 
-		$GLOBALS['smarty']->assign_by_ref("cameras", $rsp['facets']);
+		$GLOBALS['smarty']->assign_by_ref("cameras", $rsp['cameras']);
 	}
 
 	else {

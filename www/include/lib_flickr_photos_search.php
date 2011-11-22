@@ -3,13 +3,38 @@
 	#################################################################
 
 	loadlib("solr");
-	loadlib("solr_machinetags");
+	loadlib("solr_utils");
 	loadlib("solr_dates");
+	loadlib("solr_machinetags");
+
 	loadlib("flickr_photos_metadata");
 	loadlib("flickr_places");
 
 	loadlib("flickr_photos_exif");
 	loadlib("exif_tools");
+
+	#################################################################
+
+	function flickr_photos_search_facet(&$query, $facet, $viewer_id=0, $more=array()){
+
+		$q = solr_utils_hash2query($query, " AND ");
+
+		$params = array(
+			'q' => $q,
+			"facet" => "on",
+			"facet.field" => $facet,
+		);
+
+		# TO DO: perms
+
+		$rsp = solr_facet($params, $more);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		return $rsp;
+	}
 
 	#################################################################
 
