@@ -27,11 +27,14 @@
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 	$GLOBALS['smarty']->assign("is_own", $is_own);
 
+	$make = get_str("make");
+	$model = get_str("model");
+
 	#
 
 	$viewer_id = $GLOBALS['cfg']['user']['id'];
 
-	$rsp = flickr_photos_cameras_for_user($owner, $viewer_id);
+	$rsp = flickr_photos_cameras_for_user($owner, $viewer_id, $make, $model);
 
 	if ($rsp['ok']){
 
