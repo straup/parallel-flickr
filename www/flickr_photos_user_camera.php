@@ -32,9 +32,11 @@
 
 	#
 
-	$viewer_id = $GLOBALS['cfg']['user']['id'];
+	$more = array(
+		'viewer_id' => $GLOBALS['cfg']['user']['id'],
+	);
 
-	$rsp = flickr_photos_cameras_for_user($owner, $viewer_id, $make, $model);
+	$rsp = flickr_photos_cameras_photos_for_user($owner, $make, $model, $more);
 
 	if ($rsp['ok']){
 

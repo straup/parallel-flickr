@@ -61,6 +61,8 @@
 
 	function flickr_photos_permissions_photos_where($owner_id, $viewer_id=0){
 
+		# dumper("owner: {$owner_id} viewer: {$viewer_id}");
+
 		if ($owner_id == $viewer_id){
 			return '';
 		}

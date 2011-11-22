@@ -7,6 +7,9 @@
 	loadlib("solr_dates");
 	loadlib("solr_machinetags");
 
+	loadlib("flickr_photos_permissions");
+	loadlib("flickr_geo_permissions");
+
 	loadlib("flickr_photos_metadata");
 	loadlib("flickr_places");
 
@@ -15,7 +18,54 @@
 
 	#################################################################
 
-	function flickr_photos_search_facet(&$query, $facet, $viewer_id=0, $more=array()){
+	function flickr_photos_search(&$query, $more=array()){
+
+		if (! $GLOBALS['cfg']['enable_feature_solr']){
+			return not_ok('search indexing is disabled');
+		}
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
+
+		$q = solr_utils_hash2query($query, " AND ");
+
+		$params = array(
+			'q' => $q,
+		);
+
+		# TO DO: sort
+
+		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
+
+		if ($fq = _flickr_photos_search_perms_fq($owner_id, $more['viewer_id'], $more)){
+			$params['fq'] = $fq;
+		}
+
+		$rsp = solr_select($params, $more);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_photos_search_facet(&$query, $facet, $more=array()){
+
+		if (! $GLOBALS['cfg']['enable_feature_solr']){
+			return not_ok('search indexing is disabled');
+		}
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$q = solr_utils_hash2query($query, " AND ");
 
@@ -25,7 +75,11 @@
 			"facet.field" => $facet,
 		);
 
-		# TO DO: perms
+		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
+
+		if ($fq = _flickr_photos_search_perms_fq($owner_id, $more['viewer_id'], $more)){
+			$params['fq'] = $fq;
+		}
 
 		$rsp = solr_facet($params, $more);
 
@@ -41,7 +95,6 @@
 	function flickr_photos_search_index_photo(&$photo){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
-
 			return not_ok('search indexing is disabled');
 		}
 
@@ -165,6 +218,48 @@
 
 		$rsp = solr_add($docs);
 		return $rsp;
+	}
+
+	#################################################################
+
+	function _flickr_photos_search_perms_fq($owner_id=0, $viewer_id=0, $more=array()){
+
+		if (($owner_id) && ($owner_id == $viewer_id)){
+			return;
+		}
+
+		# THIS IS NOT AWESOME. PERMISSIONS IN SOLR SHOULD
+		# PROBABLY JUST ALL BE PRE-COMPUTED AND STORED THE
+		# SAME WAY MACHINETAGS ARE.... (20111119/straup)
+
+		$fq = array();
+
+		if ($perms = flickr_photos_permissions_photos_where($owner_id, $viewer_id)){
+
+			$count = count($perms);
+
+			for ($i=0; $i < $count; $i++){
+				$perms[$i] = "photo_perms:" . urlencode($perms[$i]);
+			}
+
+			$fq[] = implode(" OR ", $perms);
+		}
+
+		if (isset($more['geoperms'])){
+
+			if ($perms = flickr_geo_permissions_photos_where($owner_id, $viewer_id)){
+
+				$count = count($perms);
+
+				for ($i=0; $i < $count; $i++){
+					$perms[$i] = "geo_perms:" . urlencode($perms[$i]);
+				}
+
+				$fq[] = implode(" OR ", $perms);
+			}
+		}
+
+		return $fq;
 	}
 
 	#################################################################

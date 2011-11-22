@@ -6,10 +6,16 @@
 
 	# this one is still being worked out...
 
-	function flickr_photos_cameras_for_user(&$user, $viewer_id=0, $make, $model='', $more=array()){
+	function flickr_photos_cameras_photos_for_user(&$user, $viewer_id=0, $make, $model='', $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$query = array(
-			'photo_owner' => $user['id']
+			'photo_owner' => $user['id'],
 			'camera_make' => $make,
 		);
 
@@ -17,7 +23,7 @@
 			$query['camera_model'] = $model;
 		}
 
-		$rsp = flickr_photos_search($query, $viewer_id, $more);
+		$rsp = flickr_photos_search($query, $more);
 		return $rsp;
 	}
 
@@ -25,17 +31,27 @@
 
 	# TO DO: allow $make or just use a separate function?
 
-	function flickr_photos_cameras_for_user(&$user, $viewer_id=0, $more=array()){
+	function flickr_photos_cameras_models_for_user(&$user, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$query = array(
 			'photo_owner' => $user['id']
 		);
 
+		if (isset($more['make'])){
+			$query['camera_make'] = $more['make'];
+		}
+
 		# what we really want are "pivot facets" but those are not
 		# available until solr 4.0; see also:
 		# https://wiki.apache.org/solr/SimpleFacetParameters#Pivot_.28ie_Decision_Tree.29_Faceting
  
-		$rsp = flickr_photos_search_facet($query, "camera_make", $viewer_id);
+		$rsp = flickr_photos_search_facet($query, "camera_make", $more);
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -47,7 +63,7 @@
 		foreach ($facets as $make => $count){
 
 			$query['camera_make'] = $make;
-			$rsp = flickr_photos_search_facet($query, "camera_model", $viewer_id);
+			$rsp = flickr_photos_search_facet($query, "camera_model", $more);
 
 			# throw an error?
 
