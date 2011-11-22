@@ -24,8 +24,20 @@
 			return not_ok('search indexing is disabled');
 		}
 
+		# OMGWTF: When sorting by date_taken|posted the results
+		# are basically anything but sorted. It's unclear to me
+		# whether this is a known Lucene thing or ... what? I
+		# suppose it might make sense to store dates as INTs but
+		# then we lose the ability to do date facteing, for calendar
+		# pages sometime in the future. So for now we'll just sort
+		# by photo ID since it accomplishes the same thing...
+		# (20111121/straup)
+		#
+		# see also: http://phatness.com/2009/11/sorting-by-date-with-solr/
+
 		$defaults = array(
 			'viewer_id' => 0,
+			'sort' => 'photo_id desc',
 		);
 
 		$more = array_merge($defaults, $more);
@@ -34,9 +46,8 @@
 
 		$params = array(
 			'q' => $q,
+			'sort' => $more['sort'],
 		);
-
-		# TO DO: sort
 
 		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
 
@@ -50,6 +61,16 @@
 			return $rsp;
 		}
 
+		$photos = array();
+
+		foreach ($rsp['rows'] as $row){
+			$photo = flickr_photos_get_by_id($row['photo_id']);
+
+			$photo['can_view_geo'] = ($photo['hasgeo'] && flickr_geo_permissions_can_view_photo($photo, $more['viewer_id'])) ? 1 : 0;
+			$photos[] = $photo;
+		}
+
+		$rsp['rows'] = $photos;
 		return $rsp;
 	}
 

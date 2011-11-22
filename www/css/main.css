@@ -284,3 +284,19 @@ p.message {
     list-style-type: none;
     display:inline;
 }
+
+.camera_models {
+    margin-bottom: 25px;
+    font-size:small;
+}
+
+.camera_models ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.camera_models ul li {
+    list-style-type: none;
+    display:inline;
+}
+

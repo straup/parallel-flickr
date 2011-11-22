@@ -4,9 +4,7 @@
 
 	#################################################################
 
-	# this one is still being worked out...
-
-	function flickr_photos_cameras_photos_for_user(&$user, $viewer_id=0, $make, $model='', $more=array()){
+	function flickr_photos_cameras_photos_for_user(&$user, $make, $model='', $more=array()){
 
 		$defaults = array(
 			'viewer_id' => 0,
@@ -23,13 +21,10 @@
 			$query['camera_model'] = $model;
 		}
 
-		$rsp = flickr_photos_search($query, $more);
-		return $rsp;
+		return flickr_photos_search($query, $more);
 	}
 
 	#################################################################
-
-	# TO DO: allow $make or just use a separate function?
 
 	function flickr_photos_cameras_models_for_user(&$user, $more=array()){
 
