@@ -5,8 +5,6 @@
 	loadlib("flickr_places");
 	loadlib("flickr_photos_cameras");
 
-	error_disabled();
-
 	if ((! $GLOBALS['cfg']['enable_feature_solr']) || (! $GLOBALS['cfg']['enable_feature_cameras'])){
 		error_disabled();
 	}
@@ -39,12 +37,11 @@
 		'mincount' => $mincount,
 	);
 
-	$rsp = flickr_photos_camera_for_user_facet($owner, $facet, $viewer_id, $more);
+	$rsp = flickr_photos_cameras_for_user($owner, $viewer_id, $more);
 
 	if ($rsp['ok']){
 
-		$GLOBALS['smarty']->assign_by_ref("facets", $rsp['facets']);
-		$GLOBALS['smarty']->assign_by_ref("locations", $locations);
+		$GLOBALS['smarty']->assign_by_ref("cameras", $rsp['facets']);
 	}
 
 	else {
@@ -52,8 +49,7 @@
 		$GLOBALS['smarty']->assign("error", $rsp['error']);
 	}
 
-
-	$GLOBALS['smarty']->display("page_flickr_photos_user_places.txt");
+	$GLOBALS['smarty']->display("page_flickr_photos_user_cameras.txt");
 	exit();
 
 ?>

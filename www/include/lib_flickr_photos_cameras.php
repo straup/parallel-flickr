@@ -8,7 +8,7 @@
 
 	#################################################################
 
-	function flickr_photos_cameras_for_user_facet(&$user, $facet, $viewer_id=0, $more=array()){
+	function flickr_photos_cameras_for_user(&$user, $viewer_id=0, $more=array()){
 
 		$q = array(
 			"photo_owner" => $user['id'],
@@ -19,10 +19,10 @@
 		$params = array(
 			'q' => $q,
 			"facet" => "on",
-			"facet.field" => $facet,
+			"facet.field" => 'camera_make',
 		);
 
-		if ($fq = _flickr_photos_cameras_perms($user, $viewer_id)){
+		if ($fq = _flickr_photos_cameras_perms_fq($user, $viewer_id)){
 			$params['fq'] = $fq;
 		}
 

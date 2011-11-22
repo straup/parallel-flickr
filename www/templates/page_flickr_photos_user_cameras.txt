@@ -1,0 +1,18 @@
+{capture assign="page_title"}{$owner.username} | cameras{/capture}
+{include file="inc_head.txt"}
+
+<h2>
+{if $is_own}
+The cameras you've taken photos with
+{else}
+The cameras {$owner.username|escape}'s taken photos with
+{/if}
+</h2>
+
+{if $cameras|@count}
+{$cameras|@dumper}
+{else}
+
+{/if}
+
+{include file="inc_foot.txt"}
