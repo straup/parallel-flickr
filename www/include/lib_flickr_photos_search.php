@@ -115,6 +115,9 @@
 
 	#################################################################
 
+	# https://wiki.apache.org/solr/SimpleFacetParameters#Date_Faceting:_per_day_for_the_past_5_days
+	# https://lucene.apache.org/solr/api/org/apache/solr/util/DateMathParser.html
+
 	function flickr_photos_search_facet_dates(&$query, $facet, $start, $end, $gap, $more=array()){
 
 		$start = (is_numeric($start)) ? solr_dates_prep_timestamp($start) : solr_dates_prep_mysql_datetime($start);

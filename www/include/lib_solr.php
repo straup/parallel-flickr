@@ -98,7 +98,6 @@
 	#################################################################
 
 	# https://wiki.apache.org/solr/SimpleFacetParameters#rangefaceting
-	# https://wiki.apache.org/solr/SimpleFacetParameters#Date_Faceting:_per_day_for_the_past_5_days
 
 	function solr_facet_range($params, $more=array()){
 
