@@ -24,7 +24,7 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	$> sudo sh ./ubuntu/install.sh
 
-	$> sudo chown -R www-data templaces_c
+	$> sudo chown -R www-data templates_c
 
 	TO DO: apache configs
 
