@@ -33,7 +33,7 @@ You've taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_m
 </div>
 
 <div class="photo_sidebar" style="margin-top:0px;">
-{include file="inc_flickr_photo_map.txt"}
+{include file="inc_flickr_photo_map.txt" photo=$row}
 </div>
 
 <br clear="all" />

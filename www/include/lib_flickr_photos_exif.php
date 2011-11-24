@@ -63,7 +63,7 @@
 
 		foreach ($to_simplejoin as $tag){
 
-			if (isset($exif[$tag])){
+			if (is_array($exif[$tag])){
 				$exif[$tag] = implode(",", $exif[$tag]);
 			}
 		}

@@ -2,6 +2,13 @@
 
 	#################################################################
 
+	function exif_tools_scrub_string($str){
+
+		return sanitize(trim($str), 'str');
+	}
+
+	#################################################################
+
 	function exif_tools_rational2float($value){
 
 		$parts = explode('/', $value);

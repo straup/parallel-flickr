@@ -89,9 +89,10 @@ RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)(/page([0-9]
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/?$		/flickr_photos_user_cameras.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
 
-# TO DO: make this better (whitespace, etc.)
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_]+)(/page([0-9]+))?/?$		/flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&page=$6&%{QUERY_STRING} [L]
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_]+)(/([^/]+))?(/page([0-9]+))?/?$		/flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&model=$6&page=$8&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_\s\+]+)(/page([0-9]+))?/?$		/flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&page=$6&%{QUERY_STRING} [L]
+
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_\s\+]+)/([0-9a-zA-z-_\s\+]+)(/page([0-9]+))?/?$		/flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&model=$5&page=$7&%{QUERY_STRING} [L]
+
 
 # timecapsule
 # TO DO: finish

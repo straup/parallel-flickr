@@ -66,7 +66,9 @@
 		foreach ($rsp['rows'] as $row){
 			$photo = flickr_photos_get_by_id($row['photo_id']);
 
-			$photo['can_view_geo'] = ($photo['hasgeo'] && flickr_geo_permissions_can_view_photo($photo, $more['viewer_id'])) ? 1 : 0;
+			$can_view_geo = ($photo['hasgeo'] && flickr_geo_permissions_can_view_photo($photo, $more['viewer_id'])) ? 1 : 0;
+
+			$photo['can_view_geo'] = $can_view_geo;
 			$photos[] = $photo;
 		}
 
@@ -189,14 +191,20 @@
 
 			$exif = $rsp['rows'];
 
-			# TO DO: normalize (and probably sanitize)
+			if (isset($exif['Make'])){
 
-			if (isset($exif['Model'])){
-				$doc['camera_model'] = trim($exif['Model']);
+				if ($make = exif_tools_scrub_string($exif['Make'])){
+
+					$doc['camera_make'] = ucwords($make);
+				}
 			}
 
-			if (isset($exif['Make'])){
-				$doc['camera_make'] = trim($exif['Make']);
+			if (isset($exif['Model'])){
+
+				if ($model = exif_tools_scrub_string($exif['Model'])){
+
+					$doc['camera_model'] = $model;
+				}
 			}
 
 			# EXIF: what else?
