@@ -24,13 +24,15 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	$> sudo sh ./ubuntu/install.sh
 
-	$> sudo chown -R www-data templaces_c
+	$> sudo chown -R www-data templates_c
 
 	TO DO: apache configs
 
-	TO DO: database setup, see also: https://github.com/straup/flamework-tools/blob/master/bin/setup-db.sh
+    $> cd schema
 
-	TO DO: read in schema/*.schema
+    $> mysql -u $USER -p < SETUP.md
+
+    $> cat *schema | mysql -u root -p flickr
 
 * Now set up the application config file:
 
