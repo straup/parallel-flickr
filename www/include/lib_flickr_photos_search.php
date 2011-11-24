@@ -274,7 +274,7 @@
 			$fq[] = implode(" OR ", $perms);
 		}
 
-		if (isset($more['geoperms'])){
+		if (isset($more['enforce_geoperms'])){
 
 			if ($perms = flickr_geo_permissions_photos_where($owner_id, $viewer_id)){
 

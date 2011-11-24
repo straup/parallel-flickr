@@ -46,13 +46,12 @@
 
 	#
 
-	$viewer_id = $GLOBALS['cfg']['user']['id'];
-
 	$more = array(
 		'mincount' => $mincount,
+		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
 
-	$rsp = flickr_photos_places_for_user_facet($owner, $facet, $viewer_id, $more);
+	$rsp = flickr_photos_places_for_user_facet($owner, $facet, $more);
 
 	if ($rsp['ok']){
 

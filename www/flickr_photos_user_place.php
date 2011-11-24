@@ -70,15 +70,15 @@
 
 	# now get the photos
 
-	$more = array();
+	$more = array(
+		'viewer_id' => $GLOBALS['cfg']['user']['id'],
+	);
 
 	if ($page = get_int32("page")){
 		$more['page'] = $page;
 	}
 
-	$viewer_id = $GLOBALS['cfg']['user']['id'];
-
-	$rsp = flickr_photos_places_for_user($owner, $place, $viewer_id, $more);
+	$rsp = flickr_photos_places_for_user($owner, $place, $more);
 
 	if (! $rsp['ok']){
 		$GLOBALS['cfg']['error'] = $rsp['error'];
