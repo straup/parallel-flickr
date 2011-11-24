@@ -117,6 +117,16 @@
 
 	function flickr_photos_search_facet_dates(&$query, $facet, $start, $end, $gap, $more=array()){
 
+		$start = (is_numeric($start)) ? solr_dates_prep_timestamp($start) : solr_dates_prep_mysql_datetime($start);
+		$end = (is_numeric($end)) ? solr_dates_prep_timestamp($end) : solr_dates_prep_mysql_datetime($end);
+
+		return flickr_photos_search_facet_range($query, $facet, $start, $end, $gap, $more);
+	}
+
+	#################################################################
+
+	function flickr_photos_search_facet_range(&$query, $facet, $start, $end, $gap, $more=array()){
+
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
 			return not_ok('search indexing is disabled');
 		}
@@ -129,15 +139,12 @@
 
 		$q = solr_utils_hash2query($query, " AND ");
 
-		$start = (is_numeric($start)) ? solr_dates_prep_timestamp($start) : solr_dates_prep_mysql_datetime($start);
-		$end = (is_numeric($end)) ? solr_dates_prep_timestamp($end) : solr_dates_prep_mysql_datetime($end);
-
 		$params = array(
 			'q' => $q,
-			"facet.date" => $facet,
-			"facet.date.gap" => $gap,
-			"facet.date.start" => $start,
-			"facet.date.end" => $end,
+			"facet.range" => $facet,
+			"facet.range.gap" => $gap,
+			"facet.range.start" => $start,
+			"facet.range.end" => $end,
 		);
 
 		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
@@ -146,7 +153,7 @@
 			$params['fq'] = $fq;
 		}
 
-		return solr_facet_dates($params, $more);
+		return solr_facet_range($params, $more);
 	}
 
 	#################################################################

@@ -82,25 +82,10 @@
 			return $rsp;
 		}
 
-		$fields = $rsp['data']['facet_counts']['facet_fields'];
-		$facets = array();
-
-	 	# I suppose at some point we'll need to deal with multiple
-		# facets but for now we don't  (20111120/straup)
-
 		$facet = $params['facet.field'];
-		$count_facet = count($fields[$facet]);
 
-		foreach (range(0, $count_facet, 2) as $i){
-
-			if ($i == $count_facet){
-				break;
-			}
-
-			$key = $fields[$facet][$i];
-			$count = $fields[$facet][$i + 1];
-			$facets[$key] = $count;
-		}
+		$fields = $rsp['data']['facet_counts']['facet_fields'];
+		$facets = _solr_facet_fields_to_hash($fields[$facet]);
 
 		arsort($facets);
 
@@ -112,19 +97,19 @@
 
 	#################################################################
 
+	# https://wiki.apache.org/solr/SimpleFacetParameters#rangefaceting
 	# https://wiki.apache.org/solr/SimpleFacetParameters#Date_Faceting:_per_day_for_the_past_5_days
 
-	function solr_facet_dates($params, $more=array()){
+	function solr_facet_range($params, $more=array()){
 
 		$params['rows'] = 0;
 		$params['facet'] = "on";
 
 		$params['facet.mincount'] = (isset($more['mincount'])) ? $more['mincount'] : 1;
 
-		# TO DO: pagination...
-		$params['facet.limit'] = -1;
+		# TO DO: pagination?
 
-		$params['facet.date.other'] = 'all';
+		$params['facet.range.other'] = 'all';
 
 		$rsp = _solr_select($params);
 
@@ -132,22 +117,23 @@
 			return $rsp;
 		}
 
-		$dates = $rsp['data']['facet_counts']['facet_dates'];
-
 	 	# see above (solr_facet) for notes about multiple facets
 
-		$facet = $params['facet.date'];
-		$facets = $dates[$facet];
+		$facet = $params['facet.range'];
+
+		$ranges = $rsp['data']['facet_counts']['facet_ranges'];
+		$fields = $ranges[$facet];
+
+		$facets = _solr_facet_fields_to_hash($fields['counts']);
 		$details = array();
 
 		foreach (array('gap', 'start', 'end', 'before', 'after', 'between') as $key){
 
-			if (! isset($facets[$key])){
+			if (! isset($fields[$key])){
 				continue;
 			}
 
-			$details[$key] = $facets[$key];
-			unset($facets[$key]);
+			$details[$key] = $fields[$key];
 		}
 
 		return array(
@@ -254,6 +240,28 @@
 		}
 
 		return $query;
+	}
+
+	#################################################################
+
+	function _solr_facet_fields_to_hash(&$fields){
+
+		$hash = array();
+
+		$count_facet = count($fields);
+
+		foreach (range(0, $count_facet, 2) as $i){
+
+			if ($i == $count_facet){
+				break;
+			}
+
+			$key = $fields[$i];
+			$count = $fields[$i + 1];
+			$hash[$key] = $count;
+		}
+
+		return $hash;
 	}
 
 	#################################################################

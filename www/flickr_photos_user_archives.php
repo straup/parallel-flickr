@@ -30,9 +30,9 @@
 
 	#
 
-	$facet = "date_taken";
-	$start = "2011-01-01 00:00:00";
-	$end = "2011-12-31 23:59:59";
+	$facet = "date_posted";
+	$start = "2012-01-01 00:00:00";
+	$end = "2012-12-31 23:59:59";
 	$gap = "+7DAYS";
 
 	$more = array(
