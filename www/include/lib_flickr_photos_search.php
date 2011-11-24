@@ -115,6 +115,48 @@
 
 	#################################################################
 
+	function flickr_photos_search_facet_dates(&$query, $more=array()){
+
+		if (! $GLOBALS['cfg']['enable_feature_solr']){
+			return not_ok('search indexing is disabled');
+		}
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
+
+		$q = solr_utils_hash2query($query, " AND ");
+
+		$params = array(
+			'q' => $q,
+			"facet" => "on",
+			"facet.date" => "date_taken",
+			"facet.date.gap" => "+1DAY",
+			"facet.date.start" => "NOW/DAY-5DAYS",
+			"facet.date.end" => "NOW",
+		);
+
+		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
+
+		if ($fq = _flickr_photos_search_perms_fq($owner_id, $more['viewer_id'], $more)){
+			$params['fq'] = $fq;
+		}
+
+dumper($params);
+		$rsp = solr_facet_dates($params, $more);
+
+dumper($rsp);
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	function flickr_photos_search_index_photo(&$photo){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){

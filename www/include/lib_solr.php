@@ -112,6 +112,31 @@
 
 	#################################################################
 
+	# https://wiki.apache.org/solr/SimpleFacetParameters#Date_Faceting:_per_day_for_the_past_5_days
+
+	function solr_facet_dates($params, $more=array()){
+
+		$params['rows'] = 0;
+		$params['facet'] = "on";
+
+		$params['facet.mincount'] = (isset($more['mincount'])) ? $more['mincount'] : 1;
+
+		# TO DO: pagination...
+		$params['facet.limit'] = -1;
+
+		$rsp = _solr_select($params);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		# PLEASE PARSE ME...
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	# https://wiki.apache.org/solr/UpdateJSON
 
 	function solr_add($docs, $more=array()){

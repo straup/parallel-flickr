@@ -96,6 +96,8 @@
 
 	$GLOBALS['cfg']['enable_feature_cameras'] = 0;
 
+	$GLOBALS['cfg']['enable_feature_archives'] = 0;
+
 	#
 
 	$GLOBALS['cfg']['rewrite_static_urls'] = array(
