@@ -115,7 +115,7 @@
 
 	#################################################################
 
-	function flickr_photos_search_facet_dates(&$query, $more=array()){
+	function flickr_photos_search_facet_dates(&$query, $facet, $start, $end, $gap, $more=array()){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
 			return not_ok('search indexing is disabled');
@@ -129,13 +129,15 @@
 
 		$q = solr_utils_hash2query($query, " AND ");
 
+		$start = (is_numeric($start)) ? solr_dates_prep_timestamp($start) : solr_dates_prep_mysql_datetime($start);
+		$end = (is_numeric($end)) ? solr_dates_prep_timestamp($end) : solr_dates_prep_mysql_datetime($end);
+
 		$params = array(
 			'q' => $q,
-			"facet" => "on",
-			"facet.date" => "date_taken",
-			"facet.date.gap" => "+1DAY",
-			"facet.date.start" => "NOW/DAY-5DAYS",
-			"facet.date.end" => "NOW",
+			"facet.date" => $facet,
+			"facet.date.gap" => $gap,
+			"facet.date.start" => $start,
+			"facet.date.end" => $end,
 		);
 
 		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
@@ -144,15 +146,7 @@
 			$params['fq'] = $fq;
 		}
 
-dumper($params);
-		$rsp = solr_facet_dates($params, $more);
-
-dumper($rsp);
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		return $rsp;
+		return solr_facet_dates($params, $more);
 	}
 
 	#################################################################

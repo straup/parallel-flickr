@@ -124,13 +124,37 @@
 		# TO DO: pagination...
 		$params['facet.limit'] = -1;
 
+		$params['facet.date.other'] = 'all';
+
 		$rsp = _solr_select($params);
 
 		if (! $rsp['ok']){
 			return $rsp;
 		}
 
-		# PLEASE PARSE ME...
+		$dates = $rsp['data']['facet_counts']['facet_dates'];
+
+	 	# see above (solr_facet) for notes about multiple facets
+
+		$facet = $params['facet.date'];
+		$facets = $dates[$facet];
+		$details = array();
+
+		foreach (array('gap', 'start', 'end', 'before', 'after', 'between') as $key){
+
+			if (! isset($facets[$key])){
+				continue;
+			}
+
+			$details[$key] = $facets[$key];
+			unset($facets[$key]);
+		}
+
+		return array(
+			'ok' => 1,
+			'facets' => $facets,
+			'details' => $details,
+		);
 
 		return $rsp;
 	}

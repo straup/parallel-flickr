@@ -4,7 +4,7 @@
 
 	loadlib("flickr_photos_archives");
 
-	# TO DO: some functionality if solr is not enabled
+	# TO DO: some basic functionality even if solr is not enabled
 
 	if ((! $GLOBALS['cfg']['enable_feature_solr']) || (! $GLOBALS['cfg']['enable_feature_archives'])){
 		error_disabled();
@@ -30,12 +30,18 @@
 
 	#
 
+	$facet = "date_taken";
+	$start = "2011-01-01 00:00:00";
+	$end = "2011-12-31 23:59:59";
+	$gap = "+7DAYS";
+
 	$more = array(
 		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
 
-	flickr_photos_archives_photos_for_user($owner, $more);
+	$rsp = flickr_photos_archives_photos_for_user($owner, $facet, $start, $end, $gap, $more);
 
+	dumper($rsp);
 	exit();
 
 ?>
