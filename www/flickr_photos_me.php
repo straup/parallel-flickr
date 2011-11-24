@@ -7,8 +7,14 @@
 
 	$ctx = get_str("context");
 
-	if ($ctx == 'faves'){
-		$url = flickr_urls_faves_user($GLOBALS['cfg']['user']);
+	$map = array(
+		'faves' => 'flickr_urls_faves_user',
+		'places' => 'flickr_urls_photos_user_places',
+		'cameras' => 'flickr_urls_photos_user_cameras',
+	);
+
+	if (isset($map[$ctx]) && function_exists($map[$ctx])){
+		$url = call_user_func($map[$ctx], &$GLOBALS['cfg']['user']);
 	}
 
 	else {
