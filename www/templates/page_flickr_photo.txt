@@ -16,7 +16,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 <div class="photo_sidebar">
 
 {if $cfg.enable_feature_slippymaps}
-{include file="inc_flickr_photo_map.txt"}
+{include file="inc_flickr_photo_map.txt" show_nullisland=1}
 {/if}
 
 {if $before|@count or $after|@count}
