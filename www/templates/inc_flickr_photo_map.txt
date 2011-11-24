@@ -21,11 +21,10 @@
 	</div>
 </div>
 
-{else}
-	{if !$skip_nullisland}
+{elseif $show_nullisland}
 	{include file="inc_flickr_photo_map_nullisland.txt"}
-	{/if}
-
+{else}
+	{* silence *}
 {/if}
 
 {/if}
