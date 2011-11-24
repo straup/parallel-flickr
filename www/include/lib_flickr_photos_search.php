@@ -115,6 +115,8 @@
 
 	#################################################################
 
+	# TO DO: add the ability to batch index photos (for backfill, etc.)
+
 	function flickr_photos_search_index_photo(&$photo){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
@@ -137,8 +139,8 @@
 			'photo_owner' => $photo['user_id'],
 			'title' => $photo['title'],
 			'photo_perms' => $photo['perms'],
-			'date_taken' => solr_dates_prep_mysql_datetime($photo['datetaken']),
-			'date_posted' => solr_dates_prep_mysql_datetime($photo['dateupload']),
+			'datetaken' => solr_dates_prep_mysql_datetime($photo['datetaken']),
+			'dateupload' => solr_dates_prep_mysql_datetime($photo['dateupload']),
 		);
 
 		$tags = array();
