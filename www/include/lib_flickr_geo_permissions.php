@@ -4,8 +4,6 @@
 
 	#################################################################
 
-	# TO DO: update lib_flickr_photos_import
-
 	function flickr_geo_permissions_map($string_keys=0){
 
 		$map = array(
