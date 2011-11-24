@@ -1,6 +1,6 @@
 # This file was generated automatically by grep-ing for 'TO DO' in the source code.
 # This file is meant as a pointer to the actual details in the files themselves.
-# This file was created Thu Nov 24 07:59:31 CET 2011
+# This file was created Thu Nov 24 22:29:31 CET 2011
 
 www/.htaccess:98:# TO DO: finish
 www/flickr_photos_user_places.php:72:	# TO DO: pull in places without lots of photos
@@ -11,6 +11,7 @@ www/templates/page_flickr_photos_user_place.txt:4:{* TO DO: either get place ext
 www/templates/page_flickr_photos_user_place.txt:5:{* TO DO: figure out why safari doesn't honour the .place_map css definition... *}
 www/templates/page_flickr_photos_user_place.txt:15:{* TO DO: write a bloody possess modifier... *}
 www/include/lib_error.php:160:	# TO DO: work out how to use this for when the site is disabled
+www/include/lib_flickr_photos_search.php:118:	# TO DO: add the ability to batch index photos (for backfill, etc.)
 www/include/lib_solr.php:54:		# TO DO: put this someplace common (like not here or lib_db)
 www/include/lib_solr.php:76:		# TO DO: pagination...
 www/include/lib_flickr_photos_exif.php:47:		# TO DO: cache me?
