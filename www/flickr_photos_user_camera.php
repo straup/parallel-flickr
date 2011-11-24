@@ -27,11 +27,6 @@
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 	$GLOBALS['smarty']->assign("is_own", $is_own);
 
-	# Note: these needs to be strictly accurate until I tweak the
-	# schema definition(s) for camera stuff in parallel-flickr-solr
-	# https://github.com/straup/parallel-flickr-solr/blob/master/solr/conf/schema.xml
-	# (20111122/straup)
-
 	$make = get_str("make");
 	$model = get_str("model");
 

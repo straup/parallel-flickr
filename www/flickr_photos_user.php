@@ -25,16 +25,17 @@
 
 	$owner = users_get_by_id($flickr_user['user_id']);
 
+	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
+	$GLOBALS['smarty']->assign("is_own", $is_own);
+
 	#
 
 	$more = array(
 		'page' => get_int32("page"),
+		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
 
-	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
-	$GLOBALS['smarty']->assign("is_own", $is_own);
-
-	$photos = flickr_photos_for_user($owner, $GLOBALS['cfg']['user']['id'], $more);
+	$photos = flickr_photos_for_user($owner, $more);
 
 	$count = count($photos['rows']);
 

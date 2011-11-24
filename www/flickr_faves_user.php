@@ -24,13 +24,15 @@
 
 	$owner = users_get_by_id($flickr_user['user_id']);
 
+	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
+	$GLOBALS['smarty']->assign("is_own", $is_own);
+
 	#
 
 	$more = array(
+		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 		'page' => get_int32("page"),
 	);
-
-	#
 
 	if ($by_alias = get_str("by_alias")){
 		$more['by_owner'] = flickr_users_get_by_path_alias($by_alias);
@@ -42,12 +44,7 @@
 
 	else {}
 
-	#
-
-	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
-	$GLOBALS['smarty']->assign("is_own", $is_own);
-
-	$faves = flickr_faves_for_user($owner, $GLOBALS['cfg']['user']['id'], $more);
+	$faves = flickr_faves_for_user($owner, $more);
 	$photos = array();
 
 	foreach ($faves['rows'] as $f){

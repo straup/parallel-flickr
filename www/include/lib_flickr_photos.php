@@ -97,12 +97,18 @@
 
 	#################################################################
 
-	function flickr_photos_count_for_user(&$user, $viewer_id=0){
+	function flickr_photos_count_for_user(&$user, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
-		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
 			$str_perms = implode(",", $perms);
 			$extra = " AND perms IN ({$str_perms})";
 		}
@@ -115,24 +121,20 @@
 
 	#################################################################
 
-	function flickr_photos_for_user(&$user, $viewer_id=0, $more=array()){
+	function flickr_photos_for_user(&$user, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
 		$extra = array();
 
-		# TO DO: first of all this bit is probably wrong (and should
-		# be in a separate function) but if it stays the "_count"
-		# function needs to be updated (20111117/straup)
-		
-		if (isset($more['ymd'])){
-
-			$enc_ymd = AddSlashes($more['ymd']);
-			$extra[] = "DATE_FORMAT(datetaken, '%Y-%m-%d') = '{$enc_ymd}'";
-		}
-
-		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
 			$str_perms = implode(",", $perms);
 			$extra[] = "perms IN ({$str_perms})";
 		}
@@ -171,7 +173,13 @@
 
 	#################################################################
 
-	function flickr_photos_get_bookends(&$photo, $viewer_id=0){
+	function flickr_photos_get_bookends(&$photo, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$user = users_get_by_id($photo['user_id']);
 		$cluster_id = $user['cluster_id'];
@@ -179,19 +187,19 @@
 		$enc_id = AddSlashes($photo['id']);
 		$enc_user = AddSlashes($photo['user_id']);
 
-		if ($perms = flickr_photos_permissions_photos_where($user['id'], $viewer_id)){
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
 			$str_perms = implode(",", $perms);
 			$extra = " AND perms IN ({$str_perms})";
 		}
 
-		# FIX ME: INDEXES
+		# TO DO: INDEXES
 
 		$sql = "SELECT * FROM FlickrPhotos WHERE user_id = '{$enc_user}' AND id < '{$enc_id}' {$extra} ORDER BY id DESC LIMIT 1";
 		$rsp = db_fetch_users($cluster_id, $sql);
 
 		$before = $rsp['rows'];
 
-		# FIX ME: INDEXES
+		# TO DO: INDEXES
 
 		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' AND id > '{$enc_id}' {$extra} ORDER BY id ASC LIMIT 1";
 		$rsp = db_fetch_users($cluster_id, $sql);
