@@ -2,15 +2,21 @@
 
 	#################################################################
 
-	function flickr_faves_for_user(&$user, $viewer_id=0, $more=array()){
+	function flickr_faves_for_user(&$user, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
-		# FIX ME: PERMISSIONS
+		# TO DO: PERMISSIONS
 		$extra = "";
 
-		# FIX ME: INDEXES
+		# TO DO: INDEXES
 
 		$sql = "SELECT * FROM FlickrFaves WHERE user_id='{$enc_user}'";
 
@@ -76,6 +82,9 @@
 		if (! $rsp['ok']){
 			return $rsp;
 		}
+
+		# TO DO: index/update the photo in solr and insert $viewer['id']
+		# into the faved_by column (20111123/straup)
 
 		return array(
 			'ok' => 1

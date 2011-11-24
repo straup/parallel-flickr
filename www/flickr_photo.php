@@ -56,7 +56,12 @@
 	}
 
 	else {
-		$bookends = flickr_photos_get_bookends($photo, $GLOBALS['cfg']['user']['id']);
+
+		$more = array(
+			'viewer_id' => $GLOBALS['cfg']['user']['id'],
+		);
+
+		$bookends = flickr_photos_get_bookends($photo, $more);
 	}
 
 	$GLOBALS['smarty']->assign_by_ref("before", $bookends['before']);
