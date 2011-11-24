@@ -28,9 +28,11 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	TO DO: apache configs
 
-	TO DO: database setup, see also: https://github.com/straup/flamework-tools/blob/master/bin/setup-db.sh
+    $> cd schema
 
-	TO DO: read in schema/*.schema
+    $> mysql -u root -p < SETUP.md
+
+    $> cat *schema | mysql -u root -p flickr
 
 * Now set up the application config file:
 
@@ -39,6 +41,11 @@ _These instructions are incomplete. They'll probably work but I have tested them
 	TO DO: updating the config file, see also: https://github.com/straup/flamework-tools/blob/master/bin/make-project.sh 
 
 * That's it.
+
+Backing up photos
+--
+After setting up everything above, and setting your API key callback to "http://YOURDOMAINNAME.com/auth/", visit /account/backups/. This will
+create your backup user account and then from here you can run the various backup scripts inside of the bin/ directory. 
 
 To do:
 --
