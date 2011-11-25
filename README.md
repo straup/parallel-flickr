@@ -60,9 +60,13 @@ TO DO:
 
 * sets, galleries, groups
 
-* uploads (and then re-uploading to Flickr)
+* uploads (and then re-uploading to Flickr (see above inre: API hooks))
 
-* timezones (sad face)
+* dates and timezones... sad face (also something is currrently _very_
+  squirrel-y with the way dates are being indexed in parallel-flickr-solr but I
+  haven't been able to figure out what/why yet (20111125))
+
+* photo deletion
 
 * account deletion
 

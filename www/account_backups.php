@@ -3,6 +3,9 @@
 	include("include/init.php");
 	loadlib("flickr_backups");
 
+	# it is unclear whether this is working correctly
+	# (20111125/straup)
+
 	loadlib("invite_codes");
 
 	if ($GLOBALS['cfg']['enable_feature_invite_codes']){
@@ -19,12 +22,20 @@
 		}
 	}
 
+	if (! $GLOBALS['cfg']['enable_feature_backups']){
+		error_disabled();
+	}
+
 	login_ensure_loggedin("account/backups/");
 
 	$map = flickr_backups_type_map('string keys');
 	$GLOBALS['smarty']->assign_by_ref("map", $map);
 
 	$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
+
+	if ((! count($backups)) && (! $GLOBALS['cfg']['backups_enable_registrations'])){
+		error_disabled();
+	}
 
 	$crumb_key = 'backups';
 	$smarty->assign("crumb_key", $crumb_key);
