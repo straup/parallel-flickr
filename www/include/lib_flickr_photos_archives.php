@@ -8,6 +8,7 @@
 
 		$defaults = array(
 			'viewer_id' => 0,
+			'mincount' => 0,
 		);
 
 		$more = array_merge($defaults, $more);
@@ -20,7 +21,7 @@
 		# one or more helper functions but it's not clear how or
 		# where yet... (20111125/straup)
 
-		if ($gap == "+1YEAR"){
+		if (($gap == "+1YEAR") || ($gap == "+1MONTH")){
 			list($yyyy, $ignore) = explode("-", $start, 2);
 			$start = "{$yyyy}-01-01 00:00:00";
 
@@ -39,10 +40,17 @@
 				# see above inre: helper functions
 
 				$ts = strtotime($dt);
-				$fmt = "Y-m-d";
 
 				if ($gap == "+1YEAR"){
 					$fmt = "Y";
+				}
+
+				else if ($gap == "+1MONTH"){
+					$fmt = "Y-m";
+				}
+
+				else {
+					$fmt = "Y-m-d";
 				}
 
 				$dt = gmdate($fmt, $ts);
