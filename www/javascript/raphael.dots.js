@@ -27,7 +27,7 @@ $(function () {
 
 	var label_offset = 30;
 	var leftgutter = label_offset * 2;
-	var bottomgutter = 20;
+	var bottomgutter = 25;
 
 	var r = Raphael("chart", width, height);
 
