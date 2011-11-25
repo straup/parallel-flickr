@@ -4,6 +4,7 @@
 
 	loadlib("flickr_photos");
 	loadlib("flickr_photos_permissions");
+	loadlib("flickr_geo_permissions");
 	loadlib("flickr_places");
 	loadlib("flickr_photos_lookup");
 	loadlib("flickr_photos_search");
@@ -487,28 +488,30 @@
 
 		if ($photo['hasgeo']){
 
+			$geo_perms_map = flickr_geo_permissions_map("string keys");
+
 			if ($photo['geo_is_public']){
-				$geoperms = 0;
+				$geoperms = $geo_perms_map['public'];
 			}
 
 			else if ($photo['geo_is_contact']){
-				$geoperms = 1;
+				$geoperms = $geo_perms_map['contacts'];
 			}
 
 			else if (($photo['geo_is_family']) && ($photo['geo_is_friend'])){
-				$geoperms = 4;
+				$geoperms = $geo_perms_map['friends and family'];
 			}
 
 			else if ($photo['geo_is_friend']){
-				$geoperms = 2;
+				$geoperms = $geo_perms_map['friends'];
 			}
 
 			else if ($photo['geo_is_family']){
-				$geoperms = 3;
+				$geoperms = $geo_perms_map['family'];
 			}
 
 			else {
-				$geoperms = 5;
+				$geoperms = $geo_perms_map['private'];
 			}
 
 			$photo['geoperms'] = $geoperms;
