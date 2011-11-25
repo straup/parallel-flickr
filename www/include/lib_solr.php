@@ -137,7 +137,7 @@
 
 		return array(
 			'ok' => 1,
-			'facets' => $facets,
+			$facet => $facets,
 			'details' => $details,
 		);
 

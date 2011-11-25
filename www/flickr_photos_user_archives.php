@@ -30,18 +30,43 @@
 
 	#
 
-	$facet = "date_posted";
-	$start = "2011-01-01 00:00:00";
-	$end = "2011-12-31 23:59:59";
-	$gap = "+7DAYS";
-
 	$more = array(
-		'viewer_id' => $GLOBALS['cfg']['user']['id'],
+		'viewer__id' => $GLOBALS['cfg']['user']['id'],
 	);
 
-	$rsp = flickr_photos_archives_photos_for_user($owner, $facet, $start, $end, $gap, $more);
+	# how are we bucketing the dates?
 
-	dumper($rsp);
+	$user_context = get_str("context");
+	$db_context = ($user_context == 'posted') ? 'dateupload' : 'datetaken';
+
+	$more['context'] = $db_context;
+	$GLOBALS['smarty']->assign("context", $user_context);
+
+	# how big of a time slice will we use?
+
+	$gap = "+1YEAR";
+
+	# now get the bookends for this user (and viewer)
+
+	$rsp = flickr_photos_get_bookends_for_user($owner, $more);
+
+	if ($rsp['ok']){
+
+		$start = $rsp['start'];
+		$end = $rsp['end'];
+
+		$rsp = flickr_photos_archives_timepies_for_user($owner, $db_context, $start, $end, $gap, $more);
+
+		$GLOBALS['smarty']->assign_by_ref("dates", $rsp[$db_context]);
+		$GLOBALS['smarty']->assign_by_ref("details", $rsp['details']);
+	}
+
+	else {
+
+		$GLOBALS['smarty']->assign("error", $rsp['error']);
+	}
+
+	$GLOBALS['smarty']->display("page_flickr_photos_user_archives.txt");
 	exit();
 
 ?>

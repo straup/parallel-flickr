@@ -1,0 +1,11 @@
+{capture assign="page_title"}{$owner.username} | archives {* TO DO: context *}{/capture}
+{include file="inc_head.txt"}
+
+{if $error}
+<p class="error">{$error|escape}</p>
+{else}
+{$dates|@dumper}
+{$details|@dumper}
+{/if}
+
+{include file="inc_foot.txt"}

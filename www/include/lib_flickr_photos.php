@@ -173,6 +173,47 @@
 
 	#################################################################
 
+	function flickr_photos_get_bookends_for_user(&$user, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+			'context' => 'datetaken',
+		);
+
+		$more = array_merge($defaults, $more);
+
+		if (! in_array($more['context'], array('datetaken', 'dateupload'))){
+			return not_ok("invalid date context");
+		}
+
+		$cluster_id = $user['cluster_id'];
+		$enc_user = AddSlashes($user['id']);
+
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
+			$str_perms = implode(",", $perms);
+			$extra = " AND perms IN ({$str_perms})";
+		}
+
+		# TO DO: INDEXES
+
+		$sql = "SELECT MIN(`{$more['context']}`) AS start, MAX(`{$more['context']}`) AS end FROM FlickrPhotos WHERE user_id = '{$enc_user}' {$extra}";
+		$rsp = db_fetch_users($cluster_id, $sql);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$row = db_single($rsp);
+
+		if (! $row){
+			return not_ok("no photos to bookend!");
+		}
+
+		return ok($row);
+	}
+
+	#################################################################
+
 	function flickr_photos_get_bookends(&$photo, $more=array()){
 
 		$defaults = array(
