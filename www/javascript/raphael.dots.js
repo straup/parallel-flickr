@@ -58,37 +58,62 @@ $(function () {
 
 			var R = data[o] && Math.min(Math.round(Math.sqrt(data[o] / Math.PI) * 4), max);
 
-            if (R) {
-                (function (dx, dy, R, value) {
-                    var color = "hsb(" + [(1 - R / max) * .5, 1, .75] + ")";
-                    var dt = r.circle(dx + whatisthis + R, dy + 10, R).attr({stroke: "none", fill: color});
-                    if (R < 6) {
-                        var bg = r.circle(dx + whatisthis + R, dy + 10, 6).attr({stroke: "none", fill: "#000", opacity: .4}).hide();
-                    }
-                    var lbl = r.text(dx + whatisthis + R, dy + 10, data[o])
-                            .attr({"font": '10px', stroke: "none", fill: "#fff"}).hide();
-                    var dot = r.circle(dx + whatisthis + R, dy + 10, max).attr({stroke: "none", fill: "#000", opacity: 0});
-                    dot[0].onmouseover = function () {
-                        if (bg) {
-                            bg.show();
-                        } else {
-                            var clr = Raphael.rgb2hsb(color);
-                            clr.b = .5;
-                            dt.attr("fill", Raphael.hsb2rgb(clr).hex);
-                        }
-                        lbl.show();
-                    };
-                    dot[0].onmouseout = function () {
-                        if (bg) {
-                            bg.hide();
-                        } else {
-                            dt.attr("fill", color);
-                        }
-                        lbl.hide();
-                    };
-                })(leftgutter + X * (j + .5) - whatisthis - R, Y * (i + .5) - 10, R, data[o]);
-            }
-            o++;
-        }
-    }
+			if (R){
+
+				(function (dx, dy, R, value){
+
+					var color = "hsb(" + [(1 - R / max) * .5, 1, .75] + ")";
+
+					var dt = r.circle(dx + whatisthis + R, dy + 10, R);
+					dt.attr({stroke: "none", fill: color});
+
+					if (R < 6){
+						var bg = r.circle(dx + whatisthis + R, dy + 10, 6);
+						bg.attr({stroke: "none", fill: "#000", opacity: .4});
+						bg.hide();
+					}
+
+					var lbl = r.text(dx + whatisthis + R, dy + 10, data[o]);
+					lbl.attr({"font": '10px', stroke: "none", fill: "#fff"});
+					lbl.hide();
+
+					var dot = r.circle(dx + whatisthis + R, dy + 10, max);
+					dot.attr({stroke: "none", fill: "#000", opacity: 0});
+
+					dot[0].onmouseover = function (){
+						if (bg){
+							bg.show();
+						}
+
+						else {
+							var clr = Raphael.rgb2hsb(color);
+							clr.b = .5;
+							dt.attr("fill", Raphael.hsb2rgb(clr).hex);
+						}
+
+						lbl.show();
+					};
+
+					dot[0].onmouseout = function (){
+						if (bg){
+							bg.hide();
+						}
+
+						else {
+							dt.attr("fill", color);
+						}
+
+						lbl.hide();
+					};
+
+					dot[0].onclick = function(){
+						// please write me
+					};
+
+				})(leftgutter + X * (j + .5) - whatisthis - R, Y * (i + .5) - 10, R, data[o]);
+			}
+
+			o++;
+		}
+	}
 });
