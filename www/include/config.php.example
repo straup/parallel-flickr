@@ -21,8 +21,13 @@
 	$GLOBALS['cfg']['site_disabled'] = 0;
 	$GLOBALS['cfg']['site_disabled_retry_after'] = 0;	# seconds; if set will return HTTP Retry-After header
 
+	$GLOBALS['cfg']['enable_feature_backups'] = 1;
+	$GLOBALS['cfg']['backups_enable_registrations'] = 1;	# allow new people/photos to be pulled in by the backup tools
+								# see also: account_backups.php
+
 	$GLOBALS['cfg']['enable_feature_slippymaps'] = 1;
-	$GLOBALS['cfg']['slippymap_provider'] = 'toner';	// assumes canned htmapl provider strings
+	$GLOBALS['cfg']['slippymap_provider'] = 'toner';	# assumes canned htmapl provider strings
+								# see also: http://htmapl.com/examples/providers.html
 
 	$GLOBALS['cfg']['enable_feature_signup'] = 1;
 	$GLOBALS['cfg']['enable_feature_signin'] = 1;
