@@ -80,6 +80,9 @@ RewriteRule ^photos/me(/([a-z_]+))?/?$					/flickr_photos_me.php?context=$2&%{QU
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flickr_photos_user.php?path=$2&nsid=$3&page=$5&%{QUERY_STRING} [L]
 
+# push (experimental)
+# RewriteRule ^push/([^/]+)/?$					/flickr_push_receiver.php?secret_url=$1&%{QUERY_STRING} [L]
+
 # places
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places(/([a-z]+))?/?$		/flickr_photos_user_places.php?path=$2&nsid=$3&facet=$5&%{QUERY_STRING} [L]

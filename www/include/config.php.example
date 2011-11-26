@@ -34,6 +34,8 @@
 	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;
 	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
 
+	$GLOBALS['cfg']['enable_feature_flickr_push'] = 0;	# experimental (20111126/straup)
+
 	# See this? It assumes everything is running on a single
 	# (read: not federated) database.
 
