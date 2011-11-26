@@ -53,9 +53,9 @@ It is helpful to set these various bin/backup_* scripts to run via cron. Accordi
 
 Here's my a once-a-day example, which works for a moderate level of activity:
 
-0 3 * * * php /full/path/to/parallel-flickr/bin/backup_contacts.php
-15 3 * * * php /full/path/to/parallel-flickr/bin/backup_faves.php
-30 3 * * * php /full/path/to/parallel-flickr/bin/backup_photos.php
+    0 3 * * * php /full/path/to/parallel-flickr/bin/backup_contacts.php
+    15 3 * * * php /full/path/to/parallel-flickr/bin/backup_faves.php
+    30 3 * * * php /full/path/to/parallel-flickr/bin/backup_photos.php
 
 TO DO:
 --
