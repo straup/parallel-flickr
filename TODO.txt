@@ -1,6 +1,6 @@
 # This file was generated automatically by grep-ing for 'TO DO' in the source code.
 # This file is meant as a pointer to the actual details in the files themselves.
-# This file was created Sat Nov 26 17:16:36 CET 2011
+# This file was created Sat Nov 26 20:04:25 CET 2011
 
 www/.htaccess:98:# TO DO: finish
 www/templates/inc_flickr_photo_map.txt:16:	{* TO DO: figure out how to pass both owner and place to flickr_urls_ function (below) *}
@@ -25,3 +25,5 @@ www/include/lib_flickr_photos.php:195:		# TO DO: INDEXES
 www/include/lib_flickr_photos.php:202:		# TO DO: INDEXES
 www/include/lib_flickr_photos_import.php:92:		# TO DO: error handling...
 www/include/lib_flickr_photos_import.php:98:			# TO DO: make this less stupid...
+bin/backfill_more_user_info_in_flickrusers.php:16:		# TO DO: put this all in a function somewhere and
+bin/backfill_more_user_info_in_flickrusers.php:71:	# TO DO: a flag/option to only fetch users w/out a path_alias

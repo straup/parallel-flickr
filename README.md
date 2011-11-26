@@ -47,6 +47,16 @@ Backing up photos
 After setting up everything above, and setting your API key callback to "http://YOURDOMAINNAME.com/auth/", visit /account/backups/. This will
 create your backup user account and then from here you can run the various backup scripts inside of the bin/ directory. 
 
+Keeping up to date
+--
+It is helpful to set these various bin/backup_* scripts to run via cron. According to your level of faving, uploading, and contacts fiddling, you may have your own requirements for often you want to run the various backup scripts.
+
+Here's my a once-a-day example, which works for a moderate level of activity:
+
+    0 3 * * * php /full/path/to/parallel-flickr/bin/backup_contacts.php
+    15 3 * * * php /full/path/to/parallel-flickr/bin/backup_faves.php
+    30 3 * * * php /full/path/to/parallel-flickr/bin/backup_photos.php
+
 TO DO:
 --
 
