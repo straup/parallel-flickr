@@ -324,3 +324,22 @@ p.message {
     font-weight:700;
     margin: 0px;
 }
+
+.other_places {
+    font-size:small;
+    margin-bottom: 50px;
+    margin-top: 40px;
+}
+
+.other_places ul {
+    padding: 0px;
+    margin: 0px;
+    width:30%;
+    margin-right: 3%;
+    float:left;
+}
+
+.other_places ul li {
+    list-style-type: none;
+    line-height: 1.5em;
+}

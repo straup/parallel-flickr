@@ -82,7 +82,7 @@ RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flic
 
 # places
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/?$		/flickr_photos_user_places.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places(/([a-z]+))?/?$		/flickr_photos_user_places.php?path=$2&nsid=$3&facet=$5&%{QUERY_STRING} [L]
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)(/page([0-9]+))?/?$		/flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&page=$6&%{QUERY_STRING} [L]
 
 # cameras

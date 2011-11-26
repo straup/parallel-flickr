@@ -13,25 +13,28 @@ Your most geotagged {$facet_plural|escape}
 <div class="placetypes">
 
 <ul>
+<li><a href="{$owner|@flickr_urls_photos_user_places}">Places</a> / 
 {foreach from=$placetypes|@array_reverse item="type" name="placetypes"}
 {capture assign="type_plural"}{include file="inc_places_pluralize_placetype.txt" type=$type}{/capture}
 
 <li>
 {if $type==$facet}
-<strong>{$facet_plural|escape}</strong>
+<strong>{$facet_plural|@ucfirst|escape}</strong>
 {else}
-<a href="?facet={$type|escape}">{$type_plural}</a>
+<a href="{$owner|@flickr_urls_photos_user_places}{$type|escape}/">{$type_plural|@ucfirst|escape}</a>
 {/if}
 {if !$smarty.foreach.placetypes.last} / {/if}
 </li>
 {/foreach}
-<li> or just pick a <a href="">place at random</a>.</li>
 <ul>
 </div>
 
-{foreach from=$facets item="count" key="woeid"}
+{assign var="max_maps" value=15}
 
-<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}" data-zoom="11" data-interactive="false" style="width:100%;">
+{foreach from=$facets item="count" key="woeid" name="places"}
+{if $smarty.foreach.places.index < $max_maps}
+{assign var="zoom" value=$locations.$woeid|@flickr_places_calculate_zoom}
+<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}" data-zoom="{$zoom|escape}" data-interactive="false" style="width:100%;">
 
 	<div class="marker" style="border-radius:0 !important;" data-location="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}">{$locations.$woeid.name|escape}</div>
 
@@ -45,6 +48,49 @@ You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_us
 {/if}
 </p>
 
+{else}
+
+{if $smarty.foreach.places.index==$max_maps}
+
+{assign var="remaining" value=$smarty.foreach.places.total-$max_maps}
+{assign var="columns" value="3"}
+{assign var="per_column" value=$remaining/$columns|@ceil}
+{if $remaining < $max_maps}{assign var="per_column" value=$max_maps}{/if}
+{assign var="i" value="1"}
+
+<div class="other_places">
+	<h3>
+	{if $is_own}
+		{if $remaining > 1}
+		The other {$remaining|escape} {$facet_plural|escape} where you've taken photos
+		{else}
+		The one other {$facet|escape} where you've taken photos
+		{/if}
+	{else}
+		{if $remaining > 1}
+		The other {$remaining|escape} {$facet_plural|escape} where {$owner.username|escape} has taken photos
+		{else}
+		The one other {$facet|escape} where {$owner.username|escape} has taken photos
+		{/if}
+	{/if}
+	</h3>
+
+{/if}
+
+{if $i==1}<ul>{/if}
+
+<li><a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}" title="{if $count > 1}{$count|escape} photos in {$locations.$woeid.name|escape}{else}1 photo in {$locations.$woeid.name|escape}{/if}">{$locations.$woeid.name|escape}</a></li>
+
+{if $i==$per_column or $smarty.foreach.places.last}
+{assign var="i" value=1}
+</ul>
+{else}
+{assign var="i" value=$i+1}
+{/if}
+
+{if $smarty.foreach.places.last}</div><br clear="all" />{/if}
+
+{/if}
 {/foreach}
 
 {include file="inc_flickr_photo_map_load.txt"}

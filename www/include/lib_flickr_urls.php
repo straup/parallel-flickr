@@ -77,8 +77,8 @@
 
 	function flickr_urls_photos_user_places(&$user){
 
-		$user = flickr_urls_photos_user($user);
-		return "{$user}places/";
+		$user_url = flickr_urls_photos_user($user);
+		return "{$user_url}places/";
 	}
 
 	#################################################################

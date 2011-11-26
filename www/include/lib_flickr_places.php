@@ -29,6 +29,38 @@
 
 	#################################################################
 
+	function flickr_places_calculate_zoom(&$place){
+
+		$placetype = $place['place_type'];
+
+		# TO DO: put this is all in a big map hash, probably,
+		# but since we don't need it now just leave this as
+		# is. Also check for "Brooklyn", and other special
+		# cases here. (20111126/straup)
+
+		if ($placetype=='country'){
+			return 3;
+		}
+
+		if ($placetype=='region'){
+			return 5;
+		}
+
+		if ($placetype=='county'){
+			return 8;
+		}
+
+		if ($placetype=='locality'){
+			return 11;
+		}
+
+		# neighbourhood
+
+		return 12;
+	}
+
+	#################################################################
+
 	# Okay, stop for a second. Normally we would just cache this sort
 	# of thing (fetching data from a third-party API) using memcache
 	# or similar. Although it might be overkill there's no particular

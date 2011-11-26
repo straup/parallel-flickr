@@ -91,6 +91,18 @@ To note:
 
 * password reminders are disabled, only because I don't have a mail server set up
 
+A note about (Github) branches:
+--
+
+If you look carefully you may see that there are a lot branches for
+parallel-flickr in my Github repository. These are there purely (and only) for
+my working purposes.
+
+You're welcome to poke at them obviously but the rule of thumb is: If it's in
+"master" then it should work, modulo any outstanding bugs. If it's in any other
+branch then all the usual caveats apply, your mileage may vary and we offer no
+guarantees or refunds.
+
 See also:
 --
 
