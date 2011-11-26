@@ -1,10 +1,11 @@
 {capture assign="page_title"}{$owner.username} | photos from {$place.name}{/capture}
 {include file="inc_head.txt"}
 
-{* TO DO: either get place extent or calculate zoom by place type... *}
 {* TO DO: figure out why safari doesn't honour the .place_map css definition... *}
 
-<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$place.latitude|escape},{$place.longitude|escape}" data-zoom="12" data-interactive="false" id="map_{$photo.id|escape}" style="width:100%;">
+{assign var="zoom" value=$place|@flickr_places_calculate_zoom}
+
+<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$place.latitude|escape},{$place.longitude|escape}" data-zoom="{$zoom|escape}" data-interactive="false" id="map_{$photo.id|escape}" style="width:100%;">
 
 {foreach from=$photos item="photo"}
 	<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">
