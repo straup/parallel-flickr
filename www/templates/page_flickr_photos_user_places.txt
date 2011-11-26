@@ -32,9 +32,9 @@ Your most geotagged {$facet_plural|escape}
 {assign var="max_maps" value=15}
 
 {foreach from=$facets item="count" key="woeid" name="places"}
-
 {if $smarty.foreach.places.index < $max_maps}
-<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}" data-zoom="11" data-interactive="false" style="width:100%;">
+{assign var="zoom" value=$locations.$woeid|@flickr_places_calculate_zoom}
+<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}" data-zoom="{$zoom|escape}" data-interactive="false" style="width:100%;">
 
 	<div class="marker" style="border-radius:0 !important;" data-location="{$locations.$woeid.latitude|escape},{$locations.$woeid.longitude|escape}">{$locations.$woeid.name|escape}</div>
 
