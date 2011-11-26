@@ -5,5 +5,12 @@ todo:
 	echo "# This file was created "`date` >> TODO.txt
 	echo "" >> TODO.txt
 	grep -n -r -e "TO DO" www >> TODO.txt
+
+js:
+
+	# these needs to be cleaned up per the google compiler's whinging...	
+	# java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/htmapl.js > www/javascript/htmapl.min.js
+	# java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/modestmaps.markers.js > www/javascript/modestmaps.markers.min.js
+
 clean:
 	rm -f ./TODO.txt
