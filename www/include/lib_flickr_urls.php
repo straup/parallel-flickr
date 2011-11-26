@@ -91,6 +91,14 @@
 
 	#################################################################
 
+	function flickr_urls_photos_user_archives(&$user){
+
+		$user_url = flickr_urls_photos_user($user);
+		return "{$user_url}archives/";	
+	}
+
+	#################################################################
+
 	function flickr_urls_photos_user_cameras(&$user){
 
 		$user_url = flickr_urls_photos_user($user);

@@ -1,13 +1,22 @@
+{* note this is still all specific to month over year dumps *}
 {capture assign="page_title"}{$owner.username} | archives | {if $context=='posted'}date uploaded{else}date taken{/if}{/capture}
 {capture assign="extra_head"}
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/raphael.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/raphael.dots.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/punchcard.js"></script>
+	<script type="text/javascript">
+
+		var archives_url = '{$owner|@flickr_urls_photos_user_archives}{if $context|@strlen}{$context}/{/if}';
+
+	{literal}
+		$(document).ready(function(){
+			punchcard_draw(archives_url + "{X}/{Y}/");
+		});
+	{/literal}
+	</script>
 <style type="text/css">
 {literal}
             #chart {
                 color: #fff;
-                width: 100%;
-		height:100%;
             }
 
 {/literal}
@@ -20,20 +29,19 @@
 <p class="error">{$error|escape}</p>
 {else}
 
-{* http://raphaeljs.com/github/dots.html *}
-<table id="for-chart">
+<table id="punchcard">
 	<tfoot>
 		<tr>
 			<td>&nbsp;</td>
 	{foreach from=$years item="yyyy"}
-			<th>{$yyyy|escape}</th>
+			<th data-raw="{$yyyy|escape}">{$yyyy|escape}</th>
 	{/foreach}
 		</tr>
 	</tfoot>
 	<tbody>
 	{foreach from=$months item="counts" key="mm"}
 		<tr>
-			<th scope="row">
+			<th scope="row" data-raw="{$mm|escape}">
 				{if $mm=='01'}January
 				{elseif $mm=='02'}February
 				{elseif $mm=='03'}March
