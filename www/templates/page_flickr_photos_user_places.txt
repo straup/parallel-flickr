@@ -55,6 +55,7 @@ You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_us
 {assign var="remaining" value=$smarty.foreach.places.total-$max_maps}
 {assign var="columns" value="3"}
 {assign var="per_column" value=$remaining/$columns|@ceil}
+{if $remaining < $max_maps}{assign var="per_column" value=$max_maps}{/if}
 {assign var="i" value="1"}
 
 <div class="other_places">

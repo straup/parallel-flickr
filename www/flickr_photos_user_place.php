@@ -85,9 +85,8 @@
 	}
 
 	else {
-		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
-
 		$pagination_url = flickr_urls_photos_user_place($owner, $place);
+		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
 		$GLOBALS['smarty']->assign("pagination_url", $pagination_url);
 	}
 
