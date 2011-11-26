@@ -13,19 +13,19 @@ Your most geotagged {$facet_plural|escape}
 <div class="placetypes">
 
 <ul>
+<li><a href="{$owner|@flickr_urls_photos_user_places}">Places</a> / 
 {foreach from=$placetypes|@array_reverse item="type" name="placetypes"}
 {capture assign="type_plural"}{include file="inc_places_pluralize_placetype.txt" type=$type}{/capture}
 
 <li>
 {if $type==$facet}
-<strong>{$facet_plural|escape}</strong>
+<strong>{$facet_plural|@ucfirst|escape}</strong>
 {else}
-<a href="?facet={$type|escape}">{$type_plural}</a>
+<a href="{$owner|@flickr_urls_photos_user_places}{$type|escape}/">{$type_plural|@ucfirst|escape}</a>
 {/if}
 {if !$smarty.foreach.placetypes.last} / {/if}
 </li>
 {/foreach}
-<li> or just pick a <a href="">place at random</a>.</li>
 <ul>
 </div>
 
