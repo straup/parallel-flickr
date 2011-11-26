@@ -5,6 +5,7 @@ todo:
 	echo "# This file was created "`date` >> TODO.txt
 	echo "" >> TODO.txt
 	grep -n -r -e "TO DO" www >> TODO.txt
+	grep -n -r -e "TO DO" bin >> TODO.txt
 
 js:
 
