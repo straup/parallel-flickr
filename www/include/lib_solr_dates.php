@@ -12,7 +12,7 @@
 
 	function solr_dates_prep_timestamp($ts){
 
-		$fmt = "Y-d-m\TH:i:s\Z";
+		$fmt = "Y-m-d\TH:i:s\Z";
 		$dt = gmdate($fmt, $ts);
 
 		return $dt;
