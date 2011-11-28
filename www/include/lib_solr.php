@@ -9,6 +9,7 @@
 	#################################################################
 
 	loadlib("http");
+	loadlib("solr_utils");
 
 	#################################################################
 
@@ -59,6 +60,39 @@
 		}
 		
 		return $rsp;
+	}
+
+	#################################################################
+
+	# https://wiki.apache.org/solr/SpatialSearch#QuickStart
+
+	function solr_select_nearby($lat, $lon, $params=array(), $more=array()){
+
+		$defaults = array(
+			"d" => 1,
+			"sfield" => "location",
+			"sort" => "geodist() asc",
+		);
+
+		$more = array_merge($defaults, $more);
+
+		if (! isset($params['q'])){
+
+			$query = array(
+				"*" => "*",
+			);
+
+			$q = solr_utils_hash2query($query, " AND ");
+			$params['q'] = $q;
+		}
+
+		$params['fq'] = "{!geofilt}";
+		$params['pt'] = "{$lat},{$lon}";
+		$params['sfield'] = $more['sfield'];
+		$params['d'] = $more['d'];
+		$params['sort'] = $more['sort'];
+
+		return solr_select($params, $more);
 	}
 
 	#################################################################
@@ -230,7 +264,7 @@
 			$v = (is_array($v)) ? $v : array($v);
 
 			foreach ($v as $_v){
-				$query[] = "$k=" . urlencode($_v);
+			 	$query[] = "$k=" . urlencode($_v);
 			}
 		}
 
