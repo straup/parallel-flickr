@@ -79,20 +79,31 @@
 
 	function flickr_users_get_by_path_alias($alias){
 
-		$cache_key = "flickr_user_alias_{$alias}";
-		$cache = cache_get($cache_key);
+		if (! $GLOBALS['cfg']['enable_feature_path_alias_redirects']){
 
-		if ($cache['ok']){
-			return $cache['data'];
+			$cache_key = "flickr_user_alias_{$alias}";
+			$cache = cache_get($cache_key);
+
+			if ($cache['ok']){
+				return $cache['data'];
+			}
+
+			$enc_alias = AddSlashes($alias);
+
+			$sql = "SELECT * FROM FlickrUsers WHERE path_alias='{$enc_alias}'";
+			$user = db_single(db_fetch($sql));
+
+			cache_set($cache_key, $user, "cache locally");
+			return $user;
 		}
 
-		$enc_alias = AddSlashes($alias);
+		loadlib("flickr_users_path_aliases");
 
-		$sql = "SELECT * FROM FlickrUsers WHERE path_alias='{$enc_alias}'";
-		$user = db_single(db_fetch($sql));
+		# first, check to see if the record exists in FlickrUsersPathAliases
 
-		cache_set($cache_key, $user, "cache locally");
-		return $user;
+		# if not, check to see if it exists in FlickrUsers (and update FlickrUsersPathAliases)
+
+
 	}
 
 	#################################################################

@@ -3,11 +3,13 @@
 	include("include/init.php");
 	loadlib("flickr_users_path_aliases");
 
+	if (! $GLOBALS['cfg']['enable_feature_path_alias_redirects']){
+		error_disabled();
+	}
+
 	login_ensure_loggedin("/account/url/");
 
-	# TO DO: feature flag
-
-	$crumb_key = 'backups';
+	$crumb_key = 'pathalias';
 	$smarty->assign("crumb_key", $crumb_key);
 
 	$crumb_ok = crumb_check($crumb_key);
@@ -21,10 +23,12 @@
 		$new_alias = trim($new_alias);
 
 		if (! $new_alias){
+			$GLOBALS['smarty']->assign("error", "invalid alias");
 			$ok = 0;
 		}
 
 		if (($ok) && (flickr_users_path_aliases_get_by_alias($new_alias))){
+			$GLOBALS['smarty']->assign("error", "alias taken");
 			$ok = 0;
 		}
 
@@ -33,11 +37,10 @@
 			$rsp = flickr_users_path_aliases_create($GLOBALS['cfg']['user'], $new_alias);
 
 			if (! $rsp['ok']){
+				$GLOBALS['smarty']->assign("error", "db error");
 				$ok = 0;
 			}
 		}
-
-		$GLOBALS['smarty']->assign("ok", $ok);
 	}
 
 	$aliases = flickr_users_path_aliases_for_user($GLOBALS['cfg']['user']);
