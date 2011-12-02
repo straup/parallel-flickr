@@ -193,7 +193,7 @@
 	#loadlib('versions');
 	loadlib('http');
 	loadlib('sanitize');
-
+	loadlib('filter');
 
 	if ($this_is_webpage){
 		login_check_login();
