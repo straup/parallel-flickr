@@ -41,6 +41,18 @@ CREATE TABLE `FlickrUsers` (
   KEY `by_path_alias` (`path_alias`)
 )  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `FlickrUsersPathAliases`
+
+CREATE TABLE `FlickrUsersPathAliases` (
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `path_alias` varchar(255) NOT NULL,
+  `redirect_to` VARCHAR(255),
+  `created` INT(10) UNSIGNED NOT NULL,
+  `modified` INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `by_path_alias` (`path_alias`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `FlickrPhotosLookup`;
 
 CREATE TABLE `FlickrPhotosLookup` (
