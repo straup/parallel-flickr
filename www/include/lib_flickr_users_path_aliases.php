@@ -6,10 +6,20 @@
 
 	function flickr_users_path_aliases_get_by_alias($alias){
 
+		$cache_key = "flickr_user_path_aliases_{$alias}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
 		$enc_alias = AddSlashes($alias);
 
 		$sql = "SELECT * FROM FlickrUsersPathAliases WHERE path_alias='{$enc_alias}'";
-		return db_single(db_fetch($sql));
+		$row = db_single(db_fetch($sql));
+
+		cache_set($cache_key, $row, "cache locally");
+		return $row;
 	}
 
 	#################################################################
@@ -29,10 +39,19 @@
 
 	function flickr_users_path_aliases_for_user(&$user){
 
+		$cache_key = "flickr_user_path_aliases_user_{$user['id']}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
 		$enc_id = AddSlashes($user['id']);
 
 		$sql = "SELECT * FROM FlickrUsersPathAliases WHERE user_id='{$enc_id}' ORDER BY created DESC";
 		$rsp = db_fetch($sql);
+
+		cache_set($cache_key, $rsp, "cache locally");
 
 		return $rsp;
 	}
@@ -94,6 +113,9 @@
 
 				flickr_users_path_aliases_update($old_alias, $update);
 			}
+
+			$cache_key = "flickr_users_path_alias_user_{$user['id']}";
+			cache_unset($cache_key);
 		}
 
 		return $rsp;
@@ -113,13 +135,13 @@
 		$where = "path_alias='{$enc_alias}'";
 
 		$rsp = db_update('FlickrUsersPathAliases', $update, $where);
+
+		if ($rsp['ok']){
+			$cache_key = "flickr_users_path_alias_{$path_alias['path_alias']}";
+			cache_unset($cache_key);
+		}
+
 		return $rsp;
-	}
-
-	#################################################################
-
-	function _flickr_users_path_aliases_redirect_to(&$user, $new_path_alias){
-
 	}
 
 	#################################################################
