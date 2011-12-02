@@ -27,18 +27,26 @@
 			$ok = 0;
 		}
 
-		if (($ok) && (flickr_users_path_aliases_is_available($new_alias))){
+		if (($ok) && (! flickr_users_path_aliases_is_available($new_alias))){
 			$GLOBALS['smarty']->assign("error", "alias taken");
 			$ok = 0;
 		}
 
 		if ($ok){
 
-			$rsp = flickr_users_path_aliases_create($GLOBALS['cfg']['user'], $new_alias);
+			if (post_str("confirm")){
 
-			if (! $rsp['ok']){
-				$GLOBALS['smarty']->assign("error", "db error");
-				$ok = 0;
+				$rsp = flickr_users_path_aliases_create($GLOBALS['cfg']['user'], $new_alias);
+
+				if (! $rsp['ok']){
+					$GLOBALS['smarty']->assign("error", "db error");
+					$ok = 0;
+				}
+			}
+
+			else {
+				$GLOBALS['smarty']->assign("step", "confirm");
+				$GLOBALS['smarty']->assign("path_alias", $new_alias);
 			}
 		}
 	}

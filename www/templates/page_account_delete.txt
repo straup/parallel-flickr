@@ -1,5 +1,6 @@
 {assign var='page_title' value="Delete your account"}
 {include file="inc_head.txt"}
+{include file="inc_account_head.txt"}
 
 {if $error_deleting}<p class="error">Something went wrong. Try again later pls.</p>{/if}
 
