@@ -1,3 +1,36 @@
 {include file="inc_head.txt"}
 
+<form method="POST">
+{$crumb_key|crumb_input}
+
+<h3>Create a new URL</h3>
+
+<input type="text" name="path_alias" value="" size="30" />
+<input type="submit" value="CREATE" />
+
+{if !$aliases|@count}
+
+{else}
+
+<h3>Your URLs</h3>
+
+<table>
+	<tr>
+		<th>URL</th>
+		<th>Created</th>
+		<th>Redirects To</th>
+	</tr>
+{foreach from=$aliases item="row"}
+	<tr>
+		<td><a href="">{$row.path_alias|escape}</a></td>
+		<td>{$row.created|escape}</td>
+		<td>{if $row.redirect_to}{$row.redirect_to|escape}{else}&#8212;{/if}</td>
+	</tr>
+{/foreach}
+</table>
+
+{/if}
+
+</form>
+
 {include file="inc_foot.txt"}
