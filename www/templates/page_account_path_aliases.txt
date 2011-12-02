@@ -24,7 +24,7 @@
 	<tr>
 		<td><a href="">{$row.path_alias|escape}</a></td>
 		<td>{$row.created|escape}</td>
-		<td>{if $row.redirect_to}{$row.redirect_to|escape}{else}&#8212;{/if}</td>
+		<td>{if $row.redirect_to}<a href="">{$row.redirect_to|escape}</a>{else}&#8212;{/if}</td>
 	</tr>
 {/foreach}
 </table>

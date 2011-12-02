@@ -73,6 +73,7 @@
 			$insert[$k] = AddSlashes($v);
 		}
 
+		$enc_alias = AddSlashes($path_alias['path_alias']);
 		$where = "path_alias='{$enc_alias}'";
 
 		$rsp = db_update('FlickrUsersPathAliases', $update, $where);

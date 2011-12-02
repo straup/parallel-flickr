@@ -31,8 +31,13 @@
 		if ($ok){
 
 			$rsp = flickr_users_path_aliases_create($GLOBALS['cfg']['user'], $new_alias);
-			dumper($rsp);
+
+			if (! $rsp['ok']){
+				$ok = 0;
+			}
 		}
+
+		$GLOBALS['smarty']->assign("ok", $ok);
 	}
 
 	$aliases = flickr_users_path_aliases_for_user($GLOBALS['cfg']['user']);
