@@ -29,6 +29,8 @@
 	$GLOBALS['cfg']['slippymap_provider'] = 'toner';	# assumes canned htmapl provider strings
 								# see also: http://htmapl.com/examples/providers.html
 
+	$GLOBALS['cfg']['enable_feature_path_alias_redirects'] = 0;
+
 	$GLOBALS['cfg']['enable_feature_signup'] = 1;
 	$GLOBALS['cfg']['enable_feature_signin'] = 1;
 	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;

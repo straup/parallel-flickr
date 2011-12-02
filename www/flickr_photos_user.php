@@ -11,18 +11,8 @@
 
 	#
 
-	if ($path = get_str("path")){
-		$flickr_user = flickr_users_get_by_path_alias($path);
-	}
-
-	else if ($nsid = get_str("nsid")){
-		$flickr_user = flickr_users_get_by_nsid($nsid);
-	}
-
-	if (! $flickr_user){
-		error_404();
-	}
-
+	$flickr_user = flickr_users_get_by_url(0);
+dumper($flickr_user);
 	$owner = users_get_by_id($flickr_user['user_id']);
 
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;

@@ -56,6 +56,39 @@
 
 	#################################################################
 
+	function flickr_users_get_by_url($error_404=1){
+
+		if (($path = get_str("path")) && ($GLOBALS['cfg']['enable_feature_path_alias_redirects'])){
+
+			loadlib("flickr_users_path_aliases");
+
+			$alias = flickr_users_path_aliases_get_by_alias($path);
+
+			if (($alias) && ($alias['redirect_to'])){
+
+				$new_path = urlencode($alias['redirect_to']);
+				$redir = str_replace($path, $new_path, $_SERVER['REQUEST_URI']);
+				header("location: {$redir}");
+			}
+		}
+
+		if ($path = get_str("path")){
+			$flickr_user = flickr_users_get_by_path_alias($path);
+		}
+
+		else if ($nsid = get_str("nsid")){
+			$flickr_user = flickr_users_get_by_nsid($nsid);
+		}
+
+		if ((! $flickr_user) && ($error_404)){
+			error_404();
+		}
+
+		return $flickr_user;
+	}
+
+	#################################################################
+
 	function flickr_users_get_by_nsid($nsid){
 
 		$cache_key = "flickr_user_{$nsid}";
@@ -99,11 +132,11 @@
 
 		loadlib("flickr_users_path_aliases");
 
-		# first, check to see if the record exists in FlickrUsersPathAliases
+		if ($row = flickr_users_path_aliases_get_by_alias($alias)){
+			return flickr_users_get_by_user_id($row['user_id']);
+		}
 
-		# if not, check to see if it exists in FlickrUsers (and update FlickrUsersPathAliases)
-
-
+		return null;
 	}
 
 	#################################################################

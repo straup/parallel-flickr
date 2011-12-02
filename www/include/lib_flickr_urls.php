@@ -43,12 +43,10 @@
 
 	function flickr_urls_photo_page(&$photo){
 
-		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
-		$alias = ($flickr_user['path_alias']) ? $flickr_user['path_alias'] : $flickr_user['nsid'];
+		$user = users_get_by_id($photo['user_id']);
+		$root = flickr_urls_photos_user($user);
 
-		$root = $GLOBALS['cfg']['abs_root_url'];
-
-		return $root . "photos/" . $alias . "/" . $photo['id'] . "/";
+		return $root . $photo['id'] . "/";
 	}
 
 	#################################################################
@@ -56,9 +54,7 @@
 	function flickr_urls_photo_page_flickr(&$photo){
 
 		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
-		$alias = ($flickr_user['path_alias']) ? $flickr_user['path_alias'] : $flickr_user['nsid'];
-
-		return "http://www.flickr.com/photos/" . $alias . "/" . $photo['id'] . "/";
+		return "http://www.flickr.com/photos/{$flickr_user['nsid']}/{$photo['id']}/";
 	}
 
 	#################################################################
@@ -66,7 +62,18 @@
 	function flickr_urls_photos_user(&$user){
 
 		$flickr_user = flickr_users_get_by_user_id($user['id']);
-		$alias = ($flickr_user['path_alias']) ? $flickr_user['path_alias'] : $flickr_user['nsid'];
+
+		if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
+			$alias = flickr_users_path_aliases_current_for_user($user);
+		}
+
+		else {
+			$alias = $flickr_user['path_alias'];
+		}
+
+		if (! $alias){
+			$alias = $flickr_user['nsid'];
+		}
 
 		$root = $GLOBALS['cfg']['abs_root_url'];
 

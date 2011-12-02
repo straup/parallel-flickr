@@ -12,12 +12,27 @@
 
 	#################################################################
 
+	function flickr_users_path_aliases_current_for_user(&$user){
+
+		$rsp = flickr_users_path_aliases_for_user($user);
+
+		if (($rsp['ok']) && (count($rsp['rows']))){
+			return $rsp['rows'][0]['path_alias'];
+		}
+
+		return null;
+	}
+
+	#################################################################
+
 	function flickr_users_path_aliases_for_user(&$user){
 
 		$enc_id = AddSlashes($user['id']);
 
 		$sql = "SELECT * FROM FlickrUsersPathAliases WHERE user_id='{$enc_id}' ORDER BY created DESC";
-		return db_fetch($sql);
+		$rsp = db_fetch($sql);
+
+		return $rsp;
 	}
 
 	#################################################################
