@@ -1,5 +1,7 @@
 <?php
 
+	loadlib("flickr_api");
+
 	#################################################################
 
 	function flickr_users_path_aliases_get_by_alias($alias){
@@ -33,6 +35,25 @@
 		$rsp = db_fetch($sql);
 
 		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_users_path_aliases_is_available($alias){
+
+		if (flickr_users_path_aliases_get_by_alias($alias)){
+			return 0;
+		}
+
+		$method = "flickr.urls.lookupUser";
+		$url = "http://www.flickr.com/photos/{$alias}";
+
+		$args = array(
+			'url' => $url,
+		);
+
+		$rsp = flickr_api_call($method, $args);
+		return ($rsp['ok']) ? 0 : 1;
 	}
 
 	#################################################################
