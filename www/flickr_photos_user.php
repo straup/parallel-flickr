@@ -11,8 +11,7 @@
 
 	#
 
-	$flickr_user = flickr_users_get_by_url(0);
-dumper($flickr_user);
+	$flickr_user = flickr_users_get_by_url();
 	$owner = users_get_by_id($flickr_user['user_id']);
 
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;

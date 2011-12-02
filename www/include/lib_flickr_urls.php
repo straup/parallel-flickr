@@ -64,6 +64,7 @@
 		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
 		if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
+			loadlib("flickr_users_path_aliases");
 			$alias = flickr_users_path_aliases_current_for_user($user);
 		}
 
