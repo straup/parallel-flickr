@@ -2,7 +2,7 @@
 
 	loadlib("flickr_api");
 	loadlib("flickr_users");
-	loadlib("flickr_push_subscription_urls");
+	loadlib("flickr_push_subscriptions_urls");
 
 	#################################################################
 
