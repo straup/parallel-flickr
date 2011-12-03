@@ -135,16 +135,17 @@
 
 			$flickr_user = flickr_users_get_by_path_alias($path);
 
-			# TO DO: check to see if $path has "taken by" a local user
-			# and fetch/store something in smarty (?) so that we can 
-			# display some kind of UI-level notice to the user explaining
-			# what's going on (20111202/straup)
-
 			# see also: notes in flickr_users_create_user()
+			# see also: inc_path_alias_conflict.txt
 
 			if (($flickr_user) && ($GLOBALS['cfg']['enable_feature_path_alias_redirects'])){
 
-				# $other_user = _flickr_users_get_by_path_alias($path);
+				$other_flickr_user = _flickr_users_get_by_path_alias($path);
+				$other_user = users_get_by_id($other_flickr_user['user_id']);
+
+				$GLOBALS['smarty']->assign("path_alias_conflict", 1);
+				$GLOBALS['smarty']->assign_by_ref("path_alias_other_user", $other_user);
+				$GLOBALS['smarty']->assign_by_ref("path_alias_other_flickr_user", $other_flickr_user);
 			}
 		}
 

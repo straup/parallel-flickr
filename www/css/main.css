@@ -357,3 +357,19 @@ td {
     padding-right: 10px;
     padding-top: 10px;
 }
+
+#path_alias_conflict {
+    font-size:small;
+    padding:15px;
+    background-color:#eee;
+    margin-bottom: 20px;
+}
+
+#path_alias_conflict_details {
+    display: none;
+}
+
+#path_alias_conflict_details ul li {
+    line-height:1.5em;
+    margin-bottom:5px;
+}

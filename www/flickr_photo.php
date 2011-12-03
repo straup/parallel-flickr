@@ -43,6 +43,16 @@
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
 	$GLOBALS['smarty']->assign("is_own", $is_own);
 
+	# This is a quick and dirty hack to ensure that we display
+	# a notice if the path alias (on Flickr) has been taken by
+	# a local user. See notes in flickr_users_get_by_url and
+	# note that we are explicitly setting the "do not 404" flag
+	# here (20111203/straup)
+
+	if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
+		flickr_users_get_by_url(0);
+	}
+
 	# context (next and previous)
 
 	$context = get_str("context");

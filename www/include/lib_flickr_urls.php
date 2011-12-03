@@ -51,12 +51,22 @@
 
 	#################################################################
 
-	function flickr_urls_photo_page_flickr(&$photo){
+	function flickr_urls_photos_user_flickr(&$user){
 
 		# note: just always use the NSID
 
-		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
-		return "http://www.flickr.com/photos/{$flickr_user['nsid']}/{$photo['id']}/";
+		$flickr_user = flickr_users_get_by_user_id($user['id']);
+		return "http://www.flickr.com/photos/{$flickr_user['nsid']}/";
+	}
+
+	#################################################################
+
+	function flickr_urls_photo_page_flickr(&$photo){
+
+		$user = users_get_by_id($photo['user_id']);
+		$root = flickr_urls_photos_user_flickr($user);
+
+		return $root . "{$photo['id']}/";
 	}
 
 	#################################################################
