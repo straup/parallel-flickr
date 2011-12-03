@@ -85,7 +85,7 @@ RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flic
 
 
 # push (experimental)
-# RewriteRule ^push/([^/]+)/?$					/flickr_push_receiver.php?secret_url=$1&%{QUERY_STRING} [L]
+RewriteRule ^push/([^/]+)/?$					/flickr_push_receiver.php?secret_url=$1&%{QUERY_STRING} [L]
 
 # places
 

@@ -77,10 +77,6 @@
 			}
 		}
 
-		if ($row){
-			flickr_push_subscriptions_load_topic_url($row);
-		}
-
 		return $row;
 	}
 
@@ -106,10 +102,6 @@
 			if ($row){
 				cache_set($cache_key, $row, "cache locally");
 			}
-		}
-
-		if ($row){
-			flickr_push_subscriptions_load_topic_url($row);
 		}
 
 		return $row;
@@ -140,10 +132,6 @@
 			}
 		}
 
-		if ($row){
-			flickr_push_subscriptions_load_topic_url($row);
-		}
-
 		return $row;
 	}
 
@@ -156,8 +144,6 @@
 		$subscriptions = array();
 
 		foreach ($rsp['rows'] as $row){
-
-			subscriptions_load_topic_url($row);
 
 			$topic_id = $row['topic_id'];
 
@@ -324,7 +310,7 @@
 		$enc_id = AddSlashes($subscription['id']);
 		$where = "id='{$enc_id}'";
 
-		$rsp = db_update_users($cluster_id, 'Subscriptions', $hash, $where);
+		$rsp = db_update_users($cluster_id, 'FlickrPushSubscriptions', $hash, $where);
 
 		if ($rsp['ok']){
 			$subscription = array_merge($subscription, $update);
@@ -342,21 +328,6 @@
 		}
 
 		return $rsp;
-	}
-
-	#################################################################
-
-	function flickr_push_subscriptions_load_topic_url(&$subscription){
-
-		$topic_url = flickr_push_subscription_urls_get_by_id($subscription['url_id']);
-
-		if ($topic_url['args']){
-			$topic_url['args'] = json_decode($url['args'], 'as hash');
-		}
-
-		$subscription['topic_url'] = $topic_url;
-
-		# note the pass by ref
 	}
 
 	#################################################################

@@ -16,8 +16,6 @@
 	loadlib("flickr_push_subscriptions");
 	loadlib("syndication_atom");
 
-	include_once("Redis.php");
-
 	$secret_url = get_str("secret_url");
 
 	if (! $secret_url){
@@ -72,7 +70,6 @@
 
 	#
 
-	$redis = new Redis();
 	$new = 0;
 
 	foreach ($atom->items as $e){
@@ -88,6 +85,7 @@
 		);
 
 		$enc_photo = json_encode($photo);
+	error_log("[PARALLEL] {$enc_photo}");
 		$new ++;
 	}
 
@@ -96,7 +94,9 @@
 		'last_update_photo_count' => $new,
 	);
 
-	flickr_push_subscriptions_update($subscription, $update);
+	$rsp = flickr_push_subscriptions_update($subscription, $update);
+
+	error_log("[PARALLEL] " . var_export($rsp, 1));
 
 	#
 

@@ -29,16 +29,15 @@
 			error_disabled();
 		}
 
-		$topic_url = flickr_urls_photos_user_friends($GLOBALS['cfg']['user']);
+		# $rsp = flickr_push_subscriptions_urls_create($topic_url);
+		# dumper($rsp);
 
-		$rsp = flickr_push_subscriptions_urls_create($topic_url);
-
-		if ($rsp['ok']){
+		# if ($rsp['ok']){
 
 			$sub = array(
-				'user_id' => $GLOBALS['cfg']['user_id'],
+				'user_id' => $GLOBALS['cfg']['user']['id'],
 				'topic_id' => $topic_id,
-				'url_id' => $rsp['url']['id'],
+				# 'url_id' => $rsp['url']['id'],
 			);
 
 			$rsp = flickr_push_subscriptions_register_subscription($sub);
@@ -46,10 +45,15 @@
 			if ($rsp['ok']){
 				$sub = $rsp['subscription'];
 			}
-		}
+
+			dumper($rsp);
+			exit();
+		# }
 
 	}
 
+dumper($sub);
+exit;
 	$GLOBALS['smarty']->display("page_flickr_photos_friends.txt");
 	exit();
 
