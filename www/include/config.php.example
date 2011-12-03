@@ -37,6 +37,8 @@
 	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
 
 	$GLOBALS['cfg']['enable_feature_flickr_push'] = 0;	# experimental (20111126/straup)
+	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 0;
+	$GLOBALS['cfg']['flickr_push_enable_photos_friends_registrations'] = 0;
 
 	# See this? It assumes everything is running on a single
 	# (read: not federated) database.
