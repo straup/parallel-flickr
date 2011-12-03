@@ -132,7 +132,20 @@
 		}
 
 		if ($path){
+
 			$flickr_user = flickr_users_get_by_path_alias($path);
+
+			# TO DO: check to see if $path has "taken by" a local user
+			# and fetch/store something in smarty (?) so that we can 
+			# display some kind of UI-level notice to the user explaining
+			# what's going on (20111202/straup)
+
+			# see also: notes in flickr_users_create_user()
+
+			if (($flickr_user) && ($GLOBALS['cfg']['enable_feature_path_alias_redirects'])){
+
+				# $other_user = _flickr_users_get_by_path_alias($path);
+			}
 		}
 
 		else if ($nsid){
@@ -142,13 +155,6 @@
 		if ((! $flickr_user) && ($error_404)){
 			error_404();
 		}
-
-		# TO DO: check to see if $path has "taken by" a local user
-		# and fetch/store something in smarty (?) so that we can 
-		# display some kind of UI-level notice to the user explaining
-		# what's going on (20111202/straup)
-
-		# see also: notes in flickr_users_create_user()
 
 		return $flickr_user;
 	}
@@ -180,20 +186,7 @@
 
 		if (! $GLOBALS['cfg']['enable_feature_path_alias_redirects']){
 
-			$cache_key = "flickr_user_alias_{$alias}";
-			$cache = cache_get($cache_key);
-
-			if ($cache['ok']){
-				return $cache['data'];
-			}
-
-			$enc_alias = AddSlashes($alias);
-
-			$sql = "SELECT * FROM FlickrUsers WHERE path_alias='{$enc_alias}'";
-			$user = db_single(db_fetch($sql));
-
-			cache_set($cache_key, $user, "cache locally");
-			return $user;
+			return _flickr_users_get_by_path_alias($alias);
 		}
 
 		loadlib("flickr_users_path_aliases");
@@ -203,6 +196,28 @@
 		}
 
 		return null;
+	}
+
+	#################################################################
+
+	# THIS IS A TERRIBLE NAME... CHANGE ME
+
+	function _flickr_users_get_by_path_alias($alias){
+
+		$cache_key = "flickr_user_alias_{$alias}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
+		$enc_alias = AddSlashes($alias);
+
+		$sql = "SELECT * FROM FlickrUsers WHERE path_alias='{$enc_alias}'";
+		$user = db_single(db_fetch($sql));
+
+		cache_set($cache_key, $user, "cache locally");
+		return $user;
 	}
 
 	#################################################################
