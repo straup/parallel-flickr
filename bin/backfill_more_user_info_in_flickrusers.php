@@ -10,6 +10,7 @@
 	loadlib("backfill");
 	loadlib("flickr_api");
 	loadlib("flickr_users");
+	loadlib("flickr_users_path_aliases");
 
 	function _get_nsid($flickr_user, $more=array()){
 
@@ -53,6 +54,10 @@
 			$rsp = flickr_users_update_user($flickr_user, $update);
 
 			echo "[{$user['id']}] update path alias: {$rsp['ok']}\n";
+
+			# just let this fail silently if there's a duplicate
+
+			flickr_users_path_aliases_create($user, $path_alias);
 		}
 
 		if ($username != $user['username']){
