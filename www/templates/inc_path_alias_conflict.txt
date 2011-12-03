@@ -2,7 +2,7 @@
 <p>Hey there! The <span style="font-style:italic;">path alias</span> (the <q><strong>{$path_alias_other_flickr_user.path_alias|escape}</strong></q> part of the URL) you're visiting
 belongs to two different users on Flickr. On Flickr <q><strong>{$path_alias_other_flickr_user.path_alias|escape}</strong></q> belongs to user <a
 href="{$path_alias_other_user|@flickr_urls_photos_user}">{$path_alias_other_user.username|escape}</a>
-but here it belongs to user <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a>. <a href="#" onclick="$('#path_alias_conflict_details').show(); return false;" id="path_alias_conflict_click_here">How is that possible?</a></p>
+but here it belongs to user <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a>. <a href="#" onclick="$('#path_alias_conflict_details').show(); return false;" style="font-style:italic;">How is that possible?</a></p>
 
 <div id="path_alias_conflict_details">
 <p>Normally it wouldn't be possible except that two things have happened:</p>
