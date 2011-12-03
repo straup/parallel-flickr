@@ -6,3 +6,5 @@ CREATE TABLE `FlickrUsersPathAliases` (
   PRIMARY KEY `by_path_alias` (`path_alias`),
   KEY `by_user` (`user_id`, `created`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE FlickrUsers ADD `path_alias_taken_by` INT(11) UNSIGNED NOT NULL;

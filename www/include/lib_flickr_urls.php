@@ -53,6 +53,8 @@
 
 	function flickr_urls_photo_page_flickr(&$photo){
 
+		# note: just always use the NSID
+
 		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
 		return "http://www.flickr.com/photos/{$flickr_user['nsid']}/{$photo['id']}/";
 	}
@@ -62,22 +64,27 @@
 	function flickr_urls_photos_user(&$user){
 
 		$flickr_user = flickr_users_get_by_user_id($user['id']);
+		$alias = null;
 
 		if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
 			loadlib("flickr_users_path_aliases");
 			$alias = flickr_users_path_aliases_current_for_user($user);
 		}
 
-		else {
-			$alias = $flickr_user['path_alias'];
-		}
-
 		if (! $alias){
-			$alias = $flickr_user['nsid'];
+
+			# see notes in flickr_users_create_user
+
+			if ((! $flickr_user['path_alias']) || ($flickr_user['path_alias_taken_by'])){
+				$alias = $flickr_user['nsid'];
+			}
+
+			else {
+				$alias = $flickr_user['path_alias'];
+			}
 		}
 
 		$root = $GLOBALS['cfg']['abs_root_url'];
-
 		return $root . "photos/" . $alias . "/";
 	}
 

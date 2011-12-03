@@ -28,9 +28,48 @@
 		# (20111202/straup)
 
 		if ($flickr_user['path_alias']){
+
 			loadlib("flickr_users_path_aliases");
 			$user = users_get_by_id($flickr_user['user_id']);
-			flickr_users_path_aliases_create($user, $flickr_user['path_alias']);
+
+			$rsp = flickr_users_path_aliases_create($user, $flickr_user['path_alias']);
+
+			# Okay, so this (mysql's duplicate key (1062) error) means that a
+			# parallel-flickr user has managed to change their path alias to be
+			# the same as something that a person on flickr chose *after* the
+			# local user changed their path alias. So, because parallel-flickr
+			# is not meant to be a global mirror of the entirety of flickr we're
+			# going to flag the record for $flickr_user and update lib_flickr_urls
+			# to only ever use that user's NSID when building URLs. This is not
+			# a perfect solution in that if you did a GET on the path_alias in
+			# question it would redirect to the local user who "stole" the path
+			# alias from the (newer) flickr user but in a perverse kind of way it
+			# is the right thing to do. But only if path_alias redirects are enabled
+			# which is why we always store what flickr tells us against the FlickrUsers
+			# table. (20111202/straup)
+
+			if ((! $rsp['ok']) && ($rsp['error_code'] == 1062)){
+
+				$alias = flickr_users_path_aliases_get_by_alias($flickr_user['path_alias']);
+
+				# unless of course the two users are the same, which shouldn't
+				# ever happen but that's what makes life interesting, right?
+
+				if ($alias['user_id'] != $flickr_user['user_id']){
+
+					$update = array(
+						'path_alias_taken_by' => $alias['user_id'],
+					);
+
+					$update_rsp = flickr_users_update_user($flickr_user, $update);
+
+					# note the caching below
+
+					if ($update_rsp['ok']){
+						$flickr_user = array_merge($flickr_user, $update);
+					}
+				}
+			}
 		}
 
 		$cache_key = "flickr_user_{$flickr_user['nsid']}";
@@ -75,7 +114,10 @@
 
 	function flickr_users_get_by_url($error_404=1){
 
-		if (($path = get_str("path")) && ($GLOBALS['cfg']['enable_feature_path_alias_redirects'])){
+		$path = get_str("path");
+		$nsid = get_str("nsid");
+
+		if (($path) && ($GLOBALS['cfg']['enable_feature_path_alias_redirects'])){
 
 			loadlib("flickr_users_path_aliases");
 
@@ -89,17 +131,24 @@
 			}
 		}
 
-		if ($path = get_str("path")){
+		if ($path){
 			$flickr_user = flickr_users_get_by_path_alias($path);
 		}
 
-		else if ($nsid = get_str("nsid")){
+		else if ($nsid){
 			$flickr_user = flickr_users_get_by_nsid($nsid);
 		}
 
 		if ((! $flickr_user) && ($error_404)){
 			error_404();
 		}
+
+		# TO DO: check to see if $path has "taken by" a local user
+		# and fetch/store something in smarty (?) so that we can 
+		# display some kind of UI-level notice to the user explaining
+		# what's going on (20111202/straup)
+
+		# see also: notes in flickr_users_create_user()
 
 		return $flickr_user;
 	}
