@@ -1,28 +1,45 @@
 <?php
 
+	# note: this has parallel-flickr specific tweaks that are not part
+	# of flamework-flickrapp (20111202/straup)
+
 	#################################################################
 
-	function flickr_users_create_user($user){
+	function flickr_users_create_user($flickr_user){
 
 		$hash = array();
 
-		foreach ($user as $k => $v){
+		foreach ($flickr_user as $k => $v){
 			$hash[$k] = AddSlashes($v);
 		}
 
 		$rsp = db_insert('FlickrUsers', $hash);
 
-		if (!$rsp['ok']){
+		if (! $rsp['ok']){
 			return null;
 		}
 
-		$cache_key = "flickr_user_{$user['nsid']}";
-		cache_set($cache_key, $user, "cache locally");
+		# hey look! this is parallel-flickr specific and not part
+		# of flamework-flickrapp (20111202/straup)
 
-		$cache_key = "flickr_user_{$user['id']}";
-		cache_set($cache_key, $user, "cache locally");
+		# just add the path_alias to the FlickrUsersPathAliases
+		# table even if the feature flag is disabled so that it
+		# will do the right thing if/when it is enabled.
+		# (20111202/straup)
 
-		return $user;
+		if ($flickr_user['path_alias']){
+			loadlib("flickr_users_path_aliases");
+			$user = users_get_by_id($flickr_user['user_id']);
+			flickr_users_path_aliases_create($user, $flickr_user['path_alias']);
+		}
+
+		$cache_key = "flickr_user_{$flickr_user['nsid']}";
+		cache_set($cache_key, $flickr_user, "cache locally");
+
+		$cache_key = "flickr_user_{$flickr_user['user_id']}";
+		cache_set($cache_key, $flickr_user, "cache locally");
+
+		return $flickr_user;
 	}
 
 	#################################################################
