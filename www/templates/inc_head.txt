@@ -19,3 +19,6 @@
 
 	<div id="content">
 
+{if $cfg.enable_feature_path_alias_redirects and $path_alias_conflict and $owner.id != $path_alias_other_user.id}
+{include file="inc_path_alias_conflict.txt"}
+{/if}

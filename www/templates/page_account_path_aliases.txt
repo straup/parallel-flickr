@@ -1,0 +1,45 @@
+{capture assign="page_title"}your custom URLs{/capture}
+{include file="inc_head.txt"}
+{include file="inc_account_head.txt"}
+
+<form method="POST">
+{$crumb_key|crumb_input}
+
+<h3>Create a new URL</h3>
+
+{if $error}
+<p class="error">{$error|escape}</p>
+{else}
+
+{if $step=='confirm'}
+<p>Are you sure you want all your photos to live at <strong>{$cfg.abs_root_url}photos/{$path_alias|escape}/</strong> ?</p>
+<input type="hidden" name="confirm" value="1" />
+<input type="hidden" name="path_alias" value="{$path_alias|escape}" />
+<input type="submit" value="I AM SURE, YES" />
+{else}
+<strong>{$cfg.abs_root_url}photos/</strong> <input type="text" name="path_alias" value="" size="30" />
+<input type="submit" value="CREATE" />
+{/if}
+
+{/if}
+
+<h3>Your URLs</h3>
+
+<table>
+	<tr>
+		<th>Created</th>
+		<th>URL</th>
+		<th style="border:none;"></th>
+	</tr>
+{foreach from=$aliases item="row"}
+	<tr>
+		<td>{$row.created|date_format:"%Y-%m-%d"|escape}</td>
+		<td><a href="{$cfg.abs_root_url}photos/{$row.path_alias|escape}/">{$cfg.abs_root_url}photos/{$row.path_alias|escape}/</a></td>
+		<td style="font-size:small;font-style:italic;">{if $aliases|@count > 1 and !$row.redirect_to}⇽ all your other URLs redirect to this one{/if}</td>
+	</tr>
+{/foreach}
+</table>
+
+</form>
+
+{include file="inc_foot.txt"}

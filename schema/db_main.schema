@@ -32,6 +32,7 @@ CREATE TABLE `FlickrUsers` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `nsid` varchar(20) NOT NULL,
   `path_alias` varchar(255) NOT NULL,
+  `path_alias_taken_by` INT(11) UNSIGNED NOT NULL,
   `username` varchar(255) NOT NULL,
   `auth_token` char(34) NOT NULL,
   `oauth_token` char(34) NOT NULL,
@@ -40,6 +41,17 @@ CREATE TABLE `FlickrUsers` (
   UNIQUE KEY `by_nsid` (`nsid`),
   KEY `by_path_alias` (`path_alias`)
 )  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrUsersPathAliases`
+
+CREATE TABLE `FlickrUsersPathAliases` (
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `path_alias` VARCHAR(255) NOT NULL,
+  `redirect_to` VARCHAR(255),
+  `created` INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY `by_path_alias` (`path_alias`),
+  KEY `by_user` (`user_id`, `created`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `FlickrPhotosLookup`;
 

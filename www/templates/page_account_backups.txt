@@ -1,5 +1,6 @@
 {capture assign="page_title"}your flickr backups{/capture}
 {include file="inc_head.txt"}
+{include file="inc_account_head.txt"}
 
 <h2>Flickr Backups</h2>
 
