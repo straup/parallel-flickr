@@ -66,8 +66,6 @@ TO DO:
 
 * API hooks (see also: [flamework-api](https://github.com/straup/flamework-api))
 
-* always fetch path_alias for contacts (call flickr.people.getInfo)
-
 * sets, galleries, groups
 
 * uploads (and then re-uploading to Flickr (see above inre: API hooks))
