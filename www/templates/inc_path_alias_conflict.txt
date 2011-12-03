@@ -5,7 +5,7 @@ href="{$path_alias_other_user|@flickr_urls_photos_user}">{$path_alias_other_user
 but here it belongs to user <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a>. <a href="#" onclick="$('#path_alias_conflict_details').show(); return false;" id="path_alias_conflict_click_here">How is that possible?</a></p>
 
 <div id="path_alias_conflict_details">
-<p>Normally it wouldn't be except that two things have happened:</p>
+<p>Normally it wouldn't be possible except that two things have happened:</p>
 <ul>
 <li>One, the owner of <a href="{$cfg.abs_root_url}">this site</a> has enabled a feature that lets users <em>change</em> their original Flickr path alias, sometimes called a <q>custom URL</q>. Changing your path alias is not possible on Flickr itself although it <em>is</em> possible to change your username which can be confusing sometimes.</li>
 <li>Two, even though new and updated path aliases are checked for availability on Flickr <a href="{$path_alias_other_user|@flickr_urls_photos_user}">{$path_alias_other_user.username|escape}</a> probably created their custom URL (on Flickr) <em>after</em> <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> changed theirs (on this site).</li>
