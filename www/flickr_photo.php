@@ -23,6 +23,19 @@
 		error_404();
 	}
 
+	# This is two things. One, a quick and dirty hack to ensure
+	# that we display a notice if the path alias (on Flickr) has
+	# been taken by a local user. See notes in flickr_users_get_by_url
+	# and note that we are explicitly setting the "do not 404" flag
+	# here. Two, make sure the photo is actually owned by the user
+	# pointed to by the path alias or NSID. (20111203/straup)
+
+	$flickr_user = flickr_users_get_by_url(0);
+
+	if ($flickr_user['user_id'] != $photo['user_id']){
+		error_404();
+	}
+
 	if ($photo['deleted']){
 		$GLOBALS['smarty']->display("page_photo_deleted.txt");
 		exit();
@@ -42,16 +55,6 @@
 
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
 	$GLOBALS['smarty']->assign("is_own", $is_own);
-
-	# This is a quick and dirty hack to ensure that we display
-	# a notice if the path alias (on Flickr) has been taken by
-	# a local user. See notes in flickr_users_get_by_url and
-	# note that we are explicitly setting the "do not 404" flag
-	# here (20111203/straup)
-
-	if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
-		flickr_users_get_by_url(0);
-	}
 
 	# context (next and previous)
 
