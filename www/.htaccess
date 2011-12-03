@@ -71,6 +71,8 @@ RewriteRule  ^account/?$		/account.php		[L]
 RewriteRule  ^account/backups/?$		/account_backups.php		[L]
 RewriteRule  ^account/password/?$	/account_password.php	[L]
 RewriteRule  ^account/delete/?$		/account_delete.php	[L]
+RewriteRule  ^account/url/?$			/account_path_aliases.php		[L]
+RewriteRule  ^account/path_alias(es)?/?$		/account_path_aliases.php		[L]
 
 # Flickr stuff
 

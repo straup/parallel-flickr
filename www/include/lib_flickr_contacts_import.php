@@ -71,9 +71,23 @@
 						"password" => $password,
 					));
 
+					#
+
+					$method = 'flickr.people.getInfo';
+
+					$args = array(
+						'user_id' => $contact_nsid,
+					);
+
+					$rsp = flickr_api_call($method, $args);
+					$path_alias = ($rsp['ok']) ? $rsp['rsp']['person']['path_alias'] : '';
+
+					#
+
 					$flickr_contact = flickr_users_create_user(array(
 						'user_id' => $user_contact['id'],
 						'nsid' => $contact_nsid,
+						'path_alias' => $path_alias,
 						# note the lack of an auth_token
 					));
 				}

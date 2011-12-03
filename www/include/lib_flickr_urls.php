@@ -43,22 +43,30 @@
 
 	function flickr_urls_photo_page(&$photo){
 
-		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
-		$alias = ($flickr_user['path_alias']) ? $flickr_user['path_alias'] : $flickr_user['nsid'];
+		$user = users_get_by_id($photo['user_id']);
+		$root = flickr_urls_photos_user($user);
 
-		$root = $GLOBALS['cfg']['abs_root_url'];
+		return $root . $photo['id'] . "/";
+	}
 
-		return $root . "photos/" . $alias . "/" . $photo['id'] . "/";
+	#################################################################
+
+	function flickr_urls_photos_user_flickr(&$user){
+
+		# note: just always use the NSID
+
+		$flickr_user = flickr_users_get_by_user_id($user['id']);
+		return "http://www.flickr.com/photos/{$flickr_user['nsid']}/";
 	}
 
 	#################################################################
 
 	function flickr_urls_photo_page_flickr(&$photo){
 
-		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
-		$alias = ($flickr_user['path_alias']) ? $flickr_user['path_alias'] : $flickr_user['nsid'];
+		$user = users_get_by_id($photo['user_id']);
+		$root = flickr_urls_photos_user_flickr($user);
 
-		return "http://www.flickr.com/photos/" . $alias . "/" . $photo['id'] . "/";
+		return $root . "{$photo['id']}/";
 	}
 
 	#################################################################
@@ -66,10 +74,27 @@
 	function flickr_urls_photos_user(&$user){
 
 		$flickr_user = flickr_users_get_by_user_id($user['id']);
-		$alias = ($flickr_user['path_alias']) ? $flickr_user['path_alias'] : $flickr_user['nsid'];
+		$alias = null;
+
+		if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
+			loadlib("flickr_users_path_aliases");
+			$alias = flickr_users_path_aliases_current_for_user($user);
+		}
+
+		if (! $alias){
+
+			# see notes in flickr_users_create_user
+
+			if ((! $flickr_user['path_alias']) || ($flickr_user['path_alias_taken_by'])){
+				$alias = $flickr_user['nsid'];
+			}
+
+			else {
+				$alias = $flickr_user['path_alias'];
+			}
+		}
 
 		$root = $GLOBALS['cfg']['abs_root_url'];
-
 		return $root . "photos/" . $alias . "/";
 	}
 
