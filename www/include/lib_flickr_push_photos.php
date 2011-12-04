@@ -6,7 +6,7 @@
 
 		$cluster = $user['cluster_id'];
 
-		$photo_data['created'] = now();
+		$photo_data['created'] = time();
 
 		$insert = array();
 
