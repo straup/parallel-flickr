@@ -71,3 +71,15 @@ CREATE TABLE `FlickrPushSubscriptions` (
   UNIQUE KEY `by_topic` (`user_id`,`topic_id`),
   KEY `by_user` (`user_id`,`topic_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrPushPhotos`;
+
+CREATE TABLE `FlickrPushPhotos` (
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `subscription_id` INT(11) UNSIGNED NOT NULL,
+  `created` INT(11) UNSIGNED NOT NULL,
+  `photo_id` BIGINT(20) UNSIGNED NOT NULL,
+  `photo_data` TEXT,
+  UNIQUE KEY `by_photo_id` (`subscription_id`, `photo_id`),
+  KEY `by_sub_id` (`subscription_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

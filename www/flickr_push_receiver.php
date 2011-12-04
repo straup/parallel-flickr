@@ -14,6 +14,7 @@
 	}
 
 	loadlib("flickr_push_subscriptions");
+	loadlib("flickr_push_photos");
 	loadlib("syndication_atom");
 
 	$secret_url = get_str("secret_url");
@@ -62,13 +63,12 @@
 		exit();
 	}
 
-	# HEY LOOK. THIS IS WHERE YOU PARSE AND STORE PHOTOS.
-	# NOTICE HOW WE'RE NOT DOING THAT YET?
-
 	$xml = file_get_contents('php://input');
 	$atom = syndication_atom_parse_str($xml);
 
 	#
+
+	$user = users_get_by_id($subscription['user_id']);
 
 	$new = 0;
 
@@ -85,6 +85,18 @@
 		);
 
 		$enc_photo = json_encode($photo);
+
+		$photo_data = array(
+			'user_id' => $user['id'],
+			'subscription_id' => $subscription['id'],
+			'photo_id' => $e['id'],
+			'photo_data' => $enc_photo,
+		);
+
+error_log("[PARALLEL] " . var_export($photo_data, 1));
+		$rsp = flickr_push_photos_record($photo_data);
+
+error_log("[PARALLEL] " . var_export($rsp, 1));
 		$new ++;
 	}
 
