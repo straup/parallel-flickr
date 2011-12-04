@@ -1,12 +1,5 @@
 <?php
 
-	# EXPERIMENTAL (20111126/straup)
-
-	# Also, see how there are no 'subscribe' pages? That's because
-	# if we use this all the subscription stuff will happen on other
-	# parallel-flickr related pages that will call library code directly
-	# (20111126/straup)
-
 	include("include/init.php");
 
 	if (! $GLOBALS['cfg']['enable_feature_flickr_push']){

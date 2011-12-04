@@ -2,7 +2,7 @@
 
 	#################################################################
 
-	function flickr_photos_push_record(&$user, $photo_data){
+	function flickr_push_photos_record(&$user, $photo_data){
 
 		$cluster = $user['cluster_id'];
 
@@ -13,6 +13,8 @@
 		foreach ($photo_data as $k => $v){
 			$insert[$k] = AddSlashes($v);
 		}
+
+		$rsp = db_insert_users($cluster, 'FlickrPushPhotos', $insert);
 
 		if ((! $rsp['ok']) && ($rsp['error_code'] == 1062)){
 
@@ -25,7 +27,7 @@
 			$rsp = db_write_users($cluster, $sql);
 
 			if ($rsp['ok']){
-				$rsp = db_insert_users($cluster, 'FlickrPushPhotos', $insert);		
+				$rsp = db_insert_users($cluster, 'FlickrPushPhotos', $insert);
 			}
 		}
 

@@ -1,7 +1,5 @@
 <?php
 
-	# EXPERIMENTAL (20111126/straup)
-
 	loadlib("random");
 	loadlib("flickr_push");
 

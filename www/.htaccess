@@ -79,15 +79,17 @@ RewriteRule  ^account/path_alias(es)?/?$		/account_path_aliases.php		[L]
 RewriteRule ^photo.gne$							/flickr_photo.php?%{QUERY_STRING} [L]
 
 RewriteRule ^photos/me(/([a-z_]+))?/?$					/flickr_photos_me.php?context=$2&%{QUERY_STRING} [L]
+
 RewriteRule ^photos/friends(/page([0-9]+))?/?$				/flickr_photos_friends.php?page=$2&%{QUERY_STRING} [L]
+RewriteRule ^photos/friends/faves(/page([0-9]+))?/?$			/flickr_photos_friends_faves.php?page=$2&%{QUERY_STRING} [L]
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flickr_photos_user.php?path=$2&nsid=$3&page=$5&%{QUERY_STRING} [L]
 
+# Flickr push
 
-# push (experimental)
 RewriteRule ^push/([^/]+)/?$					/flickr_push_receiver.php?secret_url=$1&%{QUERY_STRING} [L]
 
-# places
+# Places
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places(/([a-z]+))?/?$		/flickr_photos_user_places.php?path=$2&nsid=$3&facet=$5&%{QUERY_STRING} [L]
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)(/page([0-9]+))?/?$		/flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&page=$6&%{QUERY_STRING} [L]
