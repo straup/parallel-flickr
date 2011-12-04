@@ -35,12 +35,16 @@
 
 		$rsp = flickr_push_subscriptions_register_subscription($sub);
 
-		dumper($rsp);
-		exit();
+		$GLOBALS['smarty']->assign("new_subscription", $rsp['ok']);
+		$GLOBALS['smarty']->assign("subscription_ok", $rsp['ok']);
 	}
 
-dumper($sub);
-exit;
+	else {
+
+		$rsp = flickr_push_photos_for_subscription($sub, $limit);
+		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
+	}
+
 	$GLOBALS['smarty']->display("page_flickr_photos_friends_faves.txt");
 	exit();
 

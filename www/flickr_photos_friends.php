@@ -41,10 +41,7 @@
 
 	else {
 
-		$limit = null;
-
-		$rsp = flickr_push_photos_for_subscription($sub, $limit);
-		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
+		$rsp = flickr_push_photos_for_subscription($sub);
 
 		$users_names = array();
 		$users_updated = array();

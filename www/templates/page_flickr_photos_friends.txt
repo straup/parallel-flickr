@@ -6,9 +6,10 @@
 {if $new_subscription}
 
 {if $subscription_ok}
-
+<p>Okay! Your subscription to new photos from your contacts has been
+registered. You should start seeing photos shortly.</p>
 {else}
-
+<p>Ack! Something when wrong trying to subscribe to your contacts photos.</p>
 {/if}
 
 {else}

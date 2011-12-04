@@ -1,0 +1,31 @@
+{capture assign="page_title"}faves from your contacts{/capture}
+{include file="inc_head.txt"}
+
+<h2>Your contacts' faves</h2>
+
+{if $new_subscription}
+
+{if $subscription_ok}
+<p>Okay! Your subscription to new faves from your contacts has been
+registered. You should start seeing photos shortly.</p>
+{else}
+<p>Ack! Something when wrong trying to subscribe to your contacts faves.</p>
+{/if}
+
+{else}
+
+{* TO DO: buddyicons *}
+
+{foreach from=$photos item="row"}
+
+<div style="float:left;margin-right:10px;margin-bottom:10px;">
+<a href="http://www.flickr.com/photo.gne?id={$row.photo_id|escape}" target="_flickr"><img src="{$row.photo_url}" /></a>
+</div>
+
+{/foreach}
+
+<br clear="all" />
+
+{/if}
+
+{include file="inc_foot.txt"}
