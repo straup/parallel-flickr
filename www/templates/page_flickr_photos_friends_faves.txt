@@ -16,10 +16,14 @@ registered. You should start seeing photos shortly.</p>
 
 {* TO DO: buddyicons *}
 
-{foreach from=$photos item="row"}
+{foreach from=$photos item="row" name="faves"}
 
 <div style="float:left;margin-right:10px;margin-bottom:10px;">
+{if $smarty.foreach.faves.index<10}
 <a href="http://www.flickr.com/photo.gne?id={$row.photo_id|escape}" target="_flickr"><img src="{$row.photo_url}" /></a>
+{else}
+<a href="http://www.flickr.com/photo.gne?id={$row.photo_id|escape}" target="_flickr"><img src="{$row.thumb_url}" /></a>
+{/if}
 </div>
 
 {/foreach}

@@ -89,6 +89,8 @@
 			'thumb_url' => $e['media']['thumbnail@url'],
 		);
 
+		error_log("[PARALLEL] sub: {$subscription['topic_id']} contributor: {$e['contributor']} ({$e['contributor_nsid']})");
+
 		# TO DO: if ($subscription['topic_id'] == 2){
 		# store 'faved by' information:
 		# contributor_nsid': NSID
