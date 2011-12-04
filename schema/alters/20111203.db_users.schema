@@ -1,0 +1,5 @@
+ALTER TABLE `FlickrPushSubscriptions` DROP `deleted`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `url_id`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `last_request`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `last_request_photo_count`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `last_update_photo_count`;

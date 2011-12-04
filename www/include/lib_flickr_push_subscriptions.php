@@ -109,34 +109,6 @@
 
 	#################################################################
 
-	function flickr_push_subscriptions_get_by_user_and_url(&$user, $url_id){
-
-		$cache_key = "flickr_push_subscriptions_user_{$user['id']}_url_{$url_id}";
-		$cache = cache_get($cache_key);
-
-		if ($cache['ok']){
-			$row = $cache['data'];
-		}
-
-		else {
-
-			$enc_id = AddSlashes($user['id']);
-			$enc_url = AddSlashes($url_id);
-
-			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND url_id='{$enc_url}'";
-
-			$row = db_single(db_fetch($sql));
-
-			if ($row){
-				cache_set($cache_key, $row, "cache locally");
-			}
-		}
-
-		return $row;
-	}
-
-	#################################################################
-
 	function flickr_push_subscriptions_for_user_as_hash(&$user){
 
 		$rsp = flickr_push_subscriptions_for_user($user);
@@ -282,7 +254,6 @@
 			$cache_keys = array(
 				"flickr_push_subscriptions_secret_{$subscription['secret_url']}",
 				"flickr_push_subscriptions_user_{$user['id']}_{$subscription['topic_id']}",
-				"flickr_push_subscriptions_user_{$user['id']}_and_url_{$subscription['url_id']}",
 				"flickr_push_subscriptions_for_user_{$user['id']}",
 			);
 
@@ -318,7 +289,6 @@
 			$cache_keys = array(
 				"flickr_push_subscriptions_secret_{$subscription['secret_url']}",
 				"flickr_push_subscriptions_user_{$user['id']}_{$subscription['topic_id']}",
-				"flickr_push_subscriptions_user_{$user['id']}_and_url_{$subscription['url_id']}",
 				"flickr_push_subscriptions_for_user_{$user['id']}",
 			);
 

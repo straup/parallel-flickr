@@ -85,18 +85,14 @@
 		);
 
 		$enc_photo = json_encode($photo);
-	error_log("[PARALLEL] {$enc_photo}");
 		$new ++;
 	}
 
 	$update = array(
 		'last_update' => time(),
-		'last_update_photo_count' => $new,
 	);
 
 	$rsp = flickr_push_subscriptions_update($subscription, $update);
-
-	error_log("[PARALLEL] " . var_export($rsp, 1));
 
 	#
 
