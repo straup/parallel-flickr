@@ -68,6 +68,11 @@
 
 	foreach ($atom->items as $e){
 
+		# for debugging...
+		# $fh = fopen("/tmp/wtf.json", "w");
+		# fwrite($fh, json_encode($e));
+		# fclose($fh);
+
 		# TO DO: check $subscription['topic_id'] here because
 		# at some point if we start to use the push stuff to
 		# track things we're backing we'll need to store the
@@ -89,12 +94,10 @@
 			'thumb_url' => $e['media']['thumbnail@url'],
 		);
 
-		error_log("[PARALLEL] sub: {$subscription['topic_id']} contributor: {$e['contributor']} ({$e['contributor_nsid']})");
-
-		# TO DO: if ($subscription['topic_id'] == 2){
-		# store 'faved by' information:
-		# contributor_nsid': NSID
-		# contributor: screen name
+		if ($subscription['topic_id'] == 2){
+			$photo['faved_by'] = $e['flickr']['contributor'];
+			$photo['faved_by_nsid'] = $e['flickr']['contributor_nsid'];
+		}
 
 		$enc_photo = json_encode($photo);
 
