@@ -48,6 +48,8 @@
 		$users_counts = array();
 		$users_photos = array();
 
+		# TO DO: bucket by time pies (30m, 2h, etc.)
+
 		foreach ($rsp['rows'] as $row){
 
 			$nsid = $row['owner'];
