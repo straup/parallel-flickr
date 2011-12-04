@@ -89,6 +89,11 @@
 			'thumb_url' => $e['media']['thumbnail@url'],
 		);
 
+		# TO DO: if ($subscription['topic_id'] == 2){
+		# store 'faved by' information:
+		# contributor_nsid': NSID
+		# contributor: screen name
+
 		$enc_photo = json_encode($photo);
 
 		$photo_data = array(
