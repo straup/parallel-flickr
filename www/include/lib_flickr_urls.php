@@ -73,26 +73,7 @@
 
 	function flickr_urls_photos_user(&$user){
 
-		$flickr_user = flickr_users_get_by_user_id($user['id']);
-		$alias = null;
-
-		if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
-			loadlib("flickr_users_path_aliases");
-			$alias = flickr_users_path_aliases_current_for_user($user);
-		}
-
-		if (! $alias){
-
-			# see notes in flickr_users_create_user
-
-			if ((! $flickr_user['path_alias']) || ($flickr_user['path_alias_taken_by'])){
-				$alias = $flickr_user['nsid'];
-			}
-
-			else {
-				$alias = $flickr_user['path_alias'];
-			}
-		}
+		$alias = flickr_urls_path_alias_for_user($user);
 
 		$root = $GLOBALS['cfg']['abs_root_url'];
 		return $root . "photos/" . $alias . "/";
@@ -156,11 +137,45 @@
 
 	#################################################################
 
-	function flickr_urls_faves_user(&$user){
+	function flickr_urls_faves_user(&$user, $by_user=null){
 
-		return flickr_urls_photos_user($user) . "faves/";
+		$url = flickr_urls_photos_user($user) . "faves/";
+
+		if ($by_user){
+			$alias = flickr_urls_path_alias_for_user($by_user);
+			$url .= "{$alias}/";
+		}
+
+		return $url;
 	}
 
 	#################################################################
 
+	function flickr_urls_path_alias_for_user(&$user){
+
+		$flickr_user = flickr_users_get_by_user_id($user['id']);
+		$alias = null;
+
+		if ($GLOBALS['cfg']['enable_feature_path_alias_redirects']){
+			loadlib("flickr_users_path_aliases");
+			$alias = flickr_users_path_aliases_current_for_user($user);
+		}
+
+		if (! $alias){
+
+			# see notes in flickr_users_create_user
+
+			if ((! $flickr_user['path_alias']) || ($flickr_user['path_alias_taken_by'])){
+				$alias = $flickr_user['nsid'];
+			}
+
+			else {
+				$alias = $flickr_user['path_alias'];
+			}
+		}
+
+		return $alias;
+	}
+
+	#################################################################
 ?>
