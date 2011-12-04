@@ -25,6 +25,10 @@ registered. You should start seeing photos shortly.</p>
 {/if}
 </h3>
 
+<div style="float:left;margin-right:10px;margin-bottom:10px;">
+<img src="{$cfg.abs_root_url}flickr_buddyicon.php?nsid={$nsid|escape}" />
+</div>
+
 {foreach from=$users_photos.$nsid item="row"}
 <div style="float:left;margin-right:10px;margin-bottom:10px;">
 <img src="{$row.thumb_url}" />
