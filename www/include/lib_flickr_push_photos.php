@@ -40,4 +40,51 @@
 
 	#################################################################
 
+	function flickr_push_photos_for_subscription(&$sub, $older_than=null){
+
+		$user = users_get_by_id($sub['user_id']);
+		$cluster = $user['cluster_id'];
+
+		$enc_sub = AddSlashes($sub['id']);
+
+		$sql = "SELECT * FROM FlickrPushPhotos WHERE subscription_id='{$enc_sub}'";
+
+		if ($older_than){
+
+		}
+
+		$sql .= " ORDER BY created DESC";
+
+		$rsp = db_fetch_users($cluster, $sql);
+
+		$photos = array();
+
+		foreach ($rsp['rows'] as $row){
+			$photo = json_decode($row['photo_data'], 'as hash');
+			$photo['created'] = $row['created'];
+
+			$photos[] = $photo;
+		}
+
+		$rsp['rows'] = $photos;
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_push_photos_purge(){
+
+		$now = time();
+		$then = $now - (60 * 60 * 24);
+
+		$enc_then = AddSlashes($then);
+		$sql = "DELETE FROM FlickrPushPhotos WHERE created < {$enc_then}";
+
+		foreach ($GLOBALS['cfg']['db_users']['host'] as $cluster_id => $ignore){
+
+			db_write_users($cluster_id, $sql);
+		}
+	}
+
+	#################################################################
 ?>

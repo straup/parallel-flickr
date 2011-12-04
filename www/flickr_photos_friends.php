@@ -35,12 +35,50 @@
 
 		$rsp = flickr_push_subscriptions_register_subscription($sub);
 
-		dumper($rsp);
-		exit();
+		$GLOBALS['smarty']->assign("new_subscription", $rsp['ok']);
+		$GLOBALS['smarty']->assign("subscription_ok", $rsp['ok']);
 	}
 
-dumper($sub);
-exit;
+	else {
+
+		$limit = null;
+
+		$rsp = flickr_push_photos_for_subscription($sub, $limit);
+		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
+
+		$users_names = array();
+		$users_updated = array();
+		$users_counts = array();
+		$users_photos = array();
+
+		foreach ($rsp['rows'] as $row){
+
+			$nsid = $row['owner'];
+			$created = $row['created'];
+
+			$users_counts[$nsid] ++;
+			$users_updated[$nsid] = max($users_updated[$nsid], $created);
+
+			if (! isset($users_names[$nsid])){
+				$users_names[$nsid] = $row['ownername'];
+			}
+
+			if (! is_array($users_photos[$nsid])){
+				$users_photos[$nsid] = array();
+			}
+
+			$users_photos[$nsid]["{$created}.{$row['photo_id']}"] = $row;
+		}
+
+		arsort($users_updated);
+		arsort($users_photos);
+
+		$GLOBALS['smarty']->assign_by_ref("users_updated", $users_updated);
+		$GLOBALS['smarty']->assign_by_ref("users_counts", $users_counts);
+		$GLOBALS['smarty']->assign_by_ref("users_names", $users_names);
+		$GLOBALS['smarty']->assign_by_ref("users_photos", $users_photos);
+	}
+
 	$GLOBALS['smarty']->display("page_flickr_photos_friends.txt");
 	exit();
 

@@ -1,0 +1,39 @@
+{capture assign="page_title"}photos from your contacts{/capture}
+{include file="inc_head.txt"}
+
+<h2>Your contacts</h2>
+
+{if $new_subscription}
+
+{if $subscription_ok}
+
+{else}
+
+{/if}
+
+{else}
+
+{* TO DO: buddyicons *}
+
+{foreach from=$users_updated item="ts" key="nsid"}
+<h3>
+{if $users_counts.$nsid==1}
+{$users_names.$nsid|escape} ... one photo
+{else}
+{$users_names.$nsid|escape} ... {$users_counts.$nsid|escape} photos
+{/if}
+</h3>
+
+{foreach from=$users_photos.$nsid item="row"}
+<div style="float:left;margin-right:10px;margin-bottom:10px;">
+<img src="{$row.thumb_url}" />
+</div>
+{/foreach}
+
+<br clear="all" />
+
+{/foreach}
+
+{/if}
+
+{include file="inc_foot.txt"}

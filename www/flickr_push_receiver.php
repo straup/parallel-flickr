@@ -67,8 +67,14 @@
 
 	foreach ($atom->items as $e){
 
+		if (! preg_match("!.*/(\d+)$!", $e['id'], $m)){
+			continue;
+		}
+
+		$photo_id = $m[1];
+
 		$photo = array(
-			'photo_id' => $e['id'],
+			'photo_id' => $photo_id,
 			'owner' => $e['flickr']['author_nsid'],
 			'ownername' => $e['author'],
 			'title' => $e['title'],
@@ -82,24 +88,26 @@
 		$photo_data = array(
 			'user_id' => $user['id'],
 			'subscription_id' => $subscription['id'],
-			'photo_id' => $e['id'],
+			'photo_id' => $photo_id,
 			'photo_data' => $enc_photo,
 		);
 
-error_log("[PARALLEL] " . var_export($photo_data, 1));
-		$rsp = flickr_push_photos_record($photo_data);
+		$rsp = flickr_push_photos_record($user, $photo_data);
 
-error_log("[PARALLEL] " . var_export($rsp, 1));
-		$new ++;
+		if ($rsp['ok']){
+			$new ++;
+		}
 	}
 
-	$update = array(
-		'last_update' => time(),
-	);
+	if ($new){
 
-	$rsp = flickr_push_subscriptions_update($subscription, $update);
+		$update = array(
+			'last_update' => time(),
+		);
 
-	#
+		$rsp = flickr_push_subscriptions_update($subscription, $update);
+	}
 
+	flickr_push_photos_purge();
 	exit();
 ?>
