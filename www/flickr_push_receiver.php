@@ -56,16 +56,22 @@
 		exit();
 	}
 
+	# TO DO: check $subscription['topic_id'] here against
+	# the 'flickr_push_enable_*' flags (20111203/straup)
+
 	$xml = file_get_contents('php://input');
 	$atom = syndication_atom_parse_str($xml);
-
-	#
 
 	$user = users_get_by_id($subscription['user_id']);
 
 	$new = 0;
 
 	foreach ($atom->items as $e){
+
+		# TO DO: check $subscription['topic_id'] here because
+		# at some point if we start to use the push stuff to
+		# track things we're backing we'll need to store the
+		# data in another table (20111203/straup)
 
 		if (! preg_match("!.*/(\d+)$!", $e['id'], $m)){
 			continue;
