@@ -158,6 +158,21 @@
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
 
+		# FIX ME: OMGWTF...
+/*
+<pre style="text-align: left;">'wrote
+/home/asc/parallel-flickr-static/556/556_8e34a729d6_i.json'</pre>
+<pre style="text-align: left;">'fetching 1 URIs for photo '</pre>
+<pre style="text-align: left;">'failed to fetch
+http://farm1.static.flickr.com/1/556_8e34a729d6_o.:  will retry: 1'</pre>
+<pre style="text-align: left;">'fetching 1 URIs for photo '</pre>
+<pre style="text-align: left;">'failed to fetch
+http://farm1.static.flickr.com/1/556_8e34a729d6_o.:  will retry: 1'</pre>
+<pre style="text-align: left;">'fetching 1 URIs for photo '</pre>
+<pre style="text-align: left;">'failed to fetch
+http://farm1.static.flickr.com/1/556_8e34a729d6_o.:  will retry: 0'</pre>
+*/
+
 		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
 
 		$small = "{$root}_{$photo['secret']}_z.jpg";
@@ -276,16 +291,14 @@
 		# fetch all the bits using http_multi()
 
 		if ($count = count($req)){
-			_flickr_photos_fetch_multi($req);
+			_flickr_photos_import_fetch_multi($req);
 		}
 
 	}
 
 	#################################################################
 
-	function _flickr_photos_fetch_multi(&$req, $retries=3){
-
-		dumper("fetching {$count} URIs for photo {$photo['id']}");
+	function _flickr_photos_import_fetch_multi(&$req, $retries=3){
 
 		$multi = array();
 		$failed = array();
@@ -294,6 +307,9 @@
 			list($remote, $local) = $uris;
 			$multi[] = array('url' => $remote);
 		}
+
+		$count = count($multi);
+		dumper("fetching {$count} URIs for photo {$photo['id']}");
 
 		$rsp = http_multi($multi);
 
@@ -304,8 +320,11 @@
 
 			list($remote, $local) = $_req;
 
+			# dumper("{$local} : {$_rsp['ok']}");
+
 			if (! $_rsp['ok']){
-				$failed = $_req;
+
+				$failed[] = $_req;
 
 				$will_retry = ($retries) ? 1 : 0;
 
@@ -353,7 +372,7 @@
 
 		if ((count($failed)) && ($retries)){
 			$retries = ($retries) ? $retries - 1 : 0;
-			_flickr_photos_fetch_multi($failed, $retries);
+			_flickr_photos_import_fetch_multi($failed, $retries);
 		}
 	}
 
