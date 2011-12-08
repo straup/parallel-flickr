@@ -148,10 +148,6 @@
 		if (! $backup['date_firstupdate']){
 
 			$rsp = flickr_photos_import_for_nsid($flickr_user['nsid']);
-
-			if ($rsp['ok']){
-				$update['date_firstupdate'] = $update['date_lastupdate'];
-			}
 		}
 
 		else {
@@ -168,6 +164,11 @@
 		if ($rsp['ok']){
 			$update['date_lastupdate'] = $start_time;
 			$update['details'] = "count: {$rsp['count_imported']}";
+
+			if (! $backup['date_firstupdate']){
+				$update['date_firstupdate'] = $update['date_lastupdate'];
+			}
+
 		}
 
 		else {

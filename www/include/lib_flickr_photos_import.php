@@ -158,21 +158,6 @@
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
 
-		# FIX ME: OMGWTF...
-/*
-<pre style="text-align: left;">'wrote
-/home/asc/parallel-flickr-static/556/556_8e34a729d6_i.json'</pre>
-<pre style="text-align: left;">'fetching 1 URIs for photo '</pre>
-<pre style="text-align: left;">'failed to fetch
-http://farm1.static.flickr.com/1/556_8e34a729d6_o.:  will retry: 1'</pre>
-<pre style="text-align: left;">'fetching 1 URIs for photo '</pre>
-<pre style="text-align: left;">'failed to fetch
-http://farm1.static.flickr.com/1/556_8e34a729d6_o.:  will retry: 1'</pre>
-<pre style="text-align: left;">'fetching 1 URIs for photo '</pre>
-<pre style="text-align: left;">'failed to fetch
-http://farm1.static.flickr.com/1/556_8e34a729d6_o.:  will retry: 0'</pre>
-*/
-
 		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
 
 		$small = "{$root}_{$photo['secret']}_z.jpg";
