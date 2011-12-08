@@ -162,12 +162,18 @@
 
 		$small = "{$root}_{$photo['secret']}_z.jpg";
 
+		$ext = ($photo["originalsecret"]) ? $photo["originalformat"] : "jpg";
+
 		if ($photo['originalsecret']){
-			$orig = "{$root}_{$photo['originalsecret']}_o.{$photo['originalformat']}";
+
+			# This is probably really only necessary for
+			# Cal's account (20111208/straup)
+
+			$orig = ($ext) ? "{$root}_{$photo['originalsecret']}_o.{$ext}" : null;
 		}
 
 		else {
-			$orig = "{$root}_{$photo['secret']}_b.jpg";
+			$orig = "{$root}_{$photo['secret']}_b.{$ext}";
 		}
 
 		if ($photo['media'] == 1){
@@ -207,7 +213,12 @@
 		}
 
 		if (($more['force']) || (! file_exists($local_orig))){
-			$req[] = array($orig, $local_orig);
+
+			# see above
+
+			if ($orig){
+				$req[] = array($orig, $local_orig);
+			}
 		}
 
 		# for now, just always fetch meta files because who knows

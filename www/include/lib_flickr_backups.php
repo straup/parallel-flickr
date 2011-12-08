@@ -210,15 +210,13 @@
 
 		$rsp = flickr_faves_import_for_nsid($flickr_user['nsid'], $more);
 
-		if (($rsp['ok']) && (! $backup['date_firstupdate'])){
-			$update['date_firstupdate'] = $update['date_lastupdate'];
-		}
-
-		#
-
 		if ($rsp['ok']){
 			$update['date_lastupdate'] = $start_time;
 			$update['details'] = "count: {$rsp['count_imported']}";
+
+			if (! $backup['date_firstupdate']){
+				$update['date_firstupdate'] = $update['date_lastupdate'];
+			}
 		}
 
 		else {
@@ -244,6 +242,9 @@
 			);
 		}
 
+		$backup = $backups['contacts'];
+		$update = array();
+
 		$start_time = time();
 
 		$rsp = flickr_contacts_purge_contacts($user);
@@ -257,6 +258,10 @@
 		if ($rsp['ok']){
 			$update['date_lastupdate'] = $start_time;
 			$update['details'] = "count: {$rsp['count_imported']}";
+
+			if (! $backup['date_firstupdate']){
+				$update['date_firstupdate'] = $update['date_lastupdate'];
+			}
 		}
 
 		else {
