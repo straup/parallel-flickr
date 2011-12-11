@@ -1,5 +1,6 @@
 {capture assign="page_title"}photos from your contacts{/capture}
 {include file="inc_head.txt"}
 
+your contacts photos with <a href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a> | photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">recently faved</a> 
 
 {include file="inc_foot.txt"}

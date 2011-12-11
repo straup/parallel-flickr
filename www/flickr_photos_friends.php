@@ -17,8 +17,6 @@
 		error_disabled();
 	}
 
-	error_404();
-
 	$GLOBALS['smarty']->display("page_flickr_photos_friends.txt");
 	exit();
 
