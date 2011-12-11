@@ -9,6 +9,7 @@
 	#################################################################
 
 	loadlib("http");
+	loadlib("solr_utils");
 
 	#################################################################
 
@@ -63,6 +64,40 @@
 
 	#################################################################
 
+	# https://wiki.apache.org/solr/SpatialSearch#QuickStart
+	# http://e-mats.org/2011/12/solr-missing-geographic-distance-in-response-when-using-fl_dist_geodist/
+
+	function solr_select_nearby($lat, $lon, $params=array(), $more=array()){
+
+		$defaults = array(
+			"d" => 1,
+			"sfield" => "location",
+			"sort" => "geodist() asc",
+		);
+
+		$more = array_merge($defaults, $more);
+
+		if (! isset($params['q'])){
+
+			$query = array(
+				"*" => "*",
+			);
+
+			$q = solr_utils_hash2query($query, " AND ");
+			$params['q'] = $q;
+		}
+
+		$params['fq'] = "{!geofilt}";
+		$params['pt'] = "{$lat},{$lon}";
+		$params['sfield'] = $more['sfield'];
+		$params['d'] = $more['d'];
+		$params['sort'] = $more['sort'];
+
+		return solr_select($params, $more);
+	}
+
+	#################################################################
+
 	# https://wiki.apache.org/solr/SimpleFacetParameters
 	# https://wiki.apache.org/solr/SolrFacetingOverview
 
@@ -82,25 +117,10 @@
 			return $rsp;
 		}
 
-		$fields = $rsp['data']['facet_counts']['facet_fields'];
-		$facets = array();
-
-	 	# I suppose at some point we'll need to deal with multiple
-		# facets but for now we don't  (20111120/straup)
-
 		$facet = $params['facet.field'];
-		$count_facet = count($fields[$facet]);
 
-		foreach (range(0, $count_facet, 2) as $i){
-
-			if ($i == $count_facet){
-				break;
-			}
-
-			$key = $fields[$facet][$i];
-			$count = $fields[$facet][$i + 1];
-			$facets[$key] = $count;
-		}
+		$fields = $rsp['data']['facet_counts']['facet_fields'];
+		$facets = _solr_facet_fields_to_hash($fields[$facet]);
 
 		arsort($facets);
 
@@ -108,6 +128,55 @@
 			'ok' => 1,
 			'facets' => $facets,
 		);
+	}
+
+	#################################################################
+
+	# https://wiki.apache.org/solr/SimpleFacetParameters#rangefaceting
+
+	function solr_facet_range($params, $more=array()){
+
+		$params['rows'] = 0;
+		$params['facet'] = "on";
+
+		$params['facet.mincount'] = (isset($more['mincount'])) ? $more['mincount'] : 1;
+
+		# TO DO: pagination?
+
+		$params['facet.range.other'] = 'all';
+
+		$rsp = _solr_select($params);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+	 	# see above (solr_facet) for notes about multiple facets
+
+		$facet = $params['facet.range'];
+
+		$ranges = $rsp['data']['facet_counts']['facet_ranges'];
+		$fields = $ranges[$facet];
+
+		$facets = _solr_facet_fields_to_hash($fields['counts']);
+		$details = array();
+
+		foreach (array('gap', 'start', 'end', 'before', 'after', 'between') as $key){
+
+			if (! isset($fields[$key])){
+				continue;
+			}
+
+			$details[$key] = $fields[$key];
+		}
+
+		return array(
+			'ok' => 1,
+			$facet => $facets,
+			'details' => $details,
+		);
+
+		return $rsp;
 	}
 
 	#################################################################
@@ -196,7 +265,7 @@
 			$v = (is_array($v)) ? $v : array($v);
 
 			foreach ($v as $_v){
-				$query[] = "$k=" . urlencode($_v);
+			 	$query[] = "$k=" . urlencode($_v);
 			}
 		}
 
@@ -205,6 +274,28 @@
 		}
 
 		return $query;
+	}
+
+	#################################################################
+
+	function _solr_facet_fields_to_hash(&$fields){
+
+		$hash = array();
+
+		$count_facet = count($fields);
+
+		foreach (range(0, $count_facet, 2) as $i){
+
+			if ($i == $count_facet){
+				break;
+			}
+
+			$key = $fields[$i];
+			$count = $fields[$i + 1];
+			$hash[$key] = $count;
+		}
+
+		return $hash;
 	}
 
 	#################################################################
