@@ -1,6 +1,18 @@
+{capture assign="page_title"}{$owner.username|escape} | faves{if $by_owner} | {$by_owner.username|escape}{/if}{/capture}
+{capture assign="header"}
+{if $is_own and $by_owner}
+photos you've faved, by {$by_owner.username|escape}
+{elseif $is_own}
+your faves
+{elseif $by_owner}
+{$by_owner.username|escape}'s photos, faved by {$owner.username|escape}
+{else}
+photos faved by {$owner.username|escape}
+{/if}
+{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}your faves{else}faves from {$owner.username|escape}{/if}</h2>
+<h2>{$header|escape}</h2>
 
 {foreach from=$photos item="row"}
 
