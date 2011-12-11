@@ -88,8 +88,6 @@ TO DO:
 
 * search, see also: [parallel-flickr-solr](https://github.com/straup/parallel-flickr-solr)
 
-* duplicate key errors fetching faves
-
 * better layout, tested in more than just Firefox
 
 See also: [TODO.txt](https://github.com/straup/parallel-flickr/blob/master/TODO.txt)

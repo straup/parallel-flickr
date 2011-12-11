@@ -112,9 +112,10 @@
 
 		# exif data
 
-		$more = array(
-			'force' => 1,
-		);
+		# why did I do this? (20111206/straup)
+		# $more = array(
+		# 	'force' => 1,
+		# );
 
 		if ($hasexif = flickr_photos_exif_has_exif($photo, $more)){
 
@@ -161,12 +162,18 @@
 
 		$small = "{$root}_{$photo['secret']}_z.jpg";
 
+		$ext = ($photo["originalsecret"]) ? $photo["originalformat"] : "jpg";
+
 		if ($photo['originalsecret']){
-			$orig = "{$root}_{$photo['originalsecret']}_o.{$photo['originalformat']}";
+
+			# This is probably really only necessary for
+			# Cal's account (20111208/straup)
+
+			$orig = ($ext) ? "{$root}_{$photo['originalsecret']}_o.{$ext}" : null;
 		}
 
 		else {
-			$orig = "{$root}_{$photo['secret']}_b.jpg";
+			$orig = "{$root}_{$photo['secret']}_b.{$ext}";
 		}
 
 		if ($photo['media'] == 1){
@@ -206,7 +213,12 @@
 		}
 
 		if (($more['force']) || (! file_exists($local_orig))){
-			$req[] = array($orig, $local_orig);
+
+			# see above
+
+			if ($orig){
+				$req[] = array($orig, $local_orig);
+			}
 		}
 
 		# for now, just always fetch meta files because who knows
@@ -275,69 +287,89 @@
 		# fetch all the bits using http_multi()
 
 		if ($count = count($req)){
-
-			dumper("fetching {$count} URIs for photo {$photo['id']}");
-
-			$multi = array();
-
-			foreach ($req as $uris){
-				list($remote, $local) = $uris;
-				$multi[] = array('url' => $remote);
-			}
-
-			$rsp = http_multi($multi);
-
-			for ($i=0; $i < $count; $i++){
-
-				$_rsp = $rsp[$i];
-				$_req = $req[$i];
-
-				if (! $_rsp['ok']){
-					# make an error/warning here...
-					continue;
-				} 
-
-				list($remote, $local) = $_req;
-
-				# if $source then check to ensure we have something
-				# worth writing to disk
-
-				if (preg_match("/^json:(\w+):(.*)$/", $local, $m)){
-
-					$data = $_rsp['body'];
-					$source = $m[1];
-					$local = $m[2];
-
-					$to_check = array(
-						'comments',
-					);
-
-					if (in_array($source, $to_check)){
-
-						$json = json_decode($data, "as hash");
-
-						if (! $json){
-							continue;
-						}
-					}
-
-					if ($source == 'comments'){
-
-						if (! count($json['comments']['comment'])){
-							continue;
-						}
-					}
-				}
-
-				else {
-					$data = $_rsp['body'];
-				}
-
-				_flickr_photos_import_store($local, $data);
-				dumper("wrote {$local}");
-			}
+			_flickr_photos_import_fetch_multi($req);
 		}
 
+	}
+
+	#################################################################
+
+	function _flickr_photos_import_fetch_multi(&$req, $retries=3){
+
+		$multi = array();
+		$failed = array();
+
+		foreach ($req as $uris){
+			list($remote, $local) = $uris;
+			$multi[] = array('url' => $remote);
+		}
+
+		$count = count($multi);
+		dumper("fetching {$count} URIs for photo {$photo['id']}");
+
+		$rsp = http_multi($multi);
+
+		for ($i=0; $i < $count; $i++){
+
+			$_rsp = $rsp[$i];
+			$_req = $req[$i];
+
+			list($remote, $local) = $_req;
+
+			# dumper("{$local} : {$_rsp['ok']}");
+
+			if (! $_rsp['ok']){
+
+				$failed[] = $_req;
+
+				$will_retry = ($retries) ? 1 : 0;
+
+				dumper("failed to fetch {$remote}: {$rsp['error']} will retry: {$will_retry}");
+				continue;
+			} 
+
+			# if $source then check to ensure we have something
+			# worth writing to disk
+
+			if (preg_match("/^json:(\w+):(.*)$/", $local, $m)){
+
+				$data = $_rsp['body'];
+				$source = $m[1];
+				$local = $m[2];
+
+				$to_check = array(
+					'comments',
+				);
+
+				if (in_array($source, $to_check)){
+
+					$json = json_decode($data, "as hash");
+
+					if (! $json){
+						continue;
+					}
+				}
+
+				if ($source == 'comments'){
+
+					if (! count($json['comments']['comment'])){
+						continue;
+					}
+				}
+			}
+
+			else {
+				$data = $_rsp['body'];
+			}
+
+			_flickr_photos_import_store($local, $data);
+			dumper("wrote {$local}");
+		}
+
+		if ((count($failed)) && ($retries)){
+			$retries = ($retries) ? $retries - 1 : 0;
+			_flickr_photos_import_fetch_multi($failed, $retries);
+		}
 	}
 
 	#################################################################
@@ -378,11 +410,39 @@
 
 		$imported = 0;
 
+		# TO DO: capture dateupdate for each photo and return that
+		# if there's a fatal error so that the FlickrBackups database
+		# can be set with something other than 0 (20111206/straup)
+
 		while ((! isset($pages)) || ($pages >= $args['page'])){
 
-			$rsp = flickr_api_call($method, $args);
+			# because the Flickr API has an annoying habit of
+			# timing out and this causes an initial import of
+			# photos to fail and be repeated in-toto over and
+			# over again (20111206/straup)
 
-			if (! $rsp['ok']){
+			$tries = 1;
+			$max_tries = 5;
+			$ok = 0;
+
+			while ((! $ok) && ($tries < $max_tries)){
+				$rsp = flickr_api_call($method, $args);
+				$ok = $rsp['ok'];
+
+				$tries++;
+
+				if ($ok){
+
+					$photos = $rsp['rsp']['photos']['photo'];
+
+					if (! is_array($photos)){
+						$rsp = not_ok("no photos");
+						$ok = 0;
+					}
+				}
+			}
+
+			if (! $ok){
 				return $rsp;
 			}
 
@@ -390,14 +450,7 @@
 				$pages = $rsp['rsp']['photos']['pages'];
 			}
 
-			$photos = $rsp['rsp']['photos']['photo'];
-
-			if (! is_array($photos)){
-				return array(
-					'ok' => 0,
-					'error' => 'no photos',
-				);
-			}
+			# TO DO: date update stuff (see above)
 
 			foreach ($photos as $photo){
 				flickr_photos_import_photo($photo, $more);
