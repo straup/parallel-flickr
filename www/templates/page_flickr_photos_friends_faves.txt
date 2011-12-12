@@ -4,24 +4,33 @@
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
 	<script type="text/javascript">
 
+		{* TO DO: nsids and/or just use a hash... *}
+
 		var photos = [
 {foreach from=$photos item="row"}
-		["{$row.title|escape}", "{$row.ownername|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
+		["{$row.title|escape}", "{$row.ownername|escape}", "{$row.faved_by|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
 {/foreach}
 		];
 
 		var idx = 0;
 {literal}
 
-	function show_photo(_idx){
+	function show_photo(index){
 
-		msg = "<img src=\"" + photos[_idx][3] + "\" /><br >";
-		msg += "photo by " + photos[_idx][1] + "<br />";
-		msg += "faved by ";
+		var photo = photos[index];
+		var title = photo[0];
+		var taken_by = photo[1];
+		var faved_by= photo[2];
+		var thumb = photo[3];
+		var img = photo[4];
+
+		msg = "<img src=\"" + img + "\" /><br >";
+		msg += faved_by + " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  " + taken_by + "<br />";
+		msg += "no. " + (index + 1) + " of " + photos.length + " faves";
 
 		$("#cwf_about").html("");
 
-		$.backstretch(photos[_idx][2]);
+		$.backstretch(thumb);
 		$("#cwf_about").html(msg);
 	}
 

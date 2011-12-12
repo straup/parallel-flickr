@@ -95,7 +95,7 @@
 		);
 
 		if ($subscription['topic_id'] == 2){
-			$photo['faved_by'] = $e['flickr']['contributor'];
+			$photo['faved_by'] = $e['contributor_name'];
 			$photo['faved_by_nsid'] = $e['flickr']['contributor_nsid'];
 		}
 
