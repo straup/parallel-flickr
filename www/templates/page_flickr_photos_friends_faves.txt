@@ -35,6 +35,7 @@
 
 		$("#content").hide();
 		$("#main").css("background-color", "transparent");
+		$("#footer").css("opacity", ".75");
 		$("#main").append("<div id=\"cwf_about\"></div>");
 
 		$.backstretch(thumbs[0]);

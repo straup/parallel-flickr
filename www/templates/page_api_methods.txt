@@ -1,0 +1,16 @@
+{assign var="page_title" value="API methods"}
+{include file="inc_head.txt"}
+
+{foreach from=$method_classes item="methods" key="class"}
+
+<h2>{$class|escape}</h2>
+
+<ul>
+{foreach from=$methods item="method_name}
+	<li><a href="{$cfg.abs_root_url}api/methods/{$method_name|escape:'uri'}">{$method_name|escape}</a></li>
+{/foreach}
+</ul>
+
+{/foreach}
+
+{include file="inc_foot.txt"}

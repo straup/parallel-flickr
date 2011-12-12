@@ -1,0 +1,24 @@
+{
+
+	"default_format": "json",
+
+	"formats": [
+		"json"
+	],
+
+	"methods": {
+
+		"test.echo": {
+			"documented": 1,
+			"enabled": 1,
+			"library": "api_test"
+		},
+
+		"test.error": {
+			"documented": 1,
+			"enabled": 1,
+			"library": "api_test"
+		}
+	}
+
+}
