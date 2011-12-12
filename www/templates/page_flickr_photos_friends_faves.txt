@@ -1,4 +1,62 @@
 {capture assign="page_title"}faves from your contacts{/capture}
+{capture assign="extra_head"}
+{if !$new_subscription}
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
+	<script type="text/javascript">
+
+		var photos = [
+{foreach from=$photos item="row"}
+		["{$row.title|escape}", "{$row.ownername|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
+{/foreach}
+		];
+
+		var idx = 0;
+{literal}
+
+	function show_photo(_idx){
+
+		msg = "<img src=\"" + photos[_idx][3] + "\" /><br >";
+		msg += "photo by " + photos[_idx][1] + "<br />";
+		msg += "faved by ";
+
+		$("#cwf_about").html("");
+
+		$.backstretch(photos[_idx][2]);
+		$("#cwf_about").html(msg);
+	}
+
+	$(document).ready(function(){
+		$("#content").hide();
+		$("#main").css("background-color", "transparent");
+		$("#main").append("<div id=\"cwf_about\"></div>");
+
+		show_photo(idx);
+
+	});
+
+	$(document).keypress(function(e){
+
+		// FIX ME...
+		var prev = (idx >= 0) ? idx - 1 : null;
+		var next = (idx < (photos.length - 1)) ? idx + 1 : null;
+
+		if ((e.keyCode == 37) && (prev)){
+			idx = prev;
+			show_photo(prev);
+		}
+
+		else if ((e.keyCode == 39) && (next)){
+			idx = next;
+			show_photo(next);
+		}
+
+		else {}
+	});
+
+{/literal}
+	</script>
+{/if}
+{/capture}
 {include file="inc_head.txt"}
 
 <h2>Your contacts' faves</h2>
@@ -15,9 +73,9 @@ registered. You should start seeing photos shortly.</p>
 {else}
 
 {* TO DO: buddyicons *}
-
+{if 0}
 {foreach from=$photos item="row" name="faves"}
-
+{$row|@dumper}
 <div style="float:left;margin-right:10px;margin-bottom:10px;">
 {if $smarty.foreach.faves.index<10}
 <a href="http://www.flickr.com/photo.gne?id={$row.photo_id|escape}" target="_flickr"><img src="{$row.photo_url}" /></a>
@@ -27,6 +85,7 @@ registered. You should start seeing photos shortly.</p>
 </div>
 
 {/foreach}
+{/if}
 
 <br clear="all" />
 

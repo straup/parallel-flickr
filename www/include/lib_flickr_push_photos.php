@@ -66,6 +66,7 @@
 			$photo = json_decode($row['photo_data'], 'as hash');
 			$photo['created'] = $row['created'];
 
+			$photo['display_url'] = str_replace("_s.jpg", ".jpg", $photo['thumb_url']);
 			$photos[] = $photo;
 		}
 

@@ -373,3 +373,23 @@ td {
     line-height:1.5em;
     margin-bottom:5px;
 }
+
+#cwf_about {
+    width: 400px;
+    height: 400px;
+    max-width: 400px;
+    padding: 0 0 0 50px;
+    /* border: 3px solid red; */
+    margin: 75px 50px 0 auto !important;
+    font-size:1.25em;
+    font-weight: 700;
+    color: transparent;
+    line-height:1.25em;
+    text-shadow: 0.1em 0.1em 0.05em #fff;
+}
+
+#cwf_about img {
+    border: 10px solid #fff;
+    max-width:400px;
+    max-height:400px;
+}
