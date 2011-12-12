@@ -2,31 +2,132 @@
 {capture assign="extra_head"}
 {if !$new_subscription}
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
 	<script type="text/javascript">
 
-		{* TO DO: nsids and/or just use a hash... *}
+		{* I tried justing dumping/parse this using json_encode and JSON.parse *}
+		{* but all it did was produce errors and yak shadows (20111212/straup) *}
+
+		// TO DO: track what's already been seen (photo_id + faved_by_nsid) here
+		// and below in show_photo and bucket photos in to separate lists
 
 		var photos = [
 {foreach from=$photos item="row"}
-		["{$row.title|escape}", "{$row.ownername|escape}", "{$row.faved_by|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
+		["{$row.photo_id|escape}", "{$row.title|escape}", "{$row.owner|escape}", "{$row.ownername|escape}", "{$row.faved_by_nsid|escape}", "{$row.faved_by|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
 {/foreach}
 		];
 
+		var count_photos = photos.length;
 		var idx = 0;
+
 {literal}
+
+		var thumbs = new Array();
+		var images = new Array();
+
+		for (var i=0; i < count_photos; i++){
+			thumbs.push(photos[i][6]);
+			images.push(photos[i][7]);
+		}
+
+	$(document).ready(function(){
+
+		$("#content").hide();
+		$("#main").css("background-color", "transparent");
+		$("#main").append("<div id=\"cwf_about\"></div>");
+
+		$.backstretch(thumbs[0]);
+
+		$({}).imageLoader({
+			images: thumbs,
+			async: true
+		});
+
+		$({}).imageLoader({
+			images: [ images.shift() ],
+			async: false,
+			complete: function(){
+				show_photo(idx);
+			}
+		});
+	});
+
+	// TO DO: touch support...
+
+	$(document).keypress(function(e){
+
+		var prev = (idx > 0) ? idx - 1 : count_photos - 1;
+		var next = (idx < (photos.length - 1)) ? idx + 1 : 0;
+
+		if (e.keyCode == 37){
+			show_photo(prev);
+		}
+
+		else if (e.keyCode == 39){
+			show_photo(next);
+		}
+
+		else {}
+	});
 
 	function show_photo(index){
 
-		var photo = photos[index];
-		var title = photo[0];
-		var taken_by = photo[1];
-		var faved_by= photo[2];
-		var thumb = photo[3];
-		var img = photo[4];
+		var preload = new Array();
 
-		msg = "<img src=\"" + img + "\" /><br >";
-		msg += faved_by + " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  " + taken_by + "<br />";
-		msg += "no. " + (index + 1) + " of " + photos.length + " faves";
+		for (var i=0; i < 2; i++){
+
+			if (! images.length){
+				break;
+			}
+
+			preload.push(images.shift());
+			preload.push(images.unshift());
+		}
+
+		if (preload.length){
+			$({}).imageLoader({
+				images: preload,
+				async: true
+			});
+		}
+
+		idx = index;
+
+		var prev = (index > 0) ? index - 1 : -1;
+		var next = (index < (photos.length - 1)) ? index + 1 : -1;
+
+		var photo = photos[index];
+		var photo_id = photo[0];
+		var title = photo[1];
+		var taken_by_nsid = photo[2];
+		var taken_by_name = photo[3];
+		var faved_by_nsid = photo[4];
+		var faved_by_name = photo[5];
+		var thumb = photo[6];
+		var img = photo[7];
+
+		title = title + ", by " + taken_by_name;
+
+		msg = "<a href=\"http://www.flickr.com/photos/" + taken_by_nsid + "/" + photo_id + "/\" target=\"_flickr\" title=\"" + title + "\">";
+		msg += "<img src=\"" + img + "\" /></a><br >";
+
+		msg += "<div id=\"cwf_about_text\">";
+		msg += "<a href=\"http://www.flickr.com/photos/" + faved_by_nsid + "/faves/\" target=\"_flickr\">" + faved_by_name + "</a>";
+		msg += " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  ";
+		msg += "<a href=\"http://www.flickr.com/photos/" + taken_by_nsid + "/\" target=\"_flickr\">" + taken_by_name + "</a><br />";
+
+		msg += "no. " + (index + 1) + " of " + count_photos + " faves";
+
+		if (next >= 0){
+			msg += " / <a href=\"#\" onclick=\"show_photo(" + next + ");return false;\">before</a>";
+		}
+
+		if (prev >= 0){
+			msg += " / <a href=\"#\" onclick=\"show_photo(" + prev + ");return false;\">after</a>";
+		}
+
+		msg += "</div>";
 
 		$("#cwf_about").html("");
 
@@ -34,43 +135,15 @@
 		$("#cwf_about").html(msg);
 	}
 
-	$(document).ready(function(){
-		$("#content").hide();
-		$("#main").css("background-color", "transparent");
-		$("#main").append("<div id=\"cwf_about\"></div>");
-
-		show_photo(idx);
-
-	});
-
-	$(document).keypress(function(e){
-
-		// FIX ME...
-		var prev = (idx >= 0) ? idx - 1 : null;
-		var next = (idx < (photos.length - 1)) ? idx + 1 : null;
-
-		if ((e.keyCode == 37) && (prev)){
-			idx = prev;
-			show_photo(prev);
-		}
-
-		else if ((e.keyCode == 39) && (next)){
-			idx = next;
-			show_photo(next);
-		}
-
-		else {}
-	});
-
 {/literal}
 	</script>
 {/if}
 {/capture}
 {include file="inc_head.txt"}
 
-<h2>Your contacts' faves</h2>
-
 {if $new_subscription}
+
+<h2>Your contacts' faves</h2>
 
 {if $subscription_ok}
 <p>Okay! Your subscription to new faves from your contacts has been

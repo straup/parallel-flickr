@@ -43,7 +43,6 @@
 
 		$rsp = flickr_push_photos_for_subscription($sub, $limit);
 		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
-
 	}
 
 	$GLOBALS['smarty']->display("page_flickr_photos_friends_faves.txt");

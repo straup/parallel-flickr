@@ -375,21 +375,44 @@ td {
 }
 
 #cwf_about {
-    width: 400px;
-    height: 400px;
-    max-width: 400px;
-    padding: 0 0 0 50px;
-    /* border: 3px solid red; */
+    background-color:transparent;
+    min-width:300px;
+    min-height: 300px;
+    max-width: 420px;
     margin: 75px 50px 0 auto !important;
     font-size:1.25em;
     font-weight: 700;
     color: transparent;
     line-height:1.25em;
-    text-shadow: 0.1em 0.1em 0.05em #fff;
+    text-shadow: 0.1em 0.1em 0.02em #eee;
+}
+
+#cwf_about_text {
+    min-width:300px;
+    max-width: 390px;
+    padding:20px;
+    padding-top:10px;
+    padding-left:10px;
+}
+
+#cwf_about_text a {
+    color: transparent;
+    text-decoration:none;
+}
+
+#cwf_about_text:hover {
+    color: #000 !important;
+    background-color: #eee;
+    opacity:.70;
+}
+
+#cwf_about_text:hover a{
+    color: #000 !important;
 }
 
 #cwf_about img {
     border: 10px solid #fff;
     max-width:400px;
     max-height:400px;
+    opacity: 1 !important;
 }
