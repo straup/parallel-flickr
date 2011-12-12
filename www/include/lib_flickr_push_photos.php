@@ -50,10 +50,13 @@
 
 		$enc_sub = AddSlashes($sub['id']);
 
+		# TO DO: indexes
+
 		$sql = "SELECT * FROM FlickrPushPhotos WHERE subscription_id='{$enc_sub}'";
 
 		if ($older_than){
-
+			$enc_older = AddSlashes($older_than);
+			$sql .= " AND created > '{$enc_older}'";
 		}
 
 		$sql .= " ORDER BY created DESC";

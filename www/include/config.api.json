@@ -18,6 +18,13 @@
 			"documented": 1,
 			"enabled": 1,
 			"library": "api_test"
+		},
+
+		"flickr.photos.friends.faves": {
+			"documented": 0,
+			"enabled": 1,
+			"library": "api_flickr_photos_friends",
+			"requires_auth": 1
 		}
 	}
 
