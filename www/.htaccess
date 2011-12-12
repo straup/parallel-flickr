@@ -74,6 +74,13 @@ RewriteRule  ^account/delete/?$		/account_delete.php	[L]
 RewriteRule  ^account/url/?$			/account_path_aliases.php		[L]
 RewriteRule  ^account/path_alias(es)?/?$		/account_path_aliases.php		[L]
 
+# API
+
+RewriteRule  ^api/?$			/api_rest.php		[L]
+RewriteRule  ^api/methods/?$		/api_methods.php	[L]
+RewriteRule  ^api/methods/(.*)/?$	/api_method.php?method=$1&%{QUERY_STRING}		[L]
+RewriteRule  ^api/rest/(.*)/?$		/api_rest.php?method=$1&%{QUERY_STRING}		[L]
+
 # Flickr stuff
 
 RewriteRule ^photo.gne$							/flickr_photo.php?%{QUERY_STRING} [L]

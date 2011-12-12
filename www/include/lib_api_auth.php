@@ -13,7 +13,11 @@
 
 	function api_auth_has_auth(){
 
-		# please write me...
+		# hey look... it's cheap and dirty cookie auth
+
+		if ($GLOBALS['cfg']['user']['id']){
+			return 1;
+		}
 
 		return 0;
 	}
