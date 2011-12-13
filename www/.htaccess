@@ -93,6 +93,8 @@ RewriteRule ^photos/friends/faves(/page([0-9]+))?/?$			/flickr_photos_friends_fa
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flickr_photos_user.php?path=$2&nsid=$3&page=$5&%{QUERY_STRING} [L]
 
+RewriteRule ^buddyicon/([0-9]+@N[0-9]+).jpg$ 					/flickr_buddyicon.php?nsid=$1 [L]
+
 # Flickr push
 
 RewriteRule ^push/([^/]+)/?$					/flickr_push_receiver.php?secret_url=$1&%{QUERY_STRING} [L]

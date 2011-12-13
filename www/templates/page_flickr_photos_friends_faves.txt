@@ -19,6 +19,8 @@
 		var images = new Array();
 
 		var count_photos = photos.length;
+		var count_updates = 0;
+
 		var idx = 0;
 
 {literal}
@@ -141,13 +143,29 @@
 			});
 
 			// TO DO: make befoere/after links 
-			idx = idx + count_photos;
+			idx += count_photos;
+			count_updates += count_photos;
 
-			$("#updates").html("there are new faves!");
+			var msg = "<a href=\"#\" onclick=\"show_photo(0);return false;\">";
+
+			if (count_updates > 1){
+				msg += "there are " + count_updates + " new faves";
+			}
+
+			else {
+				msg += "there are new faves";
+			}
+
+			msg += "</a>";
+
+			$("#cwf_updates").html(msg);
 		}
 	}
 
 	function show_photo(index){
+
+		// unsure about this...
+		count_updates = 0;
 
 		idx = index;
 
@@ -203,7 +221,7 @@
 			msg += " / <a href=\"#\" onclick=\"show_photo(" + prev + ");return false;\">after</a>";
 		}
 
-		msg += "<div id=\"updates\"></div>";
+		msg += "<div id=\"cwf_updates\"></div>";
 		msg += "</div>";
 
 		$("#cwf_about").html("");

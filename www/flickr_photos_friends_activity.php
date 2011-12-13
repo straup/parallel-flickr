@@ -41,14 +41,13 @@
 
 	else {
 
-		$rsp = flickr_push_photos_for_subscription($sub);
+		$older_than = time() - ((60 * 60) * 12);
+		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
 
 		$users_names = array();
 		$users_updated = array();
 		$users_counts = array();
 		$users_photos = array();
-
-		# TO DO: bucket by time pies (30m, 2h, etc.)
 
 		foreach ($rsp['rows'] as $row){
 

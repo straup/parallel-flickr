@@ -416,3 +416,51 @@ td {
     max-height:400px;
     opacity: 1 !important;
 }
+
+#cwf_updates a {
+    color: pink;
+    text-decoration: none;
+    text-shadow: none;
+    font-weight: 100;
+}
+
+.ffbp_list {
+    margin: 0px;
+    padding: 0px;
+    float:left;
+    font-size: 11px;
+    width:25%;
+    margin-left: 5%;
+}
+
+.ffbp_list li {
+    list-style-type: none;
+    line-height:1.3em;
+    text-align:right;
+}
+
+.ffbp_buddyicon {
+    float:left;
+    margin-right:10px;
+    margin-bottom:10px;
+    padding-top: 10px;
+}
+
+.ffbp_photos {
+    padding:10px;
+    margin-left:55px;
+    max-height:290px;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+.ffbp_photos:hover {
+    border-top: 1px dotted #ddd;
+    border-bottom: 1px dotted #ddd;
+}
+
+.ffbp_photo {
+    float:left;
+    margin-right:10px;
+    margin-bottom:10px;
+}
