@@ -9,27 +9,19 @@
 		{* I tried justing dumping/parse this using json_encode and JSON.parse *}
 		{* but all it did was produce errors and yak shadows (20111212/straup) *}
 
-		// TO DO: track what's already been seen (photo_id + faved_by_nsid) here
-		// and below in show_photo and bucket photos in to separate lists
-
 		var photos = [
 {foreach from=$photos item="row"}
 		["{$row.photo_id|escape}", "{$row.title|escape}", "{$row.owner|escape}", "{$row.ownername|escape}", "{$row.faved_by_nsid|escape}", "{$row.faved_by|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
 {/foreach}
 		];
 
+		var thumbs = new Array();
+		var images = new Array();
+
 		var count_photos = photos.length;
 		var idx = 0;
 
 {literal}
-
-		var thumbs = new Array();
-		var images = new Array();
-
-		for (var i=0; i < count_photos; i++){
-			thumbs.push(photos[i][6]);
-			images.push(photos[i][7]);
-		}
 
 	$(document).ready(function(){
 
@@ -37,6 +29,11 @@
 		$("#main").css("background-color", "transparent");
 		$("#footer").css("opacity", ".75");
 		$("#main").append("<div id=\"cwf_about\"></div>");
+
+		for (var i=0; i < count_photos; i++){
+			thumbs.push(photos[i][6]);
+			images.push(photos[i][7]);
+		}
 
 		$.backstretch(thumbs[0]);
 
@@ -52,6 +49,9 @@
 				show_photo(idx);
 			}
 		});
+
+		var last_check = parseInt(new Date() / 1000);
+		schedule_check_photos(last_check);
 	});
 
 	// TO DO: touch support...
@@ -72,7 +72,84 @@
 		else {}
 	});
 
+	function schedule_check_photos(older_than){
+
+		var delay = (60 * 1000) * 1;
+
+		setTimeout(function(){
+
+			$.ajax({
+				url: '/api',
+				data: {
+					'method': 'flickr.photos.friends.faves',
+					'older_than': older_than
+				},
+				success: check_photos_callback
+			});
+
+		}, delay);
+	}
+
+	function check_photos_callback(rsp){
+
+		try {
+			_check_photos_callback(rsp);
+		}
+
+		catch(e){
+			console.log(e);
+			console.log(rsp);
+		}
+
+		last_check = parseInt(new Date() / 1000);
+		schedule_check_photos(last_check);
+	}
+
+	function _check_photos_callback(rsp){
+
+		rsp = JSON.parse(rsp);
+
+		var new_photos = rsp['photos'];
+		var count_photos = new_photos.length;
+
+		if (count_photos){
+
+			new_photos.reverse();
+			var preload = [];
+
+			for (var i = 0; i < count_photos; i++){
+				var ph = new_photos[i];
+
+				preload.push(ph['display_url']);
+				preload.push(ph['thumb_url']);
+
+				photos.unshift([
+					ph['photo_id'],
+					ph['title'],
+					ph['owner'],
+					ph['ownername'],
+					ph['faved_by_nsid'],
+					ph['faved_by'],
+					ph['thumb_url'],
+					ph['display_url']
+				]);
+			}
+
+			$({}).imageLoader({
+				images: preload,
+				async: true
+			});
+
+			// TO DO: make befoere/after links 
+			idx = idx + count_photos;
+
+			$("#updates").html("there are new faves!");
+		}
+	}
+
 	function show_photo(index){
+
+		idx = index;
 
 		var preload = new Array();
 
@@ -92,8 +169,6 @@
 				async: true
 			});
 		}
-
-		idx = index;
 
 		var prev = (index > 0) ? index - 1 : -1;
 		var next = (index < (photos.length - 1)) ? index + 1 : -1;
@@ -128,6 +203,7 @@
 			msg += " / <a href=\"#\" onclick=\"show_photo(" + prev + ");return false;\">after</a>";
 		}
 
+		msg += "<div id=\"updates\"></div>";
 		msg += "</div>";
 
 		$("#cwf_about").html("");
