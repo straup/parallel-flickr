@@ -418,10 +418,17 @@ td {
 }
 
 #cwf_updates a {
+    /*
     color: pink;
     text-decoration: none;
     text-shadow: none;
+    */
     font-weight: 100;
+}
+
+#ffbp_users {
+    margin-top: 35px;
+    padding-bottom: 50px;
 }
 
 .ffbp_list {
@@ -429,13 +436,14 @@ td {
     padding: 0px;
     float:left;
     font-size: 11px;
-    width:25%;
-    margin-left: 5%;
+    width:20%;
+    margin-right: 5%;
+    color:#ccc;
 }
 
 .ffbp_list li {
     list-style-type: none;
-    line-height:1.3em;
+    line-height:1.5em;
     text-align:right;
 }
 
@@ -449,13 +457,13 @@ td {
 .ffbp_photos {
     padding:10px;
     margin-left:55px;
-    max-height:290px;
+    max-height:285px;
     overflow-x:hidden;
     overflow-y:auto;
 }
 
 .ffbp_photos:hover {
-    border-top: 1px dotted #ddd;
+
     border-bottom: 1px dotted #ddd;
 }
 

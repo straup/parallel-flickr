@@ -41,7 +41,10 @@
 
 	else {
 
-		$older_than = time() - ((60 * 60) * 12);
+		$offset_hours = 8;
+		$GLOBALS['smarty']->assign("offset_hours", $offset_hours);
+
+		$older_than = time() - ((60 * 60) * $offset_hours);
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
 
 		$users_names = array();

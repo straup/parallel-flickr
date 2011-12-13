@@ -1,12 +1,12 @@
-{* TO DO: a proper title *}
-{capture assign="page_title"}photos from your contacts | that have been poked recently{/capture}
+{capture assign="page_title"}photos from your contacts | with recent activity{/capture}
 {include file="inc_head.txt"}
 
-<h2>Your contacts photos (that have been poked recently)</h2>
+<h2>Your contacts photos (with recent activity)</h2>
 
-<p style="font-size:small;"><em>Poked?</em> These are photos from your contacts that have been uploaded, commented on or maybe faved sometime in the last 12 hours. That sort of thing. The photos
-are grouped by photographer, sorted by the photographer with the photo that's
-been most recently... <em>poked</em>.</p>
+<p style="font-size:small;font-style:italic;margin-top:25px;">These are public photos from your contacts that have been
+uploaded, commented on or maybe faved sometime in the last {$offset_hours|escape} hours. That sort
+of thing. The photos are grouped by photographer, sorted by the photographer with the photo that's
+been most recently updated.{if !$new_subscription} They are:{/if}</p>
 
 {if $new_subscription}
 
@@ -19,18 +19,18 @@ registered. You should start seeing photos shortly.</p>
 
 {else}
 
-<p style="font-size:small;">Here they are:</p>
-
 {assign var="contacts" value=$users_updated|@array_keys|@count}
-{assign var="columns" value="3"}
+{assign var="columns" value="4"}
 {assign var="per_column" value=$contacts/$columns|@ceil}
 {assign var="i" value="1"}
 
+<div id="ffbp_users">
 {foreach from=$users_updated item="ts" key="nsid" name="contacts"}
 
 {if $i==1}<ul class="ffbp_list">{/if}
 
-<li><a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
+<li>{if $users_counts.$nsid==1}1 photo{else}{$users_counts.$nsid|escape}
+photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 
 {if $i==$per_column or $smarty.foreach.contacts.last}
 {assign var="i" value=1}
@@ -39,12 +39,11 @@ registered. You should start seeing photos shortly.</p>
 {assign var="i" value=$i+1}
 {/if}
 
-{if $smarty.foreach.contacts.last}</div><br clear="all" />{/if}
-
 {/foreach}
+<br clear="all" />
 
+</div>
 
-</ul>
 
 {foreach from=$users_updated item="ts" key="nsid"}
 <a name="{$nsid|escape}"></a>
