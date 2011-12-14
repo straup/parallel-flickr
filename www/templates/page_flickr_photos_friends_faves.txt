@@ -7,8 +7,7 @@
 {if !$new_subscription}
 	<script type="text/javascript">
 
-	{* TO DO (maybe): just call the API directly? *}
-
+{if $photos|@count}
 		var faves = [
 {foreach from=$photos item="row"}
 		["{$row.photo_id|escape}", "{$row.title|escape}", "{$row.owner|escape}", "{$row.ownername|escape}", "{$row.faved_by_nsid|escape}", "{$row.faved_by|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
@@ -20,6 +19,14 @@
 			cwf_init(faves);
 		});
 {/literal}
+{else}
+{literal}
+		$(document).ready(function(){
+			cwf_init_subscription();
+		});
+{/literal}
+{/if}
+
 	</script>
 {/if}
 {/capture}
@@ -30,16 +37,25 @@
 <h2>Your contacts' faves</h2>
 
 {if $subscription_ok}
-<p>Okay! Your subscription to new faves from your contacts has been
-registered. You should start seeing photos shortly.</p>
 
-{* TO DO: poll for new photos here and then invoke cwf_init() *}
+<div style="margin-top:5%">
+<img src="{$cfg.abs_root_url}images/cat.gif" style="float:left; margin-right:30px; margin-bottom: 10px;" />
 
-{if 0}
+<div style="margin-left:130px; line-height:1.3em;">
+<p>Okay! In order to see your contacts' faves we need to create a
+<q>subscription</q> for those photos with Flickr.</p>
+
+<p>That's been done but it will
+take a few minutes (about 5 to 10) before they are sent. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+<p id="last_check" style="font-style:italic;"></p>
+</div>
+</div>
+
 <script type="text/javascript">
 	cwf_init_subscription();
 </script>
-{/if}
 
 {else}
 <p>Ack! Something when wrong trying to subscribe to your contacts faves.</p>
@@ -47,24 +63,18 @@ registered. You should start seeing photos shortly.</p>
 
 {else}
 
-{* standard layout *}
+{if !$photos|@count}
 
-{if 0}
-{* TO DO: buddyicons *}
-{foreach from=$photos item="row" name="faves"}
-{$row|@dumper}
-<div style="float:left;margin-right:10px;margin-bottom:10px;">
-{if $smarty.foreach.faves.index<10}
-<a href="http://www.flickr.com/photo.gne?id={$row.photo_id|escape}" target="_flickr"><img src="{$row.photo_url}" /></a>
-{else}
-<a href="http://www.flickr.com/photo.gne?id={$row.photo_id|escape}" target="_flickr"><img src="{$row.thumb_url}" /></a>
+<h2>Your contacts' faves</h2>
+
+<p>Hey, that's weird. There are no new faves to show you.</p>
+
+<p>We'll keep checking every couple of minutes. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+<p id="last_check" style="font-style:italic;"></p>
+
 {/if}
-</div>
-
-{/foreach}
-{/if}
-
-<br clear="all" />
 
 {/if}
 

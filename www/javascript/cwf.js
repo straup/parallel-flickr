@@ -56,9 +56,14 @@ function cwf_init_subscription(){
 		var new_photos = rsp['photos'];
 		var count_photos = new_photos.length;
 
-		// TO DO: status indicator if there are no photos...
-
 		if (! count_photos){
+
+			var d = new Date();
+			d = String(d);
+
+			var msg = "Last checked at " + d + ", still nothing yet.";
+			$("#last_check").html(msg);
+
 			cwf_init_subscription(delay);
 			return;
 		}
