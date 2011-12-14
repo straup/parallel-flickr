@@ -114,8 +114,16 @@ function cwf_init_shortcuts(){
 			cwf_show_previous_photo("overflow");
 		}
 
+		else if (e.keyCode == 38){
+			cwf_show_photo(0);		    
+		}
+
 		else if (e.keyCode == 39){
 			cwf_show_next_photo("overflow");
+		}
+
+		else if (e.keyCode == 40){
+			cwf_show_photo(count_photos - 1);
 		}
 
 		else {}
@@ -134,7 +142,11 @@ function cwf_schedule_check_photos(older_than){
 				'method': 'flickr.photos.friends.faves',
 				'older_than': older_than
 			},
-			success: cwf_check_photos_callback
+			success: cwf_check_photos_callback,
+			error: function(e){
+				console.log(e);
+				cwf_schedule_check_photos(older_than);
+			}
 		});
 
 	}, delay);
