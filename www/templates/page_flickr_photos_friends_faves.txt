@@ -3,7 +3,7 @@
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.min.js"></script>
 {if !$new_subscription}
 	<script type="text/javascript">
 

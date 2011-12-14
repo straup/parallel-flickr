@@ -94,9 +94,7 @@ function cwf_init_subscription(){
 
 		$.ajax({
 			url: '/api',
-			data: {
-				'method': 'flickr.photos.friends.faves',
-			},
+			data: {	'method': 'flickr.photos.friends.faves'	},
 			success: callback
 		});
 
