@@ -223,6 +223,7 @@ function _cwf_check_photos_callback(rsp){
 		msg += "</a>";
 
 		$("#cwf_updates").html(msg);
+		$("#cwf_count_photos").html(photos.length);
 	}
 }
 
@@ -232,7 +233,7 @@ function cwf_next_photo(allow_overflow){
 		return (idx < (photos.length - 1)) ? idx + 1 : 0;
 	}
 
-	return (idx < (photos.length - 1)) ? idx + 1 : -1
+	return (idx < (photos.length - 1)) ? idx + 1 : -1;
 }
 
 function cwf_previous_photo(allow_overflow){
@@ -302,7 +303,7 @@ function cwf_show_photo(index){
 	msg += " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  ";
 	msg += "<a href=\"http://www.flickr.com/photos/" + taken_by_nsid + "/\" target=\"_flickr\">" + taken_by_name + "</a><br />";
 
-	msg += "no. " + num + " of " + count_photos + " faves";
+	msg += "no. " + num + " of <span id=\"cwf_count_photos\">" + count_photos + "</span> faves";
 
 	if (num > 1){
 		msg += " / <a href=\"#\" onclick=\"cwf_show_next_photo();return false;\">before</a>";

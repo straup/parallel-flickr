@@ -1,0 +1,2 @@
+DROP INDEX `by_sub_id` ON FlickrPushPhotos;
+CREATE INDEX `by_sub_id` ON FlickrPushPhotos (`subscription_id`, `created`);
