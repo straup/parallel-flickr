@@ -46,7 +46,7 @@
 <q>subscription</q> for those photos with Flickr.</p>
 
 <p>That's been done but it will
-take a few minutes (about 5 to 10) before they are sent. You can come back and
+take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
 check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
 
 <p id="last_check" style="font-style:italic;"></p>
