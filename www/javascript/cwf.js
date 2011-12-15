@@ -126,7 +126,7 @@ function cwf_init_shortcuts(){
 		}
 
 		else if (e.keyCode == 40){
-			cwf_show_photo(count_photos - 1);
+			cwf_show_photo((photos.length - 1));
 		}
 
 		else {}
