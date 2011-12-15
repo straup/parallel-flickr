@@ -221,6 +221,8 @@ function _cwf_check_photos_callback(rsp){
 		msg += "</a>";
 
 		$("#cwf_updates").html(msg);
+
+		$("#cwf_photo_idx").html(idx + 1);
 		$("#cwf_count_photos").html(photos.length);
 	}
 }
@@ -301,7 +303,7 @@ function cwf_show_photo(index){
 	msg += " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  ";
 	msg += "<a href=\"http://www.flickr.com/photos/" + taken_by_nsid + "/\" target=\"_flickr\">" + taken_by_name + "</a><br />";
 
-	msg += "no. " + num + " of <span id=\"cwf_count_photos\">" + photos.length + "</span> faves";
+	msg += "no. <span id=\"cwf_photo_idx\">" + num + "</span> of <span id=\"cwf_count_photos\">" + photos.length + "</span> faves";
 
 	if (num > 1){
 		msg += " / <a href=\"#\" onclick=\"cwf_show_next_photo();return false;\">before</a>";

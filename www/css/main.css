@@ -379,7 +379,7 @@ td {
     min-width:300px;
     min-height: 300px;
     max-width: 420px;
-    margin: 75px 50px 0 auto !important;
+    margin: 60px 50px 0 auto !important;
     font-size:1.25em;
     font-weight: 700;
     color: transparent;
@@ -418,11 +418,6 @@ td {
 }
 
 #cwf_updates a {
-    /*
-    color: pink;
-    text-decoration: none;
-    text-shadow: none;
-    */
     font-weight: 100;
 }
 
