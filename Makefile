@@ -12,8 +12,8 @@ js:
 	# these needs to be cleaned up per the google compiler's whinging...	
 	# java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/htmapl.js > www/javascript/htmapl.min.js
 	# java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/modestmaps.markers.js > www/javascript/modestmaps.markers.min.js
-	#java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/punchcard.js > www/javascript/punchcard.min.js
-	java -Xmx256m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/cwf.js > www/javascript/cwf.min.js
+	java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/punchcard.js > www/javascript/punchcard.min.js
+	java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/cwf.js > www/javascript/cwf.min.js
 
 clean:
 	rm -f ./TODO.txt
