@@ -1,9 +1,10 @@
 {capture assign="page_title"}faves from your contacts{/capture}
 {capture assign="extra_head"}
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.touchwipe.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.js"></script>
 {if !$new_subscription}
 	<script type="text/javascript">
 

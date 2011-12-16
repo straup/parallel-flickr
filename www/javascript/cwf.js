@@ -110,29 +110,57 @@ function cwf_init_layout(){
 }
 
 function cwf_init_shortcuts(){
-    
-	$(document).keypress(function(e){
+
+		var left = function(){
+			cwf_show_previous_photo("overflow");
+		};
+
+		var right = function(){
+			cwf_show_next_photo("overflow");
+		};
+
+		var up = function(){
+			cwf_show_photo(0);
+		};
+
+		var down = function(){
+			cwf_show_photo((photos.length - 1));
+		};
+
+		$(document).keypress(function(e){
 
 		if (e.keyCode == 37){
-			cwf_show_previous_photo("overflow");
+			left();
 		}
 
 		else if (e.keyCode == 38){
-			cwf_show_photo(0);		    
+			up();
 		}
 
 		else if (e.keyCode == 39){
-			cwf_show_next_photo("overflow");
+			right();
 		}
 
 		else if (e.keyCode == 40){
-			cwf_show_photo((photos.length - 1));
+			down();
 		}
 
 		else {}
 	});
 
+	// http://www.netcu.de/jquery-touchwipe-iphone-ipad-library
+
+	$(document).touchwipe({
+		wipeLeft: left,
+		wipeRight: right,
+		wipeUp: up,
+		wipeDown: down,
+		min_move_x: 20,
+		min_move_y: 20,
+		preventDefaultEvents: true
+	});
 }
+
 function cwf_schedule_check_photos(older_than){
 
 	var delay = (60 * 1000) * 1;
