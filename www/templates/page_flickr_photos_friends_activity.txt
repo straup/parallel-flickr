@@ -3,20 +3,34 @@
 
 <h2>Your contacts photos (with recent activity)</h2>
 
-<p style="font-size:small;font-style:italic;margin-top:25px;">These are public photos from your contacts that have been
-uploaded, commented on or maybe faved sometime in the last {$offset_hours|escape} hours. That sort
-of thing. The photos are grouped by photographer, sorted by the photographer with the photo that's
-been most recently updated.{if !$new_subscription} They are:{/if}</p>
-
 {if $new_subscription}
 
 {if $subscription_ok}
-<p>Okay! Your subscription to new photos from your contacts has been
-registered. You should start seeing photos shortly.</p>
+
+<div style="margin-top:5%">
+<img src="{$cfg.abs_root_url}images/cat.gif" style="float:left; margin-right:30px; margin-bottom: 10px;" />
+
+<div style="margin-left:130px; line-height:1.3em;">
+<p>Okay! In order to see your contacts photos we need to create a
+<q>subscription</q> for those photos with Flickr.</p>
+
+<p>That's been done but it will
+take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
 {else}
 <p>Ack! Something when wrong trying to subscribe to your contacts photos.</p>
 {/if}
 
+{else}
+
+<p style="font-size:small;font-style:italic;margin-top:25px;">These are public photos from your contacts that have been
+uploaded, commented on or maybe faved sometime in the last {$offset_hours|escape} hours. That sort
+of thing. The photos are grouped by photographer, sorted by the photographer with the photo that's
+been most recently updated.{if !$new_subscription and $users_updated|@count} They are:{/if}</p>
+
+{if !$updated_users|@count}
+<p>STILL WAITING</p>
 {else}
 
 {assign var="contacts" value=$users_updated|@array_keys|@count}
@@ -65,6 +79,7 @@ photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 
 {/foreach}
 
+{/if}
 {/if}
 
 {include file="inc_foot.txt"}
