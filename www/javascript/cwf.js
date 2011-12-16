@@ -151,8 +151,8 @@ function cwf_init_shortcuts(){
 	// http://www.netcu.de/jquery-touchwipe-iphone-ipad-library
 
 	$(document).touchwipe({
-		wipeLeft: left,
-		wipeRight: right,
+		wipeLeft: right,
+		wipeRight: left,
 		wipeUp: up,
 		wipeDown: down,
 		min_move_x: 20,
