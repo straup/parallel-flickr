@@ -6,6 +6,10 @@
 
 	#################################################################
 
+	# an api method for photos with recent activity?
+
+	#################################################################
+
 	function api_flickr_photos_friends_faves(){
 
 		if (! $GLOBALS['cfg']['enable_feature_flickr_push']){

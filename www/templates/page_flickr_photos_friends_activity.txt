@@ -29,7 +29,8 @@ uploaded, commented on or maybe faved sometime in the last {$offset_hours|escape
 of thing. The photos are grouped by photographer, sorted by the photographer with the photo that's
 been most recently updated.{if !$new_subscription and $users_updated|@count} They are:{/if}</p>
 
-{if !$updated_users|@count}
+{if !$users_updated|@count}
+{* TO DO: timer to redirect to self and/or just a meta tag above *}x
 <p>STILL WAITING</p>
 {else}
 
