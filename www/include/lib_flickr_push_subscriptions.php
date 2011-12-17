@@ -80,9 +80,18 @@
 
 	#################################################################
 
-	function flickr_push_subscriptions_get_by_user_and_topic(&$user, $topic_id){
+	function flickr_push_subscriptions_get_by_user_and_topic(&$user, $topic_id, $topic_args=null){
+
+		if ($topic_args){
+			$topic_args = json_encode($topic_args);
+		}
 
 		$cache_key = "flickr_push_subscriptions_user_{$user['id']}_{$topic_id}";
+
+		if ($topic_args){
+			$cache_key .= "#" . md5($topic_args);
+		}
+
 		$cache = cache_get($cache_key);
 
 		if ($cache['ok']){
@@ -95,7 +104,14 @@
 			$enc_topic = AddSlashes($topic_id);
 
 			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND topic_id='{$enc_topic}'";
-			$row = db_single(db_fetch($sql));
+
+			if ($topic_args){
+				$enc_args = AddSlashes($topic_args);
+				$sql .= " AND topic_args='{$enc_args}'";
+			}
+
+			$rsp = db_fetch($sql);
+			$row = db_single($rsp);
 
 			if ($row){
 				cache_set($cache_key, $row, "cache locally");
@@ -179,6 +195,13 @@
 		$insert = array();
 
 		foreach ($subscription as $k => $v){
+
+			# quick and dirty hack... unsure
+
+			if ($k == 'topic_args'){
+				$v = json_encode($v);
+			}
+
 			$insert[$k] = AddSlashes($v);
 		}
 
@@ -203,27 +226,11 @@
 
 		$rsp = flickr_push_subscriptions_create_subscription($subscription);
 
-		if ((! $rsp['ok']) && ($rsp['error_code'] != 1062)){
+		if (! $rsp['ok']){
 			return $rsp;
 		}
 
-		else if (! $rsp['ok']){
-
-			$user = users_get_by_id($subscription['user_id']);
-			$subscription = flickr_push_subscriptions_get_by_user_and_url($user, $subscription['url_id']);
-
-			if ($subscription['verified']){
-
-				return array(
-					'ok' => 0,
-					'error' => 'Already subscribed',
-				);
-			}
-		}
-
-		else {
-			$subscription = $rsp['subscription'];
-		}
+		$subscription = $rsp['subscription'];
 
 		$flickr_rsp = flickr_push_subscribe($subscription);
 
@@ -248,16 +255,7 @@
 		$rsp = db_write_users($cluster_id, $sql);
 
 		if ($rsp['ok']){
-
-			$cache_keys = array(
-				"flickr_push_subscriptions_secret_{$subscription['secret_url']}",
-				"flickr_push_subscriptions_user_{$user['id']}_{$subscription['topic_id']}",
-				"flickr_push_subscriptions_for_user_{$user['id']}",
-			);
-
-			foreach ($cache_keys as $k){
-				cache_unset($k);
-			}
+			_flickr_push_subscriptions_purge_cache_keys($subscriptions);
 		}
 
 		return $rsp;
@@ -282,17 +280,7 @@
 		$rsp = db_update_users($cluster_id, 'FlickrPushSubscriptions', $hash, $where);
 
 		if ($rsp['ok']){
-			$subscription = array_merge($subscription, $update);
-
-			$cache_keys = array(
-				"flickr_push_subscriptions_secret_{$subscription['secret_url']}",
-				"flickr_push_subscriptions_user_{$user['id']}_{$subscription['topic_id']}",
-				"flickr_push_subscriptions_for_user_{$user['id']}",
-			);
-
-			foreach ($cache_keys as $k){
-				cache_unset($k);
-			}
+			_flickr_push_subscriptions_purge_cache_keys($subscriptions);
 		}
 
 		return $rsp;
@@ -300,4 +288,27 @@
 
 	#################################################################
 
+	function _flickr_push_subscriptions_purge_cache_keys(&$subscription){
+
+		$secret_key = "flickr_push_subscriptions_secret_{$subscription['secret_url']}";
+		$topic_key = "flickr_push_subscriptions_user_{$user['id']}_{$subscription['topic_id']}";
+
+		if ($topic_args = $subscription['topic_args']){
+			$topic_key .= "#" . md5($topic_args);
+		}
+
+		$user_key = "flickr_push_subscriptions_for_user_{$user['id']}";
+
+		$cache_keys = array(
+			$secret_key,
+			$topic_key,
+			$user_key,
+		);
+
+		foreach ($cache_keys as $k){
+			cache_unset($k);
+		}
+	}
+
+	#################################################################
 ?>

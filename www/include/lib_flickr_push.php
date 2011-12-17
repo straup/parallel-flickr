@@ -50,6 +50,15 @@
 			'callback' => $callback,
 		);
 
+		if ($topic_args = $subscription['topic_args']){
+
+			if (! is_array($topic_args)){
+				$topic_args = json_decode($topic_args, "as hash");
+			}
+
+			$args = array_merge($args, $topic_args);
+		}
+
 		$rsp = flickr_api_call($method, $args);
 		return $rsp;
 	}
@@ -74,6 +83,15 @@
 			'verify_token' => $subscription['verify_token'],
 			'callback' => $callback,
 		);
+
+		if ($topic_args = $subscription['topic_args']){
+
+			if (! is_array($topic_args)){
+				$topic_args = json_decode($topic_args, "as hash");
+			}
+
+			$args = array_merge($args, $topic_args);
+		}
 
 		$rsp = flickr_api_call($method, $args);
 		return $rsp;

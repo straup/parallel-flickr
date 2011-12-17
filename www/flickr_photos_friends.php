@@ -17,6 +17,45 @@
 		error_disabled();
 	}
 
+	$topic_map = flickr_push_topic_map("string keys");
+	$topic_id = $topic_map["contacts_photos"];
+
+	$topic_args = array(
+		'update_type' => 'created',
+	);
+
+	$sub = flickr_push_subscriptions_get_by_user_and_topic($GLOBALS['cfg']['user'], $topic_id, $topic_args);
+
+	if (! $sub){
+
+		if (! $GLOBALS['cfg']['flickr_push_enable_photos_friends_registrations']){
+			error_disabled();
+		}
+
+		$sub = array(
+			'user_id' => $GLOBALS['cfg']['user']['id'],
+			'topic_id' => $topic_id,
+			'topic_args' => $topic_args,
+		);
+
+		$rsp = flickr_push_subscriptions_register_subscription($sub);
+
+		$GLOBALS['smarty']->assign("new_subscription", $rsp['ok']);
+		$GLOBALS['smarty']->assign("subscription_ok", $rsp['ok']);
+	}
+
+	else {
+
+		# dumper($sub);
+		$offset_hours = 8;
+		$GLOBALS['smarty']->assign("offset_hours", $offset_hours);
+
+		$older_than = time() - ((60 * 60) * $offset_hours);
+		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
+
+		# dumper($rsp);
+	}
+
 	$GLOBALS['smarty']->display("page_flickr_photos_friends.txt");
 	exit();
 
