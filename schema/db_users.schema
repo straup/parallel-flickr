@@ -80,6 +80,5 @@ CREATE TABLE `FlickrPushPhotos` (
   `created` INT(11) UNSIGNED NOT NULL,
   `photo_id` BIGINT(20) UNSIGNED NOT NULL,
   `photo_data` TEXT,
-  UNIQUE KEY `by_photo_id` (`subscription_id`, `photo_id`),
   KEY `by_sub_id` (`subscription_id`, `created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

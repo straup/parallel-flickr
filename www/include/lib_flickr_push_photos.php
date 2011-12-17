@@ -16,24 +16,6 @@
 
 		$rsp = db_insert_users($cluster, 'FlickrPushPhotos', $insert);
 
-		# TO DO: fix me because this doesn't actually make any sense...
-		# (20111204/straup)
-
-		if ((! $rsp['ok']) && ($rsp['error_code'] == 1062)){
-
-			$enc_sub = AddSlashes($photo_data['subscription_id']);
-			$enc_photo = AddSlashes($photo_data['photo_id']);
-
-			$where = "`subscription_id`='{$enc_sub}' AND `photo_id`='{$enc_photo}'";
-			$sql = "DELETE FROM `FlickrPushPhotos` WHERE {$where}";
-
-			$rsp = db_write_users($cluster, $sql);
-
-			if ($rsp['ok']){
-				$rsp = db_insert_users($cluster, 'FlickrPushPhotos', $insert);
-			}
-		}
-
 		if ($rsp['ok']){
 			$rsp['photo'] = $photo_data;
 		}

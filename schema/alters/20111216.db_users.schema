@@ -3,3 +3,5 @@ ALTER TABLE FlickrPushSubscriptions ADD `topic_args` VARCHAR(255) NOT NULL;
 DROP INDEX by_topic ON FlickrPushSubscriptions;
 
 CREATE INDEX by_topic ON FlickrPushSubscriptions (`user_id`, `topic_id`, `topic_args`);
+
+DROP INDEX `by_photo_id` ON FlickrPushPhotos;
