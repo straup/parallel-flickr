@@ -46,12 +46,13 @@
 
 	else {
 
-		# dumper($sub);
 		$offset_hours = 8;
 		$GLOBALS['smarty']->assign("offset_hours", $offset_hours);
 
 		$older_than = time() - ((60 * 60) * $offset_hours);
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
+
+		# TO DO: roll in to time pies...
 
 		# dumper($rsp);
 	}
