@@ -7,7 +7,7 @@
 	loadlib("flickr_push_subscriptions");
 	loadlib("flickr_push_photos");
 
-	login_ensure_loggedin("/photos/friends/");
+	login_ensure_loggedin("/photos/friends/activity/");
 
 	if (! $GLOBALS['cfg']['enable_feature_flickr_push']){
 		error_disabled();
