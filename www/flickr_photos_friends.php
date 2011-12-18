@@ -46,19 +46,48 @@
 
 	else {
 
+		$now = time();
+
 		$offset_hours = 8;
 		$GLOBALS['smarty']->assign("offset_hours", $offset_hours);
 
-		$older_than = time() - ((60 * 60) * $offset_hours);
+		$older_than = $now - ((60 * 60) * $offset_hours);
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
+
+		$one_minute = 60;
+		$one_hour = $one_minute * 60;
 
 		$half_hour = array();
 		$two_hours = array();
 		$four_hours = array();
 		$eight_hours = array();
-		# TO DO: roll in to time pies...
 
-		# dumper($rsp);
+		foreach ($rsp['rows'] as $row){
+
+			$diff = $now - $row['created'];
+
+			if ($diff <= ($one_minute * 30)){
+				$half_hour[] = $row;
+			}
+
+			else if ($diff <= ($one_hour * 2)){
+				$two_hours[] = $row;
+			}
+
+			else if ($diff <= ($one_hour * 4)){
+				$four_hours[] = $row;
+			}
+
+			else {
+				$eight_hours[] = $row;
+			}
+
+		}
+
+		$GLOBALS['smarty']->assign_by_ref("half_hour", $half_hour);
+		$GLOBALS['smarty']->assign_by_ref("two_hours", $two_hours);
+		$GLOBALS['smarty']->assign_by_ref("four_hours", $four_hours);
+		$GLOBALS['smarty']->assign_by_ref("eight_hours", $eight_hours);
 	}
 
 	$GLOBALS['smarty']->display("page_flickr_photos_friends.txt");
