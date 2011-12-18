@@ -78,8 +78,9 @@ function ffbp_draw_photos(nsid){
 		var src = images[nsid][i];
 		var img = "<img src=\"" + src + "\" />";
 
-		html += img;
+		html += "<a href=\"" + src + "\">" + img + "</a>";
 	}
 
 	$("#photowell").html(html);
+	$("#photowell").lightBox();
 }

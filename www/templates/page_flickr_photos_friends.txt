@@ -2,6 +2,7 @@
 {capture assign="extra_head"}
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.lightbox-0.5.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/ffbp.js"></script>
 <script type="text/javascript">
 	var images = {literal}{{/literal}
@@ -23,6 +24,7 @@
 	{/literal}
 	
 </script>
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.lightbox-0.5.css" />
 {/capture}
 {include file="inc_head.txt"}
 
