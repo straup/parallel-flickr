@@ -47,14 +47,14 @@
 {foreach from=$data item="count" key="nsid"}
 {assign var="js_nsid" value=$nsid|replace:"@":"_"}
 
-<div style="float:left; border:none;margin-right:12px; margin-bottom:15px;">
-<a href="#" onclick="javascript:ffbp_draw_photos('{$js_nsid|escape}'); return false;" title="Yay! New photos from {$meta.$nsid.username|escape}"><img src="{$cfg.abs_root_url}buddyicon/{$nsid|escape}.jpg" height="48px;" width="48px;" style="border:3px solid #{$meta.$nsid.hex|escape}" /></a>
+<div style="float:left; border:none;margin-right:12px; margin-bottom:15px;" id="ffbp_{$js_nsid|escape}">
 
-<div style="text-align:center;margin-top:3px;font-size:11px;color:#ccc;">{if $count==1}<strong>1</strong> photo{else}<strong>{$count|escape}</strong> photos{/if}</div>
+	<a href="#" onclick="javascript:ffbp_draw_photos('{$js_nsid|escape}'); return false;" title="Yay! New photos from {$meta.$nsid.username|escape}"><img src="{$cfg.abs_root_url}buddyicon/{$nsid|escape}.jpg" height="48px;" width="48px;" style="border:3px solid #{$meta.$nsid.hex|escape}" /></a>
+
+	<div style="text-align:center;margin-top:3px;font-size:11px;color:#ccc;">{if $count==1}<strong>1</strong> photo{else}<strong>{$count|escape}</strong> photos{/if}</div>
 
 </div>
 
-<div id="photowell_{$js_nsid|escape}" style="float:left; border:none;display:inline;"></div>
 {/foreach}
 
 </div>

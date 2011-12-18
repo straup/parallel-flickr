@@ -74,29 +74,35 @@ function ffbp_lazyload_photos(){
 
 function ffbp_draw_photos(nsid){
 
+	if ($(".ffbp_" + nsid + "_thumb").length){
+		ffbp_hide_photos(nsid);
+		return;
+	}
+
+	// http://leandrovieira.com/projects/jquery/lightbox/
+
 	var count_photos = images[nsid].length;
-
-	var html = '';
-
-	// these need to be be inserted one at a time rather than as a single
-	// monolithic div
 
 	for (var i=0; i < count_photos; i++){
 
 		var thumb = images[nsid][i][0];
 		var photo = images[nsid][i][1];
 
-		var img = "<img src=\"" + thumb + "\" height=\"48\" width=\"48\" />";
-
 		// fix me: meta colours...
-		html += "<div style=\"float:left; margin-right:12px; margin-bottom:15px; border: 3px solid #000;\">";
+
+		var img = "<img src=\"" + thumb + "\" height=\"48\" width=\"48\" style=\"border: 3px solid #000;\" />";
+
+		html = "<div class=\"ffbp_" + nsid + "_thumb\" style=\"float:left; margin-right:12px; margin-bottom:15px;\">";
 		html += "<a href=\"" + photo + "\">" + img + "</a>";
+		html += "<div style=\"text-align:center;margin-top:3px;font-size:11px;color:#fff;\"><strong>&nbsp;</strong></div>";
 		html += "</div>";
+
+		$("#ffbp_" + nsid).after(html);
 	}
 
-	var photowell = "#photowell_" + nsid;
+	$(".ffbp_" + nsid + "_thumb a").lightBox();
+}
 
-	$(photowell).html(html);
-	$(photowell).show();
-	$(photowell +" a").lightBox();
+function ffbp_hide_photos(nsid){
+	$(".ffbp_" + nsid + "_thumb").remove();
 }
