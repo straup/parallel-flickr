@@ -78,22 +78,22 @@
 
 			if ($diff <= ($one_minute * 30)){
 				$half_hour[] = $row;
-				$users['30 minutes'][$row['owner']] ++;
+				$users['30 minutes'][$nsid] ++;
 			}
 
 			else if ($diff <= ($one_hour * 2)){
 				$two_hours[] = $row;
-				$users['two hours'][$row['owner']] ++;
+				$users['two hours'][$nsid] ++;
 			}
 
 			else if ($diff <= ($one_hour * 4)){
 				$four_hours[] = $row;
-				$users['four hours'][$row['owner']] ++;
+				$users['four hours'][$nsid] ++;
 			}
 
 			else {
 				$eight_hours[] = $row;
-				$users['eight hours'][$row['owner']] ++;
+				$users['eight hours'][$nsid] ++;
 			}
 
 			if (! isset($meta[$nsid])){
@@ -101,14 +101,18 @@
 				$meta[$nsid] = array(
 					'username' => $row['ownername'],
 					'hex' => substr(md5($nsid), 0, 6),
+					'images' => array(),
 				);
 			}
+
+			$meta[$nsid]['images'][] = $row;
 		}
 
 		$GLOBALS['smarty']->assign_by_ref("half_hour", $half_hour);
 		$GLOBALS['smarty']->assign_by_ref("two_hours", $two_hours);
 		$GLOBALS['smarty']->assign_by_ref("four_hours", $four_hours);
 		$GLOBALS['smarty']->assign_by_ref("eight_hours", $eight_hours);
+
 		$GLOBALS['smarty']->assign_by_ref("users", $users);
 		$GLOBALS['smarty']->assign_by_ref("meta", $meta);
 	}
