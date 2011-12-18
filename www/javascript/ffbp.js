@@ -17,12 +17,17 @@ function ffbp_init(images){
 
 		for (var i=0; i < count_photos; i++){
 
+			var thumb = images[nsid][i][0];
+			var photo = images[nsid][i][1];
+
+			preload.push(thumb);
+
 			if (i < 5){
-				preload.push(images[nsid][i]);
+				preload.push(photo);
 			}
 
 			else {
-				lazyload.push(images[nsid][i]);
+				lazyload.push(photo);
 			}
 		}
 	}
@@ -73,14 +78,25 @@ function ffbp_draw_photos(nsid){
 
 	var html = '';
 
+	// these need to be be inserted one at a time rather than as a single
+	// monolithic div
+
 	for (var i=0; i < count_photos; i++){
 
-		var src = images[nsid][i];
-		var img = "<img src=\"" + src + "\" />";
+		var thumb = images[nsid][i][0];
+		var photo = images[nsid][i][1];
 
-		html += "<a href=\"" + src + "\">" + img + "</a>";
+		var img = "<img src=\"" + thumb + "\" height=\"48\" width=\"48\" />";
+
+		// fix me: meta colours...
+		html += "<div style=\"float:left; margin-right:12px; margin-bottom:15px; border: 3px solid #000;\">";
+		html += "<a href=\"" + photo + "\">" + img + "</a>";
+		html += "</div>";
 	}
 
-	$("#photowell").html(html);
-	$("#photowell").lightBox();
+	var photowell = "#photowell_" + nsid;
+
+	$(photowell).html(html);
+	$(photowell).show();
+	$(photowell +" a").lightBox();
 }
