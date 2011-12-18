@@ -62,32 +62,55 @@
 		$four_hours = array();
 		$eight_hours = array();
 
+		$users = array(
+			'30 minutes' => array(),
+			'two hours' => array(),
+			'four hours' => array(),
+			'eight hours' => array(),
+		);
+
+		$meta = array();
+
 		foreach ($rsp['rows'] as $row){
 
 			$diff = $now - $row['created'];
+			$nsid = $row['owner'];
 
 			if ($diff <= ($one_minute * 30)){
 				$half_hour[] = $row;
+				$users['30 minutes'][$row['owner']] ++;
 			}
 
 			else if ($diff <= ($one_hour * 2)){
 				$two_hours[] = $row;
+				$users['two hours'][$row['owner']] ++;
 			}
 
 			else if ($diff <= ($one_hour * 4)){
 				$four_hours[] = $row;
+				$users['four hours'][$row['owner']] ++;
 			}
 
 			else {
 				$eight_hours[] = $row;
+				$users['eight hours'][$row['owner']] ++;
 			}
 
+			if (! isset($meta[$nsid])){
+
+				$meta[$nsid] = array(
+					'username' => $row['ownername'],
+					'hex' => substr(md5($nsid), 0, 6),
+				);
+			}
 		}
 
 		$GLOBALS['smarty']->assign_by_ref("half_hour", $half_hour);
 		$GLOBALS['smarty']->assign_by_ref("two_hours", $two_hours);
 		$GLOBALS['smarty']->assign_by_ref("four_hours", $four_hours);
 		$GLOBALS['smarty']->assign_by_ref("eight_hours", $eight_hours);
+		$GLOBALS['smarty']->assign_by_ref("users", $users);
+		$GLOBALS['smarty']->assign_by_ref("meta", $meta);
 	}
 
 	$GLOBALS['smarty']->display("page_flickr_photos_friends.txt");

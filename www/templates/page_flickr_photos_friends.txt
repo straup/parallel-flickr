@@ -1,6 +1,36 @@
 {capture assign="page_title"}photos from your contacts{/capture}
 {include file="inc_head.txt"}
 
-your contacts photos with <a href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a> | photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">recently faved</a> 
+<div style="margin-top:50px;margin-left:75px;margin-right:50px;">
+
+{if 0}
+<p>your contacts photos with <a href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a> | photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">recently faved</a> </p>
+{/if}
+
+{foreach from=$users item="data" key="timepie"}
+
+<div style="margin-bottom:20px;">
+
+<h3 style="float:left;margin-top:0px;"><span style="font-size:small; color: #666;display:block;">in the last</span><span style="color:pink;">{$timepie|escape}</span></h3>
+
+<div style="margin-left:200px;">
+
+{foreach from=$data item="count" key="nsid"}
+
+<div style="float:left; border:none;margin-right:12px; margin-bottom:15px;">
+<a href="http://www.flickr.com/photos/{$nsid|escape}/" target="_flickr_{$nsid|escape}" title="Yay! New photos from {$meta.$nsid.username|escape}"><img src="{$cfg.abs_root_url}buddyicon/{$nsid|escape}.jpg" height="48px;" width="48px;" style="border:3px solid #{$meta.$nsid.hex|escape}" /></a>
+
+<div style="text-align:center;margin-top:3px;font-size:11px;color:#ccc;">{if $count==1}<strong>1</strong> photo{else}<strong>{$count|escape}</strong> photos{/if}</div>
+</div>
+
+{/foreach}
+
+</div>
+
+<br clear="all" />
+</div>
+{/foreach}
+
+</div>
 
 {include file="inc_foot.txt"}
