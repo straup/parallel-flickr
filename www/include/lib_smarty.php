@@ -57,4 +57,22 @@
 	$GLOBALS['smarty']->register_function('timings', 'smarty_timings');
 
 	#######################################################################################
+
+	# keep this there or in... what ?
+
+	function escape_javascript($str){
+
+		$to_replace = array(
+			'\\' => '\\\\',
+			"'"  => "\\'",
+			'"'  => '\\"',
+			"\r" => '\\r',
+			"\n" => '\\n',
+			'</' => '<\/'
+		);
+
+		return strtr($str, $to_replace);
+	}
+
+	#######################################################################################
 ?>

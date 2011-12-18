@@ -52,6 +52,10 @@
 		$older_than = time() - ((60 * 60) * $offset_hours);
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
 
+		$half_hour = array();
+		$two_hours = array();
+		$four_hours = array();
+		$eight_hours = array();
 		# TO DO: roll in to time pies...
 
 		# dumper($rsp);

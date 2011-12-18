@@ -11,7 +11,7 @@
 {if $photos|@count}
 		var faves = [
 {foreach from=$photos item="row"}
-		["{$row.photo_id|escape}", "{$row.title|escape}", "{$row.owner|escape}", "{$row.ownername|escape}", "{$row.faved_by_nsid|escape}", "{$row.faved_by|escape}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
+		["{$row.photo_id|escape_javascript}", "{$row.title|escape_javascript}", "{$row.owner|escape_javascript}", "{$row.ownername|escape_javascript}", "{$row.faved_by_nsid|escape_javascript}", "{$row.faved_by|escape_javascript}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
 {/foreach}
 		];
 
