@@ -52,6 +52,8 @@
 		$users_counts = array();
 		$users_photos = array();
 
+		$seen = array();
+
 		foreach ($rsp['rows'] as $row){
 
 			$nsid = $row['owner'];
@@ -68,7 +70,12 @@
 				$users_photos[$nsid] = array();
 			}
 
+			if (isset($seen[$row['photo_id']])){
+				continue;
+			}
+
 			$users_photos[$nsid]["{$created}.{$row['photo_id']}"] = $row;
+			$seen[$row['photo_id']] = 1;
 		}
 
 		arsort($users_updated);
