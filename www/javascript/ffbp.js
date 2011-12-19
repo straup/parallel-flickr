@@ -13,7 +13,6 @@ function ffbp_init(images){
 	var preload = [];
 
 	for (nsid in images){
-
 		var count_photos = images[nsid].length;
 
 		for (var i=0; i < count_photos; i++){
@@ -97,7 +96,7 @@ function ffbp_draw_photos(nsid){
 
 		// TO DO: meta colours...
 
-		var img = "<img src=\"" + thumb + "\" height=\"48\" width=\"48\" style=\"border: 3px solid #000;\"/>";
+		var img = "<img src=\"" + thumb + "\" height=\"50\" width=\"50\" style=\"border: 3px solid #eee;\"/>";
 
 		// TO DO: link to photo on flickr...
 
@@ -109,10 +108,24 @@ function ffbp_draw_photos(nsid){
 		$("#ffbp_" + nsid).after(html);
 	}
 
+	var buddyicons = $(".ffbp_buddyicon");
+	var count = buddyicons.length;
+
+	for (var i=0; i < count; i++){
+		var el = $(buddyicons[i]);
+
+		if (el.attr("id") == "ffbp_" + nsid){
+			continue;
+		}
+
+		el.css("opacity", .1);
+	}
+
 	$(".ffbp_" + nsid + "_thumb a").lightBox();
 }
 
 function ffbp_hide_photos(nsid){
 	$(".ffbp_" + nsid + "_thumb").remove();
+	$(".ffbp_buddyicon").css("opacity", 1);
 	open_nsid = null;
 }

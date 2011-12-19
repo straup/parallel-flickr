@@ -24,11 +24,20 @@
     margin-bottom:15px;
 }
 
+.ffbp_buddyicon:hover {
+    opacity: 1 !important;
+}
+
 .ffbp_count {
     text-align:center;
     margin-top:3px;
     font-size:11px;
     color:#ccc;
+}
+
+.ffbp_count a {
+    color:#ccc;
+    text-decoration:none;
 }
 
 .ffbp_thumb {
@@ -44,7 +53,16 @@
     color:#fff;
 }
 
+.ffbp_nophotos {
+    color:#ddd;
+    font-size:1.8em;
+    padding-top:10px;
+}
+
 #ffbp_other {
-    font-size:small;
+    font-size:11px;
+    margin-top:50px;
     margin-left:200px;
+    font-style:italic;
+    color:#666;
 }
