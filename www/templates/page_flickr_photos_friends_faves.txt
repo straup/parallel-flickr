@@ -30,6 +30,7 @@
 
 	</script>
 {/if}
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/cwf.css" />
 {/capture}
 {include file="inc_head.txt"}
 

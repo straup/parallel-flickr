@@ -27,32 +27,26 @@
 	
 </script>
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.lightbox-0.5.css" />
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp.css" />
 {/capture}
 {include file="inc_head.txt"}
 
-<div style="margin-top:50px;margin-left:75px;margin-right:50px;">
-
-{if 0}
-<p>your contacts photos with <a href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a> | photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">recently faved</a> </p>
-{/if}
+<div id="ffbp_wrapper">
 
 {foreach from=$users item="data" key="timepie"}
 
-<div style="margin-bottom:20px;">
+<div class="ffbp_timepie">
 
-<h3 style="float:left;margin-top:0px;"><span style="font-size:small; color: #666;display:block;">in the last</span><span style="color:pink;">{$timepie|escape}</span></h3>
+<h3><span style="font-size:small; color:#ccc;display:block;">in the last</span><span style="color:#999;font-size:1.3em;padding-top:5px;display:block;">{$timepie|escape}</span></h3>
 
-<div style="margin-left:200px;">
+<div class="ffbp_users">
 
 {foreach from=$data item="count" key="nsid"}
 {assign var="js_nsid" value=$nsid|replace:"@":"_"}
 
-<div style="float:left; border:none;margin-right:12px; margin-bottom:15px;" id="ffbp_{$js_nsid|escape}">
-
+<div class="ffbp_buddyicon" id="ffbp_{$js_nsid|escape}">
 	<a href="#" onclick="javascript:ffbp_draw_photos('{$js_nsid|escape}'); return false;" title="Yay! New photos from {$meta.$nsid.username|escape}"><img src="{$cfg.abs_root_url}buddyicon/{$nsid|escape}.jpg" height="48px;" width="48px;" style="border:3px solid #{$meta.$nsid.hex|escape}" /></a>
-
-	<div style="text-align:center;margin-top:3px;font-size:11px;color:#ccc;">{if $count==1}<strong>1</strong> photo{else}<strong>{$count|escape}</strong> photos{/if}</div>
-
+	<div class="ffbp_count">{if $count==1}<strong>1</strong> photo{else}<strong>{$count|escape}</strong> photos{/if}</div>
 </div>
 
 {/foreach}
@@ -62,6 +56,8 @@
 <br clear="all" />
 </div>
 {/foreach}
+
+<p id="ffbp_other">your contacts photos with <a href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a> | photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">recently faved</a> </p>
 
 </div>
 

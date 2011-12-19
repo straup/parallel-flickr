@@ -1,0 +1,50 @@
+#ffbp_wrapper{
+    margin-top:50px;
+    margin-left:75px;
+    margin-right:50px;
+}
+
+.ffbp_timepie {
+    margin-bottom:20px;
+}
+
+.ffbp_timepie h3 {
+    float:left;
+    margin-top: 0px;
+}
+
+.ffbp_users {
+    margin-left:200px;
+}
+
+.ffbp_buddyicon {
+    float:left;
+    border:none;
+    margin-right:12px;
+    margin-bottom:15px;
+}
+
+.ffbp_count {
+    text-align:center;
+    margin-top:3px;
+    font-size:11px;
+    color:#ccc;
+}
+
+.ffbp_thumb {
+    float:left;
+    margin-right:12px;
+    margin-bottom:15px;
+}
+
+.ffbp_thumb_blurb {
+    text-align:center;
+    margin-top:3px;
+    font-size:11px;
+    color:#fff;
+}
+
+#ffbp_other {
+    font-size:small;
+    margin-left:200px;
+}

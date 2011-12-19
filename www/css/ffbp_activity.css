@@ -1,0 +1,46 @@
+#ffbp_users {
+    margin-top: 35px;
+    padding-bottom: 50px;
+}
+
+.ffbp_list {
+    margin: 0px;
+    padding: 0px;
+    float:left;
+    font-size: 11px;
+    width:20%;
+    margin-right: 5%;
+    color:#ccc;
+}
+
+.ffbp_list li {
+    list-style-type: none;
+    line-height:1.5em;
+    text-align:right;
+}
+
+.ffbp_buddyicon {
+    float:left;
+    margin-right:10px;
+    margin-bottom:10px;
+    padding-top: 10px;
+}
+
+.ffbp_photos {
+    padding:10px;
+    margin-left:55px;
+    max-height:285px;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+.ffbp_photos:hover {
+
+    border-bottom: 1px dotted #ddd;
+}
+
+.ffbp_photo {
+    float:left;
+    margin-right:10px;
+    margin-bottom:10px;
+}
