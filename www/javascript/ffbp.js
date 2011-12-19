@@ -8,11 +8,17 @@
 var lazyload = [];
 var open_nsid = null;
 
+var users = [];
+var navi = {};
+
 function ffbp_init(images){
 
 	var preload = [];
 
 	for (nsid in images){
+
+	    	users.push(nsid);
+
 		var count_photos = images[nsid].length;
 
 		for (var i=0; i < count_photos; i++){
@@ -37,9 +43,52 @@ function ffbp_init(images){
 		async: true
 	});
 
+	var count_users = users.length;
+
+	for (var i=0; i < count_users; i++){
+		var user = users[i];
+		var prev = (i >= 1) ? users[i - 1] : null;
+		var next = (i < count_users) ? users[i + 1] : null;
+		navi[user] = [prev, next];
+	}
+
+	$(document).keypress(function(e){
+
+		if (e.keyCode == 37){
+			ffbp_previous_user();
+		}
+
+		else if (e.keyCode == 39){
+			ffbp_next_user();
+		}
+
+	});
+
 	if (lazyload.length){
 		setTimeout(ffbp_lazyload_photos, 15000);
 	}
+}
+
+function ffbp_previous_user(){
+
+	var current_user = (open_nsid) ? open_nsid : users[0];
+
+	var bookends = navi[current_user];
+	var prev_user = bookends[0];
+
+	ffbp_draw_photos(prev_user);
+}
+
+function ffbp_next_user(){
+
+	var next_user = users[0];
+
+	if (open_nsid){
+		var bookends = navi[open_nsid];
+		next_user = bookends[1];
+	}
+
+	ffbp_draw_photos(next_user);
 }
 
 function ffbp_lazyload_photos(){
