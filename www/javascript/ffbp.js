@@ -54,7 +54,13 @@ function ffbp_init(images){
 
 	$(document).keypress(function(e){
 
-		if (e.keyCode == 37){
+		// console.log(e.keyCode);
+
+		if (e.keyCode == 13){
+			ffbp_show_lightbox();
+		}
+
+		else if (e.keyCode == 37){
 			ffbp_previous_user();
 		}
 
@@ -67,6 +73,16 @@ function ffbp_init(images){
 	if (lazyload.length){
 		setTimeout(ffbp_lazyload_photos, 15000);
 	}
+}
+
+function ffbp_show_lightbox(){
+
+	if (! open_nsid){
+		return;
+	}
+
+	var uid = "#ffbp_photos_" + open_nsid + "_0";
+	$(uid).trigger('click');
 }
 
 function ffbp_previous_user(){
@@ -132,8 +148,6 @@ function ffbp_draw_photos(nsid){
 		ffbp_hide_photos(open_nsid);
 	}
 
-	open_nsid = nsid;
-
 	// http://leandrovieira.com/projects/jquery/lightbox/
 
 	var count_photos = images[nsid].length;
@@ -145,7 +159,7 @@ function ffbp_draw_photos(nsid){
 
 		// TO DO: meta colours...
 
-		var img = "<img src=\"" + thumb + "\" height=\"50\" width=\"50\" style=\"border: 3px solid #eee;\"/>";
+		var img = "<img src=\"" + thumb + "\" height=\"75\" width=\"75\" style=\"border: 3px solid #eee;\" id=\"ffbp_photos_" + nsid + "_" + i + "\"/>";
 
 		// TO DO: link to photo on flickr...
 
@@ -156,6 +170,8 @@ function ffbp_draw_photos(nsid){
 
 		$("#ffbp_" + nsid).after(html);
 	}
+
+	open_nsid = nsid;
 
 	var buddyicons = $(".ffbp_buddyicon");
 	var count = buddyicons.length;

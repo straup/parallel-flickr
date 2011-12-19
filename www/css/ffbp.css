@@ -21,7 +21,9 @@
     float:left;
     border:none;
     margin-right:12px;
-    margin-bottom:15px;
+    /* margin-bottom:15px; */
+    height:80px;
+    min-height: 80px;
 }
 
 .ffbp_buddyicon:hover {
@@ -43,7 +45,7 @@
 .ffbp_thumb {
     float:left;
     margin-right:12px;
-    margin-bottom:15px;
+    /* margin-bottom:15px; */
 }
 
 .ffbp_thumb_blurb {
