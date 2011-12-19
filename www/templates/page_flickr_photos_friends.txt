@@ -28,6 +28,7 @@
 </script>
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.lightbox-0.5.css" />
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp.css" />
+<meta http-equiv="refresh" content="600" />
 {/capture}
 {include file="inc_head.txt"}
 
