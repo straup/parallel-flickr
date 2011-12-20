@@ -436,7 +436,7 @@
 					$photos = $rsp['rsp']['photos']['photo'];
 
 					if (! is_array($photos)){
-						$rsp = not_ok("no photos");
+						$rsp = not_okay("no photos");
 						$ok = 0;
 					}
 				}

@@ -15,7 +15,7 @@
 		$more['enforce_geoperms'] = 1;
 
 		if (! flickr_places_is_valid_placetype($place['place_type'])){
-			return not_ok("not a valid placetype");
+			return not_okay("not a valid placetype");
 		}
 
 		$query = array(
