@@ -18,7 +18,7 @@
 	}
 
 	$topic_map = flickr_push_topic_map("string keys");
-	$topic_id = $topic_map["your_photos"];
+	$topic_id = $topic_map["my_photos"];
 
 	$topic_args = array(
 		'update_type' => 'comments,faves,tags,notes',
@@ -39,7 +39,7 @@
 		);
 
 		$rsp = flickr_push_subscriptions_register_subscription($sub);
-
+dumper($rsp);
 		$GLOBALS['smarty']->assign("new_subscription", $rsp['ok']);
 		$GLOBALS['smarty']->assign("subscription_ok", $rsp['ok']);
 	}
@@ -52,9 +52,10 @@
 		$older_than = $now - ((60 * 60) * $offset_hours);
 
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
+dumper($rsp);
 	}
 
-	$GLOBALS['smarty']->display("page_flickr_recent_activity.txt");
+	$GLOBALS['smarty']->display("page_flickr_photos_users_recent_activity.txt");
 	exit();
 
 ?>
