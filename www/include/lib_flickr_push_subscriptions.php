@@ -103,12 +103,9 @@
 			$enc_id = AddSlashes($user['id']);
 			$enc_topic = AddSlashes($topic_id);
 
-			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND topic_id='{$enc_topic}'";
+			$enc_args = ($topic_args) ? AddSlashes($topic_args) : "";
 
-			if ($topic_args){
-				$enc_args = AddSlashes($topic_args);
-				$sql .= " AND topic_args='{$enc_args}'";
-			}
+			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND topic_id='{$enc_topic}' AND topic_args='{$enc_args}'";
 
 			$rsp = db_fetch($sql);
 			$row = db_single($rsp);
