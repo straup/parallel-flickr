@@ -53,7 +53,7 @@
 		$older_than = $now - ((60 * 60) * $offset_hours);
 
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
-		# dumper($rsp);
+		dumper($rsp);
 	}
 
 	$GLOBALS['smarty']->display("page_flickr_photos_user_recent_activity.txt");

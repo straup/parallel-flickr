@@ -1,5 +1,6 @@
 {capture assign="page_title"}photos from your contacts{/capture}
 {capture assign="extra_head"}
+{if !$new_subscription}
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.lightbox-0.5.min.js"></script>
@@ -29,8 +30,32 @@
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.lightbox-0.5.css" />
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp.css" />
 <meta http-equiv="refresh" content="600" />
+{else}
+<meta http-equiv="refresh" content="300" />
+{/if}
 {/capture}
 {include file="inc_head.txt"}
+
+{if $new_subscription}
+
+{if $subscription_ok}
+
+<div style="margin-top:5%">
+<img src="{$cfg.abs_root_url}images/cat.gif" style="float:left; margin-right:30px; margin-bottom: 10px;" />
+
+<div style="margin-left:130px; line-height:1.3em;">
+<p>Okay! In order to see your contacts photos we need to create a
+<q>subscription</q> for those photos with Flickr.</p>
+
+<p>That's been done but it will
+take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+{else}
+<p>Ack! Something when wrong trying to subscribe to your contacts photos.</p>
+{/if}
+
+{else}
 
 <div id="ffbp_wrapper">
 
@@ -68,5 +93,7 @@ photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">fave
 </div>
 
 </div>
+
+{/if}
 
 {include file="inc_foot.txt"}

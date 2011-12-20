@@ -40,7 +40,7 @@
 
 		$rsp = flickr_push_subscriptions_register_subscription($sub);
 
-		$GLOBALS['smarty']->assign("new_subscription", $rsp['ok']);
+		$GLOBALS['smarty']->assign("new_subscription", 1);
 		$GLOBALS['smarty']->assign("subscription_ok", $rsp['ok']);
 	}
 
