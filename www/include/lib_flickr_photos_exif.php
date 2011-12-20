@@ -24,7 +24,7 @@
 		$map = flickr_photos_media_map();
 
 		if ($map[$photo['media']] == 'video'){
-			return not_ok("video does not contain EXIF data");
+			return not_okay("video does not contain EXIF data");
 		}
 
 		$fname = "{$photo['id']}_{$photo['originalsecret']}_o.{$photo['originalformat']}";
@@ -33,15 +33,15 @@
 		$path = "{$froot}/{$fname}";
 
 		if (! preg_match("/\.jpe?g$/i", $path)){
-			return not_ok("not a JPEG photo");
+			return not_okay("not a JPEG photo");
 		}
 
 		if (! file_exists($path)){
-			return not_ok("original photo not found");
+			return not_okay("original photo not found");
 		}
 
 		if (! filesize($path)){
-			return not_ok("original photo is empty");
+			return not_okay("original photo is empty");
 		}
 
 		# TO DO: cache me?
@@ -49,7 +49,7 @@
 		$exif = exif_read_data($path);
 
 		if (! $exif){
-			return not_ok("failed to read EXIF data");
+			return not_okay("failed to read EXIF data");
 		}
 
 		# TO DO: expand EXIF tag values
@@ -73,7 +73,7 @@
 
 		ksort($exif);
 
-		return ok(array("rows" => $exif));
+		return okay(array("rows" => $exif));
 	}
 
 	#################################################################

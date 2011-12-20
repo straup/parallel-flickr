@@ -239,7 +239,9 @@
 		return $filter->go($str);
 	}
 
-	function ok($more=null){
+	# 'ok' and 'not_ok' conflict with testmore (20111219/straup)
+
+	function okay($more=null){
 
 		$out = array('ok' => 1);
 
@@ -250,7 +252,7 @@
 		return $out;
 	}
 
-	function not_ok($msg='Your call could not be completed as dialed', $code=null){
+	function not_okay($msg='Your call could not be completed as dialed', $code=null){
 
 		$out = array('ok' => 0,	'error' => $msg);
 
