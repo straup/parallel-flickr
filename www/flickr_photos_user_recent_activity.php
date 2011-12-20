@@ -39,7 +39,8 @@
 		);
 
 		$rsp = flickr_push_subscriptions_register_subscription($sub);
-dumper($rsp);
+		# dumper($rsp);
+
 		$GLOBALS['smarty']->assign("new_subscription", $rsp['ok']);
 		$GLOBALS['smarty']->assign("subscription_ok", $rsp['ok']);
 	}
@@ -52,10 +53,10 @@ dumper($rsp);
 		$older_than = $now - ((60 * 60) * $offset_hours);
 
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
-dumper($rsp);
+		# dumper($rsp);
 	}
 
-	$GLOBALS['smarty']->display("page_flickr_photos_users_recent_activity.txt");
+	$GLOBALS['smarty']->display("page_flickr_photos_user_recent_activity.txt");
 	exit();
 
 ?>
