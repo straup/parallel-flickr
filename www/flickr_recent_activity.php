@@ -7,30 +7,35 @@
 	loadlib("flickr_push_subscriptions");
 	loadlib("flickr_push_photos");
 
-	login_ensure_loggedin("/photos/friends/faves/");
+	login_ensure_loggedin($_SERVER['REQUEST_URI']);
 
 	if (! $GLOBALS['cfg']['enable_feature_flickr_push']){
 		error_disabled();
 	}
 
-	if (! $GLOBALS['cfg']['flickr_push_enable_photos_friends_faves']){
+	if (! $GLOBALS['cfg']['flickr_push_enable_recent_activity']){
 		error_disabled();
 	}
 
 	$topic_map = flickr_push_topic_map("string keys");
-	$topic_id = $topic_map["contacts_faves"];
+	$topic_id = $topic_map["your_photos"];
 
-	$sub = flickr_push_subscriptions_get_by_user_and_topic($GLOBALS['cfg']['user'], $topic_id);
+	$topic_args = array(
+		'update_type' => 'comments,faves,tags,notes',
+	);
+
+	$sub = flickr_push_subscriptions_get_by_user_and_topic($GLOBALS['cfg']['user'], $topic_id, $topic_args);
 
 	if (! $sub){
 
-		if (! $GLOBALS['cfg']['flickr_push_enable_photos_registrations']){
+		if (! $GLOBALS['cfg']['flickr_push_enable_registrations']){
 			error_disabled();
 		}
 
 		$sub = array(
 			'user_id' => $GLOBALS['cfg']['user']['id'],
 			'topic_id' => $topic_id,
+			'topic_args' => $topic_args,
 		);
 
 		$rsp = flickr_push_subscriptions_register_subscription($sub);
@@ -41,11 +46,15 @@
 
 	else {
 
-		$rsp = flickr_push_photos_for_subscription($sub, $limit);
-		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
+		$now = time();
+
+		$offset_hours = 8;
+		$older_than = $now - ((60 * 60) * $offset_hours);
+
+		$rsp = flickr_push_photos_for_subscription($sub, $older_than);
 	}
 
-	$GLOBALS['smarty']->display("page_flickr_photos_friends_faves.txt");
+	$GLOBALS['smarty']->display("page_flickr_recent_activity.txt");
 	exit();
 
 ?>

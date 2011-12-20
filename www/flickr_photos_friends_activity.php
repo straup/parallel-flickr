@@ -24,7 +24,7 @@
 
 	if (! $sub){
 
-		if (! $GLOBALS['cfg']['flickr_push_enable_photos_friends_registrations']){
+		if (! $GLOBALS['cfg']['flickr_push_enable_registrations']){
 			error_disabled();
 		}
 
