@@ -52,7 +52,7 @@
 
 		$now = time();
 
-		$offset_hours = 8;
+		$offset_hours = 24;
 		$older_than = $now - ((60 * 60) * $offset_hours);
 
 		$rsp = flickr_push_photos_for_subscription($sub, $older_than);

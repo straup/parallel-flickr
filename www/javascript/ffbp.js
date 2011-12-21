@@ -52,23 +52,7 @@ function ffbp_init(images){
 		navi[user] = [prev, next];
 	}
 
-	$(document).keypress(function(e){
-
-		// console.log(e.keyCode);
-
-		if (e.keyCode == 13){
-			ffbp_show_lightbox();
-		}
-
-		else if (e.keyCode == 37){
-			ffbp_previous_user();
-		}
-
-		else if (e.keyCode == 39){
-			ffbp_next_user();
-		}
-
-	});
+	ffbp_enable_shortcuts();
 
 	if (lazyload.length){
 		setTimeout(ffbp_lazyload_photos, 15000);
@@ -152,10 +136,12 @@ function ffbp_draw_photos(nsid){
 
 	var count_photos = images[nsid].length;
 
-	for (var i=0; i < count_photos; i++){
+	for (var i = count_photos-1; i >= 0; i--){
 
-		var thumb = images[nsid][i][0];
-		var photo = images[nsid][i][1];
+		var link = images[nsid][i][0];
+		var thumb = images[nsid][i][1];
+		var photo = images[nsid][i][2];
+		var title = images[nsid][i][3];
 
 		// TO DO: meta colours...
 
@@ -164,7 +150,7 @@ function ffbp_draw_photos(nsid){
 		// TO DO: link to photo on flickr...
 
 		html = "<div class=\"ffbp_thumb ffbp_" + nsid + "_thumb\">";
-		html += "<a href=\"" + photo + "\">" + img + "</a>";
+		html += "<a href=\"" + photo + "\" title=\"" + title + "\" src=\"" + link + "\">" + img + "</a>";
 		html += "<div class=\"ffbp_thumb_blurb\"><strong>&nbsp;</strong></div>";
 		html += "</div>";
 
@@ -193,4 +179,30 @@ function ffbp_hide_photos(nsid){
 	$(".ffbp_" + nsid + "_thumb").remove();
 	$(".ffbp_buddyicon").css("opacity", 1);
 	open_nsid = null;
+}
+
+function ffbp_disable_shortcuts(){
+	$(document).unbind();
+}
+
+function ffbp_enable_shortcuts(){
+
+	$(document).keypress(function(e){
+
+		// console.log(e.keyCode);
+
+		if (e.keyCode == 13){
+			ffbp_show_lightbox();
+		}
+
+		else if (e.keyCode == 37){
+			ffbp_previous_user();
+		}
+
+		else if (e.keyCode == 39){
+			ffbp_next_user();
+		}
+
+	});
+
 }
