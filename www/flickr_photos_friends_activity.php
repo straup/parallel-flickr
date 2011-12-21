@@ -60,9 +60,6 @@
 			$nsid = $row['owner'];
 			$created = $row['created'];
 
-			$users_counts[$nsid] ++;
-			$users_updated[$nsid] = max($users_updated[$nsid], $created);
-
 			if (! isset($users_names[$nsid])){
 				$users_names[$nsid] = $row['ownername'];
 			}
@@ -74,6 +71,9 @@
 			if (isset($seen[$row['photo_id']])){
 				continue;
 			}
+
+			$users_counts[$nsid] ++;
+			$users_updated[$nsid] = max($users_updated[$nsid], $created);
 
 			$users_photos[$nsid]["{$created}.{$row['photo_id']}"] = $row;
 			$seen[$row['photo_id']] = 1;
