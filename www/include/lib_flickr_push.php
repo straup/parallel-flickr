@@ -31,6 +31,48 @@
 
 	#################################################################
 
+	function flickr_push_update_types_map($rollup_by_type=0){
+
+		$map = array(
+			'name' => 'title',
+			'description' => 'description',
+			'date_create' => 'date_create',
+			'date_taken' => 'date_taken',
+			'camera' => 'camera',
+			'license' => 'license',
+			'rotation' => 'photo_url',
+			'count_comments' => 'comments',
+			'count_notes' => 'notes',
+			'count_tags' => 'tags',
+			'count_faves' => 'faves',
+			'secret' => 'photo_url',
+			'secret_o' => 'photo_url',
+			'server' => 'photo_url',
+			'has_geo' => 'geo',
+			'created' => 'created',
+		);
+
+		if ($rollup_by_type){
+
+			$tmp = array();
+
+			foreach ($map as $event => $type){
+
+				if (! is_array($tmp[$type])){
+					$tmp[$type] = array();
+				}
+
+				$tmp[$type][] = $event;
+			}
+
+			$map = $tmp;
+		}
+
+		return $map;
+	}
+
+	#################################################################
+
 	function flickr_push_subscribe($subscription){
 
 		$flickr_user = flickr_users_get_by_user_id($subscription['user_id']);

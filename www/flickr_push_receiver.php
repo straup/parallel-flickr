@@ -16,9 +16,12 @@
 		error_404();
 	}
 
+	# error_log("[PARALLEL] updates for {$secret_url}");
+
 	$subscription = flickr_push_subscriptions_get_by_secret_url($secret_url);
 
 	if (! $subscription){
+		# error_log("[PARALLEL] no subscription for {$secret_url}");
 		error_404();
 	}
 
@@ -83,6 +86,7 @@
 		}
 
 		$photo_id = $m[1];
+		$update_type = (isset($e['flickr']['update@type'])) ? $e['flickr']['update@type'] : '';
 
 		$photo = array(
 			'photo_id' => $photo_id,
@@ -92,6 +96,7 @@
 			'updated' => $e['updated'],
 			'photo_url' => $e['media']['atom_content@url'],
 			'thumb_url' => $e['media']['thumbnail@url'],
+			'update_type' => $update_type,
 		);
 
 		if ($subscription['topic_id'] == 2){
@@ -112,6 +117,10 @@
 
 		if ($rsp['ok']){
 			$new ++;
+		}
+
+		else {
+			error_log("[PARALLEL] " . var_export($rsp, 1));
 		}
 	}
 
