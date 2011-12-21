@@ -181,13 +181,13 @@ function ffbp_hide_photos(nsid){
 	open_nsid = null;
 }
 
-function ffbp_disable_shortcuts(){
-	$(document).unbind();
-}
-
 function ffbp_enable_shortcuts(){
 
 	$(document).keypress(function(e){
+
+		if ($("#lightbox-image").length){
+		    return;
+		}
 
 		// console.log(e.keyCode);
 

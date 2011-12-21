@@ -148,7 +148,6 @@
 			}).show();
 			// Assigning click events in elements to close overlay
 			$('#jquery-overlay,#jquery-lightbox').click(function() {
-		// POO
 				_finish();									
 			});
 			// Assign the _finish function to lightbox-loading-link and lightbox-secNav-btnClose objects
@@ -191,11 +190,13 @@
 			var objImagePreloader = new Image();
 			objImagePreloader.onload = function() {
 				$('#lightbox-image').attr('src',settings.imageArray[settings.activeImage][0]);
+
 				// Perfomance an effect in the image container resizing it
 				_resize_container_image_box(objImagePreloader.width,objImagePreloader.height);
 				//	clear onLoad, IE behaves irratically with animated gifs otherwise
 				objImagePreloader.onload=function(){};
-			};
+
+			    };
 			objImagePreloader.src = settings.imageArray[settings.activeImage][0];
 
 		};
@@ -325,8 +326,6 @@
 		 *
 		 */
 		function _enable_keyboard_navigation() {
-
-			ffbp_disable_shortcuts();
 
 			$(document).keydown(function(objEvent) {
 				_keyboard_action(objEvent);
