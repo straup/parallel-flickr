@@ -9,6 +9,9 @@
 
 	login_ensure_loggedin($_SERVER['REQUEST_URI']);
 
+	# this one is still full of weirdness (20111220/straup)
+	error_disabled();
+
 	if (! $GLOBALS['cfg']['enable_feature_flickr_push']){
 		error_disabled();
 	}
