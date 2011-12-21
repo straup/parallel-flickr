@@ -71,12 +71,14 @@ photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 <img src="{$cfg.abs_root_url}buddyicon/{$nsid|escape}.jpg" height="48" width="48" />
 </div>
 
+{* TO DO: filter out if update_type=='photo_url' ? *}
+
 <div class="ffbp_photos">
 {foreach from=$users_photos.$nsid item="row"}
 <div class="ffbp_photo">
 <a href="http://www.flickr.com/photos/{$row.owner|escape}/{$row.photo_id|escape}/" target="_flickr" title="&#8220;{$row.title|escape}&#8221;{if $row.update_type=='faves'} was faved{elseif $row.update_type=='geo'} was geotagged{elseif $row.update_type=='comments'} was commented on{elseif $row.update_type=='notes'} had a note added to it{elseif $row.update_type=='tags'} was tagged{elseif $row.update_type} debug:{$row.update_type|escape}{else}{/if}"><img src="{$row.thumb_url}" alt="{$row.title|escape}, by {$row.ownername|escape}" /></a>
 <div style="font-size:10px;text-align:left;color:#ccc;max-width:75px;margin-top:3px;">
-{if $row.update_type=='faves'}faved{elseif $row.update_type=='geo'}geotagged{elseif $row.update_type=='comments'}commented on{elseif $row.update_type=='notes'} had a note added{elseif $row.update_type=='tags'}tagged{elseif $row.update_type} debug:{$row.update_type|escape}{else}{/if}
+{if $row.update_type=='faves'}faved{elseif $row.update_type=='geo'}geotagged{elseif $row.update_type=='comments'}commented on{elseif $row.update_type=='notes'} had a note added{elseif $row.update_type=='tags'}tagged{elseif $row.photo_url}{* ignore *}{elseif $row.update_type} debug:{$row.update_type|escape}{else}{/if}
 </div>
 </div>
 {/foreach}
