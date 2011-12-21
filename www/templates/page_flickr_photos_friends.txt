@@ -3,15 +3,15 @@
 {if !$new_subscription}
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
-<script type="text/javascript" src="{$cfg.abs_root_url}javascript/ffbp.js"></script>
-<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.lightbox.ffbp.js"></script>
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/ffbp.min.js"></script>
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.lightbox.ffbp.min.js"></script>
 <script type="text/javascript">
 
 	var images = {literal}{{/literal}
 {foreach from=$meta item="data" key="nsid" name="meta"}
 		'{$nsid|replace:"@":"_"|escape}': [
 {foreach from=$data.images item="url" name="urls"}
-			['http://www.flickr.com/photos/{$url.owner|escape}/{$url.photo_id|escape}', '{$url.thumb_url|escape}', '{$url.display_url|escape}','{$url.title|escape_javascript}']{if ! $smarty.foreach.urls.last},
+			['http://www.flickr.com/photos/{$url.owner|escape}/{$url.photo_id|escape}', '{$url.thumb_url|escape}', '{$url.display_url|escape}','{$url.title|escape_javascript}, by {$url.ownername|escape_javascript}']{if ! $smarty.foreach.urls.last},
 {/if}
 {/foreach} 
 		]{if ! $smarty.foreach.meta.last},

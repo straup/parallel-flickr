@@ -1,7 +1,15 @@
-/*
- * this is a patched version of the jquery.lightbox.js script designed to work
- * with ffbp.js; it could almost certain stand some loving or maybe even
- * refactoring; specfically:
+/**
+ * jQuery lightBox plugin
+ * This jQuery plugin was inspired and based on Lightbox 2 by Lokesh Dhakar (http://www.huddletogether.com/projects/lightbox2/)
+ * and adapted to me for use like a plugin from jQuery.
+ * @name jquery-lightbox-0.5.js
+ * @author Leandro Vieira Pinho - http://leandrovieira.com
+ * @version 0.5
+ * @date April 11, 2008
+ * @category jQuery plugin
+ * @copyright (c) 2008 Leandro Vieira Pinho (leandrovieira.com)
+ * @license CCAttribution-ShareAlike 2.5 Brazil - http://creativecommons.org/licenses/by-sa/2.5/br/deed.en_US
+ * @example Visit http://leandrovieira.com/projects/jquery/lightbox/ for more informations about this jQuery plugin
  */
 
 // Offering a Custom Alias suport - More info: http://docs.jquery.com/Plugins/Authoring#Custom_Alias
@@ -19,11 +27,11 @@
 			// Configuration related to navigation
 			fixedNavigation:		false,		// (boolean) Boolean that informs if the navigation (next and prev button) will be fixed or not in the interface.
 			// Configuration related to images
-			imageLoading:			'/images/lightbox-ico-loading.gif',		// (string) Path and the name of the loading icon
-			imageBtnPrev:			'/images/lightbox-btn-prev.gif',		// (string) Path and the name of the prev button image
-			imageBtnNext:			'/images/lightbox-btn-next.gif',		// (string) Path and the name of the next button image
-			imageBtnClose:			'/images/lightbox-btn-close.gif',		// (string) Path and the name of the close btn
-			imageBlank:			'/images/lightbox-blank.gif',		// (string) Path and the name of a blank image (one pixel)
+			imageLoading:			'images/lightbox-ico-loading.gif',		// (string) Path and the name of the loading icon
+			imageBtnPrev:			'images/lightbox-btn-prev.gif',			// (string) Path and the name of the prev button image
+			imageBtnNext:			'images/lightbox-btn-next.gif',			// (string) Path and the name of the next button image
+			imageBtnClose:			'images/lightbox-btn-close.gif',		// (string) Path and the name of the close btn
+			imageBlank:				'images/lightbox-blank.gif',			// (string) Path and the name of a blank image (one pixel)
 			// Configuration related to container image box
 			containerBorderSize:	10,			// (integer) If you adjust the padding in the CSS for the container, #lightbox-container-image-box, you will need to update this value
 			containerResizeSpeed:	400,		// (integer) Specify the resize duration of container image. These number are miliseconds. 400 is default.
@@ -34,7 +42,7 @@
 			keyToClose:				'c',		// (string) (c = close) Letter to close the jQuery lightBox interface. Beyond this letter, the letter X and the SCAPE key is used to.
 			keyToPrev:				'p',		// (string) (p = previous) Letter to show the previous image
 			keyToNext:				'n',		// (string) (n = next) Letter to show the next image.
-			// DonÂ´t alter these variables in any way
+			// Don´t alter these variables in any way
 			imageArray:				[],
 			activeImage:			0
 		},settings);
@@ -64,24 +72,15 @@
 			settings.imageArray.length = 0;
 			// Unset image active information
 			settings.activeImage = 0;
-			// We have an image set? Or just an image? LetÂ´s see it.
+			// We have an image set? Or just an image? Let´s see it.
 			if ( jQueryMatchedObj.length == 1 ) {
-				settings.imageArray.push(new Array(
-							     objClicked.getAttribute('href'),
-							     objClicked.getAttribute('title'),
-							     objClicked.getAttribute('flickr:target')
-							 ));
+				settings.imageArray.push(new Array(objClicked.getAttribute('href'),objClicked.getAttribute('title')));
 			} else {
 				// Add an Array (as many as we have), with href and title atributes, inside the Array that storage the images references		
 				for ( var i = 0; i < jQueryMatchedObj.length; i++ ) {
-					settings.imageArray.push(new Array(
-								     jQueryMatchedObj[i].getAttribute('href'),
-								     jQueryMatchedObj[i].getAttribute('title'),
-								     jQueryMatchedObj[i].getAttribute('flickr:target')
-								 ));
+					settings.imageArray.push(new Array(jQueryMatchedObj[i].getAttribute('href'),jQueryMatchedObj[i].getAttribute('title')));
 				}
 			}
-
 			while ( settings.imageArray[settings.activeImage][0] != objClicked.getAttribute('href') ) {
 				settings.activeImage++;
 			}
@@ -171,7 +170,7 @@
 			});
 		}
 		/**
-		 * Prepares image exibition; doing a imageÂ´s preloader to calculate itÂ´s size
+		 * Prepares image exibition; doing a image´s preloader to calculate it´s size
 		 *
 		 */
 		function _set_image_to_view() { // show the loading
@@ -187,29 +186,26 @@
 			var objImagePreloader = new Image();
 			objImagePreloader.onload = function() {
 				$('#lightbox-image').attr('src',settings.imageArray[settings.activeImage][0]);
-
 				// Perfomance an effect in the image container resizing it
 				_resize_container_image_box(objImagePreloader.width,objImagePreloader.height);
 				//	clear onLoad, IE behaves irratically with animated gifs otherwise
 				objImagePreloader.onload=function(){};
-
-			    };
+			};
 			objImagePreloader.src = settings.imageArray[settings.activeImage][0];
-
 		};
 		/**
 		 * Perfomance an effect in the image container resizing it
 		 *
-		 * @param integer intImageWidth The imageÂ´s width that will be showed
-		 * @param integer intImageHeight The imageÂ´s height that will be showed
+		 * @param integer intImageWidth The image´s width that will be showed
+		 * @param integer intImageHeight The image´s height that will be showed
 		 */
 		function _resize_container_image_box(intImageWidth,intImageHeight) {
 			// Get current width and height
 			var intCurrentWidth = $('#lightbox-container-image-box').width();
 			var intCurrentHeight = $('#lightbox-container-image-box').height();
 			// Get the width and height of the selected image plus the padding
-			var intWidth = (intImageWidth + (settings.containerBorderSize * 2)); // Plus the imageÂ´s width and the left and right padding value
-			var intHeight = (intImageHeight + (settings.containerBorderSize * 2)); // Plus the imageÂ´s height and the left and right padding value
+			var intWidth = (intImageWidth + (settings.containerBorderSize * 2)); // Plus the image´s width and the left and right padding value
+			var intHeight = (intImageHeight + (settings.containerBorderSize * 2)); // Plus the image´s height and the left and right padding value
 			// Diferences
 			var intDiffW = intCurrentWidth - intWidth;
 			var intDiffH = intCurrentHeight - intHeight;
@@ -243,31 +239,14 @@
 		 */
 		function _show_image_data() {
 			$('#lightbox-container-image-data-box').slideDown('fast');
-
 			$('#lightbox-image-details-caption').hide();
-
-			var title = "(view on flickr)";
-
-			if (settings.imageArray[settings.activeImage][1]){
-				title = settings.imageArray[settings.activeImage][1];
+			if ( settings.imageArray[settings.activeImage][1] ) {
+				$('#lightbox-image-details-caption').html(settings.imageArray[settings.activeImage][1]).show();
 			}
-
-			var link = settings.imageArray[settings.activeImage][2];
-			var html = "<a id=\"ffbp-lightbox-link\" href=\"" + link + "\" title=\"view on flickr\" target=\"_flickr\">" + title + "</a>";
-
-			$('#lightbox-image-details-caption').click(function(e){
-				e.stopPropagation();								       
-			});
-
-			$('#lightbox-image-details-caption').html(html).show();
-
-		        var index = '&#160;';
-
+			// If we have a image set, display 'Image X of X'
 			if ( settings.imageArray.length > 1 ) {
-			    index = settings.txtImage + ' ' + ( settings.activeImage + 1 ) + ' ' + settings.txtOf + ' ' + settings.imageArray.length;
-			}	
-
-		        $('#lightbox-image-details-currentNumber').html(index).show();
+				$('#lightbox-image-details-currentNumber').html(settings.txtImage + ' ' + ( settings.activeImage + 1 ) + ' ' + settings.txtOf + ' ' + settings.imageArray.length).show();
+			}		
 		}
 		/**
 		 * Display the button navigations
@@ -276,7 +255,7 @@
 		function _set_navigation() {
 			$('#lightbox-nav').show();
 
-			// Instead to define this configuration in CSS file, we define here. And itÂ´s need to IE. Just.
+			// Instead to define this configuration in CSS file, we define here. And it´s need to IE. Just.
 			$('#lightbox-nav-btnPrev,#lightbox-nav-btnNext').css({ 'background' : 'transparent url(' + settings.imageBlank + ') no-repeat' });
 			
 			// Show the prev button, if not the first image in set
@@ -334,7 +313,6 @@
 		 *
 		 */
 		function _enable_keyboard_navigation() {
-
 			$(document).keydown(function(objEvent) {
 				_keyboard_action(objEvent);
 			});
@@ -345,15 +323,11 @@
 		 */
 		function _disable_keyboard_navigation() {
 			$(document).unbind();
-
-			ffbp_enable_shortcuts();
 		}
 		/**
 		 * Perform the keyboard actions
 		 *
 		 */
-
-// FIX ME
 		function _keyboard_action(objEvent) {
 			// To ie
 			if ( objEvent == null ) {
@@ -372,7 +346,7 @@
 			}
 			// Verify the key to show the previous image
 			if ( ( key == settings.keyToPrev ) || ( keycode == 37 ) ) {
-				// If weÂ´re not showing the first image, call the previous
+				// If we´re not showing the first image, call the previous
 				if ( settings.activeImage != 0 ) {
 					settings.activeImage = settings.activeImage - 1;
 					_set_image_to_view();
@@ -381,7 +355,7 @@
 			}
 			// Verify the key to show the next image
 			if ( ( key == settings.keyToNext ) || ( keycode == 39 ) ) {
-				// If weÂ´re not showing the last image, call the next
+				// If we´re not showing the last image, call the next
 				if ( settings.activeImage != ( settings.imageArray.length - 1 ) ) {
 					settings.activeImage = settings.activeImage + 1;
 					_set_image_to_view();
@@ -412,8 +386,6 @@
 			$('#jquery-overlay').fadeOut(function() { $('#jquery-overlay').remove(); });
 			// Show some elements to avoid conflict with overlay in IE. These elements appear above the overlay.
 			$('embed, object, select').css({ 'visibility' : 'visible' });
-
-		        _disable_keyboard_navigation();
 		}
 		/**
 		 / THIRD FUNCTION

@@ -133,6 +133,8 @@ function ffbp_draw_photos(nsid){
 	}
 
 	// http://leandrovieira.com/projects/jquery/lightbox/
+	// note: we are assuming jquery.lightbox.ffbp.js at
+	// least for the time being (20111221/straup)
 
 	var count_photos = images[nsid].length;
 
@@ -143,14 +145,10 @@ function ffbp_draw_photos(nsid){
 		var photo = images[nsid][i][2];
 		var title = images[nsid][i][3];
 
-		// TO DO: meta colours...
-
 		var img = "<img src=\"" + thumb + "\" height=\"75\" width=\"75\" style=\"border: 3px solid #eee;\" id=\"ffbp_photos_" + nsid + "_" + i + "\"/>";
 
-		// TO DO: link to photo on flickr...
-
 		html = "<div class=\"ffbp_thumb ffbp_" + nsid + "_thumb\">";
-		html += "<a href=\"" + photo + "\" title=\"" + title + "\" src=\"" + link + "\">" + img + "</a>";
+		html += "<a href=\"" + photo + "\" title=\"" + title + "\" flickr:target=\"" + link + "\">" + img + "</a>";
 		html += "<div class=\"ffbp_thumb_blurb\"><strong>&nbsp;</strong></div>";
 		html += "</div>";
 
