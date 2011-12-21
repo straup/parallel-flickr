@@ -21,6 +21,7 @@
 	$topic_id = $topic_map["contacts_faves"];
 
 	$sub = flickr_push_subscriptions_get_by_user_and_topic($GLOBALS['cfg']['user'], $topic_id);
+	$GLOBALS['smarty']->assign_by_ref("subscription", $sub);
 
 	if (! $sub){
 

@@ -34,7 +34,13 @@ of thing. The photos are grouped by photographer, sorted by the photographer wit
 been most recently updated.{if !$new_subscription and $users_updated|@count} They are:{/if}</p>
 
 {if !$users_updated|@count}
-<p>STILL WAITING</p>
+{if $subscription.last_update}
+<p>Hrm... your contacts have been very quiet it seems because there are no
+recent updates.</p>
+{else}
+<p>Still waiting for new updates from your contacts. Soon, I bet!</p>
+{/if}
+
 {else}
 
 {assign var="contacts" value=$users_updated|@array_keys|@count}

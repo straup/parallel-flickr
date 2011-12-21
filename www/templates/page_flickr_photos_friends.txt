@@ -57,6 +57,15 @@ check later or just leave this page open and new faves will appear in like magic
 
 {else}
 
+{if !$users|@count}
+{if $subscription.last_update}
+<p>Hrm... your contacts have been very quiet it seems because there are no
+recent updates.</p>
+{else}
+<p>Still waiting for new updates from your contacts. Soon, I bet!</p>
+{/if}
+
+{else}
 <div id="ffbp_wrapper">
 
 {foreach from=$users item="data" key="timepie"}
@@ -93,6 +102,7 @@ photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">fave
 </div>
 
 </div>
+{/if}
 
 {/if}
 

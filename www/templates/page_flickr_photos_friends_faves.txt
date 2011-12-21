@@ -69,7 +69,12 @@ check later or just leave this page open and new faves will appear in like magic
 
 <h2>Your contacts' faves</h2>
 
-<p>Hey, that's weird. There are no new faves to show you.</p>
+{if $subscription.last_update}
+<p>Hrm... your contacts have been very quiet it seems because there are new
+faves to show you.</p>
+{else}
+<p>Still waiting for new faves from your contacts.</p>
+{/if}
 
 <p>We'll keep checking every couple of minutes. You can come back and
 check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
