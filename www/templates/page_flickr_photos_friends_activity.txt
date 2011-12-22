@@ -1,4 +1,4 @@
-{capture assign="page_title"}photos from your contacts | with recent activity{/capture}
+{capture assign="page_title"}photos from your contacts | with recent activity{if $update_type} | {$update_type}{/if}{/capture}
 {capture assign="extra_head"}
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp_activity.css" />
 <meta http-equiv="refresh" content="600" />
@@ -28,6 +28,20 @@ check later or just leave this page open and new faves will appear in like magic
 
 {else}
 
+<ul id="ffbp_types">
+<li><strong>filter by</strong> | </li>
+{foreach from=$update_map item="ignore" key="type" name="types"}
+<li id="ffbp_update_types">
+{if $type==$update_type}
+<strong>{$type}</strong>
+{else}
+<a href="{$cfg.abs_root_url}photos/friends/activity/{$type|escape}/">{$type|escape}</a>
+{/if}
+{if !$smarty.foreach.types.last} | {/if}
+</li>
+{/foreach}
+</ul>
+
 <p style="font-size:small;font-style:italic;margin-top:25px;">These are public photos from your contacts that have been
 uploaded, commented on or maybe faved sometime in the last {$offset_hours|escape} hours. That sort
 of thing. The photos are grouped by photographer, sorted by the photographer with the photo that's
@@ -35,8 +49,13 @@ been most recently updated.{if !$new_subscription and $users_updated|@count} The
 
 {if !$users_updated|@count}
 {if $subscription.last_update}
+{if $update_type}
+{* TO DO: better copy *}
+<p>There are no recent photos from your contacts for that filter.</p>
+{else}
 <p>Hrm... your contacts have been very quiet it seems because there are no
 recent updates.</p>
+{/if}
 {else}
 <p>Still waiting for new updates from your contacts. Soon, I bet!</p>
 {/if}
@@ -67,7 +86,6 @@ photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 <br clear="all" />
 
 </div>
-
 
 {foreach from=$users_updated item="ts" key="nsid"}
 <a name="{$nsid|escape}"></a>

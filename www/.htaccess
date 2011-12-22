@@ -86,7 +86,7 @@ RewriteRule ^photo.gne$							/flickr_photo.php?%{QUERY_STRING} [L]
 RewriteRule ^photos/me(/([a-z_]+))?/?$					/flickr_photos_me.php?context=$2&%{QUERY_STRING} [L]
 
 RewriteRule ^photos/friends(/page([0-9]+))?/?$				/flickr_photos_friends.php?page=$2&%{QUERY_STRING} [L]
-RewriteRule ^photos/friends/activity(/page([0-9]+))?/?$			/flickr_photos_friends_activity.php?page=$2&%{QUERY_STRING} [L]
+RewriteRule ^photos/friends/activity(/([a-z_]+))?/?$			/flickr_photos_friends_activity.php?update_type=$2&%{QUERY_STRING} [L]
 RewriteRule ^photos/friends/faves(/page([0-9]+))?/?$			/flickr_photos_friends_faves.php?page=$2&%{QUERY_STRING} [L]
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/activity/?$		/flickr_photos_user_recent_activity.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
