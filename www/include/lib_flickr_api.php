@@ -13,7 +13,7 @@
 
 	#################################################################
 
-	function flickr_api_token_perms_map($string_keys=0){
+	function flickr_api_authtoken_perms_map($string_keys=0){
 
 		$map = array(
 			'0' => 'read',
