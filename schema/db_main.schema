@@ -37,6 +37,7 @@ CREATE TABLE `FlickrUsers` (
   `auth_token` char(34) NOT NULL,
   `oauth_token` char(34) NOT NULL,
   `oauth_secret` char(34) NOT NULL,
+  `token_perms` TINYINT(3) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `by_nsid` (`nsid`),
   KEY `by_path_alias` (`path_alias`)
