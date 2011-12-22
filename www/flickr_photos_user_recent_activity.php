@@ -28,6 +28,9 @@
 	);
 
 	$sub = flickr_push_subscriptions_get_by_user_and_topic($GLOBALS['cfg']['user'], $topic_id, $topic_args);
+	$GLOBALS['smarty']->assign_by_ref("subscription", $sub);
+
+	dumper($sub);
 
 	if (! $sub){
 
@@ -42,7 +45,7 @@
 		);
 
 		$rsp = flickr_push_subscriptions_register_subscription($sub);
-		# dumper($rsp);
+		dumper($rsp);
 
 		$GLOBALS['smarty']->assign("new_subscription", $rsp['ok']);
 		$GLOBALS['smarty']->assign("subscription_ok", $rsp['ok']);

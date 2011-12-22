@@ -183,7 +183,7 @@
 		$more = array_merge($defaults, $more);
 
 		if (! in_array($more['context'], array('datetaken', 'dateupload'))){
-			return not_ok("invalid date context");
+			return not_okay("invalid date context");
 		}
 
 		$cluster_id = $user['cluster_id'];
@@ -206,10 +206,10 @@
 		$row = db_single($rsp);
 
 		if (! $row){
-			return not_ok("no photos to bookend!");
+			return not_okay("no photos to bookend!");
 		}
 
-		return ok($row);
+		return okay($row);
 	}
 
 	#################################################################
