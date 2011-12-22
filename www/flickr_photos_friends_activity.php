@@ -55,7 +55,22 @@
 
 		$seen = array();
 
+		$update_map = flickr_push_update_types_map("rollup by type");
+
+		$update_type = get_str("update_type");
+
+		if (! isset($update_map[$update_type])){
+			$update_type = null;
+		}
+
+		$GLOBALS['smarty']->assign_by_ref("update_map", $update_map);
+		$GLOBALS['smarty']->assign_by_ref("update_type", $update_type);
+
 		foreach ($rsp['rows'] as $row){
+
+			if (($update_type) && ($row['update_type'] != $update_type)){
+				continue;
+			}
 
 			$nsid = $row['owner'];
 			$created = $row['created'];

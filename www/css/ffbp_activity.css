@@ -44,3 +44,18 @@
     margin-right:10px;
     margin-bottom:10px;
 }
+
+#ffbp_types {
+    margin: 0px;
+    padding: 0px;
+    font-size: 11px;
+    margin-right: 5%;
+    color:#ccc;
+}
+
+#ffbp_types li {
+    list-style-type: none;
+    line-height:1.5em;
+    text-align:right;
+    display:inline;
+}
