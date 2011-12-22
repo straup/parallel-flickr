@@ -28,6 +28,8 @@ check later or just leave this page open and new faves will appear in like magic
 
 {else}
 
+{* TO DO: filter locally in JS, maybe... *}
+
 <ul id="ffbp_types">
 <li><strong>filter by</strong> | </li>
 {foreach from=$update_map item="ignore" key="type" name="types"}
