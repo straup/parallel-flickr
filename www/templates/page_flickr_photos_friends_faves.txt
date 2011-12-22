@@ -1,0 +1,88 @@
+{capture assign="page_title"}faves from your contacts{/capture}
+{capture assign="extra_head"}
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.touchwipe.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.js"></script>
+{if !$new_subscription}
+	<script type="text/javascript">
+
+{if $photos|@count}
+		var faves = [
+{foreach from=$photos item="row"}
+		["{$row.photo_id|escape_javascript}", "{$row.title|escape_javascript}", "{$row.owner|escape_javascript}", "{$row.ownername|escape_javascript}", "{$row.faved_by_nsid|escape_javascript}", "{$row.faved_by|escape_javascript}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
+{/foreach}
+		];
+
+{literal}
+		$(document).ready(function(){
+			cwf_init(faves);
+		});
+{/literal}
+{else}
+{literal}
+		$(document).ready(function(){
+			cwf_init_subscription();
+		});
+{/literal}
+{/if}
+
+	</script>
+{/if}
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/cwf.css" />
+{/capture}
+{include file="inc_head.txt"}
+
+{if $new_subscription}
+
+<h2>Your contacts' faves</h2>
+
+{if $subscription_ok}
+
+<div style="margin-top:5%">
+<img src="{$cfg.abs_root_url}images/cat.gif" style="float:left; margin-right:30px; margin-bottom: 10px;" />
+
+<div style="margin-left:130px; line-height:1.3em;">
+<p>Okay! In order to see your contacts' faves we need to create a
+<q>subscription</q> for those photos with Flickr.</p>
+
+<p>That's been done but it will
+take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+<p id="last_check" style="font-style:italic;"></p>
+</div>
+</div>
+
+<script type="text/javascript">
+	cwf_init_subscription();
+</script>
+
+{else}
+<p>Ack! Something when wrong trying to subscribe to your contacts faves.</p>
+{/if}
+
+{else}
+
+{if !$photos|@count}
+
+<h2>Your contacts' faves</h2>
+
+{if $subscription.last_update}
+<p>Hrm... your contacts have been very quiet it seems because there are new
+faves to show you.</p>
+{else}
+<p>Still waiting for new faves from your contacts.</p>
+{/if}
+
+<p>We'll keep checking every couple of minutes. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+<p id="last_check" style="font-style:italic;"></p>
+
+{/if}
+
+{/if}
+
+{include file="inc_foot.txt"}

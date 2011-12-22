@@ -36,6 +36,12 @@
 	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;
 	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
 
+	$GLOBALS['cfg']['enable_feature_flickr_push'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_registrations'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_photos_friends_faves'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_photos_recent_activity'] = 0;	# still full of weirdness (20111221/straup)
+
 	# See this? It assumes everything is running on a single
 	# (read: not federated) database.
 

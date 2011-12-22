@@ -1,0 +1,7 @@
+CREATE TABLE `FlickrPushSubscriptionsUrls` (
+  `id` int(10) unsigned NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `args` text,
+  UNIQUE KEY `by_url` (`url`),
+  KEY `by_id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -65,6 +65,7 @@
 	#################################################################
 
 	# https://wiki.apache.org/solr/SpatialSearch#QuickStart
+	# http://e-mats.org/2011/12/solr-missing-geographic-distance-in-response-when-using-fl_dist_geodist/
 
 	function solr_select_nearby($lat, $lon, $params=array(), $more=array()){
 

@@ -21,7 +21,7 @@
 	function flickr_photos_search(&$query, $more=array()){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
-			return not_ok('search indexing is disabled');
+			return not_okay('search indexing is disabled');
 		}
 
 		# OMGWTF: When sorting by date_taken|posted the results
@@ -81,7 +81,7 @@
 	function flickr_photos_search_facet(&$query, $facet, $more=array()){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
-			return not_ok('search indexing is disabled');
+			return not_okay('search indexing is disabled');
 		}
 
 		$defaults = array(
@@ -166,7 +166,7 @@
 	function flickr_photos_search_index_photo(&$photo){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
-			return not_ok('search indexing is disabled');
+			return not_okay('search indexing is disabled');
 		}
 
 		$meta = flickr_photos_metadata_load($photo);
@@ -175,7 +175,7 @@
 
 		if (! $meta['ok']){
 
-			return not_ok('failed to load photo metadata');
+			return not_okay('failed to load photo metadata');
 		}
 
 		$meta = $meta['data']['photo'];

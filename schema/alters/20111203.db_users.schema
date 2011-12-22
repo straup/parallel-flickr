@@ -1,0 +1,15 @@
+ALTER TABLE `FlickrPushSubscriptions` DROP `deleted`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `url_id`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `last_request`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `last_request_photo_count`;
+ALTER TABLE `FlickrPushSubscriptions` DROP `last_update_photo_count`;
+
+CREATE TABLE `FlickrPushPhotos` (
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `subscription_id` INT(11) UNSIGNED NOT NULL,
+  `created` INT(11) UNSIGNED NOT NULL,
+  `photo_id` BIGINT(20) UNSIGNED NOT NULL,
+  `photo_data` TEXT,
+  UNIQUE KEY `by_photo_id` (`subscription_id`, `photo_id`),
+  KEY `by_sub_id` (`subscription_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

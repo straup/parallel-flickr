@@ -82,3 +82,29 @@ CREATE TABLE `Places` (
   `date_created` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`woeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `ApiKeys`;
+
+CREATE TABLE `ApiKeys` (
+  `id` BIGINT(20) unsigned NOT NULL,
+  `user_id` INT(11) unsigned NOT NULL,
+  `app_key` VARCHAR(40) NOT NULL,
+  `app_secret` VARCHAR(64) NOT NULL,
+  `app_callback` VARCHAR(255) NOT NULL,
+  `created` INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `by_key` (`app_key`),
+  KEY `by_user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `AuthTokens`;
+
+CREATE TABLE `AuthTokens` (
+  `id` BIGINT(20) unsigned NOT NULL,
+  `user_id` INT(11) unsigned NOT NULL,
+  `app_id` BIGINT(20) unsigned NOT NULL,         
+  `app_secret` VARCHAR(64) NOT NULL,
+  `app_perms` TINYINT(3) UNSIGNED NOT NULL,
+  `created` INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `by_app` (`app_id`, `user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,94 +1,66 @@
 <?php
 
-	#
-	# $Id$
-	#
+ 	#################################################################
 
-	# THIS WILL PROBABLY BE MOVED IN TO FLAMEWORK SOON.
-	# (20101109/straup)
+	# THIS IS NOT AWESOME. PLEASE MAKE ME BETTER.
+	# (ON THE OTHER HAND, IT WORKS...)
 
-	# THIS IS ALSO NOT EVEN NEAR TO BEING FINISHED - SPECIFICALLY
-	# THE AUTH-Y BITS AND COOKIE DANCING AND OTHER SECURITY FUN...
-	# (20101109/straup)
+	$api_config = FLAMEWORK_INCLUDE_DIR . "config.api.json";
+	$fh = fopen($api_config, "r");
+	$data = fread($fh, filesize($api_config));
+	fclose($fh);
+
+	$GLOBALS['cfg']['api'] = json_decode($data, "as hash");
 
 	#################################################################
 
-	function api_dispatch(){
+	loadlib("api_auth");
+	loadlib("api_keys");
+	loadlib("api_output");
+	loadlib("api_utils");
 
-		#
-		# Output formats
-		#
+	#################################################################
 
-		$format = request_str('format');
-
-		if ($format = request_str('format')){
-
-			if (in_array($format, $GLOBALS['cfg']['api']['formats']['valid'])){
-				$GLOBALS['cfg']['api']['formats']['current'] = $format;
-			}
-
-			else {
-				$format = null;
-			}
-		}
-
-		if (! $format){
-			$GLOBALS['cfg']['api']['formats']['current'] = $GLOBALS['cfg']['api']['formats']['default'];
-		}
-
-		#
-		# Can I get a witness?
-		#
+	function api_dispatch($method){
 
 		if (! $GLOBALS['cfg']['enable_feature_api']){
-			api_output_error(999, 'The API is currently disabled');
+			api_output_error(999, 'API disabled');
 		}
 
-		#
-		# Is this a valid method?
-		#
+		$method = filter_strict($method);
+		$enc_method = htmlspecialchars($method);
 
-		$method = request_str('method');
+		$methods = $GLOBALS['cfg']['api']['methods'];
 
-		if (! $method){
-			api_output_error(404, 'Method not found');
+		if ((! $method) || (! isset($methods[$method]))){
+			api_output_error(404, "Method '{$enc_method}' not found");
 		}
 
-		if (! isset($GLOBALS['cfg']['api']['methods'][$method])){
-			api_output_error(404, 'Method not found');
-		}
-
-		$method_row = $GLOBALS['cfg']['api']['methods'][$method];
+		$method_row = $methods[$method];
 
 		if (! $method_row['enabled']){
-			api_output_error(404, 'Method not found');
+			api_output_error(404, "Method '{$enc_method}' not found");
 		}
 
-		$lib = $method_row['library'];
-		loadlib($lib);
+		# TO DO: check API keys here
 
-		$method = explode(".", $method);
-		$function = $lib . "_" . array_pop($method);
+		# TO DO: actually check auth here (whatever that means...)
 
-		if (! function_exists($function)){
-			api_output_error(404, 'Method not found');
+		if ($method_row['requires_auth']){
+			api_auth_ensure_auth($method_row);
 		}
 
-		#
-		# Auth-y bits
-		#
+		loadlib($method_row['library']);
 
-		if ($method_row['required_login']){
-			# Please, to write me...
-		}
+		$parts = explode(".", $method);
+		$method = array_pop($parts);
 
-		#
-		# Go!
-		#
+		$func = "{$method_row['library']}_{$method}";
+		call_user_func($func);
 
-		call_user_func($function);
 		exit();
 	}
 
 	#################################################################
+
 ?>

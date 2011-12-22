@@ -1,0 +1,109 @@
+{capture assign="page_title"}photos from your contacts{/capture}
+{capture assign="extra_head"}
+{if !$new_subscription}
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/ffbp.min.js"></script>
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.lightbox.ffbp.min.js"></script>
+<script type="text/javascript">
+
+	var images = {literal}{{/literal}
+{foreach from=$meta item="data" key="nsid" name="meta"}
+		'{$nsid|replace:"@":"_"|escape}': [
+{foreach from=$data.images item="url" name="urls"}
+			['http://www.flickr.com/photos/{$url.owner|escape}/{$url.photo_id|escape}', '{$url.thumb_url|escape}', '{$url.display_url|escape}','{$url.title|escape_javascript}, by {$url.ownername|escape_javascript}']{if ! $smarty.foreach.urls.last},
+{/if}
+{/foreach} 
+		]{if ! $smarty.foreach.meta.last},
+{/if}
+{/foreach}
+	{literal}}
+{/literal};
+
+	{literal}
+	$(document).ready(function(){
+		ffbp_init(images);
+	});
+	{/literal}
+	
+</script>
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.lightbox-0.5.css" />
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp.css" />
+<meta http-equiv="refresh" content="600" />
+{else}
+<meta http-equiv="refresh" content="300" />
+{/if}
+{/capture}
+{include file="inc_head.txt"}
+
+{if $new_subscription}
+
+{if $subscription_ok}
+
+<div style="margin-top:5%">
+<img src="{$cfg.abs_root_url}images/cat.gif" style="float:left; margin-right:30px; margin-bottom: 10px;" />
+
+<div style="margin-left:130px; line-height:1.3em;">
+<p>Okay! In order to see your contacts photos we need to create a
+<q>subscription</q> for those photos with Flickr.</p>
+
+<p>That's been done but it will
+take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+{else}
+<p>Ack! Something when wrong trying to subscribe to your contacts photos.</p>
+{/if}
+
+{else}
+
+{if !$users|@count}
+{if $subscription.last_update}
+<p>Hrm... your contacts have been very quiet it seems because there are no
+recent updates.</p>
+{else}
+<p>Still waiting for new updates from your contacts. Soon, I bet!</p>
+{/if}
+
+{else}
+<div id="ffbp_wrapper">
+
+{foreach from=$users item="data" key="timepie"}
+
+<div class="ffbp_timepie">
+
+<h3><span style="font-size:small; color:#ccc;display:block;">in the last</span><span style="color:#999;font-size:1.3em;padding-top:5px;display:block;">{$timepie|escape}</span></h3>
+
+<div class="ffbp_users">
+
+{if $data|@count}
+{foreach from=$data item="count" key="nsid"}
+{assign var="js_nsid" value=$nsid|replace:"@":"_"}
+
+<div class="ffbp_buddyicon" id="ffbp_{$js_nsid|escape}">
+	<a href="#" onclick="javascript:ffbp_draw_photos('{$js_nsid|escape}'); return false;" title="Yay! New photos from {$meta.$nsid.username|escape}"><img src="{$cfg.abs_root_url}buddyicon/{$nsid|escape}.jpg" height="50px;" width="50px;" style="border:3px solid #{$meta.$nsid.hex|escape}" /></a>
+	<div class="ffbp_count"><a href="http://www.flickr.com/photos/{$nsid|escape}/" target="_flickr_{$nsid|escape}">{if $count==1}<strong>1</strong> photo{else}<strong>{$count|escape}</strong> photos{/if}</a></div>
+</div>
+
+{/foreach}
+{else}
+<div class="ffbp_nophotos">nothing new</div>
+{/if}
+
+</div>
+
+<br clear="all" />
+</div>
+{/foreach}
+
+<div id="ffbp_other">
+you can also see all the photos from your with <a href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a> or 
+photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">faved recently</a>
+</div>
+
+</div>
+{/if}
+
+{/if}
+
+{include file="inc_foot.txt"}

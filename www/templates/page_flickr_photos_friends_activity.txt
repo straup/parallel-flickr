@@ -1,0 +1,100 @@
+{capture assign="page_title"}photos from your contacts | with recent activity{/capture}
+{capture assign="extra_head"}
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp_activity.css" />
+<meta http-equiv="refresh" content="600" />
+{/capture}
+{include file="inc_head.txt"}
+
+<h2>Your contacts photos (with recent activity)</h2>
+
+{if $new_subscription}
+
+{if $subscription_ok}
+
+<div style="margin-top:5%">
+<img src="{$cfg.abs_root_url}images/cat.gif" style="float:left; margin-right:30px; margin-bottom: 10px;" />
+
+<div style="margin-left:130px; line-height:1.3em;">
+<p>Okay! In order to see your contacts photos we need to create a
+<q>subscription</q> for those photos with Flickr.</p>
+
+<p>That's been done but it will
+take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+{else}
+<p>Ack! Something when wrong trying to subscribe to your contacts photos.</p>
+{/if}
+
+{else}
+
+<p style="font-size:small;font-style:italic;margin-top:25px;">These are public photos from your contacts that have been
+uploaded, commented on or maybe faved sometime in the last {$offset_hours|escape} hours. That sort
+of thing. The photos are grouped by photographer, sorted by the photographer with the photo that's
+been most recently updated.{if !$new_subscription and $users_updated|@count} They are:{/if}</p>
+
+{if !$users_updated|@count}
+{if $subscription.last_update}
+<p>Hrm... your contacts have been very quiet it seems because there are no
+recent updates.</p>
+{else}
+<p>Still waiting for new updates from your contacts. Soon, I bet!</p>
+{/if}
+
+{else}
+
+{assign var="contacts" value=$users_updated|@array_keys|@count}
+{assign var="columns" value="4"}
+{assign var="per_column" value=$contacts/$columns|@ceil}
+{assign var="i" value="1"}
+
+<div id="ffbp_users">
+{foreach from=$users_updated item="ts" key="nsid" name="contacts"}
+
+{if $i==1}<ul class="ffbp_list">{/if}
+
+<li>{if $users_counts.$nsid==1}1 photo{else}{$users_counts.$nsid|escape}
+photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
+
+{if $i==$per_column or $smarty.foreach.contacts.last}
+{assign var="i" value=1}
+</ul>
+{else}
+{assign var="i" value=$i+1}
+{/if}
+
+{/foreach}
+<br clear="all" />
+
+</div>
+
+
+{foreach from=$users_updated item="ts" key="nsid"}
+<a name="{$nsid|escape}"></a>
+<h3>{$users_names.$nsid|escape}</h3>
+
+<div class="ffbp_buddyicon">
+<img src="{$cfg.abs_root_url}buddyicon/{$nsid|escape}.jpg" height="48" width="48" />
+</div>
+
+{* TO DO: filter out if update_type=='photo_url' ? *}
+
+<div class="ffbp_photos">
+{foreach from=$users_photos.$nsid item="row"}
+<div class="ffbp_photo" style="min-height:100px;">
+<a href="http://www.flickr.com/photos/{$row.owner|escape}/{$row.photo_id|escape}/{if $row.update_type=='geo'}map/?map_type=sat{/if}" target="_flickr" title="&#8220;{$row.title|escape}&#8221;{if $row.update_type=='faves'} was faved{elseif $row.update_type=='geo'} was geotagged{elseif $row.update_type=='comments'} was commented on{elseif $row.update_type=='notes'} had a note added to it{elseif $row.update_type=='tags'} was tagged{elseif $row.update_type} debug:{$row.update_type|escape}{else}{/if}"><img src="{$row.thumb_url}" alt="{$row.title|escape}, by {$row.ownername|escape}" /></a>
+<div style="font-size:10px;text-align:left;color:#ccc;max-width:75px;margin-top:3px;">
+{if $row.update_type=='faves'}faved{elseif $row.update_type=='geo'}geotagged{elseif $row.update_type=='comments'}commented on{elseif $row.update_type=='notes'} had a note added{elseif $row.update_type=='tags'}tagged{elseif $row.photo_url}administriviated{elseif $row.update_type} debug:{$row.update_type|escape}{else}{/if}
+</div>
+</div>
+{/foreach}
+</div>
+
+<br clear="all" />
+
+{/foreach}
+
+{/if}
+{/if}
+
+{include file="inc_foot.txt"}

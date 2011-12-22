@@ -1,0 +1,75 @@
+#ffbp_wrapper{
+    margin-top:50px;
+    margin-left:75px;
+    margin-right:50px;
+}
+
+.ffbp_timepie {
+    margin-bottom:20px;
+}
+
+.ffbp_timepie h3 {
+    float:left;
+    margin-top: 0px;
+}
+
+.ffbp_users {
+    margin-left:200px;
+}
+
+.ffbp_buddyicon {
+    float:left;
+    border:none;
+    margin-right:12px;
+    /* margin-bottom:15px; */
+    height:80px;
+    min-height: 80px;
+}
+
+.ffbp_buddyicon:hover {
+    opacity: 1 !important;
+}
+
+.ffbp_count {
+    text-align:center;
+    margin-top:3px;
+    font-size:11px;
+    color:#ccc;
+}
+
+.ffbp_count a {
+    color:#ccc;
+    text-decoration:none;
+}
+
+.ffbp_thumb {
+    float:left;
+    margin-right:12px;
+    /* margin-bottom:15px; */
+}
+
+.ffbp_thumb_blurb {
+    text-align:center;
+    margin-top:3px;
+    font-size:11px;
+    color:#fff;
+}
+
+.ffbp_nophotos {
+    color:#ddd;
+    font-size:1.8em;
+    padding-top:10px;
+}
+
+#ffbp_other {
+    font-size:11px;
+    margin-top:50px;
+    margin-left:200px;
+    font-style:italic;
+    color:#666;
+}
+
+#ffbp-lightbox-link {
+    color: #999;
+    text-decoration:none;
+}
