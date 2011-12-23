@@ -57,11 +57,23 @@
 
 		$update_map = flickr_push_update_types_map("rollup by type");
 
+		$pretty_map = array(
+			'geotagged' => 'geo',
+			'faved' => 'faved',
+			'administrivia' => 'photo_url',
+		);
+
 		$update_type = get_str("update_type");
 
-		if (! isset($update_map[$update_type])){
+		if (isset($pretty_map[$update_type])){
+			$update_type = $pretty_map[$update_type];
+		}
+
+		else if (! isset($update_map[$update_type])){
 			$update_type = null;
 		}
+
+		else {}
 
 		$GLOBALS['smarty']->assign_by_ref("update_map", $update_map);
 		$GLOBALS['smarty']->assign_by_ref("update_type", $update_type);
