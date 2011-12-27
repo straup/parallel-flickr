@@ -32,10 +32,15 @@
 
 	if ($flickr_user['auth_token']){
 
-		# fix me: check for redir
-
 		if ($flickr_user['token_perms'] == $perms_map_str[$perms]){
-			header("location: /");
+
+			$redir = get_str("redir");
+
+			if (! $redir){
+				$redir = $GLOBALS['cfg']['abs_root_url'];
+			}
+
+			header("location: {$redir}");
 			exit();
 		}
 
@@ -54,20 +59,17 @@
 
 	}
 
-dumper("WTF");
-exit;
 	# Build a URL with the perms for the auth token we're requesting
 	# and send the user there. Rocket science, I know...
 
 	$extra = array(
 		# some sort of flag/test not to create a new user...
+		'foo' => 1,
 	);
 
 	if ($redir = get_str('redir')){
 		$extra['redir'] = $redir;
 	}
-
-	$perms = $GLOBALS['cfg']['flickr_api_perms'];
 
 	$url = flickr_api_auth_url($perms, $extra);
 
