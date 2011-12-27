@@ -13,12 +13,27 @@
 		parse_str($_extra, $extra);
 	}
 
-	$foo = ((is_array($extra)) && (isset($extra['foo']))) ? 1 : 0;
+	$has_crumb = ((is_array($extra)) && (isset($extra['crumb']))) ? 1 : 0;
 
-	# Some basic sanity checking like are you already logged in?
+	if (($GLOBALS['cfg']['user']['id']) && ($has_crumb)){
 
-	if (($GLOBALS['cfg']['user']['id']) && ($foo)){
+		$crumb = crypto_decrypt($extra['crumb'], $GLOBALS['cfg']['flickr_api_secret']);
+		list($user_id, $timestamp) = explode(":", $crumb, 2);
 
+		$ok = 1;
+
+		if ($user_id != $GLOBALS['cfg']['user']['id']){
+			$ok = 0;
+		}
+
+		if ((time() - $timestamp) > 120){
+			$ok = 0;
+		}
+
+		if (! $ok){
+			header("location: {$GLOBALS['cfg']['abs_root_url']}");
+			exit();		
+		}
 	}
 
 	else {

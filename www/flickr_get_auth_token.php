@@ -24,6 +24,7 @@
 
 	elseif (! isset($perms_map_str[$perms])){
 
+		$GLOBALS['error'] = 'invalid_perm';
 		$GLOBALS['smarty']->display("page_flickr_get_auth_token.txt");
 		exit();
 	}
@@ -31,6 +32,8 @@
 	else {}
 
 	if ($flickr_user['auth_token']){
+
+		# Perms are the same; just carry on...
 
 		if ($flickr_user['token_perms'] == $perms_map_str[$perms]){
 
@@ -53,18 +56,24 @@
 			$GLOBALS['smarty']->assign("old_perms", $old_perms);
 			$GLOBALS['smarty']->assign("new_perms", $perms);
 
+			$more_permissive = ($perms_map_str[$perms] > $flickr_user['token_perms']) ? 1 : 0;
+			$GLOBALS['smarty']->assign("more_permissive", $more_permissive);
+
 			$GLOBALS['smarty']->display("page_flickr_get_auth_token.txt");
 			exit();
 		}
 
 	}
 
-	# Build a URL with the perms for the auth token we're requesting
-	# and send the user there. Rocket science, I know...
+	#
+
+	$now = time();
+	$crumb = implode(":", array($GLOBALS['cfg']['user']['id'], $now));
+
+	$enc_crumb = crypto_encrypt($crumb, $GLOBALS['cfg']['flickr_api_secret']);
 
 	$extra = array(
-		# some sort of flag/test not to create a new user...
-		'foo' => 1,
+		'crumb' => $enc_crumb,
 	);
 
 	if ($redir = get_str('redir')){
