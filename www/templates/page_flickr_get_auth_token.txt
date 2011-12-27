@@ -1,3 +1,19 @@
 {include file="inc_head.txt"}
 
+{if $error}
+
+{else}
+
+<p>Are you sure you want to allow [FIX ME] to change the permissions on Flickr
+from <strong>{$old_perms|escape}</strong> to
+<strong>{$new_perms|escape}</strong>.</p>
+
+<form method="POST">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="confirm" value="1" />
+	<input type="submit" value="YES" />
+</form>
+
+{/if}
+
 {include file="inc_foot.txt"}
