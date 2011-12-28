@@ -181,7 +181,7 @@ function ffbp_hide_photos(nsid){
 
 function ffbp_enable_shortcuts(){
 
-	$(document).keypress(function(e){
+	$(document).keydown(function(e){
 
 		if ($("#lightbox-image").length){
 		    return;

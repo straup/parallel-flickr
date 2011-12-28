@@ -21,7 +21,7 @@ var next = {if $pagination.page_count > 1 and $pagination.page < $pagination.pag
 
 $(document).ready(function(){
 
-	$(document).keypress(function(e){
+	$(document).keydown(function(e){
 
 		if ((e.keyCode == 37) && (prev)){
 			location.href = prev;

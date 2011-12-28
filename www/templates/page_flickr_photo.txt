@@ -65,7 +65,7 @@ var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|es
 
 $(document).ready(function(){
 
-	$(document).keypress(function(e){
+	$(document).keydown(function(e){
 
 		if ((e.keyCode == 37) && (prev)){
 			location.href = prev;
