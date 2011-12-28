@@ -92,11 +92,16 @@ $(document).ready(function(){
 
 	$("#edit_geocontext").click(function(e){
 
+		// TO DO: check to see if auth token perms are write
+		// bounce to token juggling page if not (20111228/straup)
+
 		if (timeout_geocontext){
 			clearTimeout(timeout_geocontext);
 		}
 
 		var old_ctx = $("#edit_geocontext").attr("geo:context");
+
+		// TO DO: pass down / read from PHP geo context map
 
 		var ctx_map = {
 			0: 'in a place that doesn\'t matter (not defined)',
