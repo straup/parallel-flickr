@@ -65,6 +65,8 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 
 <script type="text/javascript">
 
+var photo_id = '{$photo.id|escape}';
+
 var next = {if $after|@count}'{$owner|@flickr_urls_photos_user}{$after.0.id|escape}'{else}null{/if};
 var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|escape}'{else}null{/if};
 
@@ -88,8 +90,80 @@ $(document).ready(function(){
 	// http://www.ericmmartin.com/projects/simplemodal/
 
 	$("#edit_geocontext").click(function(e){
-		var ctx = $("#edit_geocontext").attr("geo:context");
-		$.modal('current geo context is ' + ctx);
+
+		var old_ctx = $("#edit_geocontext").attr("geo:context");
+
+		var ctx_map = {
+			0: 'not defined',
+			1: 'indoors',
+			2: 'outdoors',
+		};
+
+		var html = '<div id="modal_geocontext">';
+		html = '<form id="update_geocontext">';
+		html += '<select id="new_geocontext">';
+
+		for (i in ctx_map){
+			html += '<option value="' + i + '"';
+
+			if (i == old_ctx){
+				html += ' selected="true"';
+			}
+
+			html += '>' + ctx_map[i] + '</option>';
+		}
+
+		html += '</select>';
+		html += '<input type="submit" value="UPDATE" />';
+		html += '</form>';
+		html += '</div>';
+
+		html += '<a href="#" onclick="$.modal.close(); return false;">close</a>';
+
+		$.modal(html);
+
+		$("#update_geocontext").submit(function(){
+			var new_ctx = $("#new_geocontext");
+			new_ctx = new_ctx.val();
+
+			if (new_ctx == old_ctx){
+				alert("Nothing to update!");
+				return;
+			}
+
+			var args = {
+				'method': 'flickr.photos.geo.setContext',
+				'photo_id': photo_id,
+				'context': new_ctx
+			};
+
+			var _onsuccess = function(rsp){
+
+				if (rsp['stat'] != 'ok'){
+					$("#modal_geocontext").html("Ack!");
+					return;
+				}
+
+				// $("#modal_geocontext").html("Success!");
+
+				if (rsp['context'] == 0){
+					$("#geo_context").html("");
+					return;
+				}
+
+				var taken = "It was taken " + ctx_map[rsp['context']];
+				$("#geo_context").html(taken);
+
+			};
+
+			$.ajax({
+				'url': '/api/',
+				'type': 'POST',
+				'data': args,
+				'success': _onsuccess
+			});
+		});
+
 	});
 });
 

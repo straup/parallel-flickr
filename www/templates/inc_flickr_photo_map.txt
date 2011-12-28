@@ -16,7 +16,7 @@
 	{* TO DO: figure out how to pass both owner and place to flickr_urls_ function (below) *}
 	{* TO DO: unwrap this mess (see above)... *}
 
-	This photo was taken in {if $place}{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}{else}a place with no name{/if} and its location {if $photo.str_geoperms=='private'}can only be seen by <strong>you</strong>{elseif $photo.str_geoperms=='public'}can be seen by <strong>anyone</strong>{else}can only be seen by <strong>{if $is_own}you and {/if}{$photo.str_geoperms|escape}</strong>{/if}.{if $photo.geocontext} <span class="geo_context"> {if $photo.geocontext==1}It was taken inside.{elseif $photo.geocontext==2} It was taken outside.{else}{/if}</span>{/if}
+	This photo was taken in {if $place}{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}{else}a place with no name{/if} and its location {if $photo.str_geoperms=='private'}can only be seen by <strong>you</strong>{elseif $photo.str_geoperms=='public'}can be seen by <strong>anyone</strong>{else}can only be seen by <strong>{if $is_own}you and {/if}{$photo.str_geoperms|escape}</strong>{/if}.{if $photo.geocontext} <span id="geo_context"> {if $photo.geocontext==1}It was taken indoors.{elseif $photo.geocontext==2} It was taken outdoors.{else}{/if}</span>{/if}
 	{/if}
 
 	</div>

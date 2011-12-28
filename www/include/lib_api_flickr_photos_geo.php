@@ -33,9 +33,9 @@
 			api_output_error(999, "Photo is not geotagged");
 		}
 
-		$context = post_str("context");
+		$context = post_int32("context");
 
-		if (! $context){
+		if (! isset($context)){
 			api_output_error(999, "Missing context");
 		}
 
@@ -73,7 +73,12 @@
 			api_output_error(999, $rsp['error']);
 		}
 
-		api_output_ok();
+		$out = array(
+			'photo_id' => $photo_id,
+			'context' => $context,
+		);
+
+		api_output_ok($out);
 	}
 
 	#################################################################
