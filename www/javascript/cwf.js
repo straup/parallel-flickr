@@ -127,7 +127,7 @@ function cwf_init_shortcuts(){
 			cwf_show_photo((photos.length - 1));
 		};
 
-		$(document).keypress(function(e){
+		$(document).keydown(function(e){
 
 		if (e.keyCode == 37){
 			left();
