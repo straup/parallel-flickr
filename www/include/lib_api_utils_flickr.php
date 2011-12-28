@@ -14,6 +14,8 @@
 		if ($perms_map[$flickr_user['token_perms']] != $str_perms){
 			api_output_error(999, "Insufficient Flickr API permissions");
 		}
+
+		return $flickr_user;
 	}
 
 	##############################################################################
