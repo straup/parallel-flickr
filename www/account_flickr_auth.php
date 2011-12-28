@@ -25,7 +25,7 @@
 	elseif (! isset($perms_map_str[$perms])){
 
 		$GLOBALS['error'] = 'invalid_perm';
-		$GLOBALS['smarty']->display("page_flickr_get_auth_token.txt");
+		$GLOBALS['smarty']->display("page_account_flickr_auth.txt");
 		exit();
 	}
 
@@ -59,7 +59,7 @@
 			$more_permissive = ($perms_map_str[$perms] > $flickr_user['token_perms']) ? 1 : 0;
 			$GLOBALS['smarty']->assign("more_permissive", $more_permissive);
 
-			$GLOBALS['smarty']->display("page_flickr_get_auth_token.txt");
+			$GLOBALS['smarty']->display("page_account_flickr_auth.txt");
 			exit();
 		}
 
