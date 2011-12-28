@@ -115,6 +115,7 @@ p.message {
 
 .photo_meta ul li {
     list-style-type: none;
+    line-height: 1.75em;
 }
 
 .photo_cite {
@@ -373,3 +374,8 @@ td {
     line-height:1.5em;
     margin-bottom:5px;
 }
+
+.geo_context {
+    font-style:italic;
+}
+

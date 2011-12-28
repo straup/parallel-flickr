@@ -92,6 +92,10 @@
 			cache_unset($cache_key);
 		}
 
+		if ($GLOBALS['cfg']['enable_feature_solr']){
+			# flickr_photos_search_index_photo($photo);
+		}
+
 		return $rsp;
 	}
 

@@ -1,5 +1,11 @@
 {capture assign="photo_title"}{if $photo.title}{$photo.title}{else}(Untitled){/if}{/capture}
 {capture assign="page_title"}{$owner.username} | {$photo_title}{/capture}
+{capture assign="extra_head"}
+{if $is_own}
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
+{/if}
+{/capture}
 {include file="inc_head.txt"}
 
 <div class="photo">
@@ -49,6 +55,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 
 <ul>
 {if $is_own and $photo.hasexif}<li>This photo has <a href="{$photo|@flickr_urls_photo_page}exif/">EXIF data</a>.</li>{/if}
+{if $is_own and $photo.hasgeo}{if $photo.geocontext}Edit geo <a href="#" id="edit_geocontext" geo:context="{$photo.geocontext|escape}">context</a>.{else}Set geo <a href="#" id="edit_geocontext" geo:context="{$photo.geocontext|escape}">context</a>.{/if}{/if}
 </ul>
 
 </div>
@@ -76,6 +83,13 @@ $(document).ready(function(){
 		}
 
 		else {}
+	});
+
+	// http://www.ericmmartin.com/projects/simplemodal/
+
+	$("#edit_geocontext").click(function(e){
+		var ctx = $("#edit_geocontext").attr("geo:context");
+		$.modal('current geo context is ' + ctx);
 	});
 });
 

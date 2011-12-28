@@ -181,10 +181,10 @@
 		$meta = $meta['data']['photo'];
 
 		$doc = array(
-			'photo_id' => $photo['id'],
-			'photo_owner' => $photo['user_id'],
+			'id' => $photo['id'],
+			'user_id' => $photo['user_id'],
 			'title' => $photo['title'],
-			'photo_perms' => $photo['perms'],
+			'perms' => $photo['perms'],
 			'datetaken' => solr_dates_prep_mysql_datetime($photo['datetaken']),
 			'dateupload' => solr_dates_prep_mysql_datetime($photo['dateupload']),
 		);
@@ -216,7 +216,8 @@
 			$doc['location'] = "{$photo['latitude']},{$photo['longitude']}";
 			$doc['accuracy'] = $photo['accuracy'];
 
-			$doc['geo_perms'] = $photo['geoperms'];
+			$doc['geoperms'] = $photo['geoperms'];
+			$doc['geocontext'] = $photo['geocontext'];
 
 			foreach (array('neighbourhood', 'locality', 'county', 'region', 'country', 'continent') as $place){
 

@@ -209,30 +209,7 @@
 
 	#################################################################
 
-	function solr_update($update, $where){
-
-		# this doesn't work yet (20111227/straup)
-
-		return not_okay();
-
-		$rsp = solr_select($where);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		$doc = $rsp['rows'][0];
-
-		if (! $doc){
-			return not_okay();
-		}
-
-		$doc = array_merge($doc, $update);
-
-		return solr_add(array(
-			$doc
-		));
-	}
+	# TO DO: solr_update (this is more complicated than it seems...)
 
 	#################################################################
 
