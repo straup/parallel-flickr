@@ -52,6 +52,8 @@
 		}
 	}
 
+	# TO DO: also facet on geocontext (20111229/straup)
+
 	$rsp = flickr_photos_places_for_user_facet($owner, $facet, $more);
 
 	if ($rsp['ok']){

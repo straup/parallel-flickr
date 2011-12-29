@@ -69,14 +69,18 @@
 		$more['page'] = $page;
 	}
 
-	if ($geo_context = get_str("context")){
+	if ($context = get_str("context")){
 
 		$map = flickr_photos_geo_context_map("string keys");
-		$geo_context = (isset($map[$geo_context])) ? $map[$geo_context] : 0;
 
-		$more['geocontext'] = $geo_context;
+		if (isset($map[$context])){
 
-		$GLOBALS['smarty']->assign("geo_context", $geo_context);
+			$geo_context = $map[$context];
+			$more['geocontext'] = $geo_context;
+
+			$GLOBALS['smarty']->assign("context", $context);
+			$GLOBALS['smarty']->assign("geo_context", $geo_context);
+		}
 	}
 
 	$rsp = flickr_photos_places_for_user($owner, $place, $more);
