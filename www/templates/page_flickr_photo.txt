@@ -87,13 +87,23 @@ $(document).ready(function(){
 
 		else {}
 	});
+{/literal}
 
-	// http://www.ericmmartin.com/projects/simplemodal/
+{if $is_own}
+{* ensure that the user has a flickr auth token with write perms *}
+
+{if !$has_write_token}
+
+{literal}
+	$("#edit_geocontext").click(function(e){
+		// TO DO: modal dialog and redirect to /account/flickr/auth
+	});
+{/literal}
+
+{else}
+{literal}
 
 	$("#edit_geocontext").click(function(e){
-
-		// TO DO: check to see if auth token perms are write
-		// bounce to token juggling page if not (20111228/straup)
 
 		if (timeout_geocontext){
 			clearTimeout(timeout_geocontext);
@@ -137,6 +147,8 @@ $(document).ready(function(){
 		html += '<div id="status_geocontext"></div>';
 		html += '<div id="close_geocontext"><a href="#" onclick="$.modal.close(); return false;">close</a></div>';
 
+		// http://www.ericmmartin.com/projects/simplemodal/
+
 		$.modal(html);
 
 		$("#update_geocontext").submit(function(){
@@ -175,13 +187,13 @@ $(document).ready(function(){
 				$("#geo_context").html(taken);
 
 				var msg = '<p>Success! The geo context for this photo has been updated and is now <strong>' + str_ctx + '</strong>.</p>';
-				msg += '<p style="font-style:italic;font-size:small;">This dialog will close itself automagically in 5 seconds...</p>';
+				msg += '<p style="font-style:italic;font-size:small;">This dialog will close itself automagically in a moment...</p>';
 
 				$("#status_geocontext").html(msg);
 
 				timeout_geocontext = setTimeout(function(){
 					$.modal.close();
-				}, 5000);
+				}, 2000);
 			};
 
 			$.ajax({
@@ -201,6 +213,8 @@ $(document).ready(function(){
 });
 
 {/literal}
+{/if}
+{/if}
 
 </script>
 
