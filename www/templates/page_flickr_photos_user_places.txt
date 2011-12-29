@@ -1,12 +1,12 @@
 {capture assign="facet_plural"}{include file="inc_places_pluralize_placetype.txt" type=$facet}{/capture}
-{capture assign="page_title"}{$owner.username} | places | {$facet_plural}{/capture}
+{capture assign="page_title"}{$owner.username} | places | {$facet_plural}{if $context} | {$context}{/if}{/capture}
 {include file="inc_head.txt"}
 
 <h2>
 {if $is_own}
-Your most geotagged {$facet_plural|escape}
+Your most geotagged {$facet_plural|escape}{if $context}, {$context|escape}{/if} 
 {else}
-{$owner.username|escape}'s most geotagged {$facet_plural|escape}
+{$owner.username|escape}'s most geotagged {$facet_plural|escape}{if $context}, {$context|escape}{/if} 
 {/if}
 </h2>
 
@@ -42,9 +42,9 @@ Your most geotagged {$facet_plural|escape}
 
 <p style="font-size:small; margin-bottom:20px;">
 {if $is_own}
-You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}">{$locations.$woeid.name|escape}</a>.
+You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}{if $context}/{$context|escape}/{/if}">{$locations.$woeid.name|escape}</a>.
 {else}
-{$owner.username|escape} has taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}">{$locations.$woeid.name|escape}</a>.
+{$owner.username|escape} has taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}{if $context}/{$context|escape}/{/if}">{$locations.$woeid.name|escape}</a>.
 {/if}
 </p>
 

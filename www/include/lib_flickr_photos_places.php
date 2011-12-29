@@ -23,6 +23,10 @@
 			$place['place_type'] => $place['woeid'],
 		);
 
+		if (isset($more['geocontext'])){
+			$query['geocontext'] = $more['geocontext'];
+		}
+
 		return flickr_photos_search($query, $more);
 	}
 
@@ -40,6 +44,10 @@
 		$query = array(
 			"user_id" => $user['id'],
 		);
+
+		if (isset($more['geocontext'])){
+			$query['geocontext'] = $more['geocontext'];
+		}
 
 		return flickr_photos_search_facet($query, $facet, $more);
 	}

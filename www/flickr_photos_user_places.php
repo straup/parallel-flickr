@@ -4,6 +4,7 @@
 
 	loadlib("flickr_places");
 	loadlib("flickr_photos_places");
+	loadlib("flickr_photos_geo");
 
 	if ((! $GLOBALS['cfg']['enable_feature_solr']) || (! $GLOBALS['cfg']['enable_feature_places'])){
 		error_disabled();
@@ -36,6 +37,20 @@
 	$more = array(
 		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
+
+	if ($context = get_str("context")){
+
+		$map = flickr_photos_geo_context_map("string keys");
+
+		if (isset($map[$context])){
+
+			$geo_context = $map[$context];
+			$more['geocontext'] = $geo_context;
+
+			$GLOBALS['smarty']->assign("context", $context);
+			$GLOBALS['smarty']->assign("geo_context", $geo_context);
+		}
+	}
 
 	$rsp = flickr_photos_places_for_user_facet($owner, $facet, $more);
 

@@ -84,15 +84,25 @@
 	function flickr_urls_photos_user_places(&$user){
 
 		$user_url = flickr_urls_photos_user($user);
-		return "{$user_url}places/";
+		$url = "{$user_url}places/";
+
+		return $url;
 	}
 
 	#################################################################
 
-	function flickr_urls_photos_user_place(&$user, &$place){
+	function flickr_urls_photos_user_place(&$user, &$place, $geo_context=0){
 
 		$places = flickr_urls_photos_user_places($user);
-		return "{$places}{$place['woeid']}/";	
+		$url = "{$places}{$place['woeid']}/";	
+
+		if ($geo_context){
+			loadlib("flickr_photos_geo");
+			$map = flickr_photos_geo_context_map();
+			$url .= "{$map[$geo_context]}/";
+		}
+
+		return $url;
 	}
 
 	#################################################################
