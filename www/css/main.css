@@ -374,26 +374,3 @@ td {
     line-height:1.5em;
     margin-bottom:5px;
 }
-
-#geo_context {
-    font-style:italic;
-}
-
-#update_geocontext {
-    font-size:small;
-}
-
-#update_geocontext input,select{
-    border: solid thin;
-}
-
-#status_geocontext {
-    padding:25px;
-    font-size:1.3em;
-    font-weight: 700;
-}
-
-#close_geocontext {
-    text-align:right;
-    font-size:small;
-}

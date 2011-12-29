@@ -2,6 +2,8 @@
 {capture assign="page_title"}{$owner.username} | {$photo_title}{/capture}
 {capture assign="extra_head"}
 {if $is_own}
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.geo.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/photo.geo.css" />
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
 {/if}
@@ -55,7 +57,8 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 
 <ul>
 {if $is_own and $photo.hasexif}<li>This photo has <a href="{$photo|@flickr_urls_photo_page}exif/">EXIF data</a>.</li>{/if}
-{if $is_own and $photo.hasgeo}<li>Set geo <a href="#" id="edit_geocontext" geo:context="{$photo.geocontext|escape}">context</a>.</li>{/if}
+{* eventually this will let you edit all the geo bits *}
+{if $is_own and $photo.hasgeo}<li>Set geo <a href="#" id="edit_geo" geo:context="{$photo.geocontext|escape}">context</a>.</li>{/if}
 </ul>
 
 </div>
@@ -66,7 +69,6 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 <script type="text/javascript">
 
 var photo_id = '{$photo.id|escape}';
-var timeout_geocontext = null;
 
 var next = {if $after|@count}'{$owner|@flickr_urls_photos_user}{$after.0.id|escape}'{else}null{/if};
 var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|escape}'{else}null{/if};
@@ -95,120 +97,23 @@ $(document).ready(function(){
 {if !$has_write_token}
 
 {literal}
-	$("#edit_geocontext").click(function(e){
-		// TO DO: modal dialog and redirect to /account/flickr/auth
+	$("#edit_geo").click(function(e){
+
+		var html = '<div>';
+		html += 'blah blah blah';
+		html += '<a href="/account/flickr/auth?redir=FIXME#geo">Okay!</a>';
+		html += '</div>';
+		html += '<div id="close_geo"><a href="#" onclick="$.modal.close(); return false;">No, thanks.</a></div>';
+
+		$.modal.open(html);
 	});
 {/literal}
 
 {else}
 {literal}
 
-	$("#edit_geocontext").click(function(e){
-
-		if (timeout_geocontext){
-			clearTimeout(timeout_geocontext);
-		}
-
-		var old_ctx = $("#edit_geocontext").attr("geo:context");
-
-		// TO DO: pass down / read from PHP geo context map
-
-		var ctx_map = {
-			0: 'in a place that doesn\'t matter (not defined)',
-			1: 'indoors',
-			2: 'outdoors',
-		};
-
-		var html = '<div id="modal_geocontext">';
-		html = '<form id="update_geocontext">';
-
-		html += '<h3>Edit the geo context for this photo</h3>';
-
-		html += 'This photo was taken ';
-
-		html += '<select id="new_geocontext">';
-
-		for (i in ctx_map){
-			html += '<option value="' + i + '"';
-
-			if (i == old_ctx){
-				html += ' selected="true" disabled="true"';
-			}
-
-			html += '>' + ctx_map[i] + '</option>';
-		}
-
-		html += '</select>';
-		html += '&#160;';
-		html += '<input type="submit" value="UPDATE" />';
-		html += '</form>';
-		html += '</div>';
-
-		html += '<div id="status_geocontext"></div>';
-		html += '<div id="close_geocontext"><a href="#" onclick="$.modal.close(); return false;">close</a></div>';
-
-		// http://www.ericmmartin.com/projects/simplemodal/
-
-		$.modal(html);
-
-		$("#update_geocontext").submit(function(){
-
-			var new_ctx = $("#new_geocontext");
-			new_ctx = new_ctx.val();
-
-			if (new_ctx == old_ctx){
-				alert("Hey! There's nothing to update!");
-				return;
-			}
-
-			var args = {
-				'method': 'flickr.photos.geo.setContext',
-				'photo_id': photo_id,
-				'context': new_ctx
-			};
-
-			var _onsuccess = function(rsp){
-
-				if (rsp['stat'] != 'ok'){
-					$("#status_geocontext").html("Ack!");
-					return;
-				}
-
-				$("#edit_geocontext").attr("geo:context", rsp['context']);
-
-				var str_ctx = ctx_map[rsp['context']];
-
-				var taken = '';
-
-				if (rsp['context'] != 0){
-					taken = "It was taken " + str_ctx;
-				}
-
-				$("#geo_context").html(taken);
-
-				var msg = '<p>Success! The geo context for this photo has been updated and is now <strong>' + str_ctx + '</strong>.</p>';
-				msg += '<p style="font-style:italic;font-size:small;">This dialog will close itself automagically in a moment...</p>';
-
-				$("#status_geocontext").html(msg);
-
-				timeout_geocontext = setTimeout(function(){
-					$.modal.close();
-				}, 2000);
-			};
-
-			$.ajax({
-				'url': '/api/',
-				'type': 'POST',
-				'data': args,
-				'success': _onsuccess
-			});
-
-			$("#update_geocontext").hide();
-			$("#status_geocontext").html("Poking the Flickr API...");
-
-			return false;
-		});
-
+	$("#edit_geo").click(function(e){
+		photo_geo_edit_meta(photo_id);
 	});
 });
 

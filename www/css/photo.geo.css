@@ -1,0 +1,22 @@
+#geo_context {
+    font-style:italic;
+}
+
+#photo_geo_update_context {
+    font-size:small;
+}
+
+#photo_geo_update_context input,select{
+    border: solid thin;
+}
+
+#photo_geo_status {
+    padding:25px;
+    font-size:1.3em;
+    font-weight: 700;
+}
+
+#photo_geo_close {
+    text-align:right;
+    font-size:small;
+}
