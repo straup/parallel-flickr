@@ -19,7 +19,7 @@
 		}
 
 		$query = array(
-			"photo_owner" => $user['id'],
+			"user_id" => $user['id'],
 			$place['place_type'] => $place['woeid'],
 		);
 
@@ -38,7 +38,7 @@
 		$more['enforce_geoperms'] = 1;
 
 		$query = array(
-			"photo_owner" => $user['id'],
+			"user_id" => $user['id'],
 		);
 
 		return flickr_photos_search_facet($query, $facet, $more);

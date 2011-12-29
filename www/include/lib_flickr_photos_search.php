@@ -37,7 +37,7 @@
 
 		$defaults = array(
 			'viewer_id' => 0,
-			'sort' => 'photo_id desc',
+			'sort' => 'id desc',
 		);
 
 		$more = array_merge($defaults, $more);
@@ -49,7 +49,7 @@
 			'sort' => $more['sort'],
 		);
 
-		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
+		$owner_id = (isset($query['user_id'])) ? $query['user_id'] : 0;
 
 		if ($fq = _flickr_photos_search_perms_fq($owner_id, $more['viewer_id'], $more)){
 			$params['fq'] = $fq;
@@ -64,7 +64,8 @@
 		$photos = array();
 
 		foreach ($rsp['rows'] as $row){
-			$photo = flickr_photos_get_by_id($row['photo_id']);
+
+			$photo = flickr_photos_get_by_id($row['id']);
 
 			$can_view_geo = ($photo['hasgeo'] && flickr_geo_permissions_can_view_photo($photo, $more['viewer_id'])) ? 1 : 0;
 
@@ -98,7 +99,7 @@
 			"facet.field" => $facet,
 		);
 
-		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
+		$owner_id = (isset($query['user_id'])) ? $query['user_id'] : 0;
 
 		if ($fq = _flickr_photos_search_perms_fq($owner_id, $more['viewer_id'], $more)){
 			$params['fq'] = $fq;
@@ -150,7 +151,7 @@
 			"facet.range.end" => $end,
 		);
 
-		$owner_id = (isset($query['photo_owner'])) ? $query['photo_owner'] : 0;
+		$owner_id = (isset($query['user_id'])) ? $query['user_id'] : 0;
 
 		if ($fq = _flickr_photos_search_perms_fq($owner_id, $more['viewer_id'], $more)){
 			$params['fq'] = $fq;
@@ -317,7 +318,7 @@
 			$count = count($perms);
 
 			for ($i=0; $i < $count; $i++){
-				$perms[$i] = "photo_perms:" . urlencode($perms[$i]);
+				$perms[$i] = "perms:" . urlencode($perms[$i]);
 			}
 
 			$fq[] = implode(" OR ", $perms);
@@ -330,7 +331,7 @@
 				$count = count($perms);
 
 				for ($i=0; $i < $count; $i++){
-					$perms[$i] = "geo_perms:" . urlencode($perms[$i]);
+					$perms[$i] = "geoperms:" . urlencode($perms[$i]);
 				}
 
 				$fq[] = implode(" OR ", $perms);
