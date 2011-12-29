@@ -29,7 +29,9 @@
 	$GLOBALS['smarty']->assign_by_ref("placetypes", $placetypes);
 	$GLOBALS['smarty']->assign("facet", $facet);
 
-	#
+	# TO DO: easter egg to make 'airports' a valid place type/url
+	# to query by; this will probably mean indexing the place name
+	# in solr which is probably not a bad idea anyway (20111229/straup)
 
 	$more = array(
 		'viewer_id' => $GLOBALS['cfg']['user']['id'],
