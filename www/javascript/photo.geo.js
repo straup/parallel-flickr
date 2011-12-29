@@ -21,7 +21,7 @@ function photo_geo_edit_meta(photo_id){
 	var html = '<div id="modal_geo">';
 	html = '<form id="photo_geo_update_context">';
 
-	html += '<h3>Edit the geo context for this photo</h3>';
+	html += '<h3>Edit theo geo context for this photo</h3>';
 	html += 'This photo was taken ';
 
 	html += '<select id="new_geocontext">';

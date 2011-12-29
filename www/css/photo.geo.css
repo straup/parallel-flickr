@@ -20,3 +20,16 @@
     text-align:right;
     font-size:small;
 }
+
+#photo_geo_perms_warning p {
+    font-size: small;
+}
+
+#photo_geo_perms_warning .button {
+    border: solid thin;
+    padding: 8px;
+    background-color:#ddd;
+    font-weight:700;
+    text-decoration:none;
+    color:#000;
+}

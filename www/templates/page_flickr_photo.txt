@@ -69,6 +69,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 <script type="text/javascript">
 
 var photo_id = '{$photo.id|escape}';
+var photo_url = '{$photo|@flickr_urls_photo_page}';
 
 var next = {if $after|@count}'{$owner|@flickr_urls_photos_user}{$after.0.id|escape}'{else}null{/if};
 var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|escape}'{else}null{/if};
@@ -93,19 +94,27 @@ $(document).ready(function(){
 
 {if $is_own}
 {* ensure that the user has a flickr auth token with write perms *}
+{* at some point this will probably be abstracted but not yet... *}
 
 {if !$has_write_token}
-
 {literal}
 	$("#edit_geo").click(function(e){
 
-		var html = '<div>';
-		html += 'blah blah blah';
-		html += '<a href="/account/flickr/auth?redir=FIXME#geo">Okay!</a>';
-		html += '</div>';
-		html += '<div id="close_geo"><a href="#" onclick="$.modal.close(); return false;">No, thanks.</a></div>';
+		var html = '<div id="photo_geo_perms_warning">';
+		html += '<h3>We need to move some of the furniture first.</h3>';
+		html += '<p>';
+		html += 'In order to edit the geo information we need to update your Flickr auth token, first. '; 
+		html += 'When you first signed in we asked Flickr for an auth token <q>read</q> only permissions. ';
+		html += 'We\'ll need to send you to Flickr to get a new token (one with <q>write</q> permissions) before you edit your photo ';
+		html += 'You\'ll only need to do this once and you\'ll be bounced back to this page when you\'re done.';
+		html += '</p>';
+		html += '<div style="text-align:center; margin-top:30px;"><a class="button" href="';
+		html += '/account/flickr/auth?perms=write&redir=' + encodeURIComponent(photo_url) + '#edit-geo">';
+		html += 'Okay, let\'s do it</a>';
+		html += '&#160;&#160;';
+		html += '<a href="#" onclick="$.modal.close(); return false;" class="button">I\'d rather not.</a></div>';
 
-		$.modal.open(html);
+		$.modal(html);
 	});
 {/literal}
 
@@ -115,12 +124,16 @@ $(document).ready(function(){
 	$("#edit_geo").click(function(e){
 		photo_geo_edit_meta(photo_id);
 	});
-});
+
+	if (location.hash == '#edit-geo'){
+		$("#edit_geo").click();
+	}	
 
 {/literal}
 {/if}
 {/if}
 
+});
 </script>
 
 {include file="inc_flickr_photo_map_load.txt"}
