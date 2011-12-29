@@ -47,7 +47,19 @@ your photos from {$place.name|escape}
 {/if}
 </li>
 {/foreach}
-</li>
+{if $context}
+<li> / <strong>{$context|escape}</strong></li>
+{/if}
+
+{if $geo_contexts|@count}
+	{foreach from=$geo_contexts item="count" key="ctx"}
+{if $ctx and $count}
+{* note the URL here... this is a dirty hack... *}
+<li>/ <a href="{$geo_contexts_map.$ctx|escape}" title="{if $count==1}1 photo{else}{$count|escape} photos{/if}">{$geo_contexts_map.$ctx|escape}</a></li>
+{/if}
+	{/foreach}
+{/if}
+
 </ul>
 
 {if $photos|@count}

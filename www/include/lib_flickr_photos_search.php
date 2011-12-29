@@ -99,6 +99,10 @@
 			"facet.field" => $facet,
 		);
 
+		if (isset($more['facet.query'])){
+			$params['facet.query'] = $more['facet.query'];
+		}
+
 		$owner_id = (isset($query['user_id'])) ? $query['user_id'] : 0;
 
 		if ($fq = _flickr_photos_search_perms_fq($owner_id, $more['viewer_id'], $more)){
