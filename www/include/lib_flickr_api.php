@@ -13,6 +13,23 @@
 
 	#################################################################
 
+	function flickr_api_authtoken_perms_map($string_keys=0){
+
+		$map = array(
+			'0' => 'read',
+			'1' => 'write',
+			'2' => 'delete',
+		);
+
+		if ($string_keys){
+			$map = array_flip($map);
+		}
+
+		return $map;
+	}
+
+	#################################################################
+
 	function flickr_api_auth_url($perms, $extra=null){
 
 		$args = array(

@@ -1,6 +1,9 @@
+{capture assign="_plural"}
 {if $type=='neighbourhood'}neighbourhoods
 {elseif $type=='locality'}localities
 {elseif $type=='county'}counties
 {elseif $type=='region'}regions
 {elseif $type=='country'}countries
 {else}{/if}
+{/capture}
+{$_plural|trim}

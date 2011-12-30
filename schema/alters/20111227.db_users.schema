@@ -1,0 +1,1 @@
+ALTER TABLE FlickrPhotos ADD geocontext TINYINT(3) UNSIGNED NOT NULL;

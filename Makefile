@@ -16,5 +16,6 @@ js:
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/cwf.js > www/javascript/cwf.min.js
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/ffbp.js > www/javascript/ffbp.min.js
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/jquery.lightbox.ffbp.js > www/javascript/jquery.lightbox.ffbp.min.js
+	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/photo.geo.js > www/javascript/photo.geo.min.js
 clean:
 	rm -f ./TODO.txt

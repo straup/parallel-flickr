@@ -102,6 +102,19 @@
 		}
 	}
 
+	if ($GLOBALS['cfg']['user']['id']){
+
+		$perms_map = flickr_api_authtoken_perms_map();
+
+		# the currently logged in viewer
+
+		$_flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
+		$perms = $_flickr_user['token_perms'];
+
+		$has_write_token = ($perms_map[$perms] == 'write') ? 1 : 0;
+		$GLOBALS['smarty']->assign('has_write_token', $has_write_token);
+	}
+
 	$GLOBALS['smarty']->display("page_flickr_photo.txt");
 	exit();
 ?>

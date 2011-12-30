@@ -1,6 +1,7 @@
 <?php
 
 	loadlib("flickr_photos_lookup");
+	loadlib("flickr_photos_search");
 	loadlib("flickr_photos_permissions");
 
 	#################################################################
@@ -80,16 +81,47 @@
 		$enc_id = AddSlashes($photo['id']);
 		$where = "id={$enc_id}";
 
+		# see also: git:parallel-flickr/solr/conf/schema.xml
+
+		$solr_fields = array(
+			'perms',
+			'geoperms',
+			'geocontext',
+			'media',
+			'latitude',
+			'longitude',
+			'accuracy',
+			'woeid',
+			'datetaken',
+			'dateupload',
+			'title',
+			'description'
+
+			# what about exif?
+		);
+
+		$solr_update = 0;
+
 		$hash = array();
 
 		foreach ($update as $k => $v){
 			$hash[$k] = AddSlashes($v);
+
+			if (in_array($k, $solr_fields)){
+				$solr_update++;
+			}
 		}
 
 		$rsp = db_update_users($cluster_id, 'FlickrPhotos', $hash, $where);
 
 		if ($rsp['ok']){
+
 			cache_unset($cache_key);
+
+			if (($GLOBALS['cfg']['enable_feature_solr']) && ($solr_update)){
+				$photo = flickr_photos_get_by_id($photo['id']);	
+				flickr_photos_search_index_photo($photo);
+			}
 		}
 
 		return $rsp;

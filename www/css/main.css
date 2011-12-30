@@ -115,6 +115,7 @@ p.message {
 
 .photo_meta ul li {
     list-style-type: none;
+    line-height: 1.25em;
 }
 
 .photo_cite {
