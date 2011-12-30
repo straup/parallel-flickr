@@ -41,6 +41,20 @@
         return $rsp;
     }
 
+    function storage_s3_delete($fullpath) {
+        
+        $bucket = $GLOBALS['cfg']['amazon_s3_bucket_name'];
+        $date = gmdate('r');
+
+        $fields = array(
+            'Date' => $date,
+            'Content-Type' => 'text/plain',
+            'Authorization' => storage_s3_create_authorization_header_string('DELETE', null, 'text/plain', $date, "/$bucket$fullpath"),
+        );
+
+        return http_delete("$bucket.s3.amazonaws.com$fullpath", $fields);
+    }
+
     function storage_s3_create_authorization_header_string($verb, $md5, $type, $date, $resource) {
 
         $string = "$verb\n$md5\n$type\n$date\n$resource";

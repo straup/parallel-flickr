@@ -59,6 +59,21 @@
 
 	########################################################################
 
+    function http_delete($url, $headers=array(), $more=array()) {
+
+        $ch = _http_curl_handle($url, $headers, $more);
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+
+        if ($more['return_curl_handle']){
+            return $ch;
+        }
+
+        return _http_request($ch, $url, $more);
+    }
+
+	########################################################################
+
 	function http_put($url, $file_handle, $headers=array(), $more=array()){
 
 		$ch = _http_curl_handle($url, $headers, $more);
