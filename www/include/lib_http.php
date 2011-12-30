@@ -74,26 +74,12 @@
 
 	########################################################################
 
-	function http_put($url, $file_handle, $headers=array(), $more=array()){
+	function http_put($url, $bytes, $headers=array(), $more=array()){
 
 		$ch = _http_curl_handle($url, $headers, $more);
 
-		# See the monster you've created, Roy? See???!?!?!!
-
-		if (isset($more['donotsend_transfer_encoding'])){
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-		}
-
-		else {
-			curl_setopt($ch, CURLOPT_PUT, true);
-		}
-
-		# curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-
-        $info = fstat($file_handle);
-
-		curl_setopt($ch, CURLOPT_INFILE, $file_handle);
-		curl_setopt($ch, CURLOPT_INFILESIZE, $info['size']);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $bytes);
 
 		if ($more['return_curl_handle']){
 			return $ch;
@@ -133,7 +119,7 @@
 			}
 
 			else if ($method == 'PUT'){
-				$ch = http_put($url, $body, $headers, $more);
+				$ch = http_put($url, $file_handle, $headers, $more);
 			}
 
 			else {

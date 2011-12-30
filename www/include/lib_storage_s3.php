@@ -12,31 +12,25 @@
 
     loadlib('http');
 
-    function storage_s3_store($src_fullpath, $dest_fullpath, $content_type) {
+    function storage_s3_store($keyname, $bytes, $content_type) {
     
-        if (!file_exists($src_fullpath)) {
+        if (!$bytes) {
             return array('ok' => 0, 'rsp' => 'File does not exist');
         }
 
         $bucket = $GLOBALS['cfg']['amazon_s3_bucket_name'];
 
-        $file = file_get_contents($src_fullpath);
-        $md5 = base64_encode(md5($file, true));
-
+        $md5 = base64_encode(md5($bytes, true));
         $date = gmdate('r');
 
         $fields = array(
             'Date' => $date,
             'Content-MD5' => $md5,
             'Content-Type' => $content_type,
-            'Authorization' => storage_s3_create_authorization_header_string('PUT', $md5, $content_type, $date, "/$bucket$dest_fullpath"),
+            'Authorization' => storage_s3_create_authorization_header_string('PUT', $md5, $content_type, $date, "/$bucket$keyname"),
         );
 
-        $file_handle = fopen($src_fullpath, 'r');
-
-        $rsp = http_put($bucket . ".s3.amazonaws.com$dest_fullpath", $file_handle, $fields);
-
-        fclose($file_handle);
+        $rsp = http_put($bucket . ".s3.amazonaws.com$keyname", $bytes, $fields);
 
         return $rsp;
     }
