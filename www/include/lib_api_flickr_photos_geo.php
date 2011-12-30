@@ -116,9 +116,9 @@
 			}
 		}
 
-		$out = array('places' => array(
-			'place' => $possible
-		));
+		$out = array(
+			'places' => $possible
+		);
 
 		return api_output_ok($out);
 	}

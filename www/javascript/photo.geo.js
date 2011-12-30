@@ -21,7 +21,7 @@ function photo_geo_edit_meta(photo_id){
 	var html = '<div id="modal_geo">';
 	html = '<form id="photo_geo_update_context">';
 
-	html += '<h3>Edit theo geo context for this photo</h3>';
+	html += '<h3>Edit the geo context for this photo</h3>';
 	html += 'This photo was taken ';
 
 	html += '<select id="new_geocontext">';
@@ -40,14 +40,44 @@ function photo_geo_edit_meta(photo_id){
 	html += '&#160;';
 	html += '<input type="submit" value="UPDATE" />';
 	html += '</form>';
+
+	html += '<div id="photo_geo_corrections">';
+	html += '<h3>Correct location</h3>';
+	html += '<div id="photo_geo_corrections_fetch">Fetch possible corrections</div>';
+
 	html += '</div>';
 
+	html += '</div>';
 	html += '<div id="photo_geo_status"></div>';
 	html += '<div id="photo_geo_close"><a href="#" onclick="$.modal.close(); return false;">close</a></div>';
 
 	// http://www.ericmmartin.com/projects/simplemodal/
 
 	$.modal(html);
+
+	$("#photo_geo_corrections_fetch").click(function(){
+
+		var _onsuccess = function(rsp){
+			$("#photo_geo_status").html("");
+			console.log(rsp);
+		};
+
+		var args = {
+			'method': 'flickr.photos.geo.possibleCorrections', 
+			'photo_id': photo_id,
+			'place_type': 'neighbourhood'
+		};
+
+		$.ajax({
+			'url': '/api/',
+			'type': 'GET',
+			'data': args,
+			'success': _onsuccess
+		});
+
+		$("#photo_geo_corrections_fetch").hide();
+		$("#photo_geo_status").html("Poking the Flickr API...");
+	});
 
 	$("#photo_geo_update_context").submit(function(){
 
