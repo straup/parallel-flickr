@@ -95,7 +95,7 @@ function photo_geo_edit_meta(photo_id){
 
 			timeout_geocontext = setTimeout(function(){
 				$.modal.close();
-			}, 2000);
+			}, 1000);
 		};
 
 		$.ajax({
