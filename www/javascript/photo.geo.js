@@ -79,7 +79,11 @@ function photo_geo_edit_meta(photo_id){
 			var taken = '';
 
 			if (rsp['context'] != 0){
-				taken = "It was taken " + str_ctx;
+
+				var woeid = $("#edit_geo").attr("geo:woeid");
+				var url = places_url + woeid + '/' + str_ctx + '/';
+
+				taken = 'It was taken <a href="' + url + '">' + str_ctx + '</a>';
 			}
 
 			$("#geo_context").html(taken);

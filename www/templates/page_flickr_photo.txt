@@ -70,6 +70,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 
 var photo_id = '{$photo.id|escape}';
 var photo_url = '{$photo|@flickr_urls_photo_page}';
+var places_url = '{$owner|@flickr_urls_photos_user_places}';
 
 var next = {if $after|@count}'{$owner|@flickr_urls_photos_user}{$after.0.id|escape}'{else}null{/if};
 var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|escape}'{else}null{/if};
