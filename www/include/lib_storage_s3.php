@@ -20,7 +20,7 @@
 
         $access_key = $GLOBALS['cfg']['amazon_s3_access_key'];
         $secret_key = $GLOBALS['cfg']['amazon_s3_secret_key'];
-        $bucket = $GLOBALS['cfg']['amazon_s3_bucket'];
+        $bucket = $GLOBALS['cfg']['amazon_s3_bucket_name'];
 
         $file = file_get_contents($src_fullpath);
         $md5 = base64_encode(md5($file, true));
@@ -30,12 +30,9 @@
         $fields = array(
             'Date' => $date,
             'Content-MD5' => $md5,
-            'Content-Type' => 'image/jpeg', # TODO: yeah...
+            'Content-Type' => $content_type,
+            'Authorization' => storage_s3_create_authorization_header_string('PUT', $md5, $content_type, $date, "/$bucket$dest_fullpath"),
         );
-
-        $bucket = $GLOBALS['cfg']['amazon_s3_bucket_name'];
-
-        $fields['Authorization'] = storage_s3_create_authorization_header_string('PUT', $md5, 'image/jpeg', $date, "/$bucket$dest_fullpath");
 
         $file_handle = fopen($src_fullpath, 'r');
 
@@ -49,6 +46,7 @@
     function storage_s3_create_authorization_header_string($verb, $md5, $type, $date, $resource) {
 
         $string = "$verb\n$md5\n$type\n$date\n$resource";
+
         $hmac = base64_encode(hash_hmac('sha1', $string, $GLOBALS['cfg']['amazon_s3_secret_key'], true));
         return "AWS {$GLOBALS['cfg']['amazon_s3_access_key']}:$hmac"; 
     }
