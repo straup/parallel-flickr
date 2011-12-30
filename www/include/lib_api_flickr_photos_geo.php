@@ -7,6 +7,9 @@
 	loadlib("flickr_photos_geo");
 	loadlib("api_utils_flickr");
 
+	loadlib("flickr_places");
+	loadlib("geo_utils");
+
 	#################################################################
 
 	function api_flickr_photos_geo_setContext(){
@@ -14,24 +17,7 @@
 		$flickr_user = api_utils_flickr_ensure_token_perms($GLOBALS['cfg']['user'], 'write');
 
 		$photo_id = post_str("photo_id");
-
-		if (! $photo_id){
-			api_output_error(999, "Missing photo ID");
-		}
-
-		$photo = flickr_photos_get_by_id($photo_id);
-
-		if (! $photo['id']){
-			api_output_error(999, "Invalid photo ID");
-		}
-
-		if ($photo['user_id'] != $GLOBALS['cfg']['user']['id']){
-			api_output_error(999, "Insufficient permissions");
-		}
-
-		if (! $photo['hasgeo']){
-			api_output_error(999, "Photo is not geotagged");
-		}
+		$photo = _api_flickr_photos_geo_get_photo($photo_id);
 
 		$context = post_int32("context");
 
@@ -79,6 +65,87 @@
 		);
 
 		api_output_ok($out);
+	}
+
+	#################################################################
+
+	function api_flickr_photos_geo_possibleCorrections(){
+
+		$photo_id = get_str("photo_id");
+		$photo = _api_flickr_photos_geo_get_photo($photo_id);
+
+		$type = get_str("place_type");
+
+		if (! $type){
+			api_output_error(999, "Missing place type");
+		}
+
+		if (! flickr_places_is_valid_placetype($type)){
+			api_output_error(999, "Invalid place type");
+		}
+
+		# TO DO: calculate based on $type
+		$radius = 1.5;
+
+		$bbox = geo_utils_bbox_from_point($photo['latitude'], $photo['longitude'], $radius, 'km');
+		$bbox = implode(",", array($bbox[1], $bbox[0], $bbox[3], $bbox[2]));
+
+		$method = 'flickr.places.placesForBoundingBox';
+
+		$args = array(
+			'bbox' => $bbox,
+			'place_type' => $type,
+		);
+
+		$rsp = flickr_api_call($method, $args);
+
+		if (! $rsp['ok']){
+			api_output_error(999, "Flickr API error");
+		}
+
+		$possible = array();
+
+		if ($rsp['rsp']['places']['total']){
+
+			foreach ($rsp['rsp']['places']['place'] as $place){
+				$possible[] = array(
+					'woeid' => $place['woeid'],
+					'placetype' => $place['place_type'],
+					'name' => $place['_content'],
+				);
+			}
+		}
+
+		$out = array('places' => array(
+			'place' => $possible
+		));
+
+		return api_output_ok($out);
+	}
+
+	#################################################################
+
+	function _api_flickr_photos_geo_get_photo($photo_id, $ensure_is_own=1){
+
+		if (! $photo_id){
+			api_output_error(999, "Missing photo ID");
+		}
+
+		$photo = flickr_photos_get_by_id($photo_id);
+
+		if (! $photo['id']){
+			api_output_error(999, "Invalid photo ID");
+		}
+
+		if (($ensure_is_own) && ($photo['user_id'] != $GLOBALS['cfg']['user']['id'])){
+			api_output_error(999, "Insufficient permissions");
+		}
+
+		if (! $photo['hasgeo']){
+			api_output_error(999, "Photo is not geotagged");
+		}
+
+		return $photo;
 	}
 
 	#################################################################
