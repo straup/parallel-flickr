@@ -59,7 +59,7 @@
 
 	########################################################################
 
-	function http_put($url, $bytes, $headers=array(), $more=array()){
+	function http_put($url, $file_handle, $headers=array(), $more=array()){
 
 		$ch = _http_curl_handle($url, $headers, $more);
 
@@ -73,12 +73,12 @@
 			curl_setopt($ch, CURLOPT_PUT, true);
 		}
 
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $bytes);
-		curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+		# curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
 
-		# TODO: sort out PUT-ing files
-		# curl_setopt($ch, CURLOPT_INFILE, $bytes);
-		# curl_setopt($ch, CURLOPT_INFILESIZE, strlen($bytes));
+        $info = fstat($file_handle);
+
+		curl_setopt($ch, CURLOPT_INFILE, $file_handle);
+		curl_setopt($ch, CURLOPT_INFILESIZE, $info['size']);
 
 		if ($more['return_curl_handle']){
 			return $ch;
