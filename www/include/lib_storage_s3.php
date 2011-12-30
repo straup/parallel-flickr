@@ -18,8 +18,6 @@
             return array('ok' => 0, 'rsp' => 'File does not exist');
         }
 
-        $access_key = $GLOBALS['cfg']['amazon_s3_access_key'];
-        $secret_key = $GLOBALS['cfg']['amazon_s3_secret_key'];
         $bucket = $GLOBALS['cfg']['amazon_s3_bucket_name'];
 
         $file = file_get_contents($src_fullpath);
