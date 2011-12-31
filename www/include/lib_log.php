@@ -24,6 +24,7 @@
 		'notice'	=> array('html'),
 		'error'		=> array('html', 'error_log'),
 		'fatal'		=> array('html', 'error_log'),
+		'debug'		=> array(),
 	);
 
 	$GLOBALS['log_html_colors'] = array(
@@ -65,6 +66,10 @@
 		_log_dispatch('notice', $msg, array('type' => $type, 'time' => $time));
 	}
 	
+	function log_debug($type, $msg, $time=-1){
+		_log_dispatch('debug', $msg, array('type' => $type, 'time' => $time));
+	}
+	
 	function log_reset_handlers(){
 		$GLOBALS['log_handlers'] = array();
 	}
@@ -77,7 +82,6 @@
 			$GLOBALS['log_handlers'][$level] = array($handler);
 		}
 	}
-
 
 	###################################################################################################################
 
