@@ -118,8 +118,6 @@
 
 			cache_unset($cache_key);
 
-			# FIX ME: filesystem permissions and updating solr...
-
 			if (($GLOBALS['cfg']['enable_feature_solr']) && ($solr_update)){
 
 				$photo = flickr_photos_get_by_id($photo['id']);	
@@ -133,7 +131,10 @@
 				# directory. If it did, this whole problem would go away and in
 				# the end that may be the simplest possible solution. Until then
 				# we'll fetch the (meta) data directly from the API and force
-				# feed it to the search indexer.
+				# feed it to the search indexer. If you're wondering: Yes, it means
+				# that the local solr db and the actual JSON dump of photos.getInfo
+				# will be out of sync but that will sort itself out the next
+				# time bin/backup_photos.php is run (20111231/straup)
 
 				loadlib("flickr_photos_metadata");
 				$meta = flickr_photos_metadata_fetch($photo, 'inflate');
