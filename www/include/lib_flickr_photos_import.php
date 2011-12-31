@@ -30,8 +30,9 @@
 		$args = array(
 			'user_id' => $nsid,
 			'auth_token' => $flickr_user['auth_token'],
-			'extras' => 'original_format,tags,media,date_upload,date_taken,geo',
+			'extras' => 'owner_name,original_format,tags,media,date_upload,date_taken,geo',
 			'per_page' => 100,
+			'sort' => 'date-posted-desc',
 			'page' => 1,
 		);
 
@@ -157,6 +158,7 @@
 	#################################################################
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
+		
 		if ($GLOBALS['cfg']['feature_enable_storage_s3']) {
 			return flickr_photos_import_photo_files_s3($photo, $more);
 		}
@@ -300,11 +302,16 @@
 	
 	function flickr_photos_import_photo_files_s3(&$photo, $more=array()){
 		loadlib('storage_s3');
+		
+		log_debug('import', 'flickr_photos_import_photo_files_s3');
 
 		$flickr_urls = _flickr_photos_import_flickr_urls($photo, $more);
 		$orig  = storage_s3_url_photo($photo, 'o', $more);
 		$small = storage_s3_url_photo($photo, 'z', $more);
 
+		$req = array();
+		$meta = array();
+		
 		if (($more['force']) || ( ! storage_s3_file_exists($small))) {
 			$req[] = $flickr_urls['small'];
 		}
@@ -318,15 +325,31 @@
 
 		if (! isset($more['skip_meta'])) {
 			$meta = _flickr_photos_import_flickr_meta_urls($photo, $more); 
+			
+			foreach($meta as $k => $v) {
+				$req[] = $v;
+			}
 		}
+		
+		#log_debug('import', print_r($meta, 1));
+		
 
 		# now go!
 
 		# fetch all the bits using http_multi()
 
 		if ($count = count($req)){
+			
 			list($multi, $failed) = _flickr_photos_import_do_fetch_multi($req);
 		}
+
+		foreach ($multi as $rsp) {
+			log_debug('import', "ok: " . $rsp['url']);
+		}
+		foreach ($failed as $rsp) {
+			log_error('import', "failed: " . $rsp['url']);
+		}
+		
 
 		loadlib('mime_type');
 
@@ -346,6 +369,14 @@
 			}
 
 			$sent[] = storage_s3_file_store($id, $rsp['body'], $more);
+		}
+		
+		foreach ($sent as $rsp) {
+			if ($rsp['ok']) {
+				log_debug('s3', 'ok put ' . $rsp['url']);
+			} else {
+				log_error('s3', 'failed put ' . $rsp['url']);
+			}
 		}
 
 	}
@@ -759,14 +790,16 @@
 	}
 	
 	function _flickr_photos_import_do_fetch_multi($reqs, $retries=3) {
+		
+		#log_debug('import', '_flickr_photos_import_do_fetch_multi' . print_r($reqs, 1));
+		
 		$multi = array();
 		$failed = array();
 
 		$success = array();
 
-		foreach ($reqs as $uris){
-			list($remote, $local) = $uris;
-			$multi[] = array('url' => $remote);
+		foreach ($reqs as $uri){
+			$multi[] = array('url' => $uri);
 		}
 
 		$multi_rsp = http_multi($multi);
