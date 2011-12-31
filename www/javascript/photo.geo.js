@@ -1,12 +1,6 @@
-var timeout_geo = null;
-
-// currently this only lets you edit geo context (20111229/straup)
+// TO DO: clean up markup and semantic groupings of the various options...
 
 function photo_geo_edit_meta(photo_id){
-
-	if (timeout_geo){
-		clearTimeout(timeout_geocontext);
-	}
 
 	var old_ctx = $("#edit_geo").attr("geo:context");
 
@@ -19,7 +13,8 @@ function photo_geo_edit_meta(photo_id){
 	};
 
 	var html = '<div id="modal_geo">';
-	html = '<form id="photo_geo_update_context">';
+	html += '<div id="photo_geo_status"></div>';
+	html += '<form id="photo_geo_update_context">';
 
 	html += '<h3>Edit the geo context for this photo</h3>';
 	html += 'This photo was taken ';
@@ -56,7 +51,6 @@ function photo_geo_edit_meta(photo_id){
 	html += '</div>';
 
 	html += '</div>';
-	html += '<div id="photo_geo_status"></div>';
 	html += '<div id="photo_geo_close"><a href="#" onclick="$.modal.close(); return false;">close</a></div>';
 
 	// http://www.ericmmartin.com/projects/simplemodal/
@@ -74,6 +68,8 @@ function photo_geo_edit_meta(photo_id){
 				return;
 			}
 
+			var current_woeid = $("#edit_geo").attr("geo:woeid");
+
 			var html = '<form id="photo_geo_corrections_update">';
 
 			html += 'It was really taken in ';
@@ -85,7 +81,13 @@ function photo_geo_edit_meta(photo_id){
 			for (var i=0; i < count; i++){
 				var pl = rsp['places'][i];
 
-				html += '<option value="' + pl['woeid'] + '">' + pl['name'] + '</option>';		
+				html += '<option value="' + pl['woeid'] + '"';
+
+				if (pl['woeid'] == current_woeid){
+					html += ' disabled="true"';
+				}
+
+				html += '>' + pl['name'] + '</option>';		
 			}
 
 			html += '</select>';
@@ -185,13 +187,7 @@ function photo_geo_edit_meta(photo_id){
 			$("#geo_context").html(taken);
 
 			var msg = '<p>Success! The geo context for this photo has been updated and is now <strong>' + str_ctx + '</strong>.</p>';
-			msg += '<p style="font-style:italic;font-size:small;">This dialog will close itself automagically in a moment...</p>';
-
 			$("#photo_geo_status").html(msg);
-
-			timeout_geocontext = setTimeout(function(){
-				$.modal.close();
-			}, 1000);
 		};
 
 		$.ajax({
