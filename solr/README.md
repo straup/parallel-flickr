@@ -20,10 +20,10 @@ it by typing:
 What's going on here?
 --
 
-* _start.jar_ is the thing that spins up Solr
+* _start.jar_ is the thing that starts Solr
 
 * _start.jar_ is going to spin up a web server using Jetty on port 9999; you can
-  change the port number in parallel-flickr/solr/etc/jetty.xml
+  change the port number in [parallel-flickr/solr/etc/jetty.xml](https://github.com/straup/parallel-flickr/blob/master/solr/etc/jetty.xml).
 
 * _start.jar_ is going to look for a file called _solr.xml_ in the
   _solr.solr.home_ directory. Its presence will indicate that Solr is being run
@@ -50,14 +50,23 @@ What's going on here?
 * Then, _start.jar_ will look for a directory in
   ${solr.solr.cores}/parallel-flickr called "conf" which contains a bunch of
   config files specific to the parallel-flickr index (or "core"). There are two
-  you care about right now: _schema.xml_ and _solrconfig.xml_.
+  you care about right now: [schema.xml](https://github.com/straup/parallel-flickr/blob/master/solr/parallel-flickr/conf/solrconfig.xml) and [solrconfig.xml](https://github.com/straup/parallel-flickr/blob/master/solr/parallel-flickr/conf/solrconfig.xml).
   
 * The first contains information about what gets indexed. The second contains
   information about how that index is stored and queried. It is also where you
   tell Solr _where_ to store the index on disk. By default that is:
   
-	<dataDir>${solr.solr.cores}/parallel-flickr/data</dataDir>  
+	&lt;dataDir&gt;${solr.solr.cores}/parallel-flickr/data&lt;/dataDir&gt;  
 
+* In order to use Solr you'll need to enable it in your [config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example_ with the following configs:
+ 
+	$GLOBALS['cfg']['enable_feature_solr'] = 1;
+	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:9999/solr/parallel-flickr/';
+
+* To index (or re-index) exsiting data that you've imported from Flickr you will need to run the [backfill_solr_index_photos.php](https://github.com/straup/parallel-flickr/blob/master/bin/backfill_solr_index_photos.php) script, like this:
+
+	$> php -q ./bin/backfill_solr_index_photos.php
+ 
 To do:
 --
 
