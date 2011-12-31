@@ -305,8 +305,8 @@
 		
 		$flickr_urls = _flickr_photos_import_flickr_urls($photo, $more);
 		
-		$orig  = storage_s3_url_photo($photo, 'o', $more);
-		$small = storage_s3_url_photo($photo, 'z', $more);
+		$orig  = storage_s3_path_photo($photo, 'o', $more);
+		$small = storage_s3_path_photo($photo, 'z', $more);
 
 		$req = array();
 		$meta = array();

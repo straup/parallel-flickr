@@ -3,7 +3,12 @@
 	loadlib('s3');
 	
 	function storage_s3_url_photo($photo, $size='z', $more=array()) {
-		$photo_prefix = storage_s3_path_photo($photo, $more);
+		$path = storage_s3_path_photo($photo, $size, $more);
+		return s3_unsigned_object_url(storage_s3_bucket(), $path);
+	}
+	
+	function storage_s3_path_photo($photo, $size='z', $more=array()) {
+		$photo_prefix = storage_s3_prefix_photo($photo, $more);
 		
 		if ($size == 'o') {			
 			if ($photo['originalsecret']) {
@@ -18,7 +23,7 @@
 		return "{$photo_prefix}{$photo['id']}_{$photo['secret']}_z.jpg";
 	}
 	
-	function storage_s3_path_photo($photo, $more=array()) {
+	function storage_s3_prefix_photo($photo, $more=array()) {
 		$prefix = $photo['user_id'];
 		
 		$dir = join('/', str_split(substr(md5($photo['id']), 0, 8), 2));
