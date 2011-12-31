@@ -3,6 +3,6 @@
 <solr persistent="false">
 
   <cores adminPath="/admin/cores">
-    <core name="parallel-flickr" instanceDir="" />
+    <core name="parallel-flickr" instanceDir="${solr.home}/parallel-flickr" />
   </cores>
 </solr>
