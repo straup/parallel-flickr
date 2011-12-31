@@ -19,6 +19,7 @@
     text-align:right;
 }
 
+
 .ffbp_buddyicon {
     float:left;
     margin-right:10px;
@@ -58,4 +59,9 @@
     line-height:1.5em;
     text-align:right;
     display:inline;
+}
+
+#ffbp_types li a.active {
+    text-decoration: none;
+    color:#ccc;
 }

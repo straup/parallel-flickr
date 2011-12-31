@@ -13,6 +13,13 @@
 
 	function flickr_urls_photo_static(&$photo){
 
+		if ($GLOBALS['cfg']['feature_enable_storage_s3']) {
+			loadlib('storage_s3');
+			return storage_s3_url_photo($photo);
+		}
+		
+		# else 
+		
 		$secret = $photo['secret'];
 		$sz = "z";
 		$ext = "jpg";
@@ -22,12 +29,19 @@
 		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
 
 		return $root . $path . "/" . $fname;
+		
+		
 	}
 
 	#################################################################
 
 	function flickr_urls_photo_original(&$photo){
-
+		
+		if ($GLOBALS['cfg']['feature_enable_storage_s3']) {
+			loadlib('storage_s3');
+			return storage_s3_url_photo($photo, 'o');
+		}
+		
 		$secret = $photo['originalsecret'];
 		$sz = "o";
 		$ext = $photo['originalformat'];
