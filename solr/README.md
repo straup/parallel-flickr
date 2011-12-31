@@ -52,7 +52,7 @@ What's going on here?
   config files specific to the parallel-flickr index (or "core"). There are two
   you care about right now: _schema.xml_ and _solrconfig.xml_.
   
-  The first contains information about what gets indexed. The second contains
+* The first contains information about what gets indexed. The second contains
   information about how that index is stored and queried. It is also where you
   tell Solr _where_ to store the index on disk. By default that is:
   
