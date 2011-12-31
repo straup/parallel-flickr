@@ -58,7 +58,7 @@ What's going on here?
   
 	&lt;dataDir&gt;${solr.solr.cores}/parallel-flickr/data&lt;/dataDir&gt;  
 
-* In order to use Solr you'll need to enable it in your [config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example_ with the following configs:
+* In order to use Solr you'll need to enable it in your [config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example) with the following configs:
  
 	$GLOBALS['cfg']['enable_feature_solr'] = 1;
 	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:9999/solr/parallel-flickr/';
