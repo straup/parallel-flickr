@@ -118,8 +118,15 @@
 
 			cache_unset($cache_key);
 
+			# FIX ME: filesystem permissions and updating solr...
+
 			if (($GLOBALS['cfg']['enable_feature_solr']) && ($solr_update)){
+
 				$photo = flickr_photos_get_by_id($photo['id']);	
+
+				# loadlib("flickr_photos_metadata");
+				# flickr_photos_metadata_refresh($photo);
+
 				flickr_photos_search_index_photo($photo);
 			}
 		}

@@ -41,9 +41,17 @@ function photo_geo_edit_meta(photo_id){
 	html += '<input type="submit" value="UPDATE" />';
 	html += '</form>';
 
+	// corrections
+
+	// FIX ME: make me less brittle...
+	var old_placename = $("#geo_placename a").html();
+
 	html += '<div id="photo_geo_corrections">';
-	html += '<h3>Correct location</h3>';
-	html += '<div id="photo_geo_corrections_fetch">Fetch possible corrections</div>';
+	html += '<h3>Edit the place name for this photo</h3>';
+	html += '<p>Flickr thinks this photo was taken in <q>';
+	html += old_placename;
+	html += '</q>. <a href="#" id="photo_geo_corrections_fetch">Fetch the list of alternate place names.</a>';
+	html += '</p>';
 
 	html += '</div>';
 
@@ -58,8 +66,66 @@ function photo_geo_edit_meta(photo_id){
 	$("#photo_geo_corrections_fetch").click(function(){
 
 		var _onsuccess = function(rsp){
+
 			$("#photo_geo_status").html("");
-			console.log(rsp);
+
+			if (rsp['stat'] != 'ok'){
+				$("#photo_geo_status").html("Ack!");
+				return;
+			}
+
+			var html = '<form id="photo_geo_corrections_update">';
+
+			html += 'It was really taken in ';
+			html += '<select id="new_woeid">';
+			html += '<option />';
+
+			var count = rsp['places'].length;
+
+			for (var i=0; i < count; i++){
+				var pl = rsp['places'][i];
+
+				html += '<option value="' + pl['woeid'] + '">' + pl['name'] + '</option>';		
+			}
+
+			html += '</select>';
+			html += '&#160;&#160;';
+			html += '<input type="submit" value="UPDATE" />';
+			html += '</form>';
+
+			$("#photo_geo_corrections").append(html);
+
+			$("#photo_geo_corrections_update").submit(function(){
+
+				var new_woeid = $("#new_woeid");
+				new_woeid = new_woeid.val();
+
+				var _onsuccess = function(rsp){
+					$("#photo_geo_status").html(rsp['stat']);
+					console.log(rsp);
+					// update place name in display
+					// auto close window ?
+				};
+
+				var args = {
+					'method': 'flickr.photos.geo.correctLocation',
+					'photo_id': photo_id,
+					'woeid': new_woeid
+				};
+
+				$.ajax({
+					'url' : '/api/',
+					'type': 'POST',
+					'data': args,
+					'success': _onsuccess
+				});
+
+				$("#photo_geo_corrections_update").hide();
+				$("#photo_geo_status").html("Poking the Flickr API...");
+
+				return false;
+			});
+
 		};
 
 		var args = {
@@ -76,7 +142,7 @@ function photo_geo_edit_meta(photo_id){
 		});
 
 		$("#photo_geo_corrections_fetch").hide();
-		$("#photo_geo_status").html("Poking the Flickr API...");
+		$("#photo_geo_status").html("Fetching alternate place names...");
 	});
 
 	$("#photo_geo_update_context").submit(function(){

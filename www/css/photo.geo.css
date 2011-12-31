@@ -6,7 +6,7 @@
     font-size:small;
 }
 
-#photo_geo_update_context input,select{
+input,select{
     border: solid thin;
 }
 
@@ -33,3 +33,12 @@
     text-decoration:none;
     color:#000;
 }
+
+#photo_geo_corrections {
+	font-size: small;
+}
+
+#photo_geo_corrections q {
+    font-weight: 700;
+}
+

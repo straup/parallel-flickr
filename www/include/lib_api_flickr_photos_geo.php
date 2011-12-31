@@ -16,7 +16,7 @@
 
 		$flickr_user = api_utils_flickr_ensure_token_perms($GLOBALS['cfg']['user'], 'write');
 
-		$photo_id = post_str("photo_id");
+		$photo_id = post_int64("photo_id");
 		$photo = _api_flickr_photos_geo_get_photo($photo_id);
 
 		$context = post_int32("context");
@@ -69,9 +69,61 @@
 
 	#################################################################
 
+	function api_flickr_photos_geo_correctLocation(){
+
+		$flickr_user = api_utils_flickr_ensure_token_perms($GLOBALS['cfg']['user'], 'write');
+
+		$photo_id = post_int64("photo_id");
+		$photo = _api_flickr_photos_geo_get_photo($photo_id);
+
+		$woeid = post_int32("woeid");
+
+		if (! $woeid){
+			api_output_error(999, "Missing WOE ID");
+		}
+
+		# validate WOE ID preemptively?
+
+		$method = "flickr.photos.geo.correctLocation";
+
+		$args = array(
+			'photo_id' => $photo['id'],
+			'woe_id' => $woeid,
+			'auth_token' => $flickr_user['auth_token'],
+		);
+
+		$rsp = flickr_api_call($method, $args);
+
+		if (! $rsp['ok']){
+			api_output_error(999, $rsp['error']);
+		}
+
+		$update = array(
+			'woeid' => $woeid,
+		);
+
+		$rsp = flickr_photos_update_photo($photo, $update);
+
+		if (! $rsp['ok']){
+			api_output_error(999, $rsp['error']);
+		}
+
+		$place = flickr_places_get_by_woeid($woeid);
+
+		$out = array(
+			'photo_id' => $photo_id,
+			'woeid' => $woeid,
+			'place' => $place,
+		);
+
+		api_output_ok($out);
+	}
+
+	#################################################################
+
 	function api_flickr_photos_geo_possibleCorrections(){
 
-		$photo_id = get_str("photo_id");
+		$photo_id = get_int64("photo_id");
 		$photo = _api_flickr_photos_geo_get_photo($photo_id);
 
 		$type = get_str("place_type");
