@@ -124,10 +124,21 @@
 
 				$photo = flickr_photos_get_by_id($photo['id']);	
 
-				# loadlib("flickr_photos_metadata");
-				# flickr_photos_metadata_refresh($photo);
+				# This is a quick hack that may become permanent. Basically 
+				# we need to refetch the data in flickr.photos.getInfo in 
+				# order to update the solr db. Normally the _index_photo pulls
+				# this information from disk; the files having been written
+				# by the bin/backup_photos.php script. As I write this the www
+				# server does not have write permissions on the static photos
+				# directory. If it did, this whole problem would go away and in
+				# the end that may be the simplest possible solution. Until then
+				# we'll fetch the (meta) data directly from the API and force
+				# feed it to the search indexer.
 
-				flickr_photos_search_index_photo($photo);
+				loadlib("flickr_photos_metadata");
+				$meta = flickr_photos_metadata_fetch($photo, 'inflate');
+
+				flickr_photos_search_index_photo($photo, $meta);
 			}
 		}
 

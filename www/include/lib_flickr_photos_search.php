@@ -168,13 +168,15 @@
 
 	# TO DO: add the ability to batch index photos (for backfill, etc.)
 
-	function flickr_photos_search_index_photo(&$photo){
+	function flickr_photos_search_index_photo(&$photo, $meta=array()){
 
 		if (! $GLOBALS['cfg']['enable_feature_solr']){
 			return not_okay('search indexing is disabled');
 		}
 
-		$meta = flickr_photos_metadata_load($photo);
+		if (! $meta){
+			$meta = flickr_photos_metadata_load($photo);
+		}
 
 		# really exit or just ignore all the $meta stuff below?
 

@@ -76,9 +76,11 @@
 
 		list($url, $args) = flickr_api_call_build($method, $args, $more);
 
-		$more = array(
+		$defaults = array(
 			'http_timeout' => 10,
 		);
+
+		$more = array_merge($defaults, $more);
 
 		$headers = array();
 
@@ -88,6 +90,10 @@
 		# $rsp = http_get($url);
 
 		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		if (isset($more['raw'])){
 			return $rsp;
 		}
 
