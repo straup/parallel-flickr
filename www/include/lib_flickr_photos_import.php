@@ -764,7 +764,7 @@
 
 		$success = array();
 
-		foreach ($req as $uris){
+		foreach ($reqs as $uris){
 			list($remote, $local) = $uris;
 			$multi[] = array('url' => $remote);
 		}
@@ -779,13 +779,11 @@
 			}
 		}
 
-		$failed2 = array();
 		if (count($failed) and $retries > 0) {
 			$retries -= 1;
-			list ($success2, $failed2) = _flickr_photos_import_do_fetch_multi($failed, $retries);
+			list ($success2, $failed) = _flickr_photos_import_do_fetch_multi($failed, $retries);
+			$success = array_merge($success, $success2);
 		}
 
-		$success = array_merge($success, $success2);
-
-		return array($success, $failed2);
+		return array($success, $failed);
 	}
