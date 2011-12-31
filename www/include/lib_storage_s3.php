@@ -34,7 +34,7 @@
 			$type = mime_type_identify($object_id);
 		}
 		
-		$put = s3_put($GLOBALS['cfg']['remote_s3_bucket'],
+		$put = s3_put(storage_s3_bucket(),
             array(
 				'id' => $id,
 				'acl' => 'public-read',
@@ -49,13 +49,21 @@
 	}
 	
 	function storage_s3_file_exists($object_id, $more=array()) {
-		$rsp = s3_head($GLOBALS['cfg']['remote_s3_bucket'], $object_id);
+		$rsp = s3_head(storage_s3_bucket(), $object_id);
 	
 		if ($rsp['ok']) {
 			return 1;
 		} else {
 			return 0;
 		}
+	}
+	
+	function storage_s3_bucket() {
+		return array(
+			'id' => $GLOBALS['cfg']['amazon_s3_bucket_name'],
+			'key' => $GLOBALS['cfg']['amazon_s3_access_key'],
+			'secret' => $GLOBALS['cfg']['amazon_s3_secret_key'],
+		);
 	}
 	
 	
