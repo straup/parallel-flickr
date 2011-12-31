@@ -30,7 +30,7 @@
 		$args = array(
 			'user_id' => $nsid,
 			'auth_token' => $flickr_user['auth_token'],
-			'extras' => 'owner_name,original_format,tags,media,date_upload,date_taken,geo',
+			'extras' => 'original_format,tags,media,date_upload,date_taken,geo',
 			'per_page' => 100,
 			'sort' => 'date-posted-desc',
 			'page' => 1,
@@ -303,9 +303,8 @@
 	function flickr_photos_import_photo_files_s3(&$photo, $more=array()){
 		loadlib('storage_s3');
 		
-		log_debug('import', 'flickr_photos_import_photo_files_s3');
-
 		$flickr_urls = _flickr_photos_import_flickr_urls($photo, $more);
+		
 		$orig  = storage_s3_url_photo($photo, 'o', $more);
 		$small = storage_s3_url_photo($photo, 'z', $more);
 
@@ -317,8 +316,9 @@
 		}
 
 		if (($more['force']) || ( ! storage_s3_file_exists($orig))) {
+			log_debug('flickr', "flickr orig: " . $flickr_urls['orig']);
 			$req[] = $flickr_urls['orig'];
-		}
+		} 
 
 		$info = str_replace("_o.{$photo['originalformat']}", "_i.json", $orig);
 		$comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $orig);
@@ -331,23 +331,24 @@
 			}
 		}
 		
-		#log_debug('import', print_r($meta, 1));
-		
-
 		# now go!
 
 		# fetch all the bits using http_multi()
-
+		
+		log_debug('import', "multi-fetch count: " . count($req));
+		
 		if ($count = count($req)){
 			
 			list($multi, $failed) = _flickr_photos_import_do_fetch_multi($req);
 		}
-
+		
+		log_debug('import', "fetch success count: " . count($multi));
+		
 		foreach ($multi as $rsp) {
 			log_debug('import', "ok: " . $rsp['url']);
 		}
 		foreach ($failed as $rsp) {
-			log_error('import', "failed: " . $rsp['url']);
+			log_debug('import', "failed: " . $rsp['url']);
 		}
 		
 
@@ -356,9 +357,11 @@
 		$sent = array();
 
 		foreach ($multi as $rsp) {
+			$id = '';
+			
 			if ($rsp['url'] == $flickr_urls['orig']) {
 				$id = $orig;
-			} elseif ($rsp['url'] == $flickr_url['small']) {
+			} elseif ($rsp['url'] == $flickr_urls['small']) {
 				$id = $small;
 	        } elseif ($rsp['url'] == $meta['info']) {
 				$id = $info;
@@ -367,15 +370,17 @@
 				$id = $comments;
 				$more['type'] = 'application/json';
 			}
-
-			$sent[] = storage_s3_file_store($id, $rsp['body'], $more);
+			
+			if ($id) {
+				$sent[] = storage_s3_file_store($id, $rsp['body'], $more);
+			}
 		}
 		
 		foreach ($sent as $rsp) {
 			if ($rsp['ok']) {
 				log_debug('s3', 'ok put ' . $rsp['url']);
 			} else {
-				log_error('s3', 'failed put ' . $rsp['url']);
+				log_debug('s3', 'failed put ' . $rsp['url']);
 			}
 		}
 
@@ -713,7 +718,7 @@
 			$orig = "{$root}_{$photo['secret']}_b.{$ext}";
 		}
 
-		if ($photo['media'] == 'video') {
+		if ($photo['media'] == 1) {
 
 			# http://www.flickr.com/photos/straup/2378794972/play/site/3bfc8d2bb9/
 			# http://www.flickr.com/photos/straup/2378794972/play/orig/5771b28b4b/
@@ -790,8 +795,6 @@
 	}
 	
 	function _flickr_photos_import_do_fetch_multi($reqs, $retries=3) {
-		
-		#log_debug('import', '_flickr_photos_import_do_fetch_multi' . print_r($reqs, 1));
 		
 		$multi = array();
 		$failed = array();
