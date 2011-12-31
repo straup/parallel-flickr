@@ -157,6 +157,9 @@
 	#################################################################
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
+		if ($GLOBALS['cfg']['feature_enable_storage_s3']) {
+			return flickr_photos_import_photo_files_s3($photo, $more);
+		}
 
 		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
 
@@ -314,7 +317,7 @@
 		$comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $orig);
 
 		if (! isset($more['skip_meta'])) {
-			$meta = _flickr_photos_import_flickr_meta_urls($photo, $more); // assumes $more['auth_token']
+			$meta = _flickr_photos_import_flickr_meta_urls($photo, $more); 
 		}
 
 		# now go!
@@ -698,13 +701,17 @@
 
 		# basic photo info
 
-		# viewer id and not photo owner?
-		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
-
+		if ($more['auth_token']) {
+			$auth_token = $more['auth_token'];
+		} else {
+			$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
+			$auth_token = $flickr_user['auth_token'];
+		}
+		
 		$method = 'flickr.photos.getInfo';
 
 		$args = array(
-			'auth_token' => $more['auth_token'],
+			'auth_token' => $auth_token,
 			'photo_id' => $photo['id'],
 		);
 
