@@ -39,6 +39,7 @@ your photos from {$place.name|escape}
 <li><a href="{$owner|@flickr_urls_photos_user}places/">Places</a> /</li>
 
 {foreach from=$hierarchy item="row" name="hier"}
+{assign var="last_woeid" value=$row.woeid}
 <li>
 {if $row.woeid == $place.woeid and !$context}
 <strong>{$row.name|escape}</strong>
@@ -55,7 +56,7 @@ your photos from {$place.name|escape}
 	{foreach from=$geo_contexts item="count" key="ctx"}
 {if $ctx and $count}
 {* note the URL here... this is a dirty hack... *}
-<li>/ <a href="{$geo_contexts_map.$ctx|escape}" title="{if $count==1}1 photo{else}{$count|escape} photos{/if}">{$geo_contexts_map.$ctx|escape}</a></li>
+<li>/ <a href="{$owner|@flickr_urls_photos_user}places/{$last_woeid|escape}/{$geo_contexts_map.$ctx|escape}/" title="{if $count==1}1 photo{else}{$count|escape} photos{/if}">{$geo_contexts_map.$ctx|escape}</a></li>
 {/if}
 	{/foreach}
 {/if}
