@@ -5,6 +5,7 @@
 	loadlib("flickr_api");
 	loadlib("flickr_photos");
 	loadlib("flickr_photos_geo");
+	loadlib("flickr_photos_geo_corrections");
 	loadlib("api_utils_flickr");
 
 	loadlib("flickr_places");
@@ -76,10 +77,15 @@
 		$photo_id = post_int64("photo_id");
 		$photo = _api_flickr_photos_geo_get_photo($photo_id);
 
-		$woeid = post_int32("woeid");
+		$old_woeid = $photo['woeid'];
+		$new_woeid = post_int32("woeid");
 
-		if (! $woeid){
+		if (! $new_woeid){
 			api_output_error(999, "Missing WOE ID");
+		}
+
+		if ($old_woeid == $new_woeid){
+			api_output_error(999, "Nothing to correct!");
 		}
 
 		# validate WOE ID preemptively?
@@ -88,7 +94,7 @@
 
 		$args = array(
 			'photo_id' => $photo['id'],
-			'woe_id' => $woeid,
+			'woe_id' => $new_woeid,
 			'auth_token' => $flickr_user['auth_token'],
 		);
 
@@ -99,7 +105,7 @@
 		}
 
 		$update = array(
-			'woeid' => $woeid,
+			'woeid' => $new_woeid,
 		);
 
 		$rsp = flickr_photos_update_photo($photo, $update);
@@ -107,6 +113,19 @@
 		if (! $rsp['ok']){
 			api_output_error(999, $rsp['error']);
 		}
+
+		# throw an error if this fails? feels like overkill...
+
+		$correction = array(
+			'photo_id' => $photo['id'],
+			'user_id' => $photo['user_id'],
+			'old_woeid' => $old_woeid,
+			'new_woeid' => $new_woeid,
+		);
+
+		flickr_photos_geo_corrections_create($correction);
+
+		#
 
 		$place = flickr_places_get_by_woeid($woeid);
 

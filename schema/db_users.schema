@@ -83,3 +83,17 @@ CREATE TABLE `FlickrPushPhotos` (
   `photo_data` TEXT,
   KEY `by_sub_id` (`subscription_id`, `created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrPhotosGeoCorrections`;
+
+CREATE TABLE `FlickrPhotosGeoCorrections` (
+  `photo_id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `created` INT(11) UNSIGNED NOT NULL,
+  `old_woeid` INT(11) UNSIGNED NOT NULL,
+  `new_woeid` INT(11) UNSIGNED NOT NULL,
+  UNIQUE KEY `by_photo` (`photo_id`, `created`),
+  KEY `by_time` (`created`),
+  KEY `by_user_old` (`user_id`, `old_woeid`),
+  KEY `by_user_new` (`user_id`, `new_woeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
