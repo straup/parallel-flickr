@@ -19,9 +19,10 @@
 	}
 	
 	function storage_s3_path_photo($photo, $more=array()) {
-		$ownername = $photo['ownername'];
-        $dir = join('/', str_split(substr(md5($photo['id']), 0, 8), 2));
-        $path = "{$ownername}/photos/$dir/";
+		$prefix = $photo['user_id'];
+		
+		$dir = join('/', str_split(substr(md5($photo['id']), 0, 8), 2));
+        $path = "{$prefix}/photos/$dir/";
         return $path;
 	}
 	
@@ -34,12 +35,13 @@
 			$type = mime_type_identify($object_id);
 		}
 		
+	
 		$put = s3_put(storage_s3_bucket(),
             array(
-				'id' => $id,
+				'id' => $object_id,
 				'acl' => 'public-read',
 				'content_type' => $type,
-				'data' => $rsp['body'],
+				'data' => $data,
 				'meta' => array(
 					'date-synced' => time(),
                 )
@@ -52,6 +54,7 @@
 		$rsp = s3_head(storage_s3_bucket(), $object_id);
 	
 		if ($rsp['ok']) {
+			log_debug('s3', "exists: $object_id");
 			return 1;
 		} else {
 			return 0;
