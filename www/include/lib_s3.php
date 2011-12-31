@@ -4,7 +4,7 @@
 
 	########################################################################
 
-	function s3_get_bucket_url(&$bucket){
+	function s3_get_bucket_url($bucket){
 
 		$url = "http://{$bucket['id']}.s3.amazonaws.com/";
 		return $url;
@@ -25,7 +25,7 @@
 	
 	
 	
-	function s3_put(&$bucket, $args){
+	function s3_put($bucket, $args){
 
 		$defaults = array(
 			'acl' => 'private',
@@ -101,7 +101,7 @@
 
 	# see also: https://doc.s3.amazonaws.com/proposals/post.html
 
-	function s3_signed_post_params(&$bucket, $args=array()){
+	function s3_signed_post_params($bucket, $args=array()){
 
 		$defaults = array(
 			'expires' => time() + 300,
@@ -175,7 +175,7 @@
 
 	########################################################################
 
-	function s3_verify_etag(&$bucket, $object_id, $etag){
+	function s3_verify_etag($bucket, $object_id, $etag){
 
 		$more = array(
 			'expires' => time() + 300,
@@ -215,7 +215,7 @@
 	
 	########################################################################
 		
-	function s3_unsigned_object_url(&$bucket, $object_id){
+	function s3_unsigned_object_url($bucket, $object_id){
 
 		$bucket_url = s3_get_bucket_url($bucket);
 		$object_id = s3_enurlify_object_id($object_id);
@@ -226,7 +226,7 @@
 
 	########################################################################
 
-	function s3_signed_object_url(&$bucket, $id, $more=array()){
+	function s3_signed_object_url($bucket, $id, $more=array()){
 
 		$defaults = array(
 			'method' => 'GET',
