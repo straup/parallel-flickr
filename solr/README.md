@@ -1,7 +1,7 @@
 parallel-flickr-solr
 ==
 
-Add search to parallel-flickr using Solr (3.4 or higher).
+Add search to parallel-flickr using Solr (3.4).
 
 **This works but needs better documentation** (read: you'll need to be familiar with Solr if you want to do anything in the meantime.)
 
