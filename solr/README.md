@@ -1,7 +1,7 @@
 parallel-flickr-solr
 ==
 
-Add search to parallel-flickr using Solr (3.4 or higher).
+Add search to parallel-flickr using Solr (3.4).
 
 **This works but needs better documentation** (read: you'll need to be familiar with Solr if you want to do anything in the meantime.)
 
@@ -38,14 +38,19 @@ What's going on here?
   
 * The _solr.xml_ file looks like this:
 
-	<?xml version="1.0" encoding="UTF-8" ?>
+	&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
 
-	<solr persistent="false">
+	&lt;solr persistent="false"&gt;
+		&lt;cores adminPath="/admin/cores"&gt;
+			&lt;core name="parallel-flickr" instanceDir="${solr.solr.cores}/parallel-flickr" /&gt;
+		&lt;/cores&gt;
+	&lt;/solr&gt;
 
-		<cores adminPath="/admin/cores">
-			<core name="parallel-flickr" instanceDir="${solr.solr.cores}/parallel-flickr" />
-		</cores>
-	</solr>
+* If you look carefully you'll see there isn't a default _solr.xml_ file,
+  because it is explicitly prevented from being checked in to git for security
+  and privacy reasons. You will need to copy the
+  [solr.xml.example](https://github.com/straup/parallel-flickr/blob/master/solr/solr.xml.example)
+  file instead.
 
 * Then, _start.jar_ will look for a directory in
   ${solr.solr.cores}/parallel-flickr called "conf" which contains a bunch of
@@ -61,12 +66,25 @@ What's going on here?
 * In order to use Solr you'll need to enable it in your [config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example) with the following configs:
  
 	$GLOBALS['cfg']['enable_feature_solr'] = 1;
+
 	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:9999/solr/parallel-flickr/';
 
 * To index (or re-index) exsiting data that you've imported from Flickr you will need to run the [backfill_solr_index_photos.php](https://github.com/straup/parallel-flickr/blob/master/bin/backfill_solr_index_photos.php) script, like this:
 
 	$> php -q ./bin/backfill_solr_index_photos.php
- 
+
+* _start.jar_ will launch Solr as a "foreground" application. If you want to run
+  it as a proper "background" service take a look at the
+  [init.d/solr.sh](https://github.com/straup/parallel-flickr/blob/master/solr/init.d/solr.sh) file.
+
+Important
+--
+
+Solr doesn't have any kind of built-in authorization or authentication model so
+you should be careful not to run it on a port that is accessible to the public
+Internet. If you do and a bad person discovers it they will be able to freely
+read and write to your Solr database.
+
 To do:
 --
 
