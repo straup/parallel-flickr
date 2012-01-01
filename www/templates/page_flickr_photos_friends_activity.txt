@@ -35,7 +35,7 @@ check later or just leave this page open and new faves will appear in like magic
 {foreach from=$update_map item="ignore" key="type" name="types"}
 <li id="ffbp_update_types">
 {if $type==$update_type}
-<strong>{$type}</strong>
+<a class="active" href="{$cfg.abs_root_url}photos/friends/activity/"><strong>{$type|escape}</strong></a>
 {else}
 <a href="{$cfg.abs_root_url}photos/friends/activity/{$type|escape}/">{$type|escape}</a>
 {/if}

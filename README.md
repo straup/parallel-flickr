@@ -60,15 +60,11 @@ Here's my a once-a-day example, which works for a moderate level of activity:
 TO DO:
 --
 
-* write files to S3 (see also: [flamework-aws](https://github.com/straup/flamework-aws))
-
 * make sure video files are actually being fetched properly
-
-* API hooks (see also: [flamework-api](https://github.com/straup/flamework-api))
 
 * sets, galleries, groups
 
-* uploads (and then re-uploading to Flickr (see above inre: API hooks))
+* uploads (and then re-uploading to Flickr
 
 * dates and timezones... sad face (also something is currrently _very_
   squirrel-y with the way dates are being indexed in parallel-flickr-solr but I
