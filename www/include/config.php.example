@@ -104,7 +104,7 @@
 	# https://github.com/straup/parallel-flickr/tree/master/solr/
 
 	$GLOBALS['cfg']['enable_feature_solr'] = 0;
-	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:8993/solr/parallel-flickr/';
+	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:9999/solr/parallel-flickr/';
 
 	# Hey look! Things that require Solr.
 
