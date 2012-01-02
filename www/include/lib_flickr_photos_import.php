@@ -159,7 +159,7 @@
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
 		
-		if ($GLOBALS['cfg']['feature_enable_storage_s3']) {
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
 			return flickr_photos_import_photo_files_s3($photo, $more);
 		}
 

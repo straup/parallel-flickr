@@ -13,7 +13,7 @@
 
 	function flickr_urls_photo_static(&$photo){
 
-		if ($GLOBALS['cfg']['feature_enable_storage_s3']) {
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
 			loadlib('storage_s3');
 			return storage_s3_url_photo($photo);
 		}
@@ -37,7 +37,7 @@
 
 	function flickr_urls_photo_original(&$photo){
 		
-		if ($GLOBALS['cfg']['feature_enable_storage_s3']) {
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
 			loadlib('storage_s3');
 			return storage_s3_url_photo($photo, 'o');
 		}
