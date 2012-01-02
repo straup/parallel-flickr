@@ -1,0 +1,1 @@
+ALTER TABLE FlickrUsers ADD token_perms TINYINT(3) NOT NULL;

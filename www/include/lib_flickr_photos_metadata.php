@@ -4,6 +4,81 @@
 
 	#################################################################
 
+	function flickr_photos_metadata_path(&$photo){
+
+		$root = $GLOBALS['cfg']['flickr_static_path'];
+		$path = flickr_photos_id_to_path($photo['id']) . "/";
+		$fname = "{$photo['id']}_{$photo['originalsecret']}_i.json";
+
+		$meta = $root . $path . $fname;
+		return $meta;
+	}
+
+	#################################################################
+
+	# This isn't called anywhere (yet). See notes inre updates and Solr
+	# in (lib) flickr_photos_update (20111230/straup)
+
+	function flickr_photos_metadata_refresh(&$photo){
+
+		$rsp = flickr_photos_metadata_fetch($photo);
+
+		if ($rsp['ok']){
+
+			$meta = flickr_photos_metadata_path($photo);
+
+			# don't look now but we're calling private functions
+	 		# loadlib("flickr_photos_import");
+			# _flickr_photos_import_store($meta, $rsp['data']);
+
+			$cache_key = "photos_meta_{$photo['id']}";
+			cache_unset($cache_key);
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	# See notes inre updates and Solr in (lib) flickr_photos_update
+	# (20111230/straup)
+
+	function flickr_photos_metadata_fetch(&$photo, $inflate=0){
+
+		loadlib("flickr_api");
+		loadlib("flickr_users");
+
+		$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
+
+		$method = 'flickr.photos.getInfo';
+
+		$args = array(
+			'photo_id' => $photo['id'],
+			'auth_token' => $flickr_user['auth_token'],
+		);
+
+		$more = array();
+
+		if (! $inflate){
+			$more['raw'] = 1;
+		}
+
+		$rsp = flickr_api_call($method, $args, $more);
+
+		if ($rsp['ok']){
+
+			$data = ($inflate) ? $rsp['rsp'] : $rsp['body'];
+
+			$rsp = okay(array(
+				'data' => $data,
+			));
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	function flickr_photos_metadata_load(&$photo){
 
 		$cache_key = "photos_meta_{$photo['id']}";
@@ -13,11 +88,7 @@
 			return $cache['data'];
 		}
 
-		$root = $GLOBALS['cfg']['flickr_static_path'];
-		$path = flickr_photos_id_to_path($photo['id']) . "/";
-		$fname = "{$photo['id']}_{$photo['originalsecret']}_i.json";
-
-		$meta = $root . $path . $fname;
+		$meta = flickr_photos_metadata_path($photo);
 
 		if (! file_exists($meta)){
 			return array('ok' => 0, 'error' => 'missing meta file');

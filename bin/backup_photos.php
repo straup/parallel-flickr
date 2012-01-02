@@ -9,6 +9,8 @@
 
 	include("include/init.php");
 	loadlib("flickr_backups");
+	
+#	log_add_handler('debug', 'error_log');
 
 	if (! $GLOBALS['cfg']['enable_feature_backups']){
 		echo "backups are currently disabled\n";

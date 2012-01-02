@@ -37,12 +37,13 @@ CREATE TABLE `FlickrUsers` (
   `auth_token` char(34) NOT NULL,
   `oauth_token` char(34) NOT NULL,
   `oauth_secret` char(34) NOT NULL,
+  `token_perms` TINYINT(3) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `by_nsid` (`nsid`),
   KEY `by_path_alias` (`path_alias`)
 )  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `FlickrUsersPathAliases`
+DROP TABLE IF EXISTS `FlickrUsersPathAliases`;
 
 CREATE TABLE `FlickrUsersPathAliases` (
   `user_id` INT(11) UNSIGNED NOT NULL,

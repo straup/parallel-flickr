@@ -1,0 +1,43 @@
+#geo_context {
+    font-style:italic;
+}
+
+#photo_geo_context_update {
+    font-size:small;
+}
+
+input,select{
+    border: solid thin;
+}
+
+#photo_geo_status {
+    font-size:1.3em;
+    font-weight: 700;
+}
+
+#photo_geo_close {
+    text-align:right;
+    font-size:small;
+}
+
+#photo_geo_perms_warning p {
+    font-size: small;
+}
+
+#photo_geo_perms_warning .button {
+    border: solid thin;
+    padding: 8px;
+    background-color:#ddd;
+    font-weight:700;
+    text-decoration:none;
+    color:#000;
+}
+
+#photo_geo_corrections {
+	font-size: small;
+}
+
+#photo_geo_corrections q {
+    font-weight: 700;
+}
+

@@ -6,33 +6,58 @@
 	loadlib("flickr_users");
 	loadlib("random");
 
-	# Some basic sanity checking like are you already logged in?
+	$extra = get_str("extra");
 
-	if ($GLOBALS['cfg']['user']['id']){
-		header("location: {$GLOBALS['cfg']['abs_root_url']}");
-		exit();
+	if ($extra){
+		$_extra = urldecode($extra);
+		parse_str($_extra, $extra);
 	}
 
+	$has_crumb = ((is_array($extra)) && (isset($extra['crumb']))) ? 1 : 0;
 
-	if (! $GLOBALS['cfg']['enable_feature_signin']){
-		$GLOBALS['smarty']->display("page_signin_disabled.txt");
-		exit();
+	if (($GLOBALS['cfg']['user']['id']) && ($has_crumb)){
+
+		$crumb = crypto_decrypt($extra['crumb'], $GLOBALS['cfg']['flickr_api_secret']);
+		list($user_id, $timestamp) = explode(":", $crumb, 2);
+
+		$ok = 1;
+
+		if ($user_id != $GLOBALS['cfg']['user']['id']){
+			$ok = 0;
+		}
+
+		if ((time() - $timestamp) > 120){
+			$ok = 0;
+		}
+
+		if (! $ok){
+			header("location: {$GLOBALS['cfg']['abs_root_url']}");
+			exit();		
+		}
+	}
+
+	else {
+
+		if ($GLOBALS['cfg']['user']['id']){
+			header("location: {$GLOBALS['cfg']['abs_root_url']}");
+			exit();
+		}
+
+
+		if (! $GLOBALS['cfg']['enable_feature_signin']){
+			$GLOBALS['smarty']->display("page_signin_disabled.txt");
+			exit();
+		}
 	}
 
 	# Make sure that Flickr has sent back a frob
 
 	$frob = get_str("frob");
-	$extra = get_str("extra");
 
 	if (! $frob){
 		$GLOBALS['error']['missing_frob'] = 1;
 		$GLOBALS['smarty']->display("page_auth_callback_flickr_flickrauth.txt");
 		exit();
-	}
-
-	if ($extra){
-		$_extra = urldecode($extra);
-		parse_str($_extra, $extra);
 	}
 
 	# Now we exchange the frob for an access token that
@@ -54,11 +79,16 @@
 		exit();
 	}
 
+	$perms_map = flickr_api_authtoken_perms_map('string keys');
+
 	# Hey look! If we've gotten this far then that means we've been able
 	# to use the Flickr API to validate the user and we've got an auth_token
 	# we can use to call the Flickr API with on the user's behalf.
 
 	$auth = $rsp['rsp']['auth'];
+
+	$str_perms = $auth['perms']['_content'];
+	$perms = $perms_map[$str_perms];
 
 	$nsid = $auth['user']['nsid'];
 	$username = $auth['user']['username'];
@@ -72,11 +102,25 @@
 	if ($user_id = $flickr_user['user_id']){
 
 		$user = users_get_by_id($user_id);
+		$change = 0;
 
-		if ((! $flickr_user['auth_token']) || ($flickr_user['auth_token'] != $token)){
+		if (! $flickr_user['auth_token']){
+			$change = 1;
+		}
+
+		if ((! $change) && ($flickr_user['auth_token'] != $token)){
+			$change = 1;
+		}
+
+		if ((! $change) && ($flickr_user['token_perms'] != $perms)){
+			$change = 1;
+		}
+
+		if ($change){
 
 			$update = array(
 				'auth_token' => $token,
+				'token_perms' => $perms,
 			);
 
 			$rsp = flickr_users_update_user($flickr_user, $update);
@@ -135,6 +179,7 @@
 			'nsid' => $nsid,
 			'path_alias' => $path_alias,
 			'auth_token' => $token,
+			'token_perms' => $perms,
 		));
 
 		if (! $flickr_user){

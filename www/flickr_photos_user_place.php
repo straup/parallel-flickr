@@ -4,6 +4,7 @@
 
 	loadlib("flickr_places");
 	loadlib("flickr_photos_places");
+	loadlib("flickr_photos_geo");
 
 	if ((! $GLOBALS['cfg']['enable_feature_solr']) || (! $GLOBALS['cfg']['enable_feature_places'])){
 		error_disabled();
@@ -68,6 +69,32 @@
 		$more['page'] = $page;
 	}
 
+	if ($context = get_str("context")){
+
+		$str_map = flickr_photos_geo_context_map("string keys");
+
+		if (isset($str_map[$context])){
+
+			$geo_context = $str_map[$context];
+			$more['geocontext'] = $geo_context;
+
+			$GLOBALS['smarty']->assign("context", $context);
+			$GLOBALS['smarty']->assign("geo_context", $geo_context);
+		}
+	}
+
+	else {
+
+		$rsp = flickr_photos_places_contexts_for_user_and_place($owner, $place, $more);
+
+		if ($rsp['ok']){
+			$GLOBALS['smarty']->assign("geo_contexts", $rsp['contexts']);
+
+			$ctx_map = flickr_photos_geo_context_map();
+			$GLOBALS['smarty']->assign_by_ref("geo_contexts_map", $ctx_map);
+		}
+	}
+
 	$rsp = flickr_photos_places_for_user($owner, $place, $more);
 
 	if (! $rsp['ok']){
@@ -75,7 +102,7 @@
 	}
 
 	else {
-		$pagination_url = flickr_urls_photos_user_place($owner, $place);
+		$pagination_url = flickr_urls_photos_user_place($owner, $place, $geo_context);
 		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
 		$GLOBALS['smarty']->assign("pagination_url", $pagination_url);
 	}

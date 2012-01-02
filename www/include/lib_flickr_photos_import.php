@@ -32,6 +32,7 @@
 			'auth_token' => $flickr_user['auth_token'],
 			'extras' => 'original_format,tags,media,date_upload,date_taken,geo',
 			'per_page' => 100,
+			'sort' => 'date-posted-desc',
 			'page' => 1,
 		);
 
@@ -157,6 +158,10 @@
 	#################################################################
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
+		
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
+			return flickr_photos_import_photo_files_s3($photo, $more);
+		}
 
 		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
 
@@ -288,6 +293,95 @@
 
 		if ($count = count($req)){
 			_flickr_photos_import_fetch_multi($req);
+		}
+
+	}
+	
+	#################################################################
+	
+	
+	function flickr_photos_import_photo_files_s3(&$photo, $more=array()){
+		loadlib('storage_s3');
+		
+		$flickr_urls = _flickr_photos_import_flickr_urls($photo, $more);
+		
+		$orig  = storage_s3_path_photo($photo, 'o', $more);
+		$small = storage_s3_path_photo($photo, 'z', $more);
+
+		$req = array();
+		$meta = array();
+		
+		if (($more['force']) || ( ! storage_s3_file_exists($small))) {
+			$req[] = $flickr_urls['small'];
+		}
+
+		if (($more['force']) || ( ! storage_s3_file_exists($orig))) {
+			log_debug('flickr', "flickr orig: " . $flickr_urls['orig']);
+			$req[] = $flickr_urls['orig'];
+		} 
+
+		$info = str_replace("_o.{$photo['originalformat']}", "_i.json", $orig);
+		$comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $orig);
+
+		if (! isset($more['skip_meta'])) {
+			$meta = _flickr_photos_import_flickr_meta_urls($photo, $more); 
+			
+			foreach($meta as $k => $v) {
+				$req[] = $v;
+			}
+		}
+		
+		# now go!
+
+		# fetch all the bits using http_multi()
+		
+		log_debug('import', "multi-fetch count: " . count($req));
+		
+		if ($count = count($req)){
+			
+			list($multi, $failed) = _flickr_photos_import_do_fetch_multi($req);
+		}
+		
+		log_debug('import', "fetch success count: " . count($multi));
+		
+		foreach ($multi as $rsp) {
+			log_debug('import', "ok: " . $rsp['url']);
+		}
+		foreach ($failed as $rsp) {
+			log_debug('import', "failed: " . $rsp['url']);
+		}
+		
+
+		loadlib('mime_type');
+
+		$sent = array();
+
+		foreach ($multi as $rsp) {
+			$id = '';
+			
+			if ($rsp['url'] == $flickr_urls['orig']) {
+				$id = $orig;
+			} elseif ($rsp['url'] == $flickr_urls['small']) {
+				$id = $small;
+	        } elseif ($rsp['url'] == $meta['info']) {
+				$id = $info;
+				$more['type'] = 'application/json';
+			} elseif ($rsp['url'] == $meta['comments']) {
+				$id = $comments;
+				$more['type'] = 'application/json';
+			}
+			
+			if ($id) {
+				$sent[] = storage_s3_file_store($id, $rsp['body'], $more);
+			}
+		}
+		
+		foreach ($sent as $rsp) {
+			if ($rsp['ok']) {
+				log_debug('s3', 'ok put ' . $rsp['url']);
+			} else {
+				log_debug('s3', 'failed put ' . $rsp['url']);
+			}
 		}
 
 	}
@@ -574,6 +668,26 @@
 			unset($photo['geo_is_friend']);
 			unset($photo['geo_is_contact']);
 			unset($photo['geo_is_public']);
+
+			# get geo context here, this is very annoying
+			# because I forgot to include geo context when
+			# returning geo 'extras' in photos.search...me
+			# dumb (20111227/straup)
+
+			$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
+
+			$method = 'flickr.photos.getInfo';
+
+			$args = array(
+				'photo_id' => $photo['id'],
+				'auth_token' => $flickr_user['auth_token'],
+			);
+
+			$rsp = flickr_api_call($method, $args);
+
+			if ($rsp['ok']){
+				$photo['geocontext'] = $rsp['rsp']['photo']['location']['context'];
+			}
 		}
 
 		if (isset($photo['date_faved'])){
@@ -584,4 +698,128 @@
 	}
 
 	#################################################################
-?>
+	
+	function _flickr_photos_import_flickr_urls($photo, $more=array()) {
+		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
+
+		$small = "{$root}_{$photo['secret']}_z.jpg";
+
+		$ext = ($photo["originalsecret"]) ? $photo["originalformat"] : "jpg";
+
+		if ($photo['originalsecret']){
+
+			# This is probably really only necessary for
+			# Cal's account (20111208/straup)
+
+			$orig = ($ext) ? "{$root}_{$photo['originalsecret']}_o.{$ext}" : null;
+		}
+
+		else {
+			$orig = "{$root}_{$photo['secret']}_b.{$ext}";
+		}
+
+		if ($photo['media'] == 1) {
+
+			# http://www.flickr.com/photos/straup/2378794972/play/site/3bfc8d2bb9/
+			# http://www.flickr.com/photos/straup/2378794972/play/orig/5771b28b4b/
+
+			$video = ($photo['originalsecret']) ? "orig/{$photo['originalsecret']}" : "site/{$photo['secret']}";
+			$orig = "http://www.flickr.com/photos/{$nsid}/{$photo['id']}/play/{$video}";
+		}
+	
+		return array('small' => $small, 'orig' => $orig, 'is_video' => $video);
+	}
+	
+	
+	function _flickr_photos_import_flickr_meta_urls($photo, $more=array()) {
+
+		$req = array();
+
+		# basic photo info
+
+		if ($more['auth_token']) {
+			$auth_token = $more['auth_token'];
+		} else {
+			$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
+			$auth_token = $flickr_user['auth_token'];
+		}
+		
+		$method = 'flickr.photos.getInfo';
+
+		$args = array(
+			'auth_token' => $auth_token,
+			'photo_id' => $photo['id'],
+		);
+
+		list($url, $args) = flickr_api_call_build($method, $args);
+		$api_call = $url . "?". http_build_query($args);
+
+		$req['info'] = $api_call;
+
+		# fetch comments, which is to say check to see if there
+		# are any new photos worth storing
+
+		$fetch_comments = 1;
+
+		if ($more['min_date']){
+
+			$method = 'flickr.photos.comments.getList';
+
+			$args = array(
+				'photo_id' => $photo['id'],
+				'min_comment_date' => $more['min_date'],
+			);
+
+			$rsp = flickr_api_call($method, $args);
+
+			if (($rsp['ok']) && (! isset($rsp['rsp']['comments']['comment']))){
+				$fetch_comments = 0;
+			}
+		}
+
+		if ($fetch_comments){
+
+			$method = 'flickr.photos.comments.getList';
+
+			$args = array(
+				'photo_id' => $photo['id'],
+			);
+
+			list($url, $args) = flickr_api_call_build($method, $args);
+			$api_call = $url . "?". http_build_query($args);
+
+			$req['comments'] = $api_call;
+		}
+
+		return $req;
+	}
+	
+	function _flickr_photos_import_do_fetch_multi($reqs, $retries=3) {
+		
+		$multi = array();
+		$failed = array();
+
+		$success = array();
+
+		foreach ($reqs as $uri){
+			$multi[] = array('url' => $uri);
+		}
+
+		$multi_rsp = http_multi($multi);
+
+		foreach ($multi_rsp as $rsp) {
+			if ($rsp['ok']) {
+				$success[] = $rsp;
+			} else {
+				$failed[] = $rsp;
+			}
+		}
+
+		if (count($failed) and $retries > 0) {
+			$retries -= 1;
+			list ($success2, $failed) = _flickr_photos_import_do_fetch_multi($failed, $retries);
+			$success = array_merge($success, $success2);
+		}
+
+		return array($success, $failed);
+	}

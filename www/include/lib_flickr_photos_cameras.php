@@ -13,7 +13,7 @@
 		$more = array_merge($defaults, $more);
 
 		$query = array(
-			'photo_owner' => $user['id'],
+			'user_id' => $user['id'],
 			'camera_make' => $make,
 		);
 
@@ -35,7 +35,7 @@
 		$more = array_merge($defaults, $more);
 
 		$query = array(
-			'photo_owner' => $user['id']
+			'user_id' => $user['id']
 		);
 
 		if (isset($more['make'])){

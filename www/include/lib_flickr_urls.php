@@ -13,6 +13,13 @@
 
 	function flickr_urls_photo_static(&$photo){
 
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
+			loadlib('storage_s3');
+			return storage_s3_url_photo($photo);
+		}
+		
+		# else 
+		
 		$secret = $photo['secret'];
 		$sz = "z";
 		$ext = "jpg";
@@ -22,12 +29,19 @@
 		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
 
 		return $root . $path . "/" . $fname;
+		
+		
 	}
 
 	#################################################################
 
 	function flickr_urls_photo_original(&$photo){
-
+		
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
+			loadlib('storage_s3');
+			return storage_s3_url_photo($photo, 'o');
+		}
+		
 		$secret = $photo['originalsecret'];
 		$sz = "o";
 		$ext = $photo['originalformat'];
@@ -84,15 +98,25 @@
 	function flickr_urls_photos_user_places(&$user){
 
 		$user_url = flickr_urls_photos_user($user);
-		return "{$user_url}places/";
+		$url = "{$user_url}places/";
+
+		return $url;
 	}
 
 	#################################################################
 
-	function flickr_urls_photos_user_place(&$user, &$place){
+	function flickr_urls_photos_user_place(&$user, &$place, $geo_context=0){
 
 		$places = flickr_urls_photos_user_places($user);
-		return "{$places}{$place['woeid']}/";	
+		$url = "{$places}{$place['woeid']}/";	
+
+		if ($geo_context){
+			loadlib("flickr_photos_geo");
+			$map = flickr_photos_geo_context_map();
+			$url .= "{$map[$geo_context]}/";
+		}
+
+		return $url;
 	}
 
 	#################################################################

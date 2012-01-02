@@ -2,13 +2,18 @@
 
 	#################################################################
 
-	function api_output_ok($rsp, $more=array()){
+	function api_output_ok($rsp=array(), $more=array()){
+
+		$rsp['stat'] = 'ok';
+
 		api_output_send($rsp, $more);
 	}
 
 	#################################################################
 
 	function api_output_error($code=999, $msg='', $more=array()){
+
+		$rsp['stat'] = 'error';
 
 		$out = array('error' => array(
 			'code' => $code,

@@ -209,6 +209,10 @@
 
 	#################################################################
 
+	# TO DO: solr_update (this is more complicated than it seems...)
+
+	#################################################################
+
 	function solr_delete(){
 
 		# please write me

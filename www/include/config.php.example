@@ -66,11 +66,13 @@
 	# Things you need to tweak
 	#
 
+	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/generate_secret.php
+
 	$GLOBALS['cfg']['db_main'] = array(
 		'host'	=> 'localhost',
-		'name'	=> 'flamework',
+		'name'	=> 'flickr',
 		'user'	=> 'flickr',
-		'pass'	=> 'TWEAK ME',	# see also: bin/generate_secret.php
+		'pass'	=> 'TWEAK ME',
 		'auto_connect' => 1,
 	);
 
@@ -80,27 +82,43 @@
 	$GLOBALS['cfg']['flickr_api_secret'] = 'TWEAK ME';
 	$GLOBALS['cfg']['flickr_api_perms'] = 'read';
 
-	# see also: bin/generate_secret.php
+	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/generate_secret.php
 
 	$GLOBALS['cfg']['crypto_cookie_secret'] = 'TWEAK ME';
 	$GLOBALS['cfg']['crypto_password_secret'] = 'TWEAK ME';
 	$GLOBALS['cfg']['crypto_crumb_secret'] = 'TWEAK ME';
 
-	# this needs to match the path in you apache config
+	# By default, parallel-flickr stores files on the local file system. It is possible
+	# to store your photos (and metadata) using Amazon's S3 service but you'll need to
+	# enable/configure it below.
+
+	# The 'flickr_static_url/path' flags needs to match the Alias directive
+	# in your Apache config. See also:
+	# https://github.com/straup/parallel-flickr/blob/master/apache/parallel-flickr.conf.example
 
 	$GLOBALS['cfg']['flickr_static_path'] = "TWEAK ME";
 	$GLOBALS['cfg']['flickr_static_url'] = $GLOBALS['cfg']['abs_root_url'] . "static/";
+
+	# If you want to store your photos (and metadata) using Amazon's S3
+	# service you'll need to enable this feature flag and fill in the
+	# 'amazon_s3_*' flags below.
+		
+	$GLOBALS['cfg']['enable_feature_storage_s3'] = 0;
+
+	$GLOBALS['cfg']['amazon_s3_access_key'] = 'TWEAK ME';
+	$GLOBALS['cfg']['amazon_s3_secret_key'] = 'TWEAK ME';
+	$GLOBALS['cfg']['amazon_s3_bucket_name'] = 'TWEAK ME';
 
 	#
 	# Things you may want to tweak
 	#
 
-	# Solr
+	# Solr - used for search and fancy features like places and cameras
+	# https://github.com/straup/parallel-flickr/tree/master/solr/
 	# https://lucene.apache.org/solr/#intro
-	# https://github.com/straup/parallel-flickr-solr
 
 	$GLOBALS['cfg']['enable_feature_solr'] = 0;
-	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:8993/solr/parallel-flickr/';
+	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:9999/solr/parallel-flickr/';
 
 	# Hey look! Things that require Solr.
 

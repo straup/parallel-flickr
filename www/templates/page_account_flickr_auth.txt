@@ -1,0 +1,33 @@
+{include file="inc_head.txt"}
+
+{if $error}
+<p class="error">
+{if $error=='invalid_perm'}
+That is not a valid Flickr API permissions type.
+{else}
+Invisible error car hisses at you.
+{/if}
+</p>
+{else}
+
+<p>Are you sure you want to allow <strong>{$cfg.site_name|escape}</strong> to change the
+permissions on your Flickr API token from <q><strong>{$old_perms|escape}</strong></q> to
+<q><strong>{$new_perms|escape}</strong></q>.</p>
+
+<p>
+{if $more_permissive}
+This is a <strong>more permissive</strong> set of permissions than you currently allow.
+{else}
+This is a <em>less permissive</em> set of permissions than you currently allow.
+{/if}
+</p>
+
+<form method="POST">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="confirm" value="1" />
+	<input type="submit" value="YES" />
+</form>
+
+{/if}
+
+{include file="inc_foot.txt"}
