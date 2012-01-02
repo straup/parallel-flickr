@@ -57,9 +57,69 @@ function photo_geo_edit_meta(photo_id){
 
 	$.modal(html);
 
-	$("#photo_geo_corrections_fetch").click(function(){
+	$("#photo_geo_corrections_fetch").click(photo_geo_corrections_fetch);
+
+	$("#photo_geo_update_context").submit(function(){
+
+		var new_ctx = $("#new_geocontext");
+		new_ctx = new_ctx.val();
+
+		if (new_ctx == old_ctx){
+			alert("Hey! There's nothing to update!");
+			return;
+		}
+
+		var args = {
+			'method': 'flickr.photos.geo.setContext',
+			'photo_id': photo_id,
+			'context': new_ctx
+		};
 
 		var _onsuccess = function(rsp){
+
+			if (rsp['stat'] != 'ok'){
+				$("#photo_geo_status").html("Ack! There was a problem calling the Flickr API.");
+				return;
+			}
+
+			$("#edit_geo").attr("geo:context", rsp['context']);
+
+			var str_ctx = ctx_map[rsp['context']];
+
+			var taken = '';
+
+			if (rsp['context'] != 0){
+
+				var woeid = $("#edit_geo").attr("geo:woeid");
+				var url = places_url + woeid + '/' + str_ctx + '/';
+
+				taken = 'It was taken <a href="' + url + '">' + str_ctx + '</a>';
+			}
+
+			$("#geo_context").html(taken);
+
+			var msg = '<p>Success! The geo context for this photo has been updated and is now <strong>' + str_ctx + '</strong>.</p>';
+			$("#photo_geo_status").html(msg);
+		};
+
+		$.ajax({
+			'url': '/api/',
+			'type': 'POST',
+			'data': args,
+			'success': _onsuccess
+		});
+
+		$("#photo_geo_update_context").hide();
+		$("#photo_geo_status").html("Poking the Flickr API...");
+
+		return false;
+	});
+
+}
+
+function photo_geo_corrections_fetch(){
+
+	 	var _onsuccess = function(rsp){
 
 			$("#photo_geo_status").html("");
 
@@ -145,62 +205,5 @@ function photo_geo_edit_meta(photo_id){
 
 		$("#photo_geo_corrections_fetch").hide();
 		$("#photo_geo_status").html("Fetching alternate place names...");
-	});
-
-	$("#photo_geo_update_context").submit(function(){
-
-		var new_ctx = $("#new_geocontext");
-		new_ctx = new_ctx.val();
-
-		if (new_ctx == old_ctx){
-			alert("Hey! There's nothing to update!");
-			return;
-		}
-
-		var args = {
-			'method': 'flickr.photos.geo.setContext',
-			'photo_id': photo_id,
-			'context': new_ctx
-		};
-
-		var _onsuccess = function(rsp){
-
-			if (rsp['stat'] != 'ok'){
-				$("#photo_geo_status").html("Ack! There was a problem calling the Flickr API.");
-				return;
-			}
-
-			$("#edit_geo").attr("geo:context", rsp['context']);
-
-			var str_ctx = ctx_map[rsp['context']];
-
-			var taken = '';
-
-			if (rsp['context'] != 0){
-
-				var woeid = $("#edit_geo").attr("geo:woeid");
-				var url = places_url + woeid + '/' + str_ctx + '/';
-
-				taken = 'It was taken <a href="' + url + '">' + str_ctx + '</a>';
-			}
-
-			$("#geo_context").html(taken);
-
-			var msg = '<p>Success! The geo context for this photo has been updated and is now <strong>' + str_ctx + '</strong>.</p>';
-			$("#photo_geo_status").html(msg);
-		};
-
-		$.ajax({
-			'url': '/api/',
-			'type': 'POST',
-			'data': args,
-			'success': _onsuccess
-		});
-
-		$("#photo_geo_update_context").hide();
-		$("#photo_geo_status").html("Poking the Flickr API...");
-
-		return false;
-	});
 
 }
