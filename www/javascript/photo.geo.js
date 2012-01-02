@@ -114,7 +114,7 @@ function _photo_geo_context_update_onsubmit(){
 function _photo_geo_set_context_onsuccess(rsp){
 
 	if (rsp['stat'] != 'ok'){
-		$("#photo_geo_status").html("Ack! There was a problem calling the Flickr API.");
+		_photo_geo_flickr_error(rsp);
 		return;
 	}
 
@@ -149,7 +149,7 @@ function _photo_geo_set_context_onsuccess(rsp){
 
 function _photo_geo_corrections_fetch_onclick(){
 
-	// get placetype here...
+	// get placetype here based on zoom level...
 	placetype = 'neighbourhood';
 
 	$("#photo_geo_corrections_fetch").hide();
@@ -291,7 +291,7 @@ function _photo_geo_corrections_update_onsubmit(){
 		'success': _photo_geo_correct_location_onsuccess
 	});
 
-	$("#photo_geo_corrections_update").hide();
+	$("#photo_geo_corrections").hide();
 	$("#photo_geo_status").html("Poking the Flickr API...");
 
 	return false;
@@ -299,9 +299,37 @@ function _photo_geo_corrections_update_onsubmit(){
 
 function _photo_geo_correct_location_onsuccess(rsp){
 
-					$("#photo_geo_status").html(rsp['stat']);
-					console.log(rsp);
-					// update place name in display
-					// auto close window ?
+	if (rsp['stat'] != 'ok'){
+		_photo_geo_flickr_error(rsp);
+		return;
+	}
 
+	var new_woeid = rsp['woeid'];
+	var new_placename = rsp['place']['name'];
+
+	$("#edit_geo").attr("geo:woeid", rsp['woeid']);
+
+	// TO DO: check for config flags...
+
+	var placename = '<a href="">' + new_placename + '</a>';
+	$("#geo_placename").html(placename);
+
+	$("#photo_geo_status").html("Okay! The place name for your photo has been updated. It is now " + new_placename);
+
+	setTimeout(function(){
+
+		$("#photo_geo_status").html("");
+		$("#photo_geo_status").hide();
+
+		$("#photo_geo_corrections").html(_photo_geo_corrections_generate_html);
+		$("#photo_geo_corrections").show();
+
+		$("#photo_geo_corrections_update").submit(_photo_geo_corrections_update_onsubmit);
+
+	}, 2500);
+}
+
+function _photo_geo_flickr_error(rsp){
+	$("#photo_geo_status").html("Ack! There was a problem calling the Flickr API.");
+	return;
 }

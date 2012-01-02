@@ -58,7 +58,6 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 <ul>
 {if $is_own}<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a>.</li>{/if}
 {if $is_own and $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
-{* eventually this will let you edit all the geo bits *}
 {if $is_own and $photo.hasgeo}<li>Edit <a href="#" title="edit the geo data for this photo (keyboard shortcut: g)" id="edit_geo" geo:woeid="{$photo.woeid|escape}" geo:context="{$photo.geocontext|escape}">geo data</a>.</li>{/if}
 </ul>
 

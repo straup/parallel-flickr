@@ -127,11 +127,11 @@
 
 		#
 
-		$place = flickr_places_get_by_woeid($woeid);
+		$place = flickr_places_get_by_woeid($new_woeid);
 
 		$out = array(
 			'photo_id' => $photo_id,
-			'woeid' => $woeid,
+			'woeid' => $new_woeid,
 			'place' => $place,
 		);
 
