@@ -77,6 +77,7 @@ p.message {
     width: 670px;
     max-width: 670px;
     float:left;
+    margin-bottom:10%;
 }
 
 .photo_sidebar {
@@ -85,6 +86,7 @@ p.message {
     /* this can't be the correct way to do this... */
     margin-top: 3em;
     width:210px;
+    margin-bottom:10%;
 }
 
 .photo_navi {
