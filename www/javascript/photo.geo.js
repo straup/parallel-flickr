@@ -111,7 +111,8 @@ function _photo_geo_context_update_onsubmit(){
 	});
 
 	$("#photo_geo_context").hide();
-	$("#photo_geo_status").html("Poking the Flickr API...");
+
+	_photo_geo_status_show("Poking the Flickr API...");
 
 	return false;
 }
@@ -138,12 +139,11 @@ function _photo_geo_set_context_onsuccess(rsp){
 	$("#geo_context").html(taken);
 
 	var msg = '<p>Success! The geo context for this photo has been updated and is now <strong>' + str_ctx + '</strong>.</p>';
-	$("#photo_geo_status").html(msg);
+	_photo_geo_status_show(msg);
 
 	setTimeout(function(){
 
-		$("#photo_geo_status").html("");
-		$("#photo_geo_status").hide();
+		_photo_geo_status_hide();
 
 		$("#photo_geo_context").html(_photo_geo_context_generate_html);
 		$("#photo_geo_context").show();
@@ -177,12 +177,12 @@ function _photo_geo_corrections_for_placetype(placetype){
 		'success': _photo_geo_possible_corrections_onsuccess
 	});
 
-	$("#photo_geo_status").html("Fetching alternate place names...");
+	_photo_geo_status_show("Fetching alternate place names...");
 }
 
 function _photo_geo_possible_corrections_onsuccess(rsp){
 
-	$("#photo_geo_status").html("");
+	_photo_geo_status_hide();
 
 	if (rsp['stat'] != 'ok'){
 		$("#photo_geo_status").html("Ack!");
@@ -192,8 +192,6 @@ function _photo_geo_possible_corrections_onsuccess(rsp){
 	var current_woeid = $("#edit_geo").attr("geo:woeid");
 
 	var current_options = $("#new_woeid option");
-
-console.log(rsp);
 
 	if (current_options.length){
 
@@ -297,12 +295,14 @@ function _photo_geo_corrections_update_onsubmit(){
 	});
 
 	$("#photo_geo_corrections").hide();
-	$("#photo_geo_status").html("Poking the Flickr API...");
 
+	_photo_geo_status_show("Poking the Flickr API...");
 	return false;
 }
 
 function _photo_geo_correct_location_onsuccess(rsp){
+
+	_photo_geo_status_hide();
 
 	if (rsp['stat'] != 'ok'){
 		_photo_geo_flickr_error(rsp);
@@ -330,21 +330,30 @@ function _photo_geo_correct_location_onsuccess(rsp){
 	$("#geo_placename").html(placename);
 
 	$("#photo_geo_status").html("Okay! The place name for your photo has been updated. It is now " + new_placename);
+	$("#photo_geo_status").show();
 
 	setTimeout(function(){
 
-		$("#photo_geo_status").html("");
-		$("#photo_geo_status").hide();
+		_photo_geo_status_hide();
 
 		$("#photo_geo_corrections").html(_photo_geo_corrections_generate_html);
 		$("#photo_geo_corrections").show();
 
-		$("#photo_geo_corrections_update").submit(_photo_geo_corrections_update_onsubmit);
-
+		$("#photo_geo_corrections_fetch").click(_photo_geo_corrections_fetch_onclick);
 	}, 2500);
 }
 
 function _photo_geo_flickr_error(rsp){
-	$("#photo_geo_status").html("Ack! There was a problem calling the Flickr API.");
+	_photo_geo_status_show("Ack! There was a problem calling the Flickr API.");
 	return;
+}
+
+function _photo_geo_status_show(msg){
+	$("#photo_geo_status").html(msg);
+	$("#photo_geo_status").show();
+}
+
+function _photo_geo_status_hide(){
+	$("#photo_geo_status").html("");
+	$("#photo_geo_status").hide();
 }
