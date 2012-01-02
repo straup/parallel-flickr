@@ -114,81 +114,9 @@ function photo_geo_edit_meta(photo_id){
 
 		return false;
 	});
-
 }
 
 function photo_geo_corrections_fetch(){
-
-	 	var _onsuccess = function(rsp){
-
-			$("#photo_geo_status").html("");
-
-			if (rsp['stat'] != 'ok'){
-				$("#photo_geo_status").html("Ack!");
-				return;
-			}
-
-			var current_woeid = $("#edit_geo").attr("geo:woeid");
-
-			var html = '<form id="photo_geo_corrections_update">';
-
-			html += 'It was really taken in ';
-			html += '<select id="new_woeid">';
-			html += '<option />';
-
-			var count = rsp['places'].length;
-
-			for (var i=0; i < count; i++){
-				var pl = rsp['places'][i];
-
-				html += '<option value="' + pl['woeid'] + '"';
-
-				if (pl['woeid'] == current_woeid){
-					html += ' disabled="true"';
-				}
-
-				html += '>' + pl['name'] + '</option>';		
-			}
-
-			html += '</select>';
-			html += '&#160;&#160;';
-			html += '<input type="submit" value="UPDATE" />';
-			html += '</form>';
-
-			$("#photo_geo_corrections").append(html);
-
-			$("#photo_geo_corrections_update").submit(function(){
-
-				var new_woeid = $("#new_woeid");
-				new_woeid = new_woeid.val();
-
-				var _onsuccess = function(rsp){
-					$("#photo_geo_status").html(rsp['stat']);
-					console.log(rsp);
-					// update place name in display
-					// auto close window ?
-				};
-
-				var args = {
-					'method': 'flickr.photos.geo.correctLocation',
-					'photo_id': photo_id,
-					'woeid': new_woeid
-				};
-
-				$.ajax({
-					'url' : '/api/',
-					'type': 'POST',
-					'data': args,
-					'success': _onsuccess
-				});
-
-				$("#photo_geo_corrections_update").hide();
-				$("#photo_geo_status").html("Poking the Flickr API...");
-
-				return false;
-			});
-
-		};
 
 		var args = {
 			'method': 'flickr.photos.geo.possibleCorrections', 
@@ -200,10 +128,83 @@ function photo_geo_corrections_fetch(){
 			'url': '/api/',
 			'type': 'GET',
 			'data': args,
-			'success': _onsuccess
+			'success': _photo_geo_possible_corrections_onsuccess
 		});
 
 		$("#photo_geo_corrections_fetch").hide();
 		$("#photo_geo_status").html("Fetching alternate place names...");
+}
+
+function _photo_geo_possible_corrections_onsuccess(rsp){
+
+	$("#photo_geo_status").html("");
+
+	if (rsp['stat'] != 'ok'){
+		$("#photo_geo_status").html("Ack!");
+		return;
+	}
+
+	var current_woeid = $("#edit_geo").attr("geo:woeid");
+
+	var html = '<form id="photo_geo_corrections_update">';
+
+	html += 'It was really taken in ';
+	html += '<select id="new_woeid">';
+	html += '<option />';
+
+	var count = rsp['places'].length;
+
+	for (var i=0; i < count; i++){
+		var pl = rsp['places'][i];
+
+		html += '<option value="' + pl['woeid'] + '"';
+
+		if (pl['woeid'] == current_woeid){
+			html += ' disabled="true"';
+		}
+
+		html += '>' + pl['name'] + '</option>';		
+	}
+
+	html += '</select>';
+	html += '&#160;&#160;';
+	html += '<input type="submit" value="UPDATE" />';
+	html += '</form>';
+
+	$("#photo_geo_corrections").append(html);
+
+	$("#photo_geo_corrections_update").submit(_photo_geo_corrections_update_onsubmit);
+}
+
+function _photo_geo_corrections_update_onsubmit(){
+
+	var new_woeid = $("#new_woeid");
+	new_woeid = new_woeid.val();
+
+	var args = {
+		'method': 'flickr.photos.geo.correctLocation',
+		'photo_id': photo_id,
+		'woeid': new_woeid
+	};
+
+	$.ajax({
+		'url' : '/api/',
+		'type': 'POST',
+		'data': args,
+		'success': _photo_geo_correct_location_onsuccess
+	});
+
+	$("#photo_geo_corrections_update").hide();
+	$("#photo_geo_status").html("Poking the Flickr API...");
+
+	return false;
+}
+
+function _photo_geo_correct_location_onsuccess(rsp){
+
+					$("#photo_geo_status").html(rsp['stat']);
+					console.log(rsp);
+					// update place name in display
+					// auto close window ?
 
 }
