@@ -101,7 +101,7 @@
 
 	# Solr
 	# https://lucene.apache.org/solr/#intro
-	# https://github.com/straup/parallel-flickr-solr
+	# https://github.com/straup/parallel-flickr/tree/master/solr/
 
 	$GLOBALS['cfg']['enable_feature_solr'] = 0;
 	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:8993/solr/parallel-flickr/';
