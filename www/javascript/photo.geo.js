@@ -12,8 +12,13 @@ function photo_geo_edit_meta(photo_id){
 	var html = '<div id="modal_geo">';
 	html += '<div id="photo_geo_status"></div>';
 
+	html += '<div id="photo_geo_context">';
 	html += _photo_geo_context_generate_html();
+	html += '</div>';
+
+	html += '<div id="photo_geo_corrections">';
 	html += _photo_geo_corrections_generate_html();
+	html += '</div>';
 
 	html += '<div id="photo_geo_close"><a href="#" onclick="$.modal.close(); return false;">close</a></div>';
 	html += '</div>';
@@ -22,18 +27,20 @@ function photo_geo_edit_meta(photo_id){
 
 	$.modal(html);
 
+	// not thrilled with this...
+
+	$("#photo_geo_context_update").submit(_photo_geo_context_update_onsubmit);
 	$("#photo_geo_corrections_fetch").click(_photo_geo_corrections_fetch_onclick);
-	$("#photo_geo_update_context").submit(_photo_geo_context_update_onsubmit);
 }
 
 function _photo_geo_context_generate_html(){
 
 	var old_ctx = $("#edit_geo").attr("geo:context");
 
-	var html = '<div id="photo_geo_context">';
+	var html = '';
 	html += '<h3>Edit the geo context for this photo</h3>';
 
-	html += '<form id="photo_geo_update_context">';
+	html += '<form id="photo_geo_context_update">';
 	html += 'This photo was taken ';
 
 	html += '<select id="new_geocontext">';
@@ -53,7 +60,6 @@ function _photo_geo_context_generate_html(){
 	html += '<input type="submit" value="UPDATE" />';
 	html += '</form>';
 
-	html += '</div>';
 	return html;
 }
 
@@ -64,7 +70,6 @@ function _photo_geo_corrections_generate_html(){
 	// FIX ME: make me less brittle...
 	var old_placename = $("#geo_placename a").html();
 
-	html += '<div id="photo_geo_corrections">';
 	html += '<h3>Edit the place name for this photo</h3>';
 
 	html += '<p>Flickr thinks this photo was taken in <q>';
@@ -72,7 +77,6 @@ function _photo_geo_corrections_generate_html(){
 	html += '</q>. <a href="#" id="photo_geo_corrections_fetch">Fetch the list of alternate place names.</a>';
 	html += '</p>';
 
-	html += '</div>';
 	return html;
 }
 
@@ -101,7 +105,7 @@ function _photo_geo_context_update_onsubmit(){
 		'success': _photo_geo_set_context_onsuccess
 	});
 
-	$("#photo_geo_update_context").hide();
+	$("#photo_geo_context").hide();
 	$("#photo_geo_status").html("Poking the Flickr API...");
 
 	return false;
@@ -130,6 +134,17 @@ function _photo_geo_set_context_onsuccess(rsp){
 
 	var msg = '<p>Success! The geo context for this photo has been updated and is now <strong>' + str_ctx + '</strong>.</p>';
 	$("#photo_geo_status").html(msg);
+
+	setTimeout(function(){
+
+		$("#photo_geo_status").html("");
+		$("#photo_geo_status").hide();
+
+		$("#photo_geo_context").html(_photo_geo_context_generate_html);
+		$("#photo_geo_context").show();
+
+		$("#photo_geo_context_update").submit(_photo_geo_context_update_onsubmit);
+	}, 2500);
 }
 
 function _photo_geo_corrections_fetch_onclick(){
