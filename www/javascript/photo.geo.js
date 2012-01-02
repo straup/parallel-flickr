@@ -265,9 +265,11 @@ function _photo_geo_corrections_update_onsubmit(){
 		return false;
 	}
 
+	/* 
 	if (new_woeid == 0){
 		// remove all woe ids; do not remove lat,lon
 	}
+	*/
 
 	if (new_woeid == -1){
 		var opt = $("#new_woeid option:last-child");
