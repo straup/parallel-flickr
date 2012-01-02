@@ -21,6 +21,30 @@
 
 	#################################################################
 
+	function flickr_places_parent_placetype($type){
+
+		$valid = flickr_places_valid_placetypes();
+		$count = count($valid);
+
+		# This seems overly fussing but it also looks like a
+		# yak, right now...
+
+		if (! in_array($type, $valid)){
+			return null;
+		}
+
+		for ($i=0; $i < $count; $i++){
+
+			if ($valid[$i] == $type){
+				return $valid[$i + 1];
+			}
+		}
+
+		return null;
+	}
+
+	#################################################################
+
 	function flickr_places_is_valid_placetype($type){
 
 		$valid = flickr_places_valid_placetypes();

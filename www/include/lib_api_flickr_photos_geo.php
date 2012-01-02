@@ -187,7 +187,11 @@
 			}
 		}
 
+		$parent = flickr_places_parent_placetype($type);
+
 		$out = array(
+			'place_type' => $type,
+			'parent_place_type' => $parent,
 			'places' => $possible
 		);
 
