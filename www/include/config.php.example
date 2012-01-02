@@ -68,7 +68,7 @@
 
 	$GLOBALS['cfg']['db_main'] = array(
 		'host'	=> 'localhost',
-		'name'	=> 'flamework',
+		'name'	=> 'flickr',
 		'user'	=> 'flickr',
 		'pass'	=> 'TWEAK ME',	# see also: bin/generate_secret.php
 		'auto_connect' => 1,
