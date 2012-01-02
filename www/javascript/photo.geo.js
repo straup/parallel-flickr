@@ -65,10 +65,15 @@ function _photo_geo_context_generate_html(){
 
 function _photo_geo_corrections_generate_html(){
 
-	var html = '';
+	var selector = "#geo_placename";
 
-	// FIX ME: make me less brittle...
-	var old_placename = $("#geo_placename a").html();
+	if (places_is_enabled){
+		selector += " a";
+	}
+
+	var old_placename = $(selector).html();
+
+	var html = '';
 
 	html += '<h3>Edit the place name for this photo</h3>';
 
@@ -309,9 +314,19 @@ function _photo_geo_correct_location_onsuccess(rsp){
 
 	$("#edit_geo").attr("geo:woeid", rsp['woeid']);
 
-	// TO DO: check for config flags...
+	if (new_woeid == 0){
+		placename = 'a place with no name';
+	}
 
-	var placename = '<a href="">' + new_placename + '</a>';
+	else if (places_is_enabled){
+		var new_placeurl = places_url + new_woeid + '/';
+		placename = '<a href="' + new_placeurl + '">' + new_placename + '</a>';
+	}
+
+	else {
+		placename = new_placename;
+	}
+
 	$("#geo_placename").html(placename);
 
 	$("#photo_geo_status").html("Okay! The place name for your photo has been updated. It is now " + new_placename);

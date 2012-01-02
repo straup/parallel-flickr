@@ -178,6 +178,7 @@
 		exit();
 	}
 
+	loadlib('features');
 	loadlib('error');
 	loadlib('sanitize');
 	loadlib('db');
@@ -198,7 +199,6 @@
 	if ($this_is_webpage){
 		login_check_login();
 	}
-
 
 	#
 	# disable precaching

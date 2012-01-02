@@ -70,7 +70,13 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 
 var photo_id = '{$photo.id|escape}';
 var photo_url = '{$photo|@flickr_urls_photo_page}';
+
+{if 'solr'|@features_is_enabled and 'places'|@features_is_enabled}
+var places_is_enabled=1;
 var places_url = '{$owner|@flickr_urls_photos_user_places}';
+{else}
+var places_is_enabled=0;
+{/if}
 
 var next = {if $after|@count}'{$owner|@flickr_urls_photos_user}{$after.0.id|escape}'{else}null{/if};
 var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|escape}'{else}null{/if};
