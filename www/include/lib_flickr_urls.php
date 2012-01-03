@@ -121,10 +121,16 @@
 
 	#################################################################
 
-	function flickr_urls_photos_user_archives(&$user){
+	function flickr_urls_photos_user_archives(&$user, $context=null){
 
 		$user_url = flickr_urls_photos_user($user);
-		return "{$user_url}archives/";	
+		$url = "{$user_url}archives/";
+
+		if ($context){
+			$url .= "date-{$context}/";
+		}
+
+		return $url;
 	}
 
 	#################################################################

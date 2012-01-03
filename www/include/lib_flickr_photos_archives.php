@@ -68,10 +68,30 @@
 
 	function flickr_photos_archives_for_user_and_year(&$user, $year, $more=array()){
 
-		# TO DO: timezone nonsense...
-
 		$start = "{$year}-01-01 00:00:00";
 		$end = "{$year}-12-31 23:59:59";
+
+		return flickr_photos_archives_for_user_and_range($user, $start, $end, $more);
+	}
+
+	#################################################################
+
+	function flickr_photos_archives_for_user_and_month(&$user, $year, $month, $more=array()){
+
+		$last_dom = 31;	# TO DO: make this actually right...
+
+		$start = "{$year}-{$month}-01 00:00:00";
+		$end = "{$year}-{$month}-{$last_dom} 23:59:59";
+
+		return flickr_photos_archives_for_user_and_range($user, $start, $end, $more);
+	}
+
+	#################################################################
+
+	function flickr_photos_archives_for_user_and_day(&$user, $year, $month, $day, $more=array()){
+
+		$start = "{$year}-{$month}-{$day} 00:00:00";
+		$end = "{$year}-{$month}-{$day} 23:59:59";
 
 		return flickr_photos_archives_for_user_and_range($user, $start, $end, $more);
 	}
@@ -86,11 +106,12 @@
 
 		$more = array_merge($defaults, $more);
 
-		# TO DO: not hard-code this...
-		$date_col = 'datetaken';
+		$date_col = ($more['context'] == 'posted') ? 'dateupload' : 'datetaken';
 
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
+
+		# TO DO: timezone nonsense / sad face...
 
 		$enc_start = AddSlashes($start);
 		$enc_end = AddSlashes($end);
@@ -104,11 +125,13 @@
 			$sql .= " AND perms IN ({$str_perms})";
 		}
 
-		$sql .= " ORDER BY `{$date_col}` DESC";
+		$sql .= " ORDER BY `{$date_col}` ASC";
 
 		$rsp = db_fetch_paginated_users($cluster_id, $sql, $more);
 
 		$rsp['date_range'] = "{$start};{$end}";
+		$rsp['date_column'] = $date_col;
+
 		return $rsp;
 	}
 
