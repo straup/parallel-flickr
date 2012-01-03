@@ -10,17 +10,30 @@
 {if $new_subscription}
 
 {if $subscription_ok}
-
 <div style="margin-top:5%">
 <img src="{$cfg.abs_root_url}images/cat.gif" style="float:left; margin-right:30px; margin-bottom: 10px;" />
 
 <div style="margin-left:130px; line-height:1.3em;">
+
+{if $reset_subscription}
+
+<p style="font-style:italic;">Hey, that's weird. We haven't gotten any new
+photos from your contacts since {$last_update|date_format:"%B %d"|escape} which is not normal. We've
+gone ahead and requested a new <q>subscription</q> from Flickr.</p>
+
+<p>It will take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
+check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+{else}
+
 <p>Okay! In order to see your contacts photos we need to create a
 <q>subscription</q> for those photos with Flickr.</p>
 
 <p>That's been done but it will
 take a few minutes (about 5 to 10, but sometimes longer) before they are sent. You can come back and
 check later or just leave this page open and new faves will appear in like magic, in a short while.</p>
+
+{/if}
 
 {else}
 <p>Ack! Something when wrong trying to subscribe to your contacts photos.</p>

@@ -21,6 +21,23 @@
 	$topic_id = $topic_map["contacts_photos"];
 
 	$sub = flickr_push_subscriptions_get_by_user_and_topic($GLOBALS['cfg']['user'], $topic_id);
+
+	# not clear how/why this is necessary (20121202/straup)
+
+	if (($sub) && ($last_update = $sub['last_update'])){
+
+		if ((time() - $last_update) > 86400){
+
+			$rsp = flickr_push_subscriptions_delete($sub);
+
+			if ($rsp['ok']){
+				$GLOBALS['smarty']->assign("last_update", $last_update);
+				$GLOBALS['smarty']->assign("reset_subscription", 1);
+				$sub = null;
+			}
+		}
+	}
+
 	$GLOBALS['smarty']->assign_by_ref("subscription", $sub);
 
 	if (! $sub){
