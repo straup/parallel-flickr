@@ -1,6 +1,7 @@
 <?php
 
 	loadlib("flickr_photos_search");
+	loadlib("flickr_photos_permissions");
 
 	#################################################################
 
@@ -60,6 +61,54 @@
 			$rsp[$facet] = $trimmed;
 		}
 
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_photos_archives_for_user_and_year(&$user, $year, $more=array()){
+
+		# TO DO: timezone nonsense...
+
+		$start = "{$year}-01-01 00:00:00";
+		$end = "{$year}-12-31 23:59:59";
+
+		return flickr_photos_archives_for_user_and_range($user, $start, $end, $more);
+	}
+
+	#################################################################
+
+	function flickr_photos_archives_for_user_and_range(&$user, $start, $end, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
+
+		# TO DO: not hard-code this...
+		$date_col = 'datetaken';
+
+		$cluster_id = $user['cluster_id'];
+		$enc_user = AddSlashes($user['id']);
+
+		$enc_start = AddSlashes($start);
+		$enc_end = AddSlashes($end);
+
+		# TO DO: indexes probably...
+
+		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' AND `{$date_col}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
+
+		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
+			$str_perms = implode(",", $perms);
+			$sql .= " AND perms IN ({$str_perms})";
+		}
+
+		$sql .= " ORDER BY `{$date_col}` DESC";
+
+		$rsp = db_fetch_paginated_users($cluster_id, $sql, $more);
+
+		$rsp['date_range'] = "{$start};{$end}";
 		return $rsp;
 	}
 

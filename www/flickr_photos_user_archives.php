@@ -31,7 +31,7 @@
 	#
 
 	$more = array(
-		'viewer__id' => $GLOBALS['cfg']['user']['id'],
+		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
 
 	# how are we bucketing the dates?
