@@ -122,10 +122,6 @@ RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_\s\
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives(/(taken|posted))?/?$		/flickr_photos_user_archives.php?path=$2&nsid=$3&context=$5&%{QUERY_STRING} [L]
 
-# timecapsule
-# TO DO: finish
-# RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/timecapsule?/?$		/flickr_photos_user_time_capsule.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
-
 # photo pages
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/?$	/flickr_photo.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/exif/?$	/flickr_photo_exif.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
