@@ -1,13 +1,17 @@
 {capture assign="page_title"}{$owner.username} | archives | {$context} | {$year} | {$months.$month|strtolower}{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}your photos from {$months.$month|escape}, {$year|escape}{else}{$owner.username|escape}'s photos from {$months.$month|escape}, {$year|escape}{/if}</h2>
+<h2>{if $is_own}Your photos from {$months.$month|escape}, {$year|escape}{else}{$owner.username|escape}'s photos from {$months.$month|escape}, {$year|escape}{/if}</h2>
 
 <div id="archives_navi">
 
 <ul id="archives_navi_months">
 
-{if $previous_month}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$previous_month|escape}/">{$months.$previous_month|escape}</a></li>{/if}
+{if $previous_month}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$previous_month|escape}/">{$months.$previous_month|escape}, {$year|escape}</a></li>
+{elseif $previous}
+{assign var="previous_month" value=$previous.1}
+<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous.0|escape}/{$previous.1|escape}/">{$months.$previous_month|escape}, {$previous.0|escape}</a></li>
+{else}{/if}
 
 <ul>
 {foreach from=$days item="dow" key="dd"}
@@ -15,7 +19,12 @@
 {/foreach}
 </ul>
 
-{if $next_month}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$next_month|escape}/">{$months.$next_month|escape}</a></li>{/if}
+{if $next_month}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$next_month|escape}/">{$months.$next_month|escape}, {$year|escape}</a></li>
+{elseif $next}
+{assign var="next_month" value=$next.1}
+<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next.0|escape}/{$next.1|escape}/">{$months.$next_month|escape}, {$next.0|escape}</a></li>
+{else}{/if}
+
 
 </ul>
 

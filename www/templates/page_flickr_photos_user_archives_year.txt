@@ -1,7 +1,7 @@
 {capture assign="page_title"}{$owner.username} | archives | {$context} | {$year}{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}your photos from {$year|escape}{else}{$owner.username|escape}'s photos from {$year|escape}{/if}</h2>
+<h2>{if $is_own}Your photos from {$year|escape}{else}{$owner.username|escape}'s photos from {$year|escape}{/if}</h2>
 
 <div id="archives_navi">
 <ul id="archives_navi_years">

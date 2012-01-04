@@ -74,6 +74,26 @@
 
 		$GLOBALS['smarty']->assign("days", $days);
 		$GLOBALS['smarty']->assign("user_days", $user_days);
+
+		if (! $previous_month){
+
+			$ymd = implode("-", array($year, $month, 1));
+
+			if ($previous_ymd = flickr_photos_archives_previous_date_for_user($owner, $ymd, $more)){
+				$GLOBALS['smarty']->assign("previous", explode("-", $previous_ymd));
+			}
+		}
+
+		if (! $next_month){
+
+			$last_dom = dates_utils_last_dom($year, $month);
+			$ymd = implode("-", array($year, $month, $last_dom));
+
+			if ($next_ymd = flickr_photos_archives_next_date_for_user($owner, $ymd, $more)){
+				$GLOBALS['smarty']->assign("next", explode("-", $next_ymd));
+			}
+		}
+
 	}
 
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);

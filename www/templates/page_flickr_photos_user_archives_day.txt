@@ -1,15 +1,23 @@
 {capture assign="page_title"}{$owner.username} | archives | {$context} | {$year} | {$months.$month|strtolower} | {$day}{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}your photos from {$months.$month|escape} {$day|escape}, {$year|escape}{else}{$owner.username|escape}'s photos from {$months.$month|escape}, {$day|escape} {$year|escape}{/if}</h2>
+<h2>{if $is_own}Your photos from {$months.$month|escape} {$day|escape}, {$year|escape}{else}{$owner.username|escape}'s photos from {$months.$month|escape}, {$day|escape} {$year|escape}{/if}</h2>
 
 <div id="archives_navi">
 
 <ul id="archives_navi_months">
 
-{if $previous_day}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$month|escape}/{$previous_day|escape}/">{$months.$month|escape} {$previous_day|escape}</a></li>{/if}
+{if $previous_day}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$month|escape}/{$previous_day|escape}/">{$months.$month|escape} {$previous_day|escape}, {$year|escape}</a></li>
+{elseif $previous}
+{assign var="previous_month" value=$previous.1}
+<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous.0|escape}/{$previous.1|escape}/{$previous.2|escape}/">{$months.$previous_month|escape} {$previous.2|escape}, {$previous.0|escape}</a></li>
+{else}{/if}
 
-{if $next_day}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$month|escape}/{$next_day|escape}/">{$months.$month|escape} {$next_day|escape}</a></li>{/if}
+{if $next_day}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$month|escape}/{$next_day|escape}/">{$months.$month|escape} {$next_day|escape}, {$year|escape}</a></li>
+{elseif $next}
+{assign var="next_month" value=$next.1}
+<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next.0|escape}/{$next.1|escape}/{$next.2|escape}/">{$months.$next_month|escape} {$next.2|escape}, {$next.0|escape}</a></li>
+{else}{/if}
 
 </ul>
 

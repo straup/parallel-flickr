@@ -69,9 +69,22 @@
 
 		$GLOBALS['smarty']->assign("next_day", $next_day);
 		$GLOBALS['smarty']->assign("previous_day", $previous_day);
-	}
 
-	# dumper(flickr_photos_archives_bookends_for_user_and_date($owner, "{$year}-{$month}-{$day}"));
+		$ymd = implode("-", array($year, $month, $day));
+
+		if (! $previous_day){
+			if ($previous_ymd = flickr_photos_archives_previous_date_for_user($owner, $ymd, $more)){
+				$GLOBALS['smarty']->assign("previous", explode("-", $previous_ymd));
+			}
+		}
+
+		if (! $next_day){
+			if ($next_ymd = flickr_photos_archives_next_date_for_user($owner, $ymd, $more)){
+				$GLOBALS['smarty']->assign("next", explode("-", $next_ymd));
+			}
+		}
+
+	}
 
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 
