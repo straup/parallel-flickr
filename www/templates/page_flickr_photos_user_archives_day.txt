@@ -1,0 +1,29 @@
+{capture assign="page_title"}{$owner.username} | archives | {$context} | {$year}{/capture}
+{include file="inc_head.txt"}
+
+<h2>{if $is_own}your photos from {$year|escape}{else}{$owner.username|escape}'s photos from {$year|escape}{/if}</h2>
+
+{foreach from=$photos item="row"}
+
+<div class="photos_user_photo">
+
+<div class="photo">
+<a href="{$row|@flickr_urls_photo_page}"><img src="{$row|@flickr_urls_photo_static}" /></a>
+<div class="photo_when">{$row.datetaken|@flickr_dates_verbosify_iso8601}</div>
+</div>
+
+<div class="photo_sidebar" style="margin-top:0px;">
+{include file="inc_flickr_photo_map.txt" photo=$row}
+</div>
+
+<br clear="all" />
+
+</div>
+
+{/foreach}
+
+{include file="inc_pagination.txt"}
+
+{include file="inc_flickr_photo_map_load.txt"}
+
+{include file="inc_foot.txt"}

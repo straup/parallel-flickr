@@ -78,8 +78,10 @@
 
 	function flickr_photos_archives_for_user_and_month(&$user, $year, $month, $more=array()){
 
+		$month = sprintf("%02d", $month);
+
 		$ts = mktime(0, 0, 0, $month+1, 1, $year);
-		$last_dom = date("m", $ts -1);
+		$last_dom = sprintf("%02d", date("d", $ts -1));
 
 		$start = "{$year}-{$month}-01 00:00:00";
 		$end = "{$year}-{$month}-{$last_dom} 23:59:59";
@@ -90,6 +92,9 @@
 	#################################################################
 
 	function flickr_photos_archives_for_user_and_day(&$user, $year, $month, $day, $more=array()){
+
+		$month = sprintf("%02d", $month);
+		$day = sprintf("%02d", $day);
 
 		$start = "{$year}-{$month}-{$day} 00:00:00";
 		$end = "{$year}-{$month}-{$day} 23:59:59";
