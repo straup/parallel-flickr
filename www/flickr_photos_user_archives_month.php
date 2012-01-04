@@ -6,7 +6,7 @@
 	loadlib("flickr_photos_utils");
 
 	$year = get_int32("year");
-	$month = get_int32("month");
+	$month = get_str("month");	# preserve the leading 0, if present
 
 	if ((! $year) || (! $month)){
 		error_404();
@@ -63,7 +63,7 @@
 			}
 
 			$next_month = $user_months[$i+1];
-			$previous_year = $user_months[$i-1];
+			$previous_month = $user_months[$i-1];
 			break;
 		}
 
