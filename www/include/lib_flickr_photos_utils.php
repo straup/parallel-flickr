@@ -9,9 +9,9 @@
 		$count = count($photos);
 
 		for ($i=0; $i < $count; $i++){
-			$ph = $photos['rows'][$i];
+			$ph = $photos[$i];
 			$ph['can_view_geo'] = ($ph['hasgeo'] && flickr_geo_permissions_can_view_photo($ph, $viewer_id)) ? 1 : 0;
-			$photos['rows'][$i] = $ph;
+			$photos[$i] = $ph;
 		}
 
 		# Note the pass-by-ref
