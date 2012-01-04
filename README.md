@@ -64,25 +64,21 @@ TO DO:
 
 * sets, galleries, groups
 
+* people tagging (http://www.flickr.com/services/api/flickr.photos.people.getList.html)
+
 * uploads (and then re-uploading to Flickr
 
-* dates and timezones... sad face (also something is currrently _very_
-  squirrel-y with the way dates are being indexed in parallel-flickr-solr but I
-  haven't been able to figure out what/why yet (20111125))
+* dates and timezones... sad face
 
 * photo deletion
 
 * account deletion
 
-* cron jobs for backups
-
-* consider moving all the backup jobs (fetching data for individual photos) in to a proper queuing system - this should probably be a feature flag so that the whole thing can still be run in "stupid" mode and not spiral in to astronaut territory.
-
 * context-specific URLs (e.g. in-faves or in-WOEID)
 
 * display metadata
 
-* search, see also: [parallel-flickr-solr](https://github.com/straup/parallel-flickr-solr)
+* search
 
 * better layout, tested in more than just Firefox
 
