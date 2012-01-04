@@ -4,10 +4,9 @@
 
 	loadlib("flickr_users");
 	loadlib("flickr_photos");
+	loadlib("flickr_photos_utils");
 	loadlib("flickr_urls");
 	loadlib("flickr_dates");
-
-	loadlib("flickr_geo_permissions");
 
 	#
 
@@ -24,18 +23,13 @@
 		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
 
-	$photos = flickr_photos_for_user($owner, $more);
+	$rsp = flickr_photos_for_user($owner, $more);
+	$photos = $rsp['rows'];
 
-	$count = count($photos['rows']);
-
-	for ($i=0; $i < $count; $i++){
-		$ph = $photos['rows'][$i];
-		$ph['can_view_geo'] = ($ph['hasgeo'] && flickr_geo_permissions_can_view_photo($ph, $GLOBALS['cfg']['user']['id'])) ? 1 : 0;
-		$photos['rows'][$i] = $ph;
-	}
+	flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
 
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
-	$GLOBALS['smarty']->assign_by_ref("photos", $photos['rows']);
+	$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 
 	$pagination_url = flickr_urls_photos_user($owner);
 	$GLOBALS['smarty']->assign("pagination_url", $pagination_url);
