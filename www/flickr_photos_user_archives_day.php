@@ -71,6 +71,8 @@
 		$GLOBALS['smarty']->assign("previous_day", $previous_day);
 	}
 
+	# dumper(flickr_photos_archives_bookends_for_user_and_date($owner, "{$year}-{$month}-{$day}"));
+
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 
 	$pagination_url = flickr_urls_photos_user_archives($owner, $user_context);

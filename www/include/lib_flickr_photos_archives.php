@@ -129,6 +129,33 @@
 
 	#################################################################
 
+	function flickr_photos_archives_bookends_for_user_and_date(&$user, $date, $more=array()){
+
+		$cluster_id = $user['cluster_id'];
+
+		$enc_user = AddSlashes($user['id']);
+		$enc_date = AddSlashes($date);
+
+		$date_col = ($more['context'] == 'posted') ? 'dateupload' : 'datetaken';
+
+		$sql = "SELECT DATE_FORMAT({$date_col}, '%Y-%m-%d') as ymd FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+		$sql .= " AND DATE_FORMAT({$date_col}, '%Y-%m-%d') != DATE_FORMAT('{$date}', '%Y-%m-%d')";
+
+		$sql_before = "{$sql} AND `{$date_col}` < '{$enc_date}' ORDER BY {$date_col} DESC LIMIT 1";
+		$sql_after = "{$sql} AND `{$date_col}` > '{$enc_date}' LIMIT 1";
+
+		$rsp = db_fetch_users($cluster_id, $sql_before);
+		$rsp = db_single($rsp);
+		$before = $rsp['ymd'];
+
+		$rsp = db_single(db_fetch_users($cluster_id, $sql_after));
+		$after = $rsp['ymd'];
+
+		return array($before, $after);
+	}
+
+	#################################################################
+
 	function flickr_photos_archives_years_for_user(&$user, $more=array()){
 
 		$cluster_id = $user['cluster_id'];
