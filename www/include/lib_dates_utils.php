@@ -17,6 +17,36 @@
 
 	#################################################################
 
+	function dates_utils_days_for_month($year, $month){
+
+		$last_dom = dates_utils_last_dom($year, $month);
+		$days = array();
+
+		foreach (range(1, $last_dom) as $i){
+			$day = sprintf("%02d", $i);
+			$timestamp = mktime(0, 0, 0, $month, $day, $year);
+			$days[$day] = date("l", $timestamp);
+		}
+
+		return $days;
+	}
+
+	#################################################################
+
+	# see also: http://php.net/manual/en/function.cal-days-in-month.php
+
+	function dates_utils_last_dom($year, $month){
+
+		$month = sprintf("%02d", $month);
+
+		$ts = mktime(0, 0, 0, $month + 1, 1, $year);
+		$last_dom = sprintf("%02d", date("d", $ts -1));
+
+		return $last_dom;
+	}
+
+	#################################################################
+
 	function dates_utils_between($year, $month=null, $day=null){
 
 		if (($month) && ($day)){
@@ -26,12 +56,7 @@
 
 		else if ($month){
 
-			# see also: http://php.net/manual/en/function.cal-days-in-month.php
-
-			$month = sprintf("%02d", $month);
-
-			$ts = mktime(0, 0, 0, $month + 1, 1, $year);
-			$last_dom = sprintf("%02d", date("d", $ts -1));
+			$last_dom = dates_utils_last_dom($year, $month);
 
 			$start = "{$year}-{$month}-01 00:00:00";
 			$end = "{$year}-{$month}-{$last_dom} 23:59:59";
