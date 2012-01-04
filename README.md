@@ -82,6 +82,8 @@ TO DO:
 
 * better layout, tested in more than just Firefox
 
+* send to Internet Archive (http://www.archive.org/help/abouts3.txt)
+
 See also: [TODO.txt](https://github.com/straup/parallel-flickr/blob/master/TODO.txt)
 
 To note:
