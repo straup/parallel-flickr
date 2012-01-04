@@ -5,6 +5,8 @@
 	loadlib("flickr_photos_archives");
 	loadlib("flickr_photos_utils");
 
+	loadlib("dates_utils");
+
 	$year = get_int32("year");
 
 	if (! $year){
@@ -61,11 +63,14 @@
 			break;
 		}
 
-		$months = flickr_photos_archives_months_for_user($owner, $year, $more);
+		$months = dates_utils_months();
+
+		$user_months = flickr_photos_archives_months_for_user($owner, $year, $more);
 
 		$GLOBALS['smarty']->assign("next_year", $next_year);
 		$GLOBALS['smarty']->assign("previous_year", $previous_year);
-		$GLOBALS['smarty']->assign("months", $month);
+		$GLOBALS['smarty']->assign("months", $months);
+		$GLOBALS['smarty']->assign("user_months", $user_months);
 	}
 
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);

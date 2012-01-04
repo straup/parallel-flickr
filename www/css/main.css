@@ -377,21 +377,43 @@ td {
     margin-bottom:5px;
 }
 
-.archives_years {
-    margin:0;
-    padding:0;
+#archives_navi {
+    margin-bottom: 20px;
     font-size:small;
     color:#bbb;
 }
 
-.archives_years li {
+#archives_navi ul { 
+    display:inline;
+    margin:0;
+    padding:0;
+
+}
+
+#archives_navi ul li {
     display: inline;
 }
 
-.archives_years li:first-child:after {
+#archives_navi_years li:first-child:after {
     content: " | ";
 }
 
-.archives_years li:last-child:before {
+#archives_navi_years li:last-child:before {
     content: " | ";
+}
+
+#archives_navi_months li:after {
+    content: " | ";
+}
+
+#archives_navi_months li:first-child:before {
+    content: "";
+}
+
+#archives_navi_months li:last-child:before {
+    content: "";
+}
+
+#archives_navi_months li:last-child:after {
+    content: "";
 }

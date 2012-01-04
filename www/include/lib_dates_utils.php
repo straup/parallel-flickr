@@ -2,6 +2,21 @@
 
 	#################################################################
 
+	function dates_utils_months(){
+
+		$map = array();
+
+		foreach (range(1, 12) as $i){
+			$month = sprintf("%02d", $i);
+			$timestamp = mktime(0, 0, 0, $month);
+			$map[$month] = date("F", $timestamp);
+		}
+
+		return $map;
+	}
+
+	#################################################################
+
 	function dates_utils_between($year, $month=null, $day=null){
 
 		if (($month) && ($day)){
@@ -10,6 +25,8 @@
 		}
 
 		else if ($month){
+
+			# see also: http://php.net/manual/en/function.cal-days-in-month.php
 
 			$month = sprintf("%02d", $month);
 

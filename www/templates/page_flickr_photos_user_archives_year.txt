@@ -3,15 +3,23 @@
 
 <h2>{if $is_own}your photos from {$year|escape}{else}{$owner.username|escape}'s photos from {$year|escape}{/if}</h2>
 
-<ul class="archives_years">
+<div id="archives_navi">
+<ul id="archives_navi_years">
 {if $previous_year}<li><a title="photos from {$previous_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous_year|escape}/">{$previous_year}</a></li>{/if}
-<li><strong>{$year|escape}</strong></li>
+<li>
+{if 0}<strong>{$year|escape}</strong>{/if}
+<ul id="archives_navi_months">
+{foreach from=$months item="name" key="mm"}
+<li>{if in_array($mm, $user_months)}<a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$mm|escape}/">{$name|escape}</a>{else}{$name|escape}{/if}</li>
+{/foreach}
+</ul>
+
+</li>
+
 {if $next_year}<li><a title="photos from {$next_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next_year|escape}/">{$next_year}</a></li>{/if}
 </ul>
 
-<ul class="archives_months">
-
-</ul>
+</div>
 
 {foreach from=$photos item="row"}
 
