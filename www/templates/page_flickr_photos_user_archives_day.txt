@@ -1,7 +1,19 @@
-{capture assign="page_title"}{$owner.username} | archives | {$context} | {$year}{/capture}
+{capture assign="page_title"}{$owner.username} | archives | {$context} | {$year} | {$months.$month|strtolower} | {$day}{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}your photos from {$year|escape}{else}{$owner.username|escape}'s photos from {$year|escape}{/if}</h2>
+<h2>{if $is_own}your photos from {$months.$month|escape} {$day|escape}, {$year|escape}{else}{$owner.username|escape}'s photos from {$months.$month|escape}, {$day|escape} {$year|escape}{/if}</h2>
+
+<div id="archives_navi">
+
+<ul id="archives_navi_months">
+
+{if $previous_day}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$month|escape}/{$previous_day|escape}/">{$months.$month|escape} {$previous_day|escape}</a></li>{/if}
+
+{if $next_day}<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$month|escape}/{$next_day|escape}/">{$months.$month|escape} {$next_day|escape}</a></li>{/if}
+
+</ul>
+
+</div>
 
 {foreach from=$photos item="row"}
 

@@ -6,8 +6,8 @@
 	loadlib("flickr_photos_utils");
 
 	$year = get_int32("year");
-	$month = get_int32("month");
-	$day = get_int32("day");
+	$month = get_str("month");
+	$day = get_str("day");
 
 	if ((! $year) || (! $month) || (! $day)){
 		error_404();
@@ -45,9 +45,32 @@
 	$rsp = flickr_photos_archives_for_user_and_day($owner, $year, $month, $day, $more);
 	$photos = $rsp['rows'];
 
-	flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
+	$months = dates_utils_months();
+	$GLOBALS['smarty']->assign_by_ref("months", $months);
 
-	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
+	if (count($photos)){
+
+		flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
+
+		$user_days = flickr_photos_archives_days_for_user($owner, $year, $month, $more);
+
+		$count_days = count($user_days);
+
+		for ($i=0; $i < $count_days; $i++){
+
+			if ($user_days[$i] != $day){
+				continue;
+			}
+
+			$next_day = $user_days[$i+1];
+			$previous_day = $user_days[$i-1];
+			break;
+		}
+
+		$GLOBALS['smarty']->assign("next_day", $next_day);
+		$GLOBALS['smarty']->assign("previous_day", $previous_day);
+	}
+
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 
 	$pagination_url = flickr_urls_photos_user_archives($owner, $user_context);

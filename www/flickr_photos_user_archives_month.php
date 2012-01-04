@@ -44,11 +44,13 @@
 	$rsp = flickr_photos_archives_for_user_and_month($owner, $year, $month, $more);
 	$photos = $rsp['rows'];
 
+	$months = dates_utils_months();
+	$GLOBALS['smarty']->assign("months", $months);
+
 	if (count($photos)){
 
 		flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
 
-		$months = dates_utils_months();
 		$days = dates_utils_days_for_month($year, $month);
 
 		$user_months = flickr_photos_archives_months_for_user($owner, $year, $more);
@@ -70,9 +72,7 @@
 		$GLOBALS['smarty']->assign("next_month", $next_month);
 		$GLOBALS['smarty']->assign("previous_month", $previous_month);
 
-		$GLOBALS['smarty']->assign("months", $months);
 		$GLOBALS['smarty']->assign("days", $days);
-
 		$GLOBALS['smarty']->assign("user_days", $user_days);
 	}
 
