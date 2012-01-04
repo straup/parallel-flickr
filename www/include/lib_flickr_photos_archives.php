@@ -2,6 +2,7 @@
 
 	loadlib("flickr_photos_search");
 	loadlib("flickr_photos_permissions");
+	loadlib("dates_utils");
 
 	#################################################################
 
@@ -68,9 +69,7 @@
 
 	function flickr_photos_archives_for_user_and_year(&$user, $year, $more=array()){
 
-		$start = "{$year}-01-01 00:00:00";
-		$end = "{$year}-12-31 23:59:59";
-
+		list($start, $end) = dates_utils_between($year);
 		return flickr_photos_archives_for_user_and_range($user, $start, $end, $more);
 	}
 
@@ -78,14 +77,7 @@
 
 	function flickr_photos_archives_for_user_and_month(&$user, $year, $month, $more=array()){
 
-		$month = sprintf("%02d", $month);
-
-		$ts = mktime(0, 0, 0, $month+1, 1, $year);
-		$last_dom = sprintf("%02d", date("d", $ts -1));
-
-		$start = "{$year}-{$month}-01 00:00:00";
-		$end = "{$year}-{$month}-{$last_dom} 23:59:59";
-
+		list($start, $end) = dates_utils_between($year, $month);
 		return flickr_photos_archives_for_user_and_range($user, $start, $end, $more);
 	}
 
@@ -93,12 +85,7 @@
 
 	function flickr_photos_archives_for_user_and_day(&$user, $year, $month, $day, $more=array()){
 
-		$month = sprintf("%02d", $month);
-		$day = sprintf("%02d", $day);
-
-		$start = "{$year}-{$month}-{$day} 00:00:00";
-		$end = "{$year}-{$month}-{$day} 23:59:59";
-
+		list($start, $end) = dates_utils_between($year, $month, $day);
 		return flickr_photos_archives_for_user_and_range($user, $start, $end, $more);
 	}
 
@@ -138,6 +125,99 @@
 		$rsp['date_column'] = $date_col;
 
 		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_photos_archives_years_for_user(&$user, $more=array()){
+
+		$cluster_id = $user['cluster_id'];
+		$enc_user = AddSlashes($user['id']);
+
+		$datecol = 'datetaken';
+
+		$sql = "SELECT DISTINCT(DATE_FORMAT({$datecol}, '%Y')) AS year FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+		$rsp = db_fetch_users($cluster_id, $sql);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$years = array();
+
+		foreach ($rsp['rows'] as $r){
+			$years[] = $r['year'];
+		}
+
+		return okay(array('rows' => $years));
+	}
+
+	#################################################################
+
+	function flickr_photos_archives_months_for_user(&$user, $year, $more=array()){
+
+		$cluster_id = $user['cluster_id'];
+		$enc_user = AddSlashes($user['id']);
+
+		list($start, $end) = dates_utils_between($year);
+
+		$enc_start = AddSlashes($start);
+		$enc_end = AddSlashes($end);
+
+		$datecol = 'datetaken';
+
+		$sql = "SELECT DISTINCT(DATE_FORMAT({$datecol}, '%m')) AS month FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+		$sql .= " AND `{$datecol}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
+
+		$rsp = db_fetch_users($cluster_id, $sql);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$months = array();
+
+		foreach ($rsp['rows'] as $r){
+			$months[] = $r['month'];
+		}
+
+		return okay(array(
+			'rows' => $months
+		));
+	}
+
+	#################################################################
+
+	function flickr_photos_archives_days_for_user(&$user, $year, $month, $more=array()){
+
+		$cluster_id = $user['cluster_id'];
+		$enc_user = AddSlashes($user['id']);
+
+		list($start, $end) = dates_utils_between($year, $month);
+
+		$enc_start = AddSlashes($start);
+		$enc_end = AddSlashes($end);
+
+		$datecol = 'datetaken';
+
+		$sql = "SELECT DISTINCT(DATE_FORMAT({$datecol}, '%d')) AS day FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+		$sql .= " AND `{$datecol}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
+
+		$rsp = db_fetch_users($cluster_id, $sql);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$days = array();
+
+		foreach ($rsp['rows'] as $r){
+			$days[] = $r['day'];
+		}
+
+		return okay(array(
+			'rows' => $days
+		));
 	}
 
 	#################################################################
