@@ -78,7 +78,8 @@
 
 	function flickr_photos_archives_for_user_and_month(&$user, $year, $month, $more=array()){
 
-		$last_dom = 31;	# TO DO: make this actually right...
+		$ts = mktime(0, 0, 0, $month+1, 1, $year);
+		$last_dom = date("m", $ts -1);
 
 		$start = "{$year}-{$month}-01 00:00:00";
 		$end = "{$year}-{$month}-{$last_dom} 23:59:59";
@@ -111,14 +112,13 @@
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
-		# TO DO: timezone nonsense / sad face...
-
 		$enc_start = AddSlashes($start);
 		$enc_end = AddSlashes($end);
 
 		# TO DO: indexes probably...
 
-		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' AND `{$date_col}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
+		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' AND `{$date_col}` BETWEEN";
+		$sql .= " '{$enc_start}' AND '{$enc_end}'";
 
 		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
 			$str_perms = implode(",", $perms);
