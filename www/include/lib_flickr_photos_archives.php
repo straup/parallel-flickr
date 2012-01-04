@@ -134,22 +134,22 @@
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
-		$datecol = 'datetaken';
+		$date_col = ($more['context'] == 'posted') ? 'dateupload' : 'datetaken';
 
-		$sql = "SELECT DISTINCT(DATE_FORMAT({$datecol}, '%Y')) AS year FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+		$sql = "SELECT DISTINCT(DATE_FORMAT({$date_col}, '%Y')) AS year FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+
 		$rsp = db_fetch_users($cluster_id, $sql);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
 		$years = array();
 
-		foreach ($rsp['rows'] as $r){
-			$years[] = $r['year'];
+		if ($rsp['ok']){
+
+			foreach ($rsp['rows'] as $r){
+				$years[] = $r['year'];
+			}
 		}
 
-		return okay(array('rows' => $years));
+		sort($years);
+		return $years;
 	}
 
 	#################################################################
@@ -164,26 +164,23 @@
 		$enc_start = AddSlashes($start);
 		$enc_end = AddSlashes($end);
 
-		$datecol = 'datetaken';
+		$date_col = ($more['context'] == 'posted') ? 'dateupload' : 'datetaken';
 
-		$sql = "SELECT DISTINCT(DATE_FORMAT({$datecol}, '%m')) AS month FROM FlickrPhotos WHERE user_id='{$enc_user}'";
-		$sql .= " AND `{$datecol}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
+		$sql = "SELECT DISTINCT(DATE_FORMAT({$date_col}, '%m')) AS month FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+		$sql .= " AND `{$date_col}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
 
 		$rsp = db_fetch_users($cluster_id, $sql);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
 		$months = array();
 
-		foreach ($rsp['rows'] as $r){
-			$months[] = $r['month'];
+		if ($rsp['ok']){
+
+			foreach ($rsp['rows'] as $r){
+				$months[] = $r['month'];
+			}
 		}
 
-		return okay(array(
-			'rows' => $months
-		));
+		sort($months);
+		return $months;
 	}
 
 	#################################################################
@@ -198,26 +195,23 @@
 		$enc_start = AddSlashes($start);
 		$enc_end = AddSlashes($end);
 
-		$datecol = 'datetaken';
+		$date_col = ($more['context'] == 'posted') ? 'dateupload' : 'datetaken';
 
-		$sql = "SELECT DISTINCT(DATE_FORMAT({$datecol}, '%d')) AS day FROM FlickrPhotos WHERE user_id='{$enc_user}'";
-		$sql .= " AND `{$datecol}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
+		$sql = "SELECT DISTINCT(DATE_FORMAT({$date_col}, '%d')) AS day FROM FlickrPhotos WHERE user_id='{$enc_user}'";
+		$sql .= " AND `{$date_col}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
 
 		$rsp = db_fetch_users($cluster_id, $sql);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
 		$days = array();
 
-		foreach ($rsp['rows'] as $r){
-			$days[] = $r['day'];
+		if ($rsp['ok']){
+
+			foreach ($rsp['rows'] as $r){
+				$days[] = $r['day'];
+			}
 		}
 
-		return okay(array(
-			'rows' => $days
-		));
+		sort($days);
+		return $days;
 	}
 
 	#################################################################

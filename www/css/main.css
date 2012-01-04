@@ -376,3 +376,22 @@ td {
     line-height:1.5em;
     margin-bottom:5px;
 }
+
+.archives_years {
+    margin:0;
+    padding:0;
+    font-size:small;
+    color:#bbb;
+}
+
+.archives_years li {
+    display: inline;
+}
+
+.archives_years li:first-child:after {
+    content: " | ";
+}
+
+.archives_years li:last-child:before {
+    content: " | ";
+}

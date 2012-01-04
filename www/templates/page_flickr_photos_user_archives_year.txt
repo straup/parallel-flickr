@@ -3,6 +3,16 @@
 
 <h2>{if $is_own}your photos from {$year|escape}{else}{$owner.username|escape}'s photos from {$year|escape}{/if}</h2>
 
+<ul class="archives_years">
+{if $previous_year}<li><a title="photos from {$previous_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous_year|escape}/">{$previous_year}</a></li>{/if}
+<li><strong>{$year|escape}</strong></li>
+{if $next_year}<li><a title="photos from {$next_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next_year|escape}/">{$next_year}</a></li>{/if}
+</ul>
+
+<ul class="archives_months">
+
+</ul>
+
 {foreach from=$photos item="row"}
 
 <div class="photos_user_photo">

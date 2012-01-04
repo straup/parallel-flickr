@@ -43,17 +43,38 @@
 	$rsp = flickr_photos_archives_for_user_and_year($owner, $year, $more);
 	$photos = $rsp['rows'];
 
-	flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
+	if (count($photos)){
 
-	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
+		flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
+
+		$years = flickr_photos_archives_years_for_user($owner, $more);
+		$count_years = count($years);
+
+		for ($i=0; $i < $count_years; $i++){
+
+			if ($years[$i] != $year){
+				continue;
+			}
+
+			$next_year = $years[$i+1];
+			$previous_year = $years[$i-1];
+			break;
+		}
+
+		$months = flickr_photos_archives_months_for_user($owner, $year, $more);
+
+		$GLOBALS['smarty']->assign("next_year", $next_year);
+		$GLOBALS['smarty']->assign("previous_year", $previous_year);
+		$GLOBALS['smarty']->assign("months", $month);
+	}
+
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);
+	$GLOBALS['smarty']->assign("year", $year);
 
 	$pagination_url = flickr_urls_photos_user_archives($owner, $user_context);
 	$pagination_url .= "{$year}/";
 
 	$GLOBALS['smarty']->assign("pagination_url", $pagination_url);
-
-	$GLOBALS['smarty']->assign("year", $year);
 
 	$GLOBALS['smarty']->display("page_flickr_photos_user_archives_year.txt");
 	exit();
