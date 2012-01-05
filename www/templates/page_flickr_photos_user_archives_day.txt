@@ -1,7 +1,13 @@
 {capture assign="page_title"}{$owner.username} | archives | {$context} | {$year} | {$months.$month|strtolower} | {$day}{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}Your photos from {$months.$month|escape} {$day|escape}, {$year|escape}{else}{$owner.username|escape}'s photos from {$months.$month|escape}, {$day|escape} {$year|escape}{/if}</h2>
+<h2>
+{if $is_own}
+{if $context=='posted'}Photos you posted on {$months.$month|escape} {$day|escape}, {$year|escape}{else}Photos you took on {$months.$month|escape} {$day|escape}, {$year|escape}{/if}
+{else}
+{if $context=='posted'}Photos {$owner.username|escape} uploaded on {$months.$month|escape} {$day|escape}, {$year|escape}{else}Photos {$owner.username|escape} took on {$months.$month|escape} {$day|escape}, {$year|escape}{/if}
+{/if}
+</h2>
 
 <div id="archives_navi">
 

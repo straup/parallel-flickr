@@ -1,11 +1,18 @@
 {capture assign="page_title"}{$owner.username} | archives | {$context} | {$year}{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}Your photos from {$year|escape}{else}{$owner.username|escape}'s photos from {$year|escape}{/if}</h2>
+<h2>
+{if $is_own}
+{if $context=='posted'}Photos you posted during {$year|escape}{else}Photos you took during {$year|escape}{/if}
+{else}
+{if $context=='posted'}Photos {$owner.username|escape} uploaded during {$year|escape}{else}Photos {$owner.username|escape} took during {$year|escape}{/if}
+{/if}
+</h2>
 
 <div id="archives_navi">
 <ul id="archives_navi_years">
-{if $previous_year}<li><a title="photos from {$previous_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous_year|escape}/">{$previous_year}</a></li>{/if}
+{if $previous_year}<li><a title="photos from {$previous_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous_year|escape}/">{$previous_year}</a></li>{else}{* this is a dirty little hack to trick the CSS hooks *}<li style="display:none;"></li>{/if}
+
 <li>
 {if 0}<strong>{$year|escape}</strong>{/if}
 <ul id="archives_navi_months">
@@ -16,7 +23,7 @@
 
 </li>
 
-{if $next_year}<li><a title="photos from {$next_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next_year|escape}/">{$next_year}</a></li>{/if}
+{if $next_year}<li><a title="photos from {$next_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next_year|escape}/">{$next_year}</a></li>{else}{* this is a dirty little hack to trick the CSS hooks *}<li style="display:none;"></li>{/if}
 </ul>
 
 </div>
