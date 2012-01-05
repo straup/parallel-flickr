@@ -17,6 +17,8 @@
 			<a href="{$cfg.user|@flickr_urls_photos_user_cameras}">cameras</a>
 			|
 {/if}
+			<a href="{$cfg.user|@flickr_urls_photos_user_archives}">archives</a>
+			|
 {if $cfg.enable_feature_flickr_push and $cfg.flickr_push_enable_photos_friends}
 			<a
 			href="{$cfg.abs_root_url}photos/friends/">contacts</a>
