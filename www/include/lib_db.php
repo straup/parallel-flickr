@@ -190,6 +190,7 @@
 			$error_code	= mysql_errno($GLOBALS['db_conns'][$cluster_key]);
 
 			log_error("DB-$cluster_key: $error_code ".HtmlSpecialChars($error_msg));
+			# log_error("DB-$cluster_key: $error_code ".HtmlSpecialChars($sql));
 
 			$ret = array(
 				'ok'		=> 0,

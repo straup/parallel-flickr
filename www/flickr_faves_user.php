@@ -49,6 +49,13 @@
 	foreach ($faves['rows'] as $f){
 
 		$photo = flickr_photos_get_by_id($f['photo_id']);
+
+		# this shouldn't happen but does so...
+
+		if (! $photo){
+			continue;
+		}
+
 		$photo['owner'] = users_get_by_id($photo['user_id']);
 
 		# quick hack until perms are denormalized into the FlickrFaves table

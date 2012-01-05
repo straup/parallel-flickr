@@ -5,6 +5,10 @@
 	loadlib("flickr_photos_import");
 	loadlib("flickr_faves_import");
 
+	# TO DO: add an optional flag that lets you offset the last mindate
+	# by (n) seconds in case you need to backfill but not all the way back
+	# to the start of time (20120105/straup)
+
 	#################################################################
 
 	function flickr_backups_type_map($string_keys=0){
@@ -51,10 +55,9 @@
 			$map = flickr_backups_type_map();
 			$backups = flickr_backups_for_user($user, $type_id);
 				
-			$rsp = array(
-				'ok' => 1,
+			$rsp = okay(array(
 				'backup' => $backups[$map[$type_id]],
-			);	
+			));	
 		}
 
 		else {}
@@ -130,10 +133,7 @@
 
 		if (! isset($backups['photos'])){
 
-			return array(
-				'ok' => 0,
-				'error' => 'backups not registered',
-			);
+			return not_okay("backups not registered");
 		}
 
 		#
@@ -188,10 +188,7 @@
 
 		if (! isset($backups['faves'])){
 
-			return array(
-				'ok' => 0,
-				'error' => 'backups for faves not registered',
-			);
+			return not_okay("backups for faves not registered");
 		}
 
 		#
@@ -236,10 +233,7 @@
 
 		if (! isset($backups['contacts'])){
 
-			return array(
-				'ok' => 0,
-				'error' => 'backups not registered',
-			);
+			return not_okay("backups not registered");
 		}
 
 		$backup = $backups['contacts'];

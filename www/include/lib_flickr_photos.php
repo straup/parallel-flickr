@@ -114,33 +114,34 @@
 
 		$rsp = db_update_users($cluster_id, 'FlickrPhotos', $hash, $where);
 
-		if ($rsp['ok']){
+		if (! $rsp['ok']){
+			return $rsp;
+		}
 
-			cache_unset($cache_key);
+		cache_unset($cache_key);
 
-			if (($GLOBALS['cfg']['enable_feature_solr']) && ($solr_update)){
+		if (($GLOBALS['cfg']['enable_feature_solr']) && ($solr_update)){
 
-				$photo = flickr_photos_get_by_id($photo['id']);	
+			$photo = flickr_photos_get_by_id($photo['id']);	
 
-				# This is a quick hack that may become permanent. Basically 
-				# we need to refetch the data in flickr.photos.getInfo in 
-				# order to update the solr db. Normally the _index_photo pulls
-				# this information from disk; the files having been written
-				# by the bin/backup_photos.php script. As I write this the www
-				# server does not have write permissions on the static photos
-				# directory. If it did, this whole problem would go away and in
-				# the end that may be the simplest possible solution. Until then
-				# we'll fetch the (meta) data directly from the API and force
-				# feed it to the search indexer. If you're wondering: Yes, it means
-				# that the local solr db and the actual JSON dump of photos.getInfo
-				# will be out of sync but that will sort itself out the next
-				# time bin/backup_photos.php is run (20111231/straup)
+			# This is a quick hack that may become permanent. Basically 
+			# we need to refetch the data in flickr.photos.getInfo in 
+			# order to update the solr db. Normally the _index_photo pulls
+			# this information from disk; the files having been written
+			# by the bin/backup_photos.php script. As I write this the www
+			# server does not have write permissions on the static photos
+			# directory. If it did, this whole problem would go away and in
+			# the end that may be the simplest possible solution. Until then
+			# we'll fetch the (meta) data directly from the API and force
+			# feed it to the search indexer. If you're wondering: Yes, it means
+			# that the local solr db and the actual JSON dump of photos.getInfo
+			# will be out of sync but that will sort itself out the next
+			# time bin/backup_photos.php is run (20111231/straup)
 
-				loadlib("flickr_photos_metadata");
-				$meta = flickr_photos_metadata_fetch($photo, 'inflate');
+			loadlib("flickr_photos_metadata");
+			$meta = flickr_photos_metadata_fetch($photo, 'inflate');
 
-				flickr_photos_search_index_photo($photo, $meta);
-			}
+			flickr_photos_search_index_photo($photo, $meta);
 		}
 
 		return $rsp;
@@ -215,10 +216,11 @@
 
 		$rsp = db_insert_users($cluster_id, 'FlickrPhotos', $insert);
 
-		if ($rsp['ok']){
-			$rsp['photo'] = $photo;
+		if (! $rsp['ok']){
+			return $rsp;
 		}
 
+		$rsp['photo'] = $photo;
 		return $rsp;
 	}
 

@@ -32,6 +32,11 @@
 
 	#################################################################
 
+	# TO DO: either suppress the 1062 errors or fetch the various
+	# rows below. It's not really a big deal except that the errors
+	# get spewed to STDOUT and are confusing and a bit angst-making
+	# (20120105/straup)
+
 	function flickr_faves_add_fave(&$viewer, &$photo, $date_faved=0){
 
 		if (! $date_faved){
@@ -55,7 +60,7 @@
 
 		$rsp = db_insert_users($cluster_id, 'FlickrFaves', $insert);
 
-		if (! $rsp['ok']){
+		if ((! $rsp['ok']) && ($rsp['error_code'] != 1062)){
 			return $rsp;
 		}
 
@@ -79,16 +84,14 @@
 
 		$rsp = db_insert_users($cluster_id, 'FlickrFavesUsers', $insert);
 
-		if (! $rsp['ok']){
+		if ((! $rsp['ok']) && ($rsp['error_code'] != 1062)){
 			return $rsp;
 		}
 
 		# TO DO: index/update the photo in solr and insert $viewer['id']
 		# into the faved_by column (20111123/straup)
 
-		return array(
-			'ok' => 1
-		);
+		return okay();
 	}
 
 	#################################################################
