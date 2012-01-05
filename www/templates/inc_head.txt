@@ -8,6 +8,12 @@
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.markers.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmapl.js"></script>
+	{if 'sharkify'|@features_is_enabled}
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/sharkify.min.js"></script>
+	{/if}
+	<script type="text/javascript">
+	var abs_root_url='{$cfg.abs_root_url}';
+	</script>
 	{$extra_head}
 </head>
 <body>

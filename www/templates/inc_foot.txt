@@ -25,9 +25,17 @@
 {/if}
 			|
 			<a href="{$cfg.abs_root_url}signout/">signout</a>
+{if 'sharkify'|@features_is_enabled}
+			...
+			<a href="#" onclick="sharkify_add();return false;">sharkify</a>
+{/if}
 {else}
 	{if $cfg.enable_feature_signin}
 			<a href="{$cfg.abs_root_url}signin/?redir={$smarty.server.REQUEST_URI|escape:'url'}">sign in with your flickr account</a>
+	{/if}
+	{if 'sharkify'|@features_is_enabled}
+			...or 
+			<a href="#" onclick="sharkify_add();return false;">sharkify</a>
 	{/if}
 {/if}
 
