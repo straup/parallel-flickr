@@ -48,42 +48,38 @@
 	$months = dates_utils_months();
 	$GLOBALS['smarty']->assign_by_ref("months", $months);
 
-	if (count($photos)){
+	flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
 
-		flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
+	$user_days = flickr_photos_archives_days_for_user($owner, $year, $month, $more);
 
-		$user_days = flickr_photos_archives_days_for_user($owner, $year, $month, $more);
+	$count_days = count($user_days);
 
-		$count_days = count($user_days);
+	for ($i=0; $i < $count_days; $i++){
 
-		for ($i=0; $i < $count_days; $i++){
-
-			if ($user_days[$i] != $day){
-				continue;
-			}
-
-			$next_day = $user_days[$i+1];
-			$previous_day = $user_days[$i-1];
-			break;
+		if ($user_days[$i] != $day){
+			continue;
 		}
 
-		$GLOBALS['smarty']->assign("next_day", $next_day);
-		$GLOBALS['smarty']->assign("previous_day", $previous_day);
+		$next_day = $user_days[$i+1];
+		$previous_day = $user_days[$i-1];
+		break;
+	}
 
-		$ymd = implode("-", array($year, $month, $day));
+	$GLOBALS['smarty']->assign("next_day", $next_day);
+	$GLOBALS['smarty']->assign("previous_day", $previous_day);
 
-		if (! $previous_day){
-			if ($previous_ymd = flickr_photos_archives_previous_date_for_user($owner, $ymd, $more)){
-				$GLOBALS['smarty']->assign("previous", explode("-", $previous_ymd));
-			}
+	$ymd = implode("-", array($year, $month, $day));
+
+	if (! $previous_day){
+		if ($previous_ymd = flickr_photos_archives_previous_date_for_user($owner, $ymd, $more)){
+			$GLOBALS['smarty']->assign("previous", explode("-", $previous_ymd));
 		}
+	}
 
-		if (! $next_day){
-			if ($next_ymd = flickr_photos_archives_next_date_for_user($owner, $ymd, $more)){
-				$GLOBALS['smarty']->assign("next", explode("-", $next_ymd));
-			}
+	if (! $next_day){
+		if ($next_ymd = flickr_photos_archives_next_date_for_user($owner, $ymd, $more)){
+			$GLOBALS['smarty']->assign("next", explode("-", $next_ymd));
 		}
-
 	}
 
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);

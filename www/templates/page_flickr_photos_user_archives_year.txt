@@ -11,7 +11,11 @@
 
 <div id="archives_navi">
 <ul id="archives_navi_years">
-{if $previous_year}<li><a title="photos from {$previous_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous_year|escape}/">{$previous_year}</a></li>{else}{* this is a dirty little hack to trick the CSS hooks *}<li style="display:none;"></li>{/if}
+{if $previous_year}<li><a title="photos from {$previous_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous_year|escape}/">{$previous_year}</a></li>
+{elseif $previous}
+{assign var="previous_month" value=$previous.1}
+<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous.0|escape}/">{$previous.0|escape}</a></li>
+{else}{* this is a dirty little hack to trick the CSS hooks *}<li style="display:none;"></li>{/if}
 
 <li>
 {if 0}<strong>{$year|escape}</strong>{/if}
@@ -23,10 +27,18 @@
 
 </li>
 
-{if $next_year}<li><a title="photos from {$next_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next_year|escape}/">{$next_year}</a></li>{else}{* this is a dirty little hack to trick the CSS hooks *}<li style="display:none;"></li>{/if}
+{if $next_year}<li><a title="photos from {$next_year|escape}" href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next_year|escape}/">{$next_year}</a></li>
+{elseif $next}
+{assign var="next_month" value=$next.1}
+<li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$next.0|escape}/">{$next.0|escape}</a></li>
+{else}{* this is a dirty little hack to trick the CSS hooks *}<li style="display:none;"></li>{/if}
 </ul>
 
 </div>
+
+{if ! $photos|@count}
+<p>None!</p>
+{else}
 
 {foreach from=$photos item="row"}
 
@@ -50,5 +62,7 @@
 {include file="inc_pagination.txt"}
 
 {include file="inc_flickr_photo_map_load.txt"}
+
+{/if}
 
 {include file="inc_foot.txt"}

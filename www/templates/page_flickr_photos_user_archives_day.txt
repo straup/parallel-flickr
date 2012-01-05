@@ -29,6 +29,10 @@
 
 </div>
 
+{if ! $photos|@count}
+<p>None!</p>
+{else}
+
 {foreach from=$photos item="row"}
 
 <div class="photos_user_photo">
@@ -51,5 +55,7 @@
 {include file="inc_pagination.txt"}
 
 {include file="inc_flickr_photo_map_load.txt"}
+
+{/if}
 
 {include file="inc_foot.txt"}

@@ -45,33 +45,49 @@
 	$rsp = flickr_photos_archives_for_user_and_year($owner, $year, $more);
 	$photos = $rsp['rows'];
 
-	if (count($photos)){
+	flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
 
-		flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
+	$years = flickr_photos_archives_years_for_user($owner, $more);
+	$count_years = count($years);
 
-		$years = flickr_photos_archives_years_for_user($owner, $more);
-		$count_years = count($years);
+	for ($i=0; $i < $count_years; $i++){
 
-		for ($i=0; $i < $count_years; $i++){
-
-			if ($years[$i] != $year){
-				continue;
-			}
-
-			$next_year = $years[$i+1];
-			$previous_year = $years[$i-1];
-			break;
+		if ($years[$i] != $year){
+			continue;
 		}
 
-		$months = dates_utils_months();
-
-		$user_months = flickr_photos_archives_months_for_user($owner, $year, $more);
-
-		$GLOBALS['smarty']->assign("next_year", $next_year);
-		$GLOBALS['smarty']->assign("previous_year", $previous_year);
-		$GLOBALS['smarty']->assign("months", $months);
-		$GLOBALS['smarty']->assign("user_months", $user_months);
+		$next_year = $years[$i+1];
+		$previous_year = $years[$i-1];
+		break;
 	}
+
+	$months = dates_utils_months();
+
+	$user_months = flickr_photos_archives_months_for_user($owner, $year, $more);
+
+	$GLOBALS['smarty']->assign("next_year", $next_year);
+	$GLOBALS['smarty']->assign("previous_year", $previous_year);
+
+	if (! $previous_year){
+
+		$ymd = "{$year}-01-01";
+
+		if ($previous_ymd = flickr_photos_archives_previous_date_for_user($owner, $ymd, $more)){
+			$GLOBALS['smarty']->assign("previous", explode("-", $previous_ymd));
+		}
+	}
+
+	if (! $next_year){
+
+		$ymd = "{$year}-12-31";
+
+		if ($next_ymd = flickr_photos_archives_next_date_for_user($owner, $ymd, $more)){
+			$GLOBALS['smarty']->assign("next", explode("-", $next_ymd));
+		}
+	}
+
+	$GLOBALS['smarty']->assign("months", $months);
+	$GLOBALS['smarty']->assign("user_months", $user_months);
 
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 	$GLOBALS['smarty']->assign("year", $year);
