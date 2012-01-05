@@ -257,6 +257,7 @@
 
 		$sql = "SELECT DISTINCT(DATE_FORMAT({$date_col}, '%d')) AS day FROM FlickrPhotos WHERE user_id='{$enc_user}'";
 		$sql .= " AND `{$date_col}` BETWEEN '{$enc_start}' AND '{$enc_end}'";
+		$sql .= " ORDER BY `{$date_col}` ASC";
 
 		$rsp = db_fetch_users($cluster_id, $sql);
 		$days = array();
