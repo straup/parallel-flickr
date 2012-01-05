@@ -41,6 +41,8 @@
 	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 1;
 	$GLOBALS['cfg']['flickr_push_enable_photos_friends_faves'] = 1;
 	$GLOBALS['cfg']['flickr_push_enable_photos_recent_activity'] = 0;	# still full of weirdness (20111221/straup)
+	$GLOBALS['cfg']['flickr_push_notification_email'] = '';			# add a valid email address where notifications will
+										# will be sent if a feed is unsubscribed (by flickr)
 
 	$GLOBALS['cfg']['enable_feature_sharkify'] = 1;		# http://www.iamcal.com/sharkify/
 
