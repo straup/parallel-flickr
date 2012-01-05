@@ -379,7 +379,7 @@ td {
 
 #archives_navi {
     margin-bottom: 20px;
-    font-size:small;
+    font-size:11px;
     color:#bbb;
 }
 
@@ -416,6 +416,10 @@ td {
 
 #archives_navi_months li:last-child:after {
     content: "";
+}
+
+#archives_navi_days li:last-child:after {
+    content: " | ";
 }
 
 .archives_list {

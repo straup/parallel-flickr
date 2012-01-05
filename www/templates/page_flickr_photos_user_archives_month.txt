@@ -13,7 +13,7 @@
 <li><a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$previous.0|escape}/{$previous.1|escape}/">{$months.$previous_month|escape}, {$previous.0|escape}</a></li>
 {else}{/if}
 
-<ul>
+<ul id="archives_navi_days">
 {foreach from=$days item="dow" key="dd"}
 <li>{if in_array($dd, $user_days)}<a href="{$owner|@flickr_urls_photos_user_archives}date-{$context|escape}/{$year|escape}/{$month|escape}/{$dd|escape}/" title="photos from {$dow|escape}, {$months.$month|escape} {$dd|escape} {$year|escape}">{$dd|escape}</a>{else}{$dd|escape}{/if}</li>
 {/foreach}
