@@ -101,6 +101,10 @@
 			$args = array_merge($args, $topic_args);
 		}
 
+		if ($GLOBALS['cfg']['flickr_push_notification_email']){
+			$args['mailto'] = $GLOBALS['cfg']['flickr_push_notification_email'];
+		}
+
 		$rsp = flickr_api_call($method, $args);
 		return $rsp;
 	}
