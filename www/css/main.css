@@ -417,3 +417,18 @@ td {
 #archives_navi_months li:last-child:after {
     content: "";
 }
+
+.archives_list {
+    float:left;
+    width:40%;
+}
+
+.archives_list ul { 
+    margin:0;
+    padding:0;
+}
+
+.archives_list li {
+    list-style-type: none;
+    line-height: 1.25em;
+}

@@ -16,7 +16,7 @@
 		$more = array_merge($defaults, $more);
 
 		$query = array(
-			'photo_owner' => $user['id'],
+			'user_id' => $user['id'],
 		);
 
 		# this kind of thing will probably need to be moved in to
