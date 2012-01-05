@@ -669,6 +669,9 @@
 			unset($photo['geo_is_friend']);
 			unset($photo['geo_is_contact']);
 			unset($photo['geo_is_public']);
+		}
+
+		if (isset($photo['context'])){
 			unset($photo['context']);
 		}
 
