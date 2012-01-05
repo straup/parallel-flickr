@@ -662,32 +662,14 @@
 			}
 
 			$photo['geoperms'] = $geoperms;
+			$photo['geocontext'] = $photo['context'];
 
 			unset($photo['place_id']);
 			unset($photo['geo_is_family']);
 			unset($photo['geo_is_friend']);
 			unset($photo['geo_is_contact']);
 			unset($photo['geo_is_public']);
-
-			# get geo context here, this is very annoying
-			# because I forgot to include geo context when
-			# returning geo 'extras' in photos.search...me
-			# dumb (20111227/straup)
-
-			$flickr_user = flickr_users_get_by_user_id($photo['user_id']);
-
-			$method = 'flickr.photos.getInfo';
-
-			$args = array(
-				'photo_id' => $photo['id'],
-				'auth_token' => $flickr_user['auth_token'],
-			);
-
-			$rsp = flickr_api_call($method, $args);
-
-			if ($rsp['ok']){
-				$photo['geocontext'] = $rsp['rsp']['photo']['location']['context'];
-			}
+			unset($photo['context']);
 		}
 
 		if (isset($photo['date_faved'])){
