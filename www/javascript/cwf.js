@@ -334,11 +334,11 @@ function cwf_show_photo(index){
 	msg += "no. <span id=\"cwf_photo_idx\">" + num + "</span> of <span id=\"cwf_count_photos\">" + photos.length + "</span> faves";
 
 	if (num > 1){
-		msg += " / <a href=\"#\" onclick=\"cwf_show_next_photo();return false;\">before</a>";
+		msg += " / <a href=\"#\" onclick=\"cwf_show_next_photo();return false;\" title=\"before, keyboard shortcut: ⇦\">before</a>";
 	}
 
 	if (num < count_photos){
-		msg += " / <a href=\"#\" onclick=\"cwf_show_previous_photo();return false;\">after</a>";
+		msg += " / <a href=\"#\" onclick=\"cwf_show_previous_photo();return false;\" title=\"after, keyboard short: ⇨\">after</a>";
 	}
 
 	msg += "<div id=\"cwf_updates\"></div>";
