@@ -114,7 +114,7 @@ photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 
 <div class="ffbp_photos">
 {foreach from=$users_photos.$nsid item="row"}
-<div class="ffbp_photo" style="min-height:100px;">
+<div class="ffbp_photo {if $row.update_type}{$row.update_type|escape}{else}unknown{/if}" style="min-height:100px;">
 <a href="http://www.flickr.com/photos/{$row.owner|escape}/{$row.photo_id|escape}/{if $row.update_type=='geo'}map/?map_type=sat{/if}" target="_flickr" title="&#8220;{$row.title|escape}&#8221;{if $row.update_type=='faves'} was faved{elseif $row.update_type=='geo'} was geotagged{elseif $row.update_type=='comments'} was commented on{elseif $row.update_type=='notes'} had a note added to it{elseif $row.update_type=='tags'} was tagged{elseif $row.update_type} debug:{$row.update_type|escape}{else}{/if}"><img src="{$row.thumb_url}" alt="{$row.title|escape}, by {$row.ownername|escape}" /></a>
 <div style="font-size:10px;text-align:left;color:#ccc;max-width:75px;margin-top:3px;">
 {if $row.update_type=='faves'}faved{elseif $row.update_type=='geo'}geotagged{elseif $row.update_type=='comments'}commented on{elseif $row.update_type=='notes'} had a note added{elseif $row.update_type=='tags'}tagged{elseif $row.photo_url}administriviated{elseif $row.update_type} debug:{$row.update_type|escape}{else}{/if}
@@ -126,6 +126,48 @@ photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 <br clear="all" />
 
 {/foreach}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function(){
+
+	function filter_photos(type){
+
+		if (type=='all'){
+			$("#ffbp_users").show();
+			$(".ffbp_photo").show();
+			return;
+		}
+
+		var selector = "." + type;
+
+		$("#ffbp_users").hide();
+		$(".ffbp_photo:not(" + selector + ")").hide();
+		$(selector).show();
+	}
+
+	$(document).keydown(function(e){
+
+		var map = {
+			65: 'all',
+			67: 'comments',
+			70: 'faves',
+			71: 'geo',
+			78: 'notes',
+			84: 'tags',
+		}
+
+		var code = e.keyCode;
+
+		if (map[code]){
+			filter_photos(map[code]);
+		}
+	});
+});
+
+{/literal}
+</script>
 
 {/if}
 {/if}
