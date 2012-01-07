@@ -104,7 +104,7 @@
 		}
 
 		if ($json['stat'] != 'ok'){
-			return array( 'ok' => 0, 'error' => $json['message']);
+			return array( 'ok' => 0, 'error' => $json['message'], 'error_code' => $json['code']);
 		}
 
 		unset($json['stat']);
