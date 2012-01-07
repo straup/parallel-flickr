@@ -103,6 +103,7 @@ photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 </div>
 
 {foreach from=$users_updated item="ts" key="nsid"}
+<div class="ffbp_user">
 <a name="{$nsid|escape}"></a>
 <h3>{$users_names.$nsid|escape}</h3>
 
@@ -125,6 +126,7 @@ photos{/if} / <a href="#{$nsid|escape}">{$users_names.$nsid|escape}</a></li>
 
 <br clear="all" />
 
+</div>
 {/foreach}
 
 <script type="text/javascript">
@@ -143,8 +145,13 @@ $(document).ready(function(){
 		var selector = "." + type;
 
 		$("#ffbp_users").hide();
+
+		// who can say... it works... (20120107/straup)
+		$(".ffbp_user .ffbp_photo:not(" + selector + ")").parent().parent().hide()
 		$(".ffbp_photo:not(" + selector + ")").hide();
+
 		$(selector).show();
+		$(".ffbp_user " + selector).parent().parent().show()
 	}
 
 	$(document).keydown(function(e){
