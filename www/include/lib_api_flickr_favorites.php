@@ -1,5 +1,6 @@
 <?php
 
+	loadlib("flickr_faves");
 	loadlib("flickr_api");
 	loadlib("api_utils_flickr");
 
@@ -15,19 +16,22 @@
 			api_output_error(999, "Missing photo ID");
 		}
 
-		$method = 'flickr.favorites.add';
-
-		$args = array(
-			'photo_id' => $photo_id,
-			'auth_token' => $flickr_user['auth_token'],
-		);
-
-		$rsp = flickr_api_call($method, $args);
-
 		# just silently ignore things that have already been faved
 
-		if ((! $rsp['ok']) && ($rsp['error_code'] != 3)){
-			api_output_error(999, $rsp['error']);
+		if (! flickr_faves_is_faved_by_user($GLOBALS['cfg']['user'], $photo_id)){
+
+			$method = 'flickr.favorites.add';
+
+			$args = array(
+				'photo_id' => $photo_id,
+				'auth_token' => $flickr_user['auth_token'],
+			);
+
+			$rsp = flickr_api_call($method, $args);
+
+			if ((! $rsp['ok']) && ($rsp['error_code'] != 3)){
+				api_output_error(999, $rsp['error']);
+			}
 		}
 
 		$out = array(

@@ -2,6 +2,20 @@
 
 	#################################################################
 
+	function flickr_faves_is_faved_by_user(&$user, $photo_id){
+
+		$cluster_id = $user['cluster_id'];
+		$enc_user = AddSlashes($user['id']);
+		$enc_photo = AddSlashes($photo_id);
+
+		$sql = "SELECT photo_id FROM FlickrFaves WHERE photo_id='{$enc_photo}' AND user_id='{$enc_user}'";
+		$rsp = db_single(db_fetch_users($cluster_id, $sql));
+
+		return ($rsp) ? 1 : 0;
+	}
+
+	#################################################################
+
 	function flickr_faves_for_user(&$user, $more=array()){
 
 		$defaults = array(
