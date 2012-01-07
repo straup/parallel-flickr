@@ -341,6 +341,11 @@ function cwf_show_photo(index){
 		msg += " / <a href=\"#\" onclick=\"cwf_show_previous_photo();return false;\" title=\"after, keyboard short: ⇨\">after</a>";
 	}
 
+	// TO DO: is photo faved?
+	// TO DO: does user have write token?
+	// TO DO: if no auth token redirect to this specific photo...
+	// msg += ' / <a id="cwf_fave_' + photo_id + '" href="#" onclick="cwf_fave_photo(' + photo_id + ');return false;">♡ </a>';
+
 	msg += "<div id=\"cwf_updates\"></div>";
 	msg += "</div>";
 
@@ -348,4 +353,29 @@ function cwf_show_photo(index){
 
 	$.backstretch(thumb);
 	$("#cwf_about").html(msg);
+}
+
+function cwf_fave_photo(photo_id){
+
+	var data = {
+		'method': 'flickr.favorites.add',
+		'photo_id': photo_id
+	};
+
+	$.ajax({
+		'url': '/api',
+		'type': 'POST',
+		'data': data,
+		'success': _cwf_fave_photo_onsuccess
+	});
+}
+
+function _cwf_fave_photo_onsuccess(rsp){
+
+	var photo_id = rsp['photo_id'];
+	var selector = $("#cwf_fave_" + photo_id);
+
+	var el = $(selector);
+	el.html("♥");
+	el.attr("onclick", "alert('hi');");
 }

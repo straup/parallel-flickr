@@ -30,7 +30,11 @@
 			api_output_error(999, $rsp['error']);
 		}
 
-		api_output_ok();
+		$out = array(
+			'photo_id' => $photo_id,
+		);
+
+		api_output_ok($out);
 	}
 
 	#################################################################
