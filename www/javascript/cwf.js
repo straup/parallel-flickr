@@ -342,9 +342,10 @@ function cwf_show_photo(index){
 	}
 
 	// TO DO: is photo faved?
+	// TO DO: generic fave js functions not bound to cwf stuff?
 	// TO DO: does user have write token?
 	// TO DO: if no auth token redirect to this specific photo...
-	// msg += ' / <a id="cwf_fave_' + photo_id + '" href="#" onclick="cwf_fave_photo(' + photo_id + ');return false;">♡ </a>';
+	msg += ' / <a id="cwf_fave_' + photo_id + '" href="#" onclick="cwf_fave_photo(' + photo_id + ');return false;">♡ </a>';
 
 	msg += "<div id=\"cwf_updates\"></div>";
 	msg += "</div>";
