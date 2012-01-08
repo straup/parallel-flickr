@@ -318,6 +318,7 @@ function cwf_show_photo(index){
 	var faved_by_name = photo[5];
 	var thumb = photo[6];
 	var img = photo[7];
+	var is_faved = photo[8];
 
 	var num = index + 1;
 
@@ -345,7 +346,8 @@ function cwf_show_photo(index){
 	// TO DO: generic fave js functions not bound to cwf stuff?
 	// TO DO: does user have write token?
 	// TO DO: if no auth token redirect to this specific photo...
-	msg += ' / <a id="cwf_fave_' + photo_id + '" href="#" onclick="cwf_fave_photo(' + photo_id + ');return false;">♡ </a>';
+
+	msg += ' / ' + photo_favorites_generate_html(photo_id, is_faved);
 
 	msg += "<div id=\"cwf_updates\"></div>";
 	msg += "</div>";

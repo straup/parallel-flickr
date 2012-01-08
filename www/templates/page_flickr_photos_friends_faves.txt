@@ -5,13 +5,14 @@
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.favorites.js"></script>
 {if !$new_subscription}
 	<script type="text/javascript">
 
 {if $photos|@count}
 		var faves = [
 {foreach from=$photos item="row"}
-		["{$row.photo_id|escape_javascript}", "{$row.title|escape_javascript}", "{$row.owner|escape_javascript}", "{$row.ownername|escape_javascript}", "{$row.faved_by_nsid|escape_javascript}", "{$row.faved_by|escape_javascript}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
+		["{$row.photo_id|escape_javascript}", "{$row.title|escape_javascript}", "{$row.owner|escape_javascript}", "{$row.ownername|escape_javascript}", "{$row.faved_by_nsid|escape_javascript}", "{$row.faved_by|escape_javascript}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}", {if $row.is_faved}1{else}0{/if} ],
 {/foreach}
 		];
 

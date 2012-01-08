@@ -2,6 +2,12 @@
 
 	#################################################################
 
+	# note: it may be the case that we are calling this function after
+	# a user has faved a photo (either on flickr or, more likely, by
+	# calling the local flickr.favorites.add API method from one of the
+	# push pages) but before the backup_faves.php script has been run;
+	# it's not been decided how to handle this yet (20120108/straup)
+
 	function flickr_faves_is_faved_by_user(&$user, $photo_id){
 
 		$cluster_id = $user['cluster_id'];
