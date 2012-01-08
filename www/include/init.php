@@ -89,6 +89,40 @@
 		include(FLAMEWORK_INCLUDE_DIR."/config.php");
 	}
 
+	# First, ensure that 'abs_root_url' is both assigned and properly
+	# set up to run out of user's public_html directory (if need be).
+
+	$server_url = $GLOBALS['cfg']['abs_root_url'];
+
+	if (! $server_url){
+		$scheme = ($_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
+		$server_url = "{$scheme}://{$_SERVER['SERVER_NAME']}";
+	}
+
+	$cwd = '';
+
+        if ($parent_dirname = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/')){
+
+		$parts = explode("/", $parent_dirname);
+		$cwd = implode("/", array_slice($parts, 1));
+
+		# see below
+		$cwd = rtrim($cwd, '/');
+	}
+
+	# See this? We expect that abs_root_url always have a trailing slash.
+	# Really it's just about being consistent. It doesn't really matter which
+	# one you choose because either way it's going to be pain or a nuisance
+	# at some point or another. So we choose trailing slashes.
+
+	$GLOBALS['cfg']['abs_root_url'] = rtrim($server_url, '/') . "/";
+
+	if ($cwd){
+		$GLOBALS['cfg']['abs_root_url'] .= $cwd . "/";
+	}
+
+	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
+
 	#
 	# Poor man's database configs:
 	# See notes in config.php
