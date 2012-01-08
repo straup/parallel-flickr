@@ -44,11 +44,12 @@ ErrorDocument 500 /500.php
 
 # Get mod_rewrite fired up
 RewriteEngine on
+RewriteBase /
 
 # Login stuff
 
-RewriteRule ^invite/?$						invite.php?%{QUERY_STRING} [L]
-RewriteRule ^invite(?:/([^/]+))?/?$				invite.php?code=$1&%{QUERY_STRING} [L]
+# RewriteRule ^invite/?$						invite.php?%{QUERY_STRING} [L]
+# RewriteRule ^invite(?:/([^/]+))?/?$				invite.php?code=$1&%{QUERY_STRING} [L]
 
 RewriteRule  ^auth/$			/auth_callback_flickr_flickrauth.php?%{QUERY_STRING}	[L]
 RewriteRule  ^signin/$			/signin_flickr_flickrauth.php?%{QUERY_STRING}		[L]
@@ -65,77 +66,77 @@ RewriteRule ^reset/([a-zA-Z0-9]+)/$	/reset.php?reset=$1	[L,QSA]
 
 # Account stuff
 
-RewriteRule  ^account/?$		/account.php		[L]
-RewriteRule  ^account/backups/?$		/account_backups.php		[L]
-RewriteRule  ^account/password/?$	/account_password.php	[L]
-RewriteRule  ^account/delete/?$		/account_delete.php	[L]
-RewriteRule  ^account/url/?$			/account_path_aliases.php		[L]
-RewriteRule  ^account/path_alias(es)?/?$		/account_path_aliases.php		[L]
+RewriteRule  ^account/?$		account.php		[L]
+RewriteRule  ^account/backups/?$	account_backups.php		[L]
+RewriteRule  ^account/password/?$	account_password.php	[L]
+RewriteRule  ^account/delete/?$		account_delete.php	[L]
+RewriteRule  ^account/url/?$			account_path_aliases.php		[L]
+RewriteRule  ^account/path_alias(es)?/?$	account_path_aliases.php		[L]
 
-RewriteRule  ^account/flickr/auth/?$		/account_flickr_auth.php?%{QUERY_STRING}	[L]
+RewriteRule  ^account/flickr/auth/?$		account_flickr_auth.php?%{QUERY_STRING}	[L]
 
 # API
 
-RewriteRule  ^api/?$			/api_rest.php		[L]
-RewriteRule  ^api/methods/?$		/api_methods.php	[L]
-RewriteRule  ^api/methods/(.*)/?$	/api_method.php?method=$1&%{QUERY_STRING}		[L]
-RewriteRule  ^api/rest/(.*)/?$		/api_rest.php?method=$1&%{QUERY_STRING}		[L]
+RewriteRule  ^api/?$			api_rest.php		[L]
+RewriteRule  ^api/methods/?$		api_methods.php	[L]
+RewriteRule  ^api/methods/(.*)/?$	api_method.php?method=$1&%{QUERY_STRING}		[L]
+RewriteRule  ^api/rest/(.*)/?$		api_rest.php?method=$1&%{QUERY_STRING}		[L]
 
 # Flickr stuff
 
-RewriteRule ^photo.gne$							/flickr_photo.php?%{QUERY_STRING} [L]
+RewriteRule ^photo.gne$							flickr_photo.php?%{QUERY_STRING} [L]
 
-RewriteRule ^photos/me(/([a-z_]+))?/?$					/flickr_photos_me.php?context=$2&%{QUERY_STRING} [L]
+RewriteRule ^photos/me(/([a-z_]+))?/?$					flickr_photos_me.php?context=$2&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/friends(/page([0-9]+))?/?$				/flickr_photos_friends.php?page=$2&%{QUERY_STRING} [L]
-RewriteRule ^photos/friends/activity(/([a-z_]+))?/?$			/flickr_photos_friends_activity.php?update_type=$2&%{QUERY_STRING} [L]
-RewriteRule ^photos/friends/faves(/page([0-9]+))?/?$			/flickr_photos_friends_faves.php?page=$2&%{QUERY_STRING} [L]
+RewriteRule ^photos/friends(/page([0-9]+))?/?$				flickr_photos_friends.php?page=$2&%{QUERY_STRING} [L]
+RewriteRule ^photos/friends/activity(/([a-z_]+))?/?$			flickr_photos_friends_activity.php?update_type=$2&%{QUERY_STRING} [L]
+RewriteRule ^photos/friends/faves(/page([0-9]+))?/?$			flickr_photos_friends_faves.php?page=$2&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/activity/?$		/flickr_photos_user_recent_activity.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flickr_photos_user.php?path=$2&nsid=$3&page=$5&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/activity/?$		flickr_photos_user_recent_activity.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	flickr_photos_user.php?path=$2&nsid=$3&page=$5&%{QUERY_STRING} [L]
 
-RewriteRule ^buddyicon/([0-9]+@N[0-9]+).jpg$ 					/flickr_buddyicon.php?nsid=$1 [L]
+RewriteRule ^buddyicon/([0-9]+@N[0-9]+).jpg$ 					flickr_buddyicon.php?nsid=$1 [L]
 
 # Flickr push
 
-RewriteRule ^push/([^/]+)/?$					/flickr_push_receiver.php?secret_url=$1&%{QUERY_STRING} [L]
+RewriteRule ^push/([^/]+)/?$					flickr_push_receiver.php?secret_url=$1&%{QUERY_STRING} [L]
 
 # Places
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places(/([a-z]+))?/?$		/flickr_photos_user_places.php?path=$2&nsid=$3&facet=$5&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places(/([a-z]+))?/?$		flickr_photos_user_places.php?path=$2&nsid=$3&facet=$5&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/([a-z]+)(/(indoors|outdoors))?/?$		/flickr_photos_user_places.php?path=$2&nsid=$3&facet=$4&context=$6&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/([a-z]+)(/(indoors|outdoors))?/?$		flickr_photos_user_places.php?path=$2&nsid=$3&facet=$4&context=$6&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)(/page([0-9]+))?/?$		/flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&page=$6&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)(/page([0-9]+))?/?$		flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&page=$6&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)/(indoors|outdoors)(/page([0-9]+))?/?$		/flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&context=$5&page=$7&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/places/(\d+)/(indoors|outdoors)(/page([0-9]+))?/?$		flickr_photos_user_place.php?path=$2&nsid=$3&woeid=$4&context=$5&page=$7&%{QUERY_STRING} [L]
 
 # cameras
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/?$		/flickr_photos_user_cameras.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/?$		flickr_photos_user_cameras.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_\s\+]+)(/page([0-9]+))?/?$		/flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&page=$6&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_\s\+]+)(/page([0-9]+))?/?$		flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&page=$6&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_\s\+]+)/([0-9a-zA-z-_\s\+]+)(/page([0-9]+))?/?$		/flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&model=$5&page=$7&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/cameras/([0-9a-zA-z-_\s\+]+)/([0-9a-zA-z-_\s\+]+)(/page([0-9]+))?/?$		flickr_photos_user_camera.php?path=$2&nsid=$3&make=$4&model=$5&page=$7&%{QUERY_STRING} [L]
 
 # calendar
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives(/date-(taken|posted))?/?$		/flickr_photos_user_archives.php?path=$2&nsid=$3&context=$5&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives(/date-(taken|posted))?/?$		flickr_photos_user_archives.php?path=$2&nsid=$3&context=$5&%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])(/page([0-9]+))?/?$		/flickr_photos_user_archives_year.php?path=$2&nsid=$3&context=$5&year=$6&page=$8%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])(/page([0-9]+))?/?$		flickr_photos_user_archives_year.php?path=$2&nsid=$3&context=$5&year=$6&page=$8%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])/([0-9][0-9])(/page([0-9]+))?/?$		/flickr_photos_user_archives_month.php?path=$2&nsid=$3&context=$5&year=$6&month=$7&page=$9%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])/([0-9][0-9])(/page([0-9]+))?/?$		flickr_photos_user_archives_month.php?path=$2&nsid=$3&context=$5&year=$6&month=$7&page=$9%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])/([0-9][0-9])/([0-9][0-9])(/page([0-9]+))?/?$		/flickr_photos_user_archives_day.php?path=$2&nsid=$3&context=$5&year=$6&month=$7&day=$8&page=$10%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])/([0-9][0-9])/([0-9][0-9])(/page([0-9]+))?/?$		flickr_photos_user_archives_day.php?path=$2&nsid=$3&context=$5&year=$6&month=$7&day=$8&page=$10%{QUERY_STRING} [L]
 
 # photo pages
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/?$	/flickr_photo.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/exif/?$	/flickr_photo_exif.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/?$	flickr_photo.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/exif/?$	flickr_photo_exif.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]
 
 # faves
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/faves(/page([0-9]+))?/?$	/flickr_faves_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/faves/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	/flickr_faves_user.php?path=$2&nsid=$3&by_alias=$5&by_nsid=$6&page=$8%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/faves(/page([0-9]+))?/?$	flickr_faves_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/faves/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	flickr_faves_user.php?path=$2&nsid=$3&by_alias=$5&by_nsid=$6&page=$8%{QUERY_STRING} [L]
 
 # contacts
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/contacts(/page([0-9]+))?/?$	/flickr_contacts_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/contacts(/page([0-9]+))?/?$	flickr_contacts_user.php?path=$2&nsid=$3&page=$5%{QUERY_STRING} [L]
