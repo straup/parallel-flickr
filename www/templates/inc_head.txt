@@ -5,9 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" type="text/css" media="all" href="/css/main.css" />
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.markers.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmapl.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmapl-standalone.min.js"></script>
 	{if 'sharkify'|@features_is_enabled}
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/sharkify.min.js"></script>
 	{/if}
