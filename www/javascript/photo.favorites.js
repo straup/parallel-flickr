@@ -1,5 +1,5 @@
-var symbols_faved="♥";
-var symbols_notfaved="♡";
+var symbols_faved="★";
+var symbols_notfaved="☆";
 
 function photo_favorites_add(photo_id){
 
@@ -51,8 +51,9 @@ function photo_favorites_generate_html(photo_id, faved){
 	var symbol = photo_favorites_symbol(photo_id, faved);
 	var onclick = photo_favorites_onclick(photo_id, faved);
 	var title = photo_favorites_title(photo_id, faved);
+	var classname = photo_favorites_classname(photo_id, faved);
 
-	var html= '<a href="#" id="' + uid + '" onclick="' + onclick + '" title="' + title + '" class="photo_favorite">';
+	var html= '<a href="#" id="' + uid + '" onclick="' + onclick + '" title="' + title + '" class="' + classname + '">';
 	html += symbol;
 	html += '</a>';
 
@@ -66,6 +67,7 @@ function photo_favorites_toggle_html_api(photo_id){
 	el.html("...");
 	el.attr("onclick", "return false;");
 	el.attr("title", "talking to the sky");
+	el.attr("class", "");
 }
 
 function photo_favorites_toggle_html(photo_id, faved){
@@ -74,11 +76,13 @@ function photo_favorites_toggle_html(photo_id, faved){
 	var symbol = photo_favorites_symbol(photo_id, faved);
 	var onclick = photo_favorites_onclick(photo_id, faved);
 	var title = photo_favorites_title(photo_id, faved);
+	var classname = photo_favorites_classname(photo_id, faved);
 
 	var el = $(selector);
 	el.html(symbol);
 	el.attr("onclick", onclick);
 	el.attr("title", title);
+	el.attr("class", classname);
 }
 
 function photo_favorites_symbol(photo_id, faved){
@@ -94,6 +98,10 @@ function photo_favorites_onclick(photo_id, faved){
 function photo_favorites_title(photo_id, faved){
 	var title = (faved) ? "remove as favourite" : "add as favourite";
 	return title;
+}
+
+function photo_favorites_classname(photo_id, faved){
+	return (faved) ? "photo_faved" : "photo_notfaved";
 }
 
 function photo_favorites_uid(photo_id){

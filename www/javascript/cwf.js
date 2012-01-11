@@ -329,7 +329,8 @@ function cwf_show_photo(index){
 
 	msg += "<div id=\"cwf_about_text\">";
 	msg += "<a href=\"http://www.flickr.com/photos/" + faved_by_nsid + "/faves/\" target=\"_flickr\">" + faved_by_name + "</a>";
-	msg += " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  ";
+	//msg += " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  ";
+	msg += " <span>" + symbols_faved + "</span>  ";
 	msg += "<a href=\"http://www.flickr.com/photos/" + taken_by_nsid + "/\" target=\"_flickr\">" + taken_by_name + "</a><br />";
 
 	msg += "no. <span id=\"cwf_photo_idx\">" + num + "</span> of <span id=\"cwf_count_photos\">" + photos.length + "</span> faves";

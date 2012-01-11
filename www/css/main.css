@@ -459,3 +459,16 @@ td {
     list-style-type: none;
     line-height: 1.25em;
 }
+
+/* note that these are not in cwf.css so that they can reused outside of cwf */
+
+.photo_faved {
+    text-shadow: 0.1em 0.1em 0.02em #fff !important;
+}
+
+.photo_faved:hover {
+    opacity:.8;
+}
+
+.photo_notfaved {
+}
