@@ -1,0 +1,47 @@
+{literal}
+<script type="text/javascript">
+$(window).load(function(){
+	var $document = $(document);
+	var GOING_DOWN = {74:'', 32: ''};
+	var GOING_UP = {75:''};
+	var $elems = $('.{/literal}{$class_name}{literal}');
+	var num_elems = $elems.length;
+	var tops = [];
+
+	$elems.each(function() {
+		tops.push($(this).offset().top - 5);
+	});
+
+	$document.keydown(function(e){
+		var scrollTopPos = $document.scrollTop();
+		if (e.keyCode in GOING_DOWN) {
+			for (var i = 0; i < num_elems - 1; i++) {
+				if (scrollTopPos <= tops[i]) {
+					if (scrollTopPos == tops[i]) {
+						scrollTo(tops[i + 1]); 
+					} else {
+						scrollTo(tops[i]); 
+					}
+					return false;
+				}
+			}
+		} else if (e.keyCode in GOING_UP) {
+			for (var i = num_elems - 1; i > 0; i--) {
+				if (scrollTopPos >= tops[i]) {
+					if (scrollTopPos == tops[i]) {
+						scrollTo(tops[i - 1]);
+					} else {
+						scrollTo(tops[i]); 
+					}
+					return false;
+				}
+			}
+		}
+	});
+
+	function scrollTo(value) {
+		$('html,body').animate({scrollTop: value}, 250, 'swing');
+	}
+});
+</script>
+{/literal}
