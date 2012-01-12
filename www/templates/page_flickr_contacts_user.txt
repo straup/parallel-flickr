@@ -22,4 +22,8 @@ There are <a href="{$row|@flickr_urls_photos_user}">{$row.count_photos|escape} p
 
 {include file="inc_pagination.txt"}
 
+{if $cfg.enable_keyboard_browse}
+{include file="inc_keyboard_browse.txt" class_name="photo"}
+{/if}
+
 {include file="inc_foot.txt"}
