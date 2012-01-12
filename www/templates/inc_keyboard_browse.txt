@@ -17,7 +17,8 @@ $(window).load(function(){
 		if (e.keyCode in GOING_DOWN) {
 			for (var i = 0; i < num_elems - 1; i++) {
 				if (scrollTopPos <= tops[i]) {
-					if (scrollTopPos == tops[i]) {
+					fudger = tops[i] - scrollTopPos;
+					if (fudger <= 1) {
 						scrollTo(tops[i + 1]); 
 					} else {
 						scrollTo(tops[i]); 
@@ -28,7 +29,8 @@ $(window).load(function(){
 		} else if (e.keyCode in GOING_UP) {
 			for (var i = num_elems - 1; i > 0; i--) {
 				if (scrollTopPos >= tops[i]) {
-					if (scrollTopPos == tops[i]) {
+					fudger = scrollTopPos - tops[i];
+					if (fudger <= 1) {
 						scrollTo(tops[i - 1]);
 					} else {
 						scrollTo(tops[i]); 
