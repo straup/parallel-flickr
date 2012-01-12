@@ -9,7 +9,7 @@ $(window).load(function(){
 	var tops = [];
 
 	$elems.each(function() {
-		tops.push($(this).offset().top - 5);
+		tops.push(Math.round($(this).offset().top) - 5);
 	});
 
 	$document.keydown(function(e){
