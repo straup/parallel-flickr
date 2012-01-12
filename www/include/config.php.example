@@ -133,6 +133,8 @@
 
 	$GLOBALS['cfg']['enable_feature_archives'] = 0;
 
+	$GLOBALS['cfg']['enable_keyboard_browse'] = 0;
+
 	#
 
 	$GLOBALS['cfg']['rewrite_static_urls'] = array(
