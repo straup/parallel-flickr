@@ -74,7 +74,7 @@ your photos from {$place.name|escape}
 </div>
 
 <div class="photo_sidebar" style="margin-top:0px;">
-{include file="inc_flickr_photo_map.txt" photo=$row}
+{include file="inc_flickr_photo_map.txt" photo=$row nozoom=1}
 </div>
 
 <br clear="all" />
