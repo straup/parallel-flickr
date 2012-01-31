@@ -24,17 +24,20 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	$> sudo sh ./ubuntu/install.sh
 
-	$> sudo chown -R www-data templates_c
+	$> sudo chown -R www-data www/templates_c
 
 	TO DO: apache configs
+  see: apache/parallel-flickr.conf.example
 
-    $> cd schema
+  $> cd schema
 
-    $> mysql -u root -p < SETUP.md
+  CHANGE flickr DB password in SETUP.md
 
-    $> cat *schema | mysql -u root -p flickr
+  $> mysql -u root -p < SETUP.md
 
-* Now set up the application config file:
+  $> cat *schema | mysql -u root -p flickr
+
+* Now set up the application config file (grep for TWEAK ME):
 
 	$> cp www/include/config.php.example www/include/config.php
 
