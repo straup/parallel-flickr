@@ -241,13 +241,13 @@
 
 		$start_time = time();
 
-		$rsp = flickr_contacts_purge_contacts($user);
+		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
-		if ($rsp['ok']){
+		$more = array(
+			'purge_existing_contacts' => 1
+		);
 
-			$flickr_user = flickr_users_get_by_user_id($user['id']);
-			$rsp = flickr_contacts_import_for_nsid($flickr_user['nsid']);
-		}
+		$rsp = flickr_contacts_import_for_nsid($flickr_user['nsid'], $more);
 
 		if ($rsp['ok']){
 			$update['date_lastupdate'] = $start_time;
