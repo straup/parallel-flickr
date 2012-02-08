@@ -4,6 +4,7 @@
 
 	loadlib("flickr_users");
 	loadlib("flickr_photos");
+	loadlib("flickr_backups");
 	loadlib("flickr_photos_utils");
 	loadlib("flickr_urls");
 	loadlib("flickr_dates");
@@ -15,6 +16,9 @@
 
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
 	$GLOBALS['smarty']->assign("is_own", $is_own);
+
+	$is_registered = flickr_backups_is_registered_user($owner);
+	$GLOBALS['smarty']->assign("is_registered", $is_registered);
 
 	#
 

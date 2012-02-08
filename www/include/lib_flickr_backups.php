@@ -101,6 +101,19 @@
 
 	#################################################################
 
+	function flickr_backups_is_registered_user(&$user){
+
+		$enc_user = AddSlashes($user['id']);
+		$sql = "SELECT * FROM FlickrBackups WHERE user_id='{$enc_user}'";
+
+		$rsp = db_fetch($sql);
+		$row = db_single($rsp);
+
+		return ($row) ? 1 : 0;
+	}
+
+	#################################################################
+
 	function flickr_backups_for_user(&$user, $type_id=null){
 
 		$enc_user = AddSlashes($user['id']);

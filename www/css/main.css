@@ -459,3 +459,10 @@ td {
     list-style-type: none;
     line-height: 1.25em;
 }
+
+.isnot_registered {
+    font-size:small;
+    font-style:italic;
+    margin-bottom: 20px;
+    max-width:640px;
+}
