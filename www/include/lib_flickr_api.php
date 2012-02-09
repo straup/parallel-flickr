@@ -118,8 +118,9 @@
 
 		$args['api_key'] = $GLOBALS['cfg']['flickr_api_key'];
 
-		# did we really never add json output for uploads...
-		# (20120208/straup)
+		# did we really never add json output for uploads?
+		# why did we do that... (20120208/straup)
+		#
 		# $args['format'] = 'json';
 		# $args['nojsoncallback'] = 1;
 
@@ -139,17 +140,27 @@
 
 		$rsp = http_post($url, $args, $headers, $more);
 
-		/*
-<rsp stat="ok">
-<ticketid>9999-1234</ticketid>
-</rsp>
+		if (! $rsp['ok']){
+			return $rsp;
+		}
 
-<rsp stat="ok">
-<photoid>999999</photoid>
-</rsp>
-		*/
+		# sigh... see above
 
-		# sudo parse the XML... see above
+		if ((isset($args['async'])) && ($args['async'])){
+
+			if (preg_match("/<ticketid>(\d+-\d+)<\/ticketid>/m", $rsp['body'], $m)){
+				return okay(array("ticket_id" => $m[1]));
+			}
+		}
+
+		else {
+
+			if (preg_match("/<photoid>(\d+)<\/photoid>/m", $rsp['body'], $m)){
+				return okay(array("photo_id" => $m[1]));
+			}
+		}
+
+		return not_okay("failed to parse response '{$rsp['body']}'");
 	}
 
 	#################################################################
