@@ -46,6 +46,9 @@
 
 	$GLOBALS['cfg']['enable_feature_sharkify'] = 1;		# http://www.iamcal.com/sharkify/
 
+	$GLOBALS['cfg']['enable_feature_uploads'] = 0;
+	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 0;
+
 	# See this? It assumes everything is running on a single
 	# (read: not federated) database.
 
