@@ -26,8 +26,13 @@
 			return $rsp;
 		}
 
-		return $rsp;
+		if ((isset($args['async'])) && ($args['async'])){
+			return $rsp;
+		}
+
 		# import photo here
+
+		return $rsp;
 	}
 
 	#################################################################
