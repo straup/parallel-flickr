@@ -35,6 +35,8 @@
 
 	foreach ($attachments as $file){
 
+		# TO DO: check mime type
+
 		$filename = $file->filename;
 		$path = "{$tmpdir}/{$filename}";
 
