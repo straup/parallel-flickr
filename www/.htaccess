@@ -73,6 +73,8 @@ RewriteRule  ^account/delete/?$		account_delete.php	[L]
 RewriteRule  ^account/url/?$			account_path_aliases.php		[L]
 RewriteRule  ^account/path_alias(es)?/?$	account_path_aliases.php		[L]
 
+RewriteRule  ^account/uploadbyemail/?$		account_uploadbyemail.php		[L]
+
 RewriteRule  ^account/flickr/auth/?$		account_flickr_auth.php?%{QUERY_STRING}	[L]
 
 # API
