@@ -7,7 +7,6 @@
 	loadlib("flickr_photos_upload");
 
 	# THIS IS SO NOT FINISHED (20120209/straup)
-	error_disabled();
 
 	# https://code.google.com/p/php-mime-mail-parser/
 	loadpear("MimeMailParser");
@@ -16,7 +15,7 @@
 	$parser->setStream(STDIN);  
   
 	$to = $parser->getHeader('to');  
-	
+
 	# TO DO: WRITE ME
 
 	$user = users_get_by_magic_email($to);
@@ -31,14 +30,18 @@
 	}
 
 	$uploads = array();
+
 	$tmpdir = sys_get_temp_dir();
+	$pid = getmypid();
 
-	foreach ($attachments as $file){
+	foreach ($attachments as $att){
 
-		# TO DO: check mime type
+		if (! preg_match("/^image\//", $att->content_type)){
+			continue;
+		}
 
-		$filename = $file->filename;
-		$path = "{$tmpdir}/{$filename}";
+		$filename = $att->filename;
+		$path = "{$tmpdir}/{$pid}-{$filename}";
 
 		$fh = fopen($path, "w");
 
@@ -49,7 +52,7 @@
 
 		# TO DO: check buffer size
 
-		while ($bytes = $attachment->read()){
+		while ($bytes = $att->read()){
 			fwrite($fh, $bytes);
 		}
 
@@ -58,13 +61,24 @@
 		$uploads[] = $path;
 	}
 
+	if (! count($uploads)){
+		echo "no valid uploads";
+		exit();
+	}
+
 	foreach ($uploads as $path){
 
 		$args = array();
 
 		$rsp = flickr_photos_upload($user, $path, $args);
 
-		# TO DO: check me...
+		# THROW AN ERROR ?
+
+		if (! $rsp['ok']){
+
+			echo "failed to upload '{$path}' : {$rsp['error']}";
+			continue;
+		}
 	}
 
 	foreach ($uploads as $path){

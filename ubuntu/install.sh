@@ -27,5 +27,8 @@ ${INSTALL} php5-mysql
 ${INSTALL} php5-curl
 ${INSTALL} php5-mcrypt
 
+/usr/bin/pecl install mailparse
+echo 'extension=mailparse.so' > /etc/php5/apache2/conf.d/mailparse.ini
+
 ln -s  /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
 /etc/init.d/apache2 restart
