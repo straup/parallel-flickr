@@ -20,6 +20,15 @@
 			"library": "api_test"
 		},
 
+		"flickr.photos.upload": {
+			"documented": 0,
+			"enabled": 1,
+			"library": "api_flickr_photos",
+			"requires_auth": 1,
+			"requires_crumb": 1,
+			"crumb_ttl": 300
+		},
+
 		"flickr.photos.friends.faves": {
 			"documented": 0,
 			"enabled": 1,

@@ -1,0 +1,60 @@
+{include file="inc_head.txt"}
+
+{if !$can_upload}
+INSUFFICIENT PERMS
+{else}
+
+<form id="upload" method="POST" enctype="multipart/form-data">
+	<input type="file" name="photo" id="photo" data-crumb="{$crumb|escape}" />
+	<input type="submit" value="UPLOAD" />
+</form>
+
+{/if}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function(){
+
+	$("#upload").submit(function(){
+
+		var data = new FormData();
+		data.append("method", "flickr.photos.upload");
+
+		var crumb = $("#photo").attr("data-crumb");
+		data.append("crumb", crumb);
+
+		/* sudo account for multiple photos... */
+
+		try {
+			var photos = $("#photo");
+			var files = photos = photos[0].files;
+			data.append('photo', files[0]);
+		}
+
+		catch(e){
+			console.log(e);
+			return false;
+		}
+
+		$.ajax({
+			url: "/api",
+			type: "POST",
+			data: data,
+			cache: false,
+			contentType: false,
+			processData: false,
+			dataType: "json",
+			success: function(rsp){
+console.log(rsp);
+			}
+		});
+
+		return false;
+	});
+});
+
+{/literal}
+</script>
+
+{include file="inc_foot.txt"}
