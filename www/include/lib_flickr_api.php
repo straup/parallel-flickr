@@ -9,6 +9,7 @@
 	#################################################################
 
 	$GLOBALS['cfg']['flickr_api_endpoint'] = 'http://api.flickr.com/services/rest/';
+	$GLOBALS['cfg']['flickr_upload_endpoint'] = 'http://api.flickr.com/services/upload/';
 	$GLOBALS['cfg']['flickr_auth_endpoint'] = 'http://api.flickr.com/services/auth/';
 
 	#################################################################
@@ -109,6 +110,46 @@
 
 		unset($json['stat']);
 		return array( 'ok' => 1, 'rsp' => $json );
+	}
+
+	#################################################################
+
+	function flickr_api_upload($file, $args, $more=array()){
+
+		$args['api_key'] = $GLOBALS['cfg']['flickr_api_key'];
+
+		# did we really never add json output for uploads...
+		# (20120208/straup)
+		# $args['format'] = 'json';
+		# $args['nojsoncallback'] = 1;
+
+		$sig = _flickr_api_sign_args($args);
+
+		$args['api_sig'] = $sig;
+		$args['photo'] = "@{$file}";
+
+		$defaults = array(
+			'http_timeout' => 10,
+		);
+
+		$more = array_merge($defaults, $more);
+		$headers = array();
+
+		$url = $GLOBALS['cfg']['flickr_upload_endpoint'];
+
+		$rsp = http_post($url, $args, $headers, $more);
+
+		/*
+<rsp stat="ok">
+<ticketid>9999-1234</ticketid>
+</rsp>
+
+<rsp stat="ok">
+<photoid>999999</photoid>
+</rsp>
+		*/
+
+		# sudo parse the XML... see above
 	}
 
 	#################################################################
