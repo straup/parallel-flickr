@@ -282,9 +282,10 @@
 
 	function flickr_users_has_token_perms(&$flickr_user, $string_perms){
 
-		$flickr_perms = $flickr_user['token_perms'];
-
+		loadlib("flickr_api");
 		$perms_map = flickr_api_authtoken_perms_map("string keys");
+
+		$flickr_perms = $flickr_user['token_perms'];
 
 		return ($flickr_perms >= $perms_map[$string_perms]) ? 1 : 0;
 	}
