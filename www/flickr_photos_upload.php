@@ -6,6 +6,10 @@
 
 	login_ensure_loggedin("photos/upload");
 
+	if (! $GLOBALS['cfg']['enable_feature_uploads']){
+		error_disabled();
+	}
+
 	$is_registered = flickr_backups_is_registered_user($GLOBALS['cfg']['user']);
 	$can_upload = $is_registered;
 

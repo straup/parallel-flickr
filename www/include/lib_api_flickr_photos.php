@@ -6,6 +6,10 @@
 
 	function api_flickr_photos_upload(){
 
+		if (! $GLOBALS['cfg']['enable_feature_uploads']){
+			api_output_error(999, "uploads are disabled");
+		}
+
 		if (! $_FILES['photo']){
 			api_output_error(999, "missing photo");
 		}
