@@ -1,7 +1,24 @@
+{capture assign="page_title"}upload{/capture}
 {include file="inc_head.txt"}
 
-{if !$can_upload}
-INSUFFICIENT PERMS
+<h2>Upload a photo</h2>
+
+{if !$is_registered}
+
+<p>Sorry. This feature is only available to registered <q>backup</q> users of
+the site.</p>
+
+{elseif !$can_upload}
+
+<p>Okay, you're almost ready to upload photos to Flickr. By default
+<strong>{$cfg.site_name|escape}</strong> only needs to have an authentication
+token for your Flickr account ({$cfg.user.username|escape}) with <q>read</q>
+permissions. In order to upload photos we'll need to bounce you back through the
+Flickr website site so you can confirm that you're okay with
+<strong>{$cfg.site_name|escape}</strong> uploading photos on your behalf.</p>
+
+<p><a href="{$cfg.abs_root_url}account/flickr/auth?perms=write&redir=/photos/upload">Get started.</a></p>
+
 {else}
 
 <form id="upload" method="POST" enctype="multipart/form-data">

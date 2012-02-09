@@ -14,6 +14,7 @@
 	}
 
 	$has_crumb = ((is_array($extra)) && (isset($extra['crumb']))) ? 1 : 0;
+	$user_id = 0;
 
 	if (($GLOBALS['cfg']['user']['id']) && ($has_crumb)){
 
@@ -99,20 +100,20 @@
 
 	$flickr_user = flickr_users_get_by_nsid($nsid);
 
-	if ($user_id = $flickr_user['user_id']){
-
-		$user = users_get_by_id($user_id);
+	if ($flickr_user){
+		
+		$user = users_get_by_id($flickr_user['user_id']);
 		$change = 0;
 
 		if (! $flickr_user['auth_token']){
 			$change = 1;
 		}
 
-		if ((! $change) && ($flickr_user['auth_token'] != $token)){
+		if ($flickr_user['auth_token'] != $token){
 			$change = 1;
 		}
 
-		if ((! $change) && ($flickr_user['token_perms'] != $perms)){
+		if ($flickr_user['token_perms'] != $perms){
 			$change = 1;
 		}
 
