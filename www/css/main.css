@@ -460,8 +460,6 @@ td {
     line-height: 1.25em;
 }
 
-/* note that these are not in cwf.css so that they can reused outside of cwf */
-
 .photo_faved {
     text-shadow: 0.1em 0.1em 0.02em #fff !important;
 }
@@ -471,4 +469,11 @@ td {
 }
 
 .photo_notfaved {
+}
+
+.isnot_registered {
+    font-size:small;
+    font-style:italic;
+    margin-bottom: 20px;
+    max-width:640px;
 }

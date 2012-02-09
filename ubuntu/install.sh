@@ -23,9 +23,9 @@ ${INSTALL} htop
 ${INSTALL} mysql-server
 
 ${INSTALL} php5
-${INSTALL} php-5-mysql
+${INSTALL} php5-mysql
 ${INSTALL} php5-curl
-${INSTALL} php-mcrypt
+${INSTALL} php5-mcrypt
 
 ln -s  /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
 /etc/init.d/apache2 restart

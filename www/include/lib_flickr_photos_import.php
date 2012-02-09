@@ -562,6 +562,12 @@
 	function _flickr_photos_import_store($path, &$bits){
 
 		$fh = fopen($path, "w");
+
+		if (! $fh){
+			echo "failed to create filehandle for '{$path}'\n";
+			return 0;
+		}
+
 		fwrite($fh, $bits);
 		fclose($fh);
 

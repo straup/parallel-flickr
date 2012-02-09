@@ -14,6 +14,7 @@
 	}
 
 	foreach (flickr_backups_users() as $user){
+		echo "backup contacts for {$user['username']}\n";
 		$rsp = flickr_backups_get_contacts($user);
 		dumper($rsp);
 	}

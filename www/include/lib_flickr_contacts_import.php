@@ -20,6 +20,8 @@
 		}
 
 		$method = 'flickr.contacts.getList';
+
+		$all_contacts = array();
 		$count_contacts = 0;
 
 		$args = array(
@@ -32,26 +34,48 @@
 
 		while ((! isset($pages)) || ($pages >= $args['page'])){
 
-			$rsp = flickr_api_call($method, $args);
+			$api_ok = 0;
+			$api_error = '';
 
-			if (! $rsp){
-				return array(
-					'ok' => 0,
-					'error' => 'The Flickr API is wigging out...',
-				);
+			# Can I just say this is so profoundly annoying. Why why why
+			# are API calls to a federated database table failing? Anyway.
+			# (20120201/straup)
+
+			$retries = 0;
+			$max_retries = 10;
+
+			while (! $api_ok){
+
+				$retries += 1;
+
+				$rsp = flickr_api_call($method, $args);
+				$api_ok = $rsp['ok'];
+
+				if (! $api_ok){
+					$api_error = "The Flickr API is wigging out: {$rsp['error']}";
+				}
+
+				else {
+					$contacts = $rsp['rsp']['contacts']['contact'];
+
+					if (! is_array($contacts)){
+						$api_error = "The Flickr API did not return any contacts";
+						$api_ok = 0;
+					}
+				}
+
+				echo "page: {$args['page']}/{$pages} tries: {$retries}/{$max_retries} ok: {$api_ok}\n";
+
+				if (! $api_ok){
+
+					if ($retries == $max_retries){
+						return not_okay("Unable to fetch contacts: {$api_error}");
+					}
+				}
 			}
 
 			if (! isset($pages)){
 				$pages = $rsp['rsp']['contacts']['pages'];
-			}
-
-			$contacts = $rsp['rsp']['contacts']['contact'];
-
-			if (! is_array($contacts)){
-				return array(
-					'ok' => 0,
-					'error' => 'The Flickr API did not return any contacts',
-				);
 			}
 
 			foreach ($contacts as $contact){
@@ -101,11 +125,28 @@
 					'rel' => $rel,
 				);
 
-				$contact = flickr_contacts_add_contact($insert);
-				$count_contacts ++;
+				$all_contacts[] = $insert;
 			}
 
 			$args['page'] += 1;
+		}
+
+		if (isset($more['purge_existing_contacts'])){
+
+			$rsp = flickr_contacts_purge_contacts($user);
+
+			if (! $rsp['ok']){
+				return not_okay("failed to purge existing contacts: {$rsp['error']}");
+			}
+		}
+
+		# echo "import " . count($all_contacts) . " contacts\n";
+
+		foreach ($all_contacts as $insert){
+
+			if (flickr_contacts_add_contact($insert)){
+				$count_contacts ++;
+			}
 		}
 
 		return array(

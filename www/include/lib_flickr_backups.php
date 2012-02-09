@@ -101,6 +101,19 @@
 
 	#################################################################
 
+	function flickr_backups_is_registered_user(&$user){
+
+		$enc_user = AddSlashes($user['id']);
+		$sql = "SELECT * FROM FlickrBackups WHERE user_id='{$enc_user}'";
+
+		$rsp = db_fetch($sql);
+		$row = db_single($rsp);
+
+		return ($row) ? 1 : 0;
+	}
+
+	#################################################################
+
 	function flickr_backups_for_user(&$user, $type_id=null){
 
 		$enc_user = AddSlashes($user['id']);
@@ -241,13 +254,13 @@
 
 		$start_time = time();
 
-		$rsp = flickr_contacts_purge_contacts($user);
+		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
-		if ($rsp['ok']){
+		$more = array(
+			'purge_existing_contacts' => 1
+		);
 
-			$flickr_user = flickr_users_get_by_user_id($user['id']);
-			$rsp = flickr_contacts_import_for_nsid($flickr_user['nsid']);
-		}
+		$rsp = flickr_contacts_import_for_nsid($flickr_user['nsid'], $more);
 
 		if ($rsp['ok']){
 			$update['date_lastupdate'] = $start_time;

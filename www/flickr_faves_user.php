@@ -4,6 +4,7 @@
 
 	loadlib("flickr_users");
 	loadlib("flickr_photos");
+	loadlib("flickr_backups");
 	loadlib("flickr_faves");
 	loadlib("flickr_urls");
 	loadlib("flickr_dates");
@@ -13,12 +14,20 @@
 	$viewer = $GLOBALS['cfg']['user'];
 
 	$flickr_user = flickr_users_get_by_url();
+
 	$owner = users_get_by_id($flickr_user['user_id']);
+	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 
 	$is_own = ($owner['id'] == $viewer['id']) ? 1 : 0;
 	$GLOBALS['smarty']->assign("is_own", $is_own);
 
-	#
+	$is_registered = flickr_backups_is_registered_user($owner);
+	$GLOBALS['smarty']->assign("is_registered", $is_registered);
+
+	if (! $is_registered){
+		$GLOBALS['smarty']->display("page_flickr_faves_user.txt");
+		exit();
+	}
 
 	$more = array(
 		'viewer_id' => $viewer['id'],
@@ -71,7 +80,6 @@
 		$photos[] = $photo;
 	}
 
-	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 	$GLOBALS['smarty']->assign_by_ref("by_owner", $by_owner);
 
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);

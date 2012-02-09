@@ -2,6 +2,20 @@
 
 <h2>{if $is_own}your photos{else}photos from {$owner.username|escape}{/if}</h2>
 
+{if !$is_registered}
+<div class="isnot_registered">
+{if $is_own}
+These are only some of your Flickr photos. You're not
+a registered user of <strong>{$cfg.site_name|escape}</strong> so the photos you're seeing are
+only those that were faved by one or more the people whose photos are backed up here.
+{else}
+These are only some of <strong>{$owner.username|escape}</strong>'s Flickr photos. They are a not
+a registered user of <strong>{$cfg.site_name|escape}</strong> so the photos you're seeing are
+only those that were faved by one or more the people whose photos are backed up here.
+{/if}
+</div>
+{/if}
+
 {foreach from=$photos item="row"}
 
 <div class="photos_user_photo">
