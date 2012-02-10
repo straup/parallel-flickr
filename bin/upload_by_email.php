@@ -4,11 +4,10 @@
 	ini_set("include_path", "{$root}/www:{$root}/www/include");
 
 	include("include/init.php");
+
 	loadlib("flickr_photos_upload");
 	loadlib("flickr_users");
 	loadlib("flickr_backups");
-
-	# THIS IS SO NOT FINISHED (20120209/straup)
 
 	# https://code.google.com/p/php-mime-mail-parser/
 	loadpear("MimeMailParser");
@@ -41,6 +40,15 @@
 		log_fatal("invalid magic email address");
 	}
 
+	# TO DO: in some magic future pony world we should allow
+	# users to restrict uploads to one or more 'From' addresses
+	# (20120209/straup)
+
+	# strictly speaking both of these should always be true
+	# because they are checked when a user creates their
+	# upload by email address but measure twice and all that
+	# (20120209/straup)
+
 	if (! flickr_backups_is_registered_user($user)){
 		log_fatal("not a registered backup user");
 	}
@@ -50,8 +58,6 @@
 	if (! flickr_users_has_token_perms($flickr_user, "write")){
 		log_fatal("user has insufficient token perms");
 	}
-
-	# $subject = $parser->getHeader('subject');  
 
 	$attachments = $parser->getAttachments();
 
@@ -69,6 +75,10 @@
 
 	foreach ($attachments as $att){
 
+		# Flickr goes to a lot of trouble to pull images out
+		# of HTML forms and remote services. parallel-flickr
+		# does not. (20120209/straup)
+
 		if (! preg_match("/^image\//", $att->content_type)){
 			continue;
 		}
@@ -82,8 +92,6 @@
 			echo "failed to open {$path}";
 			continue;
 		}
-
-		# TO DO: check buffer size
 
 		while ($bytes = $att->read()){
 
@@ -123,6 +131,8 @@
 			echo "failed to upload '{$path}' : {$rsp['error']}";
 			continue;
 		}
+
+
 	}
 
 	foreach ($uploads as $path){

@@ -30,7 +30,8 @@
 			return $rsp;
 		}
 
-		# import photo here
+		# TO DO: archive the photo locally now that we have a photo ID
+		# see also: bin/upload_by_email.php
 
 		return $rsp;
 	}
