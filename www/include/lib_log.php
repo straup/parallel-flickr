@@ -25,7 +25,7 @@
 		'error'		=> array('html', 'error_log'),
 		'fatal'		=> array('html', 'error_log'),
 		'rawr'		=> array('error_log'),
-		'debug'		=> array(),
+		'debug'		=> array('plain'),
 	);
 
 	$GLOBALS['log_html_colors'] = array(
@@ -117,7 +117,7 @@
 
 		$msg = str_replace("\n", ' ', $msg);
 
-		error_log("[$level] $msg ($page)");
+		error_log("[$level] $msg");
 	}
 
 
@@ -163,7 +163,7 @@
 		# only shows notices if we asked to see them
 		if ($level == 'notice' && !$GLOBALS['cfg']['admin_flags_show_notices']) return;
 
-		$type = $more['type'] ? $more['type'] : '';
+		$type = $more['type'] ? $more['type'] : $level;
 
 		if ($type) echo "[$type] ";
 
