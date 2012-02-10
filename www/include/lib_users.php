@@ -318,4 +318,16 @@
 	}
 
 	#################################################################
+
+	function users_reset_uploadbyemail_address(&$user){
+
+		# please for to be making me better
+		$addr = random_string(rand(5, 10)) . "." . random_string(rand(5, 10));
+
+		# TO DO: check/update the database
+
+		return $addr;
+	}
+
+	#################################################################
 ?>

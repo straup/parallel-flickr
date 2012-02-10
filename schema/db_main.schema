@@ -8,10 +8,12 @@ CREATE TABLE `Users` (
   `created` int(10) unsigned NOT NULL,
   `password` char(64) DEFAULT NULL,
   `conf_code` char(24) DEFAULT NULL,
+  `uploadbyemail_address` varchar(21) DEFAULT NULL,
   `confirmed` int(10) unsigned NOT NULL,
   `cluster_id` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `by_email` (`email`),
+  UNIQUE KEY `by_upload` (`uploadbyemail_address`),
   UNIQUE KEY `by_username` (`username`,`deleted`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

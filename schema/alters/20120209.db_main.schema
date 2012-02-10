@@ -1,0 +1,2 @@
+ALTER TABLE Users ADD uploadbyemail_address VARCHAR(21) DEFAULT NULL;
+CREATE UNIQUE INDEX `by_upload` ON Users (`uploadbyemail_address`);

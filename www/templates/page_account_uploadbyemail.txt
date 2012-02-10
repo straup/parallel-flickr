@@ -23,6 +23,12 @@ Flickr website site so you can confirm that you're okay with
 
 <h3>{$cfg.user.uploadbyemail_address|escape}@{$cfg.uploads_by_email_hostname|escape}</h3>
 
+<form method="POST" action="{$cfg.abs_root_url}account/uploadbyemail/">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="reset" value="1" />
+	<input type="submit" value="RESET" />
+</form>
+
 {/if}
 
 {include file="inc_foot.txt"}

@@ -22,9 +22,25 @@
 		$can_upload = flickr_users_has_token_perms($flickr_user, "write");
 	}
 
-	if (($can_upload) && (! $user['uploadbyemail_address'])){
+	if ($can_upload){
 
-		$GLOBALS['cfg']['user']['uploadbyemail_address'] = 'fixme';
+		$crumb_key = 'uploadbyemail';
+		$crumb_ok = crumb_check($crumb_key);
+
+		$GLOBALS['smarty']->assign("crumb_key", $crumb_key);
+
+		if (! $user['uploadbyemail_address']){
+			$address = users_reset_uploadbyemail_address($user);
+			$GLOBALS['cfg']['user']['uploadbyemail_address'] = $address;
+		}
+
+		else if (($crumb_ok) && (post_str("reset"))){
+			$address = users_reset_uploadbyemail_address($user);
+			$GLOBALS['cfg']['user']['uploadbyemail_address'] = $address;
+			$GLOBALS['smarty']->assign("is_reset", 1);
+		}
+
+		else {}
 	}
 
 	$GLOBALS['smarty']->assign("is_registered", $is_registered);
