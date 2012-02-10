@@ -64,6 +64,9 @@
 	$tmpdir = sys_get_temp_dir();
 	$pid = getmypid();
 
+	$max_bytes = $GLOBALS['cfg']['uploads_by_email_maxbytes'];
+	$bytes_read = 0;
+
 	foreach ($attachments as $att){
 
 		if (! preg_match("/^image\//", $att->content_type)){
@@ -83,6 +86,18 @@
 		# TO DO: check buffer size
 
 		while ($bytes = $att->read()){
+
+			$bytes_read += strlen($bytes);
+
+			if (($max_bytes) && ($bytes_read >= $max_bytes)){
+
+				foreach ($uploads as $path){
+					unlink($path);
+				}
+
+				log_fatal("upload by email exceeded max bytes ({$max_bytes})");
+			}
+
 			fwrite($fh, $bytes);
 		}
 

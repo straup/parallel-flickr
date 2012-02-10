@@ -49,6 +49,7 @@
 	$GLOBALS['cfg']['enable_feature_uploads'] = 0;
 	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 0;
 	$GLOBALS['cfg']['uploads_by_email_hostname'] = '';
+	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;	// 1048576 is 1MB
 
 	# See this? It assumes everything is running on a single
 	# (read: not federated) database.
