@@ -21,14 +21,21 @@
 		log_fatal("uploads by email are disabled");
 	}
 
+	# sudo make me less bad (also include hostname)
+	$re = "/([a-zA-Z0-9\.]+)@/";
+
 	$parser = new MimeMailParser();  
 	$parser->setStream(STDIN);  
   
 	$to = $parser->getHeader('to');  
 
-	# TO DO: WRITE ME
+	if (! preg_match($re, $to, $m)){
+		log_fatal("failed to parse upload by email address");
+	}
 
-	$user = users_get_by_magic_email($to);
+	$addr = $m[1];
+
+	$user = users_get_by_uploadbyemail_address($addr);
 
 	if (! $user){
 		log_fatal("invalid magic email address");
