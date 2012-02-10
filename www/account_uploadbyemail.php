@@ -29,18 +29,26 @@
 
 		$GLOBALS['smarty']->assign("crumb_key", $crumb_key);
 
-		if (! $user['uploadbyemail_address']){
-			$address = users_reset_uploadbyemail_address($user);
-			$GLOBALS['cfg']['user']['uploadbyemail_address'] = $address;
+		$do_reset = 0;
+
+		if (($crumb_ok) && (post_str("create"))){
+			$GLOBALS['smarty']->assign("is_new", 1);
+			$do_reset = 1;
 		}
 
 		else if (($crumb_ok) && (post_str("reset"))){
-			$address = users_reset_uploadbyemail_address($user);
-			$GLOBALS['cfg']['user']['uploadbyemail_address'] = $address;
 			$GLOBALS['smarty']->assign("is_reset", 1);
+			$do_reset = 1;
 		}
 
 		else {}
+
+		# TO DO: error checking/handling
+
+		if ($do_reset){
+			$rsp = users_reset_uploadbyemail_address($GLOBALS['cfg']['user']);
+			$GLOBALS['cfg']['user']['uploadbyemail_address'] = $rsp['uploadbyemail_address'];
+		}
 	}
 
 	$GLOBALS['smarty']->assign("is_registered", $is_registered);

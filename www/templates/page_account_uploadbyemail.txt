@@ -21,6 +21,26 @@ Flickr website site so you can confirm that you're okay with
 
 {else}
 
+{if $is_reset}
+<p class="confirm">Your upload by email address has been reset.</p>
+{/if}
+
+{if $is_new}
+<p class="confirm">Your upload by email address has been created!</p>
+{/if}
+
+{if !$cfg.user.uploadbyemail_address|escape}
+
+<p>Your upload by email address hasn't been created yet. Press the button to get started!</p>
+
+<form method="POST" action="{$cfg.abs_root_url}account/uploadbyemail/">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="create" value="1" />
+	<input type="submit" value="CREATE" />
+</form>
+
+{else}
+
 <h3>{$cfg.user.uploadbyemail_address|escape}@{$cfg.uploads_by_email_hostname|escape}</h3>
 
 <form method="POST" action="{$cfg.abs_root_url}account/uploadbyemail/">
@@ -28,6 +48,8 @@ Flickr website site so you can confirm that you're okay with
 	<input type="hidden" name="reset" value="1" />
 	<input type="submit" value="RESET" />
 </form>
+
+{/if}
 
 {/if}
 

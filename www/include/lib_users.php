@@ -184,6 +184,18 @@
 
 	#################################################################
 
+	function users_get_by_uploadbyemail_address($addr){
+
+		$enc_addr = AddSlashes($addr);
+
+		$sql = "SELECT * FROM Users WHERE uploadbyemail_address='{$enc_addr}'";
+		$row = db_single(db_fetch($sql));
+
+		return $row;
+	}
+
+	#################################################################
+
 	function users_is_email_taken($email){
 
 		$enc_email = AddSlashes($email);
@@ -321,11 +333,45 @@
 
 	function users_reset_uploadbyemail_address(&$user){
 
-		# please for to be making me better
+		$tries = 0;
+		$max_tries = 10;
+
+		$addr = null;
+
+		while (! $addr){
+
+			$tries ++;
+
+			$addr = users_generate_uploadbyemail_address();
+
+			if (users_get_by_uploadbyemail_address($addr)){
+				$addr = null;
+
+				if ($tries == $max_tries){
+					return not_okay("failed to generate uploadbyemail address");
+				}
+			}
+		}
+
+		$update = array(
+			'uploadbyemail_address' => $addr,
+		);
+
+		$rsp = users_update_user($user, $update);
+
+		if ($rsp['ok']){
+			$rsp['uploadbyemail_address'] = $addr;
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	# please for to be making me better...
+
+	function users_generate_uploadbyemail_address(){
 		$addr = random_string(rand(5, 10)) . "." . random_string(rand(5, 10));
-
-		# TO DO: check/update the database
-
 		return $addr;
 	}
 
