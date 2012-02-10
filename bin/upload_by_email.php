@@ -13,11 +13,11 @@
 	loadpear("MimeMailParser");
 
 	if (! $GLOBALS['cfg']['enable_feature_uploads']){
-		log_fatal("uploads are disabled");
+		log_rawr("uploads are disabled");
 	}
 
 	if (! $GLOBALS['cfg']['enable_feature_uploads_by_email']){
-		log_fatal("uploads by email are disabled");
+		log_rawr("uploads by email are disabled");
 	}
 
 	# sudo make me less bad (also include hostname)
@@ -29,7 +29,7 @@
 	$to = $parser->getHeader('to');  
 
 	if (! preg_match($re, $to, $m)){
-		log_fatal("failed to parse upload by email address");
+		log_rawr("failed to parse upload by email address");
 	}
 
 	$addr = $m[1];
@@ -37,7 +37,7 @@
 	$user = users_get_by_uploadbyemail_address($addr);
 
 	if (! $user){
-		log_fatal("invalid magic email address");
+		log_rawr("invalid magic email address");
 	}
 
 	# TO DO: in some magic future pony world we should allow
@@ -50,19 +50,19 @@
 	# (20120209/straup)
 
 	if (! flickr_backups_is_registered_user($user)){
-		log_fatal("not a registered backup user");
+		log_rawr("not a registered backup user");
 	}
 
 	$flickr_user = flickr_users_get_by_user_id($user['id']);
 
 	if (! flickr_users_has_token_perms($flickr_user, "write")){
-		log_fatal("user has insufficient token perms");
+		log_rawr("user has insufficient token perms");
 	}
 
 	$attachments = $parser->getAttachments();
 
 	if (! count($attachments)){
-		log_fatal("no attachments");
+		log_rawr("no attachments");
 	}
 
 	$uploads = array();
@@ -103,7 +103,7 @@
 					unlink($path);
 				}
 
-				log_fatal("upload by email exceeded max bytes ({$max_bytes})");
+				log_rawr("upload by email exceeded max bytes ({$max_bytes})");
 			}
 
 			fwrite($fh, $bytes);
@@ -115,7 +115,7 @@
 	}
 
 	if (! count($uploads)){
-		log_fatal("no valid uploads");
+		log_rawr("no valid uploads");
 	}
 
 	foreach ($uploads as $path){

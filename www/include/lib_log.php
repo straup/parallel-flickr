@@ -24,6 +24,7 @@
 		'notice'	=> array('html'),
 		'error'		=> array('html', 'error_log'),
 		'fatal'		=> array('html', 'error_log'),
+		'rawr'		=> array('error_log'),
 		'debug'		=> array(),
 	);
 
@@ -56,6 +57,10 @@
 		exit;
 	}
 
+	function log_rawr($msg){
+		_log_dispatch('rawr', $msg);
+		exit;
+	}
 
 	function log_error($msg){
 		_log_dispatch('error', $msg);

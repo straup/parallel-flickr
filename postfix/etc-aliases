@@ -1,0 +1,2 @@
+# See man 5 aliases for format
+uploadbyemail: "| /usr/bin/php -q /path/to/parallel-flickr/bin/upload_by_email.php"
