@@ -43,7 +43,56 @@
 		#    disk and rebuild the SRP (with the relevant extras) and
 		#    call the _flickr_photos_import_prepare_photo and the
 		#    flickr_photos_add_photo functions to pre-fill the database
-		#
+
+		$photo_id = $rsp['photo_id'];
+
+		$info_args = array(
+			'photo_id' => $photo_id,
+			'auth_token' => $flickr_user['auth_token'],
+		);
+
+		$info_rsp = flickr_api_call('flickr.photos.getInfo', $info_args);
+
+		if ($info_rsp['ok']){
+
+			$photo = $info_rsp['rsp']['photo'];
+
+			$spr = array(
+				'id' => $photo_id,
+				'owner' =>  $flickr_user['nsid'],
+				'secret' =>  $photo['secret'],
+				'server' => $photo['server'],
+				'farm' => $photo['farm'],
+				'title' => $photo['title']['_content'],
+				'ispublic' => $photo['visibility']['ispublic'],
+				'isfriend' => $photo['visibility']['isfriend'],
+				'isfamily' => $photo['visibility']['isfamily'],
+				'originalsecret' =>  $photo['originalsecret'],
+				'originalformat' => $photo['originalformat'],
+				'tags' => join(" ", $photo['tags']['tag']),
+				'media' => $photo['media'],
+				# "media_status": "ready",
+				'dateupload' => $photo['dates']['posted'],
+				'datetaken' => $photo['dates']['taken'],
+				# "datetakengranularity": 0,
+			);
+	
+			$hasgeo = (isset($photo['location'])) ? 1 : 0;
+
+			$spr['latitude'] = ($hasgeo) ? $photo['location']['latitude'] : 0;
+			$spr['longitude'] =  ($hasgeo) ? $photo['location']['longitude'] : 0;
+			$spr['accuracy'] =  ($hasgeo) ? $photo['location']['accuracy'] : 0;
+			$spr['context'] =  ($hasgeo) ? $photo['location']['context'] : 0;
+			$spr['woeid'] =  ($hasgeo) ? $photo['location']['woeid'] : 0;
+			$spr['geo_is_public'] = ($hasgeo) ? $photo['location']['geoperms']['ispublic'] : 0;
+			$spr['geo_is_contact'] = ($hasgeo) ? $photo['location']['geoperms']['iscontact'] : 0;
+			$spr['geo_is_friend'] = ($hasgeo) ? $photo['location']['geoperms']['isfriend'] : 0;
+			$spr['geo_is_family'] = ($hasgeo) ? $photo['location']['geoperms']['isfamily'] : 0;
+
+			# $rsp['spr'] = $spr;
+			# $rsp['photo'] = $photo;
+		}
+
 		# 3) something about non-local (S3) filestores and blocking on
 		#    uploads; something about pre-signed upload forms and
 		#    callbacks in flickr_photos_upload.php if not using local
