@@ -63,10 +63,12 @@ $(document).ready(function(){
 			processData: false,
 			dataType: "json",
 			success: function(rsp){
-console.log(rsp);
+				console.log(rsp);
+				$('input[type=submit]').removeAttr('disabled');
 			}
 		});
 
+		$('input[type=submit]').attr('disabled', 'disabled');
 		return false;
 	});
 });

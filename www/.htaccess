@@ -31,10 +31,10 @@ php_value short_open_tag on
 
 php_flag display_errors on
 
-# TO DO: set this in api_rest.php and have it read the
-# upload_by_email_max_bytes value; don't make it upload by email
-# specific... (20120210/straup)
-# php_value upload_max_filesize 5M
+# See also: $GLOBALS['cfg']['uploads_by_email_maxbytes']
+# I would like to find a way to sync these two things...
+
+php_value upload_max_filesize 5M
 
 # this sets all current and future error flags on, except for E_NOTICE
 # which can go fuck itself. we have some separate code for checking the
@@ -53,7 +53,7 @@ RewriteBase /
 
 # Login stuff
 
-# RewriteRule ^invite/?$						invite.php?%{QUERY_STRING} [L]
+# RewriteRule ^invite/?$					invite.php?%{QUERY_STRING} [L]
 # RewriteRule ^invite(?:/([^/]+))?/?$				invite.php?code=$1&%{QUERY_STRING} [L]
 
 RewriteRule  ^auth/$			/auth_callback_flickr_flickrauth.php?%{QUERY_STRING}	[L]
