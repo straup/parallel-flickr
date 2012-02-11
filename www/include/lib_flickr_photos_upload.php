@@ -20,7 +20,6 @@
 		}
 
 		$args['auth_token'] = $flickr_user['auth_token'];
-		$args['is_public'] = 0;
 
 		# default upload perms?
 
