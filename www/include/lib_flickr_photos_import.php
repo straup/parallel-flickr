@@ -101,7 +101,6 @@
 			$rsp = flickr_photos_add_photo($photo);
 
 			if (! $rsp['ok']){
-				dumper("OMGWTF");
 				dumper($rsp);
 			}
 
