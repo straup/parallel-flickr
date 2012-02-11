@@ -45,7 +45,11 @@
 		# 2) since we'll have photos getInfo we could both write that to
 		#    disk and rebuild the SRP (with the relevant extras) and
 		#    call the _flickr_photos_import_prepare_photo and the
-		#    flickr_photos_add_photo functions to pre-fill the database
+		#    flickr_photos_add_photo functions to pre-fill the database.
+		#
+		# 3) something about offline tasks so that we don't have to block
+		#    on calls to the Flickr API; also remote filesystems (see
+		#    below); something about a poorman's OLT system.
 
 		$photo_id = $rsp['photo_id'];
 
@@ -132,12 +136,12 @@
 			# _flickr_photos_import_store($info, $json);
 		}
 
-		# 3) something about non-local (S3) filestores and blocking on
+		# 4) something about non-local (S3) filestores and blocking on
 		#    uploads; something about pre-signed upload forms and
 		#    callbacks in flickr_photos_upload.php if not using local
 		#    FS; something about how that works for upload by email
 		#
-		# 4) it's time to create lib_storage, lib_storage_fs and
+		# 5) it's time to create lib_storage, lib_storage_fs and
 		#    reconcile it all with lib_storage_s3
 
 		return $rsp;
