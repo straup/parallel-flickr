@@ -31,6 +31,11 @@ php_value short_open_tag on
 
 php_flag display_errors on
 
+# TO DO: set this in api_rest.php and have it read the
+# upload_by_email_max_bytes value; don't make it upload by email
+# specific... (20120210/straup)
+# php_value upload_max_filesize 5M
+
 # this sets all current and future error flags on, except for E_NOTICE
 # which can go fuck itself. we have some separate code for checking the
 # one notice we do care about.

@@ -31,10 +31,30 @@
 		}
 
 		# TO DO: archive the photo locally now that we have a photo ID
-		# see also: bin/upload_by_email.php
+
+		# There are a few things to note about doing this:
+		#
+		# 1) because the only thing the Flickr API returns is a photo ID
+		#    we have to first call photos.getInfo and to get the photo
+		#    secret and then call flickr_photos_id_to_path and store the
+		#    original photo.
+		#
+		# 2) since we'll have photos getInfo we could both write that to
+		#    disk and rebuild the SRP (with the relevant extras) and
+		#    call the _flickr_photos_import_prepare_photo and the
+		#    flickr_photos_add_photo functions to pre-fill the database
+		#
+		# 3) something about non-local (S3) filestores and blocking on
+		#    uploads; something about pre-signed upload forms and
+		#    callbacks in flickr_photos_upload.php if not using local
+		#    FS; something about how that works for upload by email
+		#
+		# 4) it's time to create lib_storage, lib_storage_fs and
+		#    reconcile it all with lib_storage_s3
 
 		return $rsp;
 	}
 
 	#################################################################
+
 ?>
