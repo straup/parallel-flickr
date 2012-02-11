@@ -3,7 +3,6 @@
 	loadlib("flickr_users");
 	loadlib("flickr_api");
 
-	loadlib("flickr_photos");
 	loadlib("flickr_photos_import");
 
 	#################################################################
@@ -21,9 +20,22 @@
 
 		$args['auth_token'] = $flickr_user['auth_token'];
 
+		if ($GLOBALS['cfg']['enable_feature_uploads_shoutout']){
+			$args['tags'] .= " uploaded:by=parallel-flickr";
+		}
+
+		if (! isset($args['title'])){
+			$args['title'] = "Untitled Upload #" . time();
+		}
+
+		$args['is_public'] = 0;
+
 		# default upload perms?
 
 		$rsp = flickr_api_upload($file, $args);
+
+		$rsp['do_archive'] = $GLOBALS['cfg']['enable_feature_uploads_archive'];
+		$rsp['archived_ok'] = 0;
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -33,9 +45,16 @@
 			return $rsp;
 		}
 
-		# TO DO: archive the photo locally now that we have a photo ID
+		if (! $GLOBALS['cfg']['enable_feature_uploads_archive']){
+			return $rsp;
+		}
 
+		# Archive the photo locally now that we have a photo ID.
 		# There are a few things to note about doing this:
+		#
+		# 0) put this all in a function somewhere so that it can be
+		#    called by things that are uploading asynchronously; also
+		#    PHP timing out
 		#
 		# 1) because the only thing the Flickr API returns is a photo ID
 		#    we have to first call photos.getInfo and to get the photo
@@ -76,33 +95,36 @@
 				'isfamily' => $photo['visibility']['isfamily'],
 				'originalsecret' =>  $photo['originalsecret'],
 				'originalformat' => $photo['originalformat'],
-				'tags' => join(" ", $photo['tags']['tag']),
 				'media' => $photo['media'],
-				# "media_status": "ready",
 				'dateupload' => $photo['dates']['posted'],
 				'datetaken' => $photo['dates']['taken'],
-				# "datetakengranularity": 0,
 			);
+
+			$tags = array();
 	
+			# TO DO: escaping...
+
+			foreach ($photo['tags']['tag'] as $t){
+				$tags[] = $t['raw'];
+			}
+
+			$spr['tags'] = join(" ", $tags);
+
 			$hasgeo = (isset($photo['location'])) ? 1 : 0;
 
-			$spr['latitude'] = ($hasgeo) ? $photo['location']['latitude'] : 0;
-			$spr['longitude'] =  ($hasgeo) ? $photo['location']['longitude'] : 0;
-			$spr['accuracy'] =  ($hasgeo) ? $photo['location']['accuracy'] : 0;
-			$spr['context'] =  ($hasgeo) ? $photo['location']['context'] : 0;
-			$spr['woeid'] =  ($hasgeo) ? $photo['location']['woeid'] : 0;
-			$spr['geo_is_public'] = ($hasgeo) ? $photo['geoperms']['ispublic'] : 0;
-			$spr['geo_is_contact'] = ($hasgeo) ? $photo['geoperms']['iscontact'] : 0;
-			$spr['geo_is_friend'] = ($hasgeo) ? $photo['geoperms']['isfriend'] : 0;
-			$spr['geo_is_family'] = ($hasgeo) ? $photo['geoperms']['isfamily'] : 0;
+			if ($hasgeo){
+				$spr['latitude'] = $photo['location']['latitude'];
+				$spr['longitude'] = $photo['location']['longitude'];
+				$spr['accuracy'] = $photo['location']['accuracy'];
+				$spr['context'] = $photo['location']['context'];
+				$spr['woeid'] = $photo['location']['woeid'];
+				$spr['geo_is_public'] = $photo['geoperms']['ispublic'];
+				$spr['geo_is_contact'] = $photo['geoperms']['iscontact'];
+				$spr['geo_is_friend'] = $photo['geoperms']['isfriend'];
+				$spr['geo_is_family'] = $photo['geoperms']['isfamily'];
+			}
 
-			# See all of this stuff? It's a hodge-podge of functions pulled
-			# from the import/backup code. This should be cleaned up where
-			# possible even if that just means making "private" functions
-			# public and x_wrapper_my_wrapper-ing others (20120210/straup)
-
-			$photo = _flickr_photos_import_prepare_photo($user, $spr);
-
+			# TO DO: make functions for all this stuff
 			# note: not checking for video-ness
 
 			$orig = "{$photo['originalsecret']}_{$photo['id']}_o.{$photo['originalformat']}";
@@ -110,23 +132,16 @@
 
 			$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
 
-			# oh yeah, right... the www server will need to be able
-			# to write to the static files directory....grrrnnnn
-
-			if (! file_exists($root)){
-				# mkdir($root, 0755, true);
-			}
-
 			$orig = $root . $orig;
 			$info = $root . $info;
 
-			# $rsp['photo'] = $photo;
-			# $rsp['o'] = $orig;
-			# $rsp['i'] = $info;
+			# TO DO: merge this in to flickr_photos_import_photo
 
-			# add the photo to the database
-			# flickr_photos_add_photo($photo);
-			# flickr_photos_lookup_add($photo['id'], $photo['user_id']);
+			if (! file_exists($root)){
+				# oh yeah, right... the www server will need to be able
+				# to write to the static files directory....grrrnnnn
+				# mkdir($root, 0755, true);
+			}
 
 			# copy the original into place; note the lack of a thumbnail
 			# copy(file, $orig);
@@ -134,6 +149,21 @@
 			# copy the basic metadata into place
 			# $json = json_encode($info_rsp);
 			# _flickr_photos_import_store($info, $json);
+
+			# see above; this part is still not done...
+
+			$more = array(
+				'donot_import_files' => 1
+			);
+
+			# see this: we're passing $spr not $photo
+			$ph_rsp = flickr_photos_import_photo($spr, $more);
+
+			$rsp['archived_ok'] = $ph_rsp['ok'];
+
+			# $rsp['debug'] = $ph_rsp;
+			# $rsp['o'] = $orig;
+			# $rsp['i'] = $info;
 		}
 
 		# 4) something about non-local (S3) filestores and blocking on

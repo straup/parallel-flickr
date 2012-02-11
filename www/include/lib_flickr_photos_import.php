@@ -85,7 +85,7 @@
 
 		if ($_photo = flickr_photos_get_by_id($photo['id'])){
 
-			echo "update photo {$photo['id']}\n";
+			# echo "update photo {$photo['id']}\n";
 			# TO DO: make this less stupid...
 
 			unset($photo['id']);
@@ -96,7 +96,7 @@
 
 		else {
 
-			echo "add photo {$photo['id']}\n";
+			# echo "add photo {$photo['id']}\n";
 
 			$rsp = flickr_photos_add_photo($photo);
 
@@ -107,14 +107,26 @@
 			flickr_photos_lookup_add($photo['id'], $photo['user_id']);
 		}
 
-		flickr_photos_import_photo_files($photo, $more);
+		# See also: lib_flickr_photos_upload.php
+
+		if (! isset($more['donot_import_files'])){
+			flickr_photos_import_photo_files($photo, $more);
+		}
+
+		flickr_photos_import_index_photo($photo, $more);
+
+		# go!
+
+		return okay(array(
+			'photo' => $photo
+		));
+	}
+
+	#################################################################
+
+	function flickr_photos_import_index_photo(&$photo, $more=array()){
 
 		# exif data
-
-		# why did I do this? (20111206/straup)
-		# $more = array(
-		# 	'force' => 1,
-		# );
 
 		if ($hasexif = flickr_photos_exif_has_exif($photo, $more)){
 
@@ -132,24 +144,21 @@
 			}
 		}
 
-		# things that depend on solr (move to a separate function?)
+		# solr (and places)
 
 		if ($GLOBALS['cfg']['enable_feature_solr']){
+
 			flickr_photos_search_index_photo($photo);
-		}
 
-		if (($GLOBALS['cfg']['enable_feature_solr']) && ($GLOBALS['cfg']['enable_feature_places'])){
+			if ($GLOBALS['cfg']['enable_feature_places']){
 
-			if (($photo['woeid']) && ($GLOBALS['cfg']['places_prefetch_data'])){
-				flickr_places_get_by_woeid($photo['woeid']);
+				if (($photo['woeid']) && ($GLOBALS['cfg']['places_prefetch_data'])){
+					flickr_places_get_by_woeid($photo['woeid']);
+				}
 			}
 		}
 
-		# go!
-
-		return okay(array(
-			'photo' => $photo
-		));
+		# note the pass by ref
 	}
 
 	#################################################################
@@ -563,7 +572,7 @@
 		$fh = fopen($path, "w");
 
 		if (! $fh){
-			echo "failed to create filehandle for '{$path}'\n";
+			# echo "failed to create filehandle for '{$path}'\n";
 			return 0;
 		}
 
@@ -687,6 +696,7 @@
 	#################################################################
 	
 	function _flickr_photos_import_flickr_urls($photo, $more=array()) {
+
 		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
 
 		$small = "{$root}_{$photo['secret']}_z.jpg";

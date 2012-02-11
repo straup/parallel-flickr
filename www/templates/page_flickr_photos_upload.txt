@@ -62,6 +62,9 @@ $(document).ready(function(){
 			contentType: false,
 			processData: false,
 			dataType: "json",
+			error: function(rsp){
+				console.log(rsp);
+			},
 			success: function(rsp){
 				console.log(rsp);
 				$('input[type=submit]').removeAttr('disabled');

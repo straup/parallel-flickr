@@ -46,10 +46,34 @@
 
 	$GLOBALS['cfg']['enable_feature_sharkify'] = 1;		# http://www.iamcal.com/sharkify/
 
+	# Uploads
+
 	$GLOBALS['cfg']['enable_feature_uploads'] = 0;
+
+	# store files locally (and in the database) as they are uploaded
+	# to flickr; note that you will need to ensure that Apache has
+	# write permissions on 	$GLOBALS['cfg']['flickr_static_path']
+	# (unless you're using S3 for storing photos)
+
+	$GLOBALS['cfg']['enable_feature_uploads_archive'] = 0;
+
+	# If true this will add a 'uploaded:by=parallel-flickr' machine
+	# tag to all photos uploaded to flickr
+
+	$GLOBALS['cfg']['enable_feature_uploads_shoutout'] = 0;
+
+	# Note: setting up and configuring a mail server is left to
+	# the individual. The bin/upload_by_email.php script expects
+	# to be handd a MIME compatible email message on STDIN; see
+	# also sample postfix config files in the postfix directory
+
 	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 0;
 	$GLOBALS['cfg']['uploads_by_email_hostname'] = '';
-	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;	// 1048576 is 1MB
+
+	# 1048576 is 1MB; web based upload sizes are controled by the
+	# 'upload_max_filesize' directive in www/.htaccess
+
+	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;
 
 	# See this? It assumes everything is running on a single
 	# (read: not federated) database.
