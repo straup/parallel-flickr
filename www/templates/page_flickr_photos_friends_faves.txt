@@ -16,6 +16,8 @@
 {/foreach}
 		];
 
+		/* please make me not a global; this is set in cwf.js */
+		can_fave = {$can_fave|escape};
 {literal}
 		$(document).ready(function(){
 			cwf_init(faves);

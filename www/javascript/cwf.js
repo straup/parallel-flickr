@@ -11,6 +11,8 @@ var images = new Array();
 var count_photos = 0;
 var count_updates = 0;
 
+var can_fave = 0;
+
 var idx = 0;
 
 function cwf_init(faves){
@@ -378,6 +380,10 @@ function cwf_show_photo(index){
 }
 
 function cwf_fave_photo(photo_id){
+
+	if (! can_fave){
+		// do something here
+	}
 
 	var data = {
 		'method': 'flickr.favorites.add',
