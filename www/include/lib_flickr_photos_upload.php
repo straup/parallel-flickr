@@ -28,8 +28,6 @@
 			$args['title'] = "Untitled Upload #" . time();
 		}
 
-		$args['is_public'] = 0;
-
 		# default upload perms?
 
 		$rsp = flickr_api_upload($file, $args);
