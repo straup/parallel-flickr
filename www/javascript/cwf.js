@@ -26,7 +26,25 @@ function cwf_init(faves){
 		images.push(photos[i][7]);
 	}
 
-	$.backstretch(thumbs[0]);
+	/*
+		this is here so that we can (try to) load the correct
+		photo if we have to punt a user through the upgrade
+		token process; probably a better key would be photo
+		id + user who faved but let's just start with this
+		(20120213/straup)
+	*/
+
+	var hash = location.hash;
+
+	if (hash){
+		hash = parseInt(hash.substring(1, hash.length));
+
+		if ((hash) && (hash <= count_photos)){
+			idx = hash - 1;
+		}
+	}
+
+	$.backstretch(thumbs[idx]);
 
 	$({}).imageLoader({
 		images: thumbs,
