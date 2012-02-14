@@ -57,6 +57,10 @@
 		$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 	}
 
+	$flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
+	$can_fave = flickr_users_has_token_perms($flickr_user, "write");
+	$GLOBALS['smarty']->assign("can_fave", $can_fave);
+
 	$GLOBALS['smarty']->display("page_flickr_photos_friends_faves.txt");
 	exit();
 

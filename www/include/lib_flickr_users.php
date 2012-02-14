@@ -280,4 +280,15 @@
 
 	#################################################################
 
+	function flickr_users_has_token_perms(&$flickr_user, $string_perms){
+
+		$flickr_perms = $flickr_user['token_perms'];
+
+		$perms_map = flickr_api_authtoken_perms_map("string keys");
+
+		return ($flickr_perms >= $perms_map[$string_perms]) ? 1 : 0;
+	}
+
+	#################################################################
+
 ?>
