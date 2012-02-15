@@ -2,7 +2,9 @@ function flickr_auth_toggle_perms(perms, redir){
 
 	var auth_url = abs_root_url + 'account/flickr/auth?perms=' + perms;
 
-	// redir...
+	if (redir){
+		auth_url += '&redir=' + encodeURIComponent(redir);
+	}
 
 	var html = '<div id="modal_flickr_auth">';
 

@@ -3,12 +3,22 @@ var symbols_notfaved="☆";
 
 function photo_favorites_add(photo_id){
 
-	/*
 	if (! can_fave){
-		flickr_auth_toggle_perms('write');
+
+		/* sudo put me in a function? */
+
+		var host = location.host;
+		var href = location.href.split("#");
+
+		var redir = href[0];
+		redir = redir.replace("http://", "");
+		redir = redir.replace(host, "");
+
+		redir += "#" + photo_id;
+
+		flickr_auth_toggle_perms('write', redir);
 		return;
 	}
-	*/
 
     	var data = {
 		'method': 'flickr.favorites.add',
