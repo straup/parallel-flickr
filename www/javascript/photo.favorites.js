@@ -3,7 +3,14 @@ var symbols_notfaved="☆";
 
 function photo_favorites_add(photo_id){
 
-	var data = {
+	/*
+	if (! can_fave){
+		flickr_auth_toggle_perms('write');
+		return;
+	}
+	*/
+
+    	var data = {
 		'method': 'flickr.favorites.add',
 		'photo_id': photo_id
 	};

@@ -378,32 +378,3 @@ function cwf_show_photo(index){
 	$.backstretch(thumb);
 	$("#cwf_about").html(msg);
 }
-
-function cwf_fave_photo(photo_id){
-
-	if (! can_fave){
-		// do something here
-	}
-
-	var data = {
-		'method': 'flickr.favorites.add',
-		'photo_id': photo_id
-	};
-
-	$.ajax({
-		'url': '/api',
-		'type': 'POST',
-		'data': data,
-		'success': _cwf_fave_photo_onsuccess
-	});
-}
-
-function _cwf_fave_photo_onsuccess(rsp){
-
-	var photo_id = rsp['photo_id'];
-	var selector = $("#cwf_fave_" + photo_id);
-
-	var el = $(selector);
-	el.html("♥");
-	el.attr("onclick", "alert('hi');");
-}
