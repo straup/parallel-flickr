@@ -102,16 +102,15 @@
 		}
 	}
 
-	if ($GLOBALS['cfg']['user']['id']){
+	# check to see if the logged in user is the photo owner and has write perms
+	# if we ever do suggestions, etc. then maybe we'll care if this isn't also
+	# the photo owner (20120216/straup)
 
-		$perms_map = flickr_api_authtoken_perms_map();
-
-		# the currently logged in viewer
+	if ($is_own){
 
 		$_flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
-		$perms = $_flickr_user['token_perms'];
+		$has_write_token = flickr_users_has_token_perms($_flickr_user, 'write');
 
-		$has_write_token = ($perms_map[$perms] == 'write') ? 1 : 0;
 		$GLOBALS['smarty']->assign('has_write_token', $has_write_token);
 	}
 
