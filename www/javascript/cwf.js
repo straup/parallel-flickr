@@ -39,7 +39,8 @@ function cwf_init(faves){
 		  to fave the same photo later down the list but for now it
 		  will do; the point is that if they've gotten this far they
 		  actually have a write token now so this step will only happen
-		  once; still, not ideal... (20120215/straup)
+		  once; still, not ideal; see also below in cwf_show_photo()
+		  (20120216/straup)
 		*/
 
 		if ((hash_photo) && (! hash_idx) && (photos[i][0] == hash_photo)){
@@ -309,6 +310,21 @@ function cwf_show_next_photo(overflow){
 }
 
 function cwf_show_photo(index){
+
+	/*
+	  maybe maybe but it produces URLs that are ugly as sin; also
+	  not sure how to integrate it with the auth token juggling
+	  code above (in init) and in photo.favorites.js which only
+	  expects a photo id. TBD... (20120216/straup)
+	*/
+
+	/*
+	var photo_id = photos[index][0];
+	var faved_by = photos[index][4];
+
+	var href = location.href.split("#");
+	location.href = href[0] + "#" + faved_by + "/" + photo_id;
+	*/
 
 	// unsure about this...
 	count_updates = 0;
