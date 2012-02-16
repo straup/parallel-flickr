@@ -38,7 +38,8 @@ function cwf_init(faves){
 		  this is not ideal because the user may actually be trying
 		  to fave the same photo later down the list but for now it
 		  will do; the point is that if they've gotten this far they
-		  actually have a write token (20120215/straup)
+		  actually have a write token now so this step will only happen
+		  once; still, not ideal... (20120215/straup)
 		*/
 
 		if ((hash_photo) && (! hash_idx) && (photos[i][0] == hash_photo)){
