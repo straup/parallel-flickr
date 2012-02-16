@@ -62,6 +62,13 @@
 			"enabled": 1,
 			"library": "api_flickr_favorites",
 			"requires_auth": 1
+		},
+
+		"flickr.favorites.remove": {
+			"documented": 0,
+			"enabled": 1,
+			"library": "api_flickr_favorites",
+			"requires_auth": 1
 		}
 
 	}

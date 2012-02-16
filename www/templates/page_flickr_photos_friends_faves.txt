@@ -4,17 +4,23 @@
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.touchwipe.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.favorites.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/flickr.auth.js"></script>
 {if !$new_subscription}
 	<script type="text/javascript">
 
 {if $photos|@count}
 		var faves = [
 {foreach from=$photos item="row"}
-		["{$row.photo_id|escape_javascript}", "{$row.title|escape_javascript}", "{$row.owner|escape_javascript}", "{$row.ownername|escape_javascript}", "{$row.faved_by_nsid|escape_javascript}", "{$row.faved_by|escape_javascript}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}"],
+		["{$row.photo_id|escape_javascript}", "{$row.title|escape_javascript}", "{$row.owner|escape_javascript}", "{$row.ownername|escape_javascript}", "{$row.faved_by_nsid|escape_javascript}", "{$row.faved_by|escape_javascript}", "{$row.thumb_url|escape}",  "{$row.display_url|escape}", {if $row.is_faved}1{else}0{/if} ],
 {/foreach}
 		];
 
+		/* please make me not a global; this is set in cwf.js */
+		can_fave = {$can_fave|escape};
 {literal}
 		$(document).ready(function(){
 			cwf_init(faves);

@@ -11,6 +11,8 @@ var images = new Array();
 var count_photos = 0;
 var count_updates = 0;
 
+var can_fave = 0;
+
 var idx = 0;
 
 function cwf_init(faves){
@@ -21,12 +23,36 @@ function cwf_init(faves){
 	cwf_init_layout();
 	cwf_init_shortcuts();
 
+	var hash_photo = location.hash;
+	var hash_idx = null;
+
+	if (hash_photo){
+		hash_photo = parseInt(hash_photo.substring(1, hash_photo.length));
+	}
+
 	for (var i=0; i < count_photos; i++){
 		thumbs.push(photos[i][6]);
 		images.push(photos[i][7]);
+
+		/*
+		  this is not ideal because the user may actually be trying
+		  to fave the same photo later down the list but for now it
+		  will do; the point is that if they've gotten this far they
+		  actually have a write token now so this step will only happen
+		  once; still, not ideal; see also below in cwf_show_photo()
+		  (20120216/straup)
+		*/
+
+		if ((hash_photo) && (! hash_idx) && (photos[i][0] == hash_photo)){
+			hash_idx = i;
+		}
 	}
 
-	$.backstretch(thumbs[0]);
+	if (hash_idx){
+		idx = hash_idx;
+	}
+
+	$.backstretch(thumbs[idx]);
 
 	$({}).imageLoader({
 		images: thumbs,
@@ -285,6 +311,21 @@ function cwf_show_next_photo(overflow){
 
 function cwf_show_photo(index){
 
+	/*
+	  maybe maybe but it produces URLs that are ugly as sin; also
+	  not sure how to integrate it with the auth token juggling
+	  code above (in init) and in photo.favorites.js which only
+	  expects a photo id. TBD... (20120216/straup)
+	*/
+
+	/*
+	var photo_id = photos[index][0];
+	var faved_by = photos[index][4];
+
+	var href = location.href.split("#");
+	location.href = href[0] + "#" + faved_by + "/" + photo_id;
+	*/
+
 	// unsure about this...
 	count_updates = 0;
 
@@ -318,6 +359,7 @@ function cwf_show_photo(index){
 	var faved_by_name = photo[5];
 	var thumb = photo[6];
 	var img = photo[7];
+	var is_faved = photo[8];
 
 	var num = index + 1;
 
@@ -328,7 +370,8 @@ function cwf_show_photo(index){
 
 	msg += "<div id=\"cwf_about_text\">";
 	msg += "<a href=\"http://www.flickr.com/photos/" + faved_by_nsid + "/faves/\" target=\"_flickr\">" + faved_by_name + "</a>";
-	msg += " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  ";
+	//msg += " <span style=\"font-size:1.2em;font-weight:700;\">☆</span>  ";
+	msg += " <span>" + symbols_faved + "</span>  ";
 	msg += "<a href=\"http://www.flickr.com/photos/" + taken_by_nsid + "/\" target=\"_flickr\">" + taken_by_name + "</a><br />";
 
 	msg += "no. <span id=\"cwf_photo_idx\">" + num + "</span> of <span id=\"cwf_count_photos\">" + photos.length + "</span> faves";
@@ -342,9 +385,11 @@ function cwf_show_photo(index){
 	}
 
 	// TO DO: is photo faved?
+	// TO DO: generic fave js functions not bound to cwf stuff?
 	// TO DO: does user have write token?
 	// TO DO: if no auth token redirect to this specific photo...
-	// msg += ' / <a id="cwf_fave_' + photo_id + '" href="#" onclick="cwf_fave_photo(' + photo_id + ');return false;">♡ </a>';
+
+	msg += ' / ' + photo_favorites_generate_html(photo_id, is_faved);
 
 	msg += "<div id=\"cwf_updates\"></div>";
 	msg += "</div>";
@@ -353,29 +398,4 @@ function cwf_show_photo(index){
 
 	$.backstretch(thumb);
 	$("#cwf_about").html(msg);
-}
-
-function cwf_fave_photo(photo_id){
-
-	var data = {
-		'method': 'flickr.favorites.add',
-		'photo_id': photo_id
-	};
-
-	$.ajax({
-		'url': '/api',
-		'type': 'POST',
-		'data': data,
-		'success': _cwf_fave_photo_onsuccess
-	});
-}
-
-function _cwf_fave_photo_onsuccess(rsp){
-
-	var photo_id = rsp['photo_id'];
-	var selector = $("#cwf_fave_" + photo_id);
-
-	var el = $(selector);
-	el.html("♥");
-	el.attr("onclick", "alert('hi');");
 }

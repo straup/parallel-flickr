@@ -4,6 +4,7 @@
 
 	loadlib("flickr_users");
 	loadlib("flickr_push");
+	loadlib("flickr_faves");
 	loadlib("flickr_push_subscriptions");
 	loadlib("flickr_push_photos");
 
@@ -43,8 +44,22 @@
 	else {
 
 		$rsp = flickr_push_photos_for_subscription($sub, $limit);
-		$GLOBALS['smarty']->assign_by_ref("photos", $rsp['rows']);
+		$photos = $rsp['rows'];
+
+		$count = count($photos);
+
+		for ($i=0; $i < $count; $i++){
+			$photo_id = $photos[$i]['photo_id'];
+			$faved = flickr_faves_is_faved_by_user($GLOBALS['cfg']['user'], $photo_id);
+			$photos[$i]['is_faved'] = $faved;
+		}
+
+		$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 	}
+
+	$flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
+	$can_fave = flickr_users_has_token_perms($flickr_user, "write");
+	$GLOBALS['smarty']->assign("can_fave", $can_fave);
 
 	$GLOBALS['smarty']->display("page_flickr_photos_friends_faves.txt");
 	exit();

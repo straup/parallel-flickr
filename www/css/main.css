@@ -460,9 +460,37 @@ td {
     line-height: 1.25em;
 }
 
+.photo_faved {
+    text-shadow: 0.1em 0.1em 0.02em #fff !important;
+}
+
+.photo_faved:hover {
+    opacity:.8;
+}
+
+.photo_notfaved {
+}
+
 .isnot_registered {
     font-size:small;
     font-style:italic;
     margin-bottom: 20px;
     max-width:640px;
+}
+
+#modal_flickr_auth {
+    font-size: small;
+}
+
+#modal_flickr_auth .buttons {
+    text-align:center;
+}
+
+#modal_flickr_auth .buttons button {
+    border: solid thin;
+    padding: 5px;
+}
+
+button a {
+    text-decoration: none;
 }

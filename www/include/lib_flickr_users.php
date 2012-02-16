@@ -286,9 +286,9 @@
 		$perms_map = flickr_api_authtoken_perms_map("string keys");
 
 		$flickr_perms = $flickr_user['token_perms'];
-
 		return ($flickr_perms >= $perms_map[$string_perms]) ? 1 : 0;
 	}
 
 	#################################################################
+
 ?>
