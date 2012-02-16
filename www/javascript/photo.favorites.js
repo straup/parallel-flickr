@@ -16,7 +16,7 @@ function photo_favorites_add(photo_id){
 
 		redir += "#" + photo_id;
 
-		flickr_auth_toggle_perms('write', redir);
+		flickr_auth_dialog_request_write_perms('fave', redir);
 		return;
 	}
 

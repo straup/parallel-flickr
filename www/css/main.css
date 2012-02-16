@@ -477,3 +477,20 @@ td {
     margin-bottom: 20px;
     max-width:640px;
 }
+
+#modal_flickr_auth {
+    font-size: small;
+}
+
+#modal_flickr_auth .buttons {
+    text-align:center;
+}
+
+#modal_flickr_auth .buttons button {
+    border: solid thin;
+    padding: 5px;
+}
+
+button a {
+    text-decoration: none;
+}
