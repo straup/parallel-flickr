@@ -23,7 +23,7 @@ function flickr_auth_dialog_request_write_perms(action, redir){
 
 	// other 'actions' go here...
 
-	html += 'You\'ll only have to need to do this once (or until you revoke the token itself <a href="http://www.flickr.com/services/auth/list.gne">on Flickr</a>). Once you\'ve approved the new token you will be sent back to this webpage.</p>';
+	html += 'You\'ll only have to do this once (or until you revoke the token itself <a href="http://www.flickr.com/services/auth/list.gne">on Flickr</a>). Once you\'ve approved the new token you will be sent back to this webpage.</p>';
 
 	html += '<div class="buttons"><button onclick="location.href=\'' + auth_url + '\'; return false;">Get started</button>&#160;&#160;';
 	html += '<button onclick="$.modal.close(); return false;">Nevermind, maybe another time.</button></div>';
