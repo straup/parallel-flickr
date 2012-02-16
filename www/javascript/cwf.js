@@ -23,27 +23,31 @@ function cwf_init(faves){
 	cwf_init_layout();
 	cwf_init_shortcuts();
 
+	var hash_photo = location.hash;
+	var hash_idx = null;
+
+	if (hash_photo){
+		hash_photo = parseInt(hash_photo.substring(1, hash_photo.length));
+	}
+
 	for (var i=0; i < count_photos; i++){
 		thumbs.push(photos[i][6]);
 		images.push(photos[i][7]);
+
+		/*
+		  this is not ideal because the user may actually be trying
+		  to fave the same photo later down the list but for now it
+		  will do; the point is that if they've gotten this far they
+		  actually have a write token (20120215/straup)
+		*/
+
+		if ((hash_photo) && (! hash_idx) && (photos[i][0] == hash_photo)){
+			hash_idx = i;
+		}
 	}
 
-	/*
-		this is here so that we can (try to) load the correct
-		photo if we have to punt a user through the upgrade
-		token process; probably a better key would be photo
-		id + user who faved but let's just start with this
-		(20120213/straup)
-	*/
-
-	var hash = location.hash;
-
-	if (hash){
-		hash = parseInt(hash.substring(1, hash.length));
-
-		if ((hash) && (hash <= count_photos)){
-			idx = hash - 1;
-		}
+	if (hash_idx){
+		idx = hash_idx;
 	}
 
 	$.backstretch(thumbs[idx]);
