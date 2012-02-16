@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/photo.geo.css" />
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/flickr.auth.js"></script>
 {/if}
 {/capture}
 {include file="inc_head.txt"}
