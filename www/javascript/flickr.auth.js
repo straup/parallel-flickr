@@ -19,6 +19,11 @@ function flickr_auth_dialog_request_write_perms(action, redir){
 		html += 'again so that you can authorize us to access your account with a <q>write</q> token. ';
 	}
 
+	else if (action=='geo'){
+		html += 'In order to be able to edit your photos we need to bounce you back through Flickr ';
+		html += 'again so that you can authorize us to access your account with a <q>write</q> token. ';	    
+	}
+
 	html += '</span>';
 
 	// other 'actions' go here...
