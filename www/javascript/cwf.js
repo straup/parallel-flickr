@@ -259,11 +259,15 @@ function _cwf_check_photos_callback(rsp){
 			async: true
 		});
 
+		/* this is buggy (20120216/straup) */
+
 		idx += count_photos;
 		count_updates += count_photos;
 
 		var msg = "<a href=\"#\" onclick=\"cwf_show_photo(0);return false;\">";
 
+		/* msg += 'p:' + count_photos + ' u:' + count_updates + ' '; */
+		
 		if (count_updates > 1){
 			msg += "there are " + count_updates + " new faves";
 		}
