@@ -97,3 +97,17 @@ CREATE TABLE `FlickrPhotosGeoCorrections` (
   KEY `by_user_old` (`user_id`, `old_woeid`),
   KEY `by_user_new` (`user_id`, `new_woeid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `FlickrGeoBookmarks`;
+
+CREATE TABLE `FlickrGeoBookmarks` (
+  `id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `name` VARCHAR(255),       
+  `latitude` DECIMAL(9,6) DEFAULT NULL,
+  `longitude` DECIMAL(9,6) DEFAULT NULL,
+  `accuracy` TINYINT(3) UNSIGNED NOT NULL,
+  `woeid` INT(11) UNSIGNED NOT NULL,
+  `geoperms` TINYINT(3) UNSIGNED NOT NULL,
+  `geocontext` TINYINT(3) UNSIGNED NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

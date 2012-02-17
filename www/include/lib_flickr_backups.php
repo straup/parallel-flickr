@@ -2,6 +2,7 @@
 
 	loadlib("flickr_users");
 	loadlib("flickr_contacts_import");
+	loadlib("flickr_geobookmarks_import");
 	loadlib("flickr_photos_import");
 	loadlib("flickr_faves_import");
 
@@ -17,6 +18,7 @@
 			0 => 'photos',
 			1 => 'faves',
 			2 => 'contacts',
+			3 => 'geobookmarks'
 		);
 
 		if ($string_keys){
@@ -281,4 +283,43 @@
 	}
 
 	#################################################################
+
+	function flickr_backups_get_geobookmarks(&$user){
+
+		$backups = flickr_backups_for_user($user);
+
+		if (! isset($backups['geobookmarks'])){
+
+			# return not_okay("backups not registered");
+		}
+
+		$backup = $backups['geobookmarks'];
+		$update = array();
+
+		$start_time = time();
+
+		$flickr_user = flickr_users_get_by_user_id($user['id']);
+
+		$rsp = flickr_geobookmarks_import_for_nsid($flickr_user['nsid'], $more);
+
+		if ($rsp['ok']){
+			$update['date_lastupdate'] = $start_time;
+			$update['details'] = "count: {$rsp['count_imported']}";
+
+			if (! $backup['date_firstupdate']){
+				$update['date_firstupdate'] = $update['date_lastupdate'];
+			}
+		}
+
+		else {
+			$update['details'] = "update failed ($start_time) : {$rsp['error']}";
+		}
+
+		flickr_backups_update($backup, $update);
+
+		return $rsp;
+	}
+
+	#################################################################
+
 ?>
