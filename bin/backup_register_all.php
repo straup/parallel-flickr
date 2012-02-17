@@ -10,11 +10,6 @@
 	include("include/init.php");
 	loadlib("flickr_backups");
 
-	if (! $GLOBALS['cfg']['enable_feature_backups']){
-		echo "backups are currently disabled\n";
-		exit();
-	}
-
 	$map = flickr_backups_type_map("string keys");
 
 	foreach (flickr_backups_users() as $user){
