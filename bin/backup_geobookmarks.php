@@ -14,7 +14,7 @@
 	}
 
 	foreach (flickr_backups_users() as $user){
-		echo "backup contacts for {$user['username']}\n";
+		echo "backup geobookmarks for {$user['username']}\n";
 		$rsp = flickr_backups_get_geobookmarks($user);
 		dumper($rsp);
 	}
