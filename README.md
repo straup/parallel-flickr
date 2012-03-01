@@ -18,7 +18,7 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	$> sudo apt-get install git-core
 
-	$> git clone git@github.com:straup/parallel-flickr.git
+	$> git clone git://github.com/straup/parallel-flickr
 
 	$> cd parallel-flickr
 
