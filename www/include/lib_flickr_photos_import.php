@@ -155,6 +155,13 @@
 
 	#################################################################
 
+	# TO DO: this is not critical but it seems like it would be nice
+	# to make it possible to indicate which of the available photo sizes
+	# to download. Basically just an array in $GLOBALS['cfg'] that lists
+	# photo 'extensions' as defined by flickr.photos.getSizes. This should
+	# probably come *after* the storage (fs/s3) stuff is sorted out.
+	# (20120320/straup)
+
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
 		
 		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
