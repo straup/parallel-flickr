@@ -198,6 +198,18 @@
 		}
 
 		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' {$extra} ORDER BY dateupload DESC";
+
+		if (isset($more['with'])) {
+			# Here, we are asking for a the page which a particular photo occurs in a person's stream, which
+			# means we'll be passing in the determining the page number ourselves. We do this by doing a
+			# binary search.
+
+			$pagination_more = $more;
+			$pagination_more['just_pagination'] = 1;
+
+			$pagination = db_fetch_paginated_users($cluster_id, $sql, $more);
+		}
+
 		return db_fetch_paginated_users($cluster_id, $sql, $more);
 	}
 
