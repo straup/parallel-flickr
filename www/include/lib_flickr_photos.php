@@ -215,7 +215,7 @@
 
 				$pagination = db_fetch_paginated_users($cluster_id, $sql, $pagination_more);
 
-				$offset_where = " AND dateupload > '{$photo['dateupload']}'";
+				$offset_where = " AND dateupload >= '{$photo['dateupload']}'";
 				
 				$offset_sql = "SELECT COUNT(*) FROM FlickrPhotos WHERE user_id='{$enc_user}' {$extra} {$offset_where} ORDER BY dateupload DESC";
 
@@ -224,6 +224,7 @@
 					$offset_count = intval(array_pop($ret['rows'][0]));
 
 					$per_page	= isset($more['per_page'])	? max(1, $args['per_page'])	: $GLOBALS['cfg']['pagination_per_page'];
+
 					$page = ceil($offset_count / $per_page);
 
 					if ($page > $pagination['page_count']){
