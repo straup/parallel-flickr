@@ -201,13 +201,38 @@
 
 		if (isset($more['with'])) {
 			# Here, we are asking for a the page which a particular photo occurs in a person's stream, which
-			# means we'll be passing in the determining the page number ourselves. We do this by doing a
-			# binary search.
+			# means we'll be passing in the determining the page number ourselves. We do this by figuring out
+			# how many photos are before this one in the stream and then dividing.
 
-			$pagination_more = $more;
-			$pagination_more['just_pagination'] = 1;
+			$photo = flickr_photos_get_by_id($more['with']);
+			$can_see_photo = $photo ? flickr_photos_permissions_can_view_photo($photo, $GLOBALS['cfg']['user']['id']) : false;
 
-			$pagination = db_fetch_paginated_users($cluster_id, $sql, $more);
+			if ($can_see_photo) {
+
+				# The only reason we need this is for spill messing with per-page amounts
+				$pagination_more = $more;
+				$pagination_more['just_pagination'] = 1;
+
+				$pagination = db_fetch_paginated_users($cluster_id, $sql, $pagination_more);
+
+				$offset_where = " AND dateupload > '{$photo['dateupload']}'";
+				
+				$offset_sql = "SELECT COUNT(*) FROM FlickrPhotos WHERE user_id='{$enc_user}' {$extra} {$offset_where} ORDER BY dateupload DESC";
+
+				$ret = db_fetch_users($cluster_id, $offset_sql);
+				if($ret['ok']) {
+					$offset_count = intval(array_pop($ret['rows'][0]));
+
+					$per_page	= isset($more['per_page'])	? max(1, $args['per_page'])	: $GLOBALS['cfg']['pagination_per_page'];
+					$page = ceil($offset_count / $per_page);
+
+					if ($page > $pagination['page_count']){
+						$page--;
+					}
+
+					$more['page'] = $page;
+				}
+			}
 		}
 
 		return db_fetch_paginated_users($cluster_id, $sql, $more);
