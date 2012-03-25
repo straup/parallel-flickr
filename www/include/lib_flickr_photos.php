@@ -223,7 +223,7 @@
 				if($ret['ok']) {
 					$offset_count = intval(array_pop($ret['rows'][0]));
 
-					$per_page	= isset($more['per_page'])	? max(1, $args['per_page'])	: $GLOBALS['cfg']['pagination_per_page'];
+					$per_page	= isset($more['per_page'])	? max(1, $more['per_page'])	: $GLOBALS['cfg']['pagination_per_page'];
 
 					$page = ceil($offset_count / $per_page);
 
