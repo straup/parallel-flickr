@@ -1,0 +1,5 @@
+{
+	"stat":"ok",
+	"formats":["json"],
+	"default_format":"json"
+}

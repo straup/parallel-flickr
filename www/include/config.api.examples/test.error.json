@@ -1,0 +1,7 @@
+{
+	"stat": "error",
+	"error":{
+		"code":500,
+		"error":"This is the network of our disconnect"
+	}
+}

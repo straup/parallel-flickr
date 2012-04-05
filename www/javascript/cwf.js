@@ -231,6 +231,8 @@ function _cwf_check_photos_callback(rsp){
 	var new_photos = rsp['photos'];
 	var count_photos = new_photos.length;
 
+	/* console.log('pre: p:' + count_photos + ' u:' + count_updates); */
+
 	if (count_photos){
 
 		new_photos.reverse();
@@ -266,7 +268,7 @@ function _cwf_check_photos_callback(rsp){
 
 		var msg = "<a href=\"#\" onclick=\"cwf_show_photo(0);return false;\">";
 
-		/* msg += 'p:' + count_photos + ' u:' + count_updates + ' '; */
+		/* console.log('post: p:' + count_photos + ' u:' + count_updates); */
 		
 		if (count_updates > 1){
 			msg += "there are " + count_updates + " new faves";
