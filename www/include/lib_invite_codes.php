@@ -253,8 +253,8 @@
 		$args = array(
 			'to_email' => $invite['email'],
 			'template' => $template,
-			'from_name' => 'Pua Email Robot',
-			'from_email' => 'do-not-reply@mail.pua.spum.org',
+			'from_name' => "{$GLOBALS['cfg']['site_name']} Email Robot",
+			'from_email' => "do-not-reply@mail.{$_SERVER['SERVER_NAME']}",
 		);
 
 		$GLOBALS['smarty']->assign_by_ref("invite", $invite);
@@ -277,7 +277,7 @@
 
 	#################################################################
 
-	function invite_codes_signin(&$invite){
+	function invite_codes_signin(&$invite, $redir=''){
 
 		if (! $invite['redeemed']){
 
@@ -289,9 +289,15 @@
 		}
 
 		invite_codes_set_cookie($invite);
-		header("location: /signin/");
-		exit();
 
+		$goto = "/signin/";
+
+		if ($redir){
+			$goto .= "?redir=" . urlencode($redir);
+		}
+
+		header("location: {$goto}");
+		exit();
 	}
 
 	#################################################################

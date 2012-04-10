@@ -1,3 +1,14 @@
-php_value include_path '.:../:'
+<Limit GET POST>
+	order deny,allow
+	# deny from all
+	allow from all
+</Limit>
 
+RewriteEngine	On
 
+RewriteRule	users(/page([0-9]+))?/?$	users.php?page=$2&%{QUERY_STRING}	[L]
+RewriteRule	user/([0-9]+)/?$		user.php?user_id=$1&%{QUERY_STRING}	[L]
+
+RewriteRule	invites/?$			invites.php?%{QUERY_STRING}		[L]
+RewriteRule	invites/generate/?$		invites_generate.php?code=$1&%{QUERY_STRING}	[L]
+RewriteRule	invite/([a-zA-Z0-9]+)/?$	invite.php?code=$1&%{QUERY_STRING}	[L]

@@ -1,10 +1,7 @@
 <?php
 
-	include("include/init.php");
-
-	if (! auth_has_role('invites')){
-		error_404();
-	}
+	include("../include/init.php");
+	loadlib("god");
 
 	loadlib("invite_codes");
 

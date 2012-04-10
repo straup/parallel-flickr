@@ -32,7 +32,7 @@
 	if ($code = get_str("code")){
 
 		if ($invite = invite_codes_get_by_code($code)){
-			invite_codes_signin($invite);
+			invite_codes_signin($invite, $redir);
 			exit();
 		}
 
@@ -61,7 +61,7 @@
 		if ($code){
 
 			if ($invite = invite_codes_get_by_code($code)){
-				invite_codes_signin($invite);
+				invite_codes_signin($invite, $redir);
 				exit();
 			}
 

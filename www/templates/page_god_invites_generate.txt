@@ -1,0 +1,47 @@
+{include file="inc_god_head.txt"}
+
+<h2>Invite generator</h2>
+
+{if $invite}
+
+
+{if $invite_sent}<p class="success">Okay, that invite has been sent to that email address!</p>{/if}
+
+<p><strong><a href="{$cfg.abs_root_url}god/invite/{$invite.code|escape}/">{$cfg.abs_root_url}god/invite/{$invite.code|escape}</a></strong></p>
+
+<p>this is an invite code for {$invite.email|escape}</p>
+
+<p>created {$invite.created|date_format:"%b %d, %Y (at %l:%M %p)"|escape}</p>
+
+{if $invite.sent}
+<p>sent {$invite.sent|date_format:"%b %d, %Y (at %l:%M %p)"|escape}</p>
+{/if}
+
+{if $invite.redeemed}
+<p>redeemed {$invite.redeemed|date_format:"%b %d, %Y (at %l:%M %p)"|escape}</p>
+{/if}
+
+{if !$invite_sent}
+
+<form method="POST" action="{$cfg.abs_root_url}god/invites/generate/">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="code" value="{$invite.code|escape}" />
+	<input type="submit" value="SEND" />
+</form>
+{/if}
+
+{else}
+
+{if $error|@count}
+<p class="error">{$error|escape}</p>
+{/if}
+
+<form method="POST" action="{$cfg.abs_root_url}god/invites/generate/">
+	{$crumb_key|crumb_input}
+	<input type="text" name="email" value="" size="30" />
+	<input type="submit" value="INVITE" />
+</form>
+
+{/if}
+
+{include file="inc_god_foot.txt"}

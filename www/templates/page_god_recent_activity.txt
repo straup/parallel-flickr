@@ -1,0 +1,29 @@
+{include file="inc_god_head.txt"}
+
+<table>
+	<tr>
+		<th>User</th>
+		<th>Subscription</th>
+		<th>Last Request</th>
+		<th>Photos Sent</th>
+		<th>Last Update</th>
+		<th>New Photos</th>
+	</tr>
+
+{foreach from=$activity item="row"}
+	{assign var="topic" value=$row.topic_id}
+	<tr{if $row.recent} style="font-weight:700;"{/if}>
+		<td><a href="{$cfg.abs_root_url}god/user.php?id={$row.user.id|escape}">{$row.user.username|escape}</a></td>
+		<td>{$topic_map.$topic|escape}</td>
+		<td>{if $row.last_request}{$row.last_request|date_format:"%Y-%m-%d %I:%M"|escape}{else}&#8212;{/if}</td>
+		<td class="number">{$row.last_request_photo_count|escape}</td>
+		<td>{if $row.last_update}{$row.last_update|date_format:"%Y-%m-%d %I:%M"|escape}{else}&#8212;{/if}</td>
+		<td class="number">{$row.last_update_photo_count|escape}</td>
+	</tr>
+{/foreach}
+
+</table>
+
+{include file="inc_pagination.txt"}
+
+{include file="inc_god_foot.txt"}
