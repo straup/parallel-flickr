@@ -1,11 +1,8 @@
 <?php
 
 	include("include/init.php");
+
 	loadlib("flickr_backups");
-
-	# it is unclear whether this is working correctly
-	# (20111125/straup)
-
 	loadlib("invite_codes");
 
 	if ($GLOBALS['cfg']['enable_feature_invite_codes']){
