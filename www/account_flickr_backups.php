@@ -2,18 +2,27 @@
 
 	include("include/init.php");
 
+	login_ensure_loggedin();
+
 	loadlib("flickr_backups");
 	loadlib("invite_codes");
 
+	$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
+	$registered = (count($backups)) ? 1 : 0;
+
+	if ((! $registered) && (! $GLOBALS['cfg']['backups_enable_registrations'])){
+		error_disabled();
+	}
+	
 	if ($GLOBALS['cfg']['enable_feature_invite_codes']){
 
-		if (! invite_codes_get_by_cookie()){
+		if ((! $registered) && (! invite_codes_get_by_cookie())){
 
 			$cookie = login_get_cookie('invite');
 
 			if (! $cookie){
 
-				header("location: /invite/?redir=" . urlencode("/account/backups"));
+				header("location: /invite/?redir=" . urlencode("account/flickr/backups"));
 				exit();
 			}
 		}
@@ -23,16 +32,8 @@
 		error_disabled();
 	}
 
-	login_ensure_loggedin("account/backups/");
-
 	$map = flickr_backups_type_map('string keys');
 	$GLOBALS['smarty']->assign_by_ref("map", $map);
-
-	$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
-
-	if ((! count($backups)) && (! $GLOBALS['cfg']['backups_enable_registrations'])){
-		error_disabled();
-	}
 
 	$crumb_key = 'backups';
 	$smarty->assign("crumb_key", $crumb_key);

@@ -17,6 +17,10 @@
 		$base_url = isset($GLOBALS['cfg']) && isset($GLOBALS['cfg']['abs_root_url'])
 		    ? rtrim($GLOBALS['cfg']['abs_root_url'], '/')
 		    : '';
+
+		if (! $redir){
+			$redir = ltrim($_SERVER['REQUEST_URI'], "/");
+		}
 		
 		if ($redir){
 			header("Location: {$base_url}/signin/?redir=".urlencode($redir));
