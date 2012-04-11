@@ -171,13 +171,7 @@
 
 		if (($rsp['ok']) && (isset($more['send_email']))){
 
-			$template = 'email_invite_code.txt';
-
-			if (isset($more['template'])){
-				$template = $more['template'];
-			}
-
-			invite_codes_send_invite($rsp['invite'], $template);
+			invite_codes_send_invite($rsp['invite']);
 		}
 
 		return $rsp;
@@ -248,7 +242,7 @@
 
 	#################################################################
 
-	function invite_codes_send_invite(&$invite, $template=''){
+	function invite_codes_send_invite(&$invite, $template='email_invite_code.txt'){
 
 		$args = array(
 			'to_email' => $invite['email'],

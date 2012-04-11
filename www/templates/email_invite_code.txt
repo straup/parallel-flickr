@@ -1,8 +1,24 @@
-{assign var="email_subject" value="You have been sent an invite code!"}
+{capture assign="email_subject"}{$cfg.site_name} has sent you an invite code!{/capture}
 Hello! 
+
+"{$cfg.site_name}" is sending you a form letter that contains an invite code so that you may use the site to backup your Flickr photos!
 
 Your invite code is:
 
-	{$cfg.abs_root_url}invite/{$invite.code|escape}/
+	{$cfg.abs_root_url}invite/{$invite.code|escape}/?redir=/account/flickr/backups/
+
+You should only need to visit that page once. If you've not already logged in to "{$cfg.site_name}" then you'll be bounced throught the Flickr API authentication flow so you can allow it "read" permissions to view (and backup) your photos.
+
+Once you've done that you'll still need to confirm that you want the site to backup your photos. After you've registered to have your photos archived they'll be included in the next round of backups (which may or may not happen on a regular schedule depending on how "{$cfg.site_name}" is set up).
+
+You can get your photos, and faves, by visiting:
+
+	{$cfg.abs_root_url}photos/me/
+
+	{$cfg.abs_root_url}photos/me/faves/
+
+If you visit your photos page before the backup scripts are run and see that some of your photos are already there it's because one of the other users of "{$cfg.site_name}" faved your photo on Flickr and it was archived in the past.
+
+There may be some bugs left in the mix but otherwise it should be All Good (tm).
 
 Enjoy!
