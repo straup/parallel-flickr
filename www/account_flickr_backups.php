@@ -8,7 +8,7 @@
 	loadlib("invite_codes");
 
 	$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
-	$registered = (count($backups)) ? 0 : 0;
+	$registered = (count($backups)) ? 1 : 0;
 
 	if ((! $registered) && (! $GLOBALS['cfg']['backups_enable_registrations'])){
 		error_disabled();
