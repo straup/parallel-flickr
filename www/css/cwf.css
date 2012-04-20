@@ -44,3 +44,12 @@
 #cwf_updates a {
     font-weight: 100;
 }
+
+/* http://revdancatt.com/2012/03/31/the-pxl-effect-with-javascript-and-canvas-and-maths/ */
+
+#backstretch {
+    image-rendering:-moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering:-webkit-optimize-contrast;
+    -ms-interpolation-mode:nearest-neighbor;
+}
