@@ -26,6 +26,32 @@ This user has an auth token with <q>{$perms_map.$perms|escape}</q> permissions.
 {/if}
 </p>
 
+{if $user.backups}
+
+<h4>Backups</h4>
+
+<table>
+<tr>
+<th>Type</th>
+<th>Status</th>
+<th>First update</th>
+<th>Last update</th>
+<th>Details</th>
+</tr>
+
+{foreach from=$user.backups item="row" key="type"}
+<tr>
+<td><strong>{$type|escape}</strong></td>
+<td>{if $row.disabled}disabled{else}enabled{/if}</td>
+<td>{$row.date_firstupdate|date_format|escape}</td>
+<td>{$row.date_lastupdate|date_format|escape}</td>
+<td>{$row.details|escape}</td>
+</tr>
+{/foreach}
+
+</table>
+
+{/if}
 
 {/if}
 
