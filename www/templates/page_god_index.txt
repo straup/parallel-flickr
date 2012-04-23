@@ -3,7 +3,8 @@
 <h2>God</h2>
 
 <ul>
-	<li><a href="{$cfg.abs_root_url}god/users/">Users</a></li>
+	<li><a href="{$cfg.abs_root_url}god/users/backup/">Registered backup users</a></li>
+	<li><a href="{$cfg.abs_root_url}god/users/">All users</a></li>
 </ul>
 
 <ul>
