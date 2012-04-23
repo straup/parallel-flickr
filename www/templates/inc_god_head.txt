@@ -5,9 +5,14 @@
 
 		<meta content='width=device-width,maximum-scale=1.0,initial-scale=1.0,user-scalable=0' name='viewport'>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
+
+		<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/main.css" />
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.7.1.min.js"></script>
 	</head>
 
 	<body>
+
+	<div id="god">
 
 	<div id="nav">
 		<div id="login" style="float: right;">
@@ -20,6 +25,5 @@
 {/if}
 
 		</div>
+			<br clear="all" />
 	</div>
-
-	<div id="god">
