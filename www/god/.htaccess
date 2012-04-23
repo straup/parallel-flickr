@@ -6,6 +6,8 @@
 
 RewriteEngine	On
 
+RewriteRule	users/backup(/page([0-9]+))?/?$	users_backup.php?page=$2&%{QUERY_STRING}	[L]
+
 RewriteRule	users(/page([0-9]+))?/?$	users.php?page=$2&%{QUERY_STRING}	[L]
 RewriteRule	user/([0-9]+)/?$		user.php?user_id=$1&%{QUERY_STRING}	[L]
 

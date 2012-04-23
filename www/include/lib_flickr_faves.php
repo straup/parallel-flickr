@@ -52,6 +52,27 @@
 
 	#################################################################
 
+	function flickr_faves_count_for_user(&$user, $more=array()){
+
+		$defaults = array(
+			'viewer_id' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
+
+		$cluster_id = $user['cluster_id'];
+		$enc_user = AddSlashes($user['id']);
+
+		# TO DO: perms
+
+		$sql = "SELECT COUNT(photo_id) AS cnt FROM FlickrFaves WHERE user_id='{$enc_user}' {$extra}";
+		$row = db_single(db_fetch_users($cluster_id, $sql));
+
+		return $row['cnt'];
+	}
+
+	#################################################################
+
 	# TO DO: either suppress the 1062 errors or fetch the various
 	# rows below. It's not really a big deal except that the errors
 	# get spewed to STDOUT and are confusing and a bit angst-making

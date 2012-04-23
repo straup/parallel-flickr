@@ -11,6 +11,22 @@
 
 <p>Account created: {$user.created|date_format:"%b %d, %Y at %l:%M %p"|escape}</p>
 
+<p>Photos: <a href="{$user|@flickr_urls_photos_user}">{$user.count_photos|escape}</a></p>
+
+{if $user.count_faves}
+<p>Faves: <a href="{$user|@flickr_urls_faves_user}">{$user.count_faves|escape}</a></p>
+{/if}
+
+<p>
+{if $flickr_user.auth_token}
+{assign var="perms" value=$flickr_user.token_perms}
+This user has an auth token with <q>{$perms_map.$perms|escape}</q> permissions.
+{else}
+<em>This user has not logged in to the site.</em>
+{/if}
+</p>
+
+
 {/if}
 
 {include file="inc_god_foot.txt"}

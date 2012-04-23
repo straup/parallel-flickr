@@ -1,0 +1,24 @@
+{capture assign="page_title"}users{/capture}
+{include file="inc_god_head.txt"}
+
+<h2>Users</h2>
+
+<table>
+	<tr>
+		<th>ID</th>
+		<th>Username</th>
+		<th>Created</th>
+	</tr>
+{foreach from=$users item="row"}
+<tr>
+	<td>{$row.id|escape}</td>
+	<td><a href="{$cfg.abs_root_url}god/user/{$row.id|escape}/">{$row.username|escape}</a></td>
+	<td>{$row.created|date_format:"%b %d, %Y"|escape}</td>
+</tr>
+{/foreach}
+
+</table>
+
+{include file="inc_pagination.txt"}
+
+{include file="inc_god_foot.txt"}
