@@ -3,73 +3,21 @@
 	# $Id$
 	#
 
-	# Basic stuff
-	# Things you need to tweak
-	# Things you may want to tweak
-	# Things you can probably not worry about
-
 	$GLOBALS['cfg'] = array();
 
-	#
-	# Basic stuff
-	#
-
-	$GLOBALS['cfg']['environment'] = 'prod';
+	# Things you may want to change in a hurry
 
 	$GLOBALS['cfg']['site_name'] = '🐼  | parallel-flickr';
+	$GLOBALS['cfg']['environment'] = 'prod';
 
 	$GLOBALS['cfg']['site_disabled'] = 0;
 	$GLOBALS['cfg']['site_disabled_retry_after'] = 0;	# seconds; if set will return HTTP Retry-After header
 
-	$GLOBALS['cfg']['enable_feature_backups'] = 1;
-	$GLOBALS['cfg']['backups_enable_registrations'] = 1;	# allow new people/photos to be pulled in by the backup tools
-								# see also: account_backups.php
-
-	$GLOBALS['cfg']['enable_feature_slippymaps'] = 1;
-	$GLOBALS['cfg']['slippymap_provider'] = 'toner';	# assumes canned htmapl provider strings
-								# see also: http://htmapl.com/examples/providers.html
-
-	$GLOBALS['cfg']['enable_feature_path_alias_redirects'] = 0;
-
-	$GLOBALS['cfg']['enable_feature_signup'] = 1;
-	$GLOBALS['cfg']['enable_feature_signin'] = 1;
-	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;
-	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
-
-	$GLOBALS['cfg']['enable_feature_flickr_push'] = 1;
-	$GLOBALS['cfg']['flickr_push_enable_registrations'] = 1;
-	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 1;
-	$GLOBALS['cfg']['flickr_push_enable_photos_friends_faves'] = 1;
-	$GLOBALS['cfg']['flickr_push_enable_photos_recent_activity'] = 0;	# still full of weirdness (20111221/straup)
-	$GLOBALS['cfg']['flickr_push_notification_email'] = '';			# add a valid email address where notifications will
-										# will be sent if a feed is unsubscribed (by flickr)
-
-	$GLOBALS['cfg']['enable_feature_sharkify'] = 1;		# http://www.iamcal.com/sharkify/
-
-	# See this? It assumes everything is running on a single
-	# (read: not federated) database.
-
-	$GLOBALS['cfg']['db_enable_poormans_federation'] = 1;
-	$GLOBALS['cfg']['db_enable_poormans_ticketing'] = 1;
-
-	$GLOBALS['cfg']['abs_root_url']		= 'http://'.($_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : 'fake.com').'/';
-	$GLOBALS['cfg']['safe_abs_root_url']	= $GLOBALS['cfg']['abs_root_url'];
-
-	$GLOBALS['cfg']['smarty_template_dir'] = realpath(dirname(__FILE__) . '/../templates/');
-	$GLOBALS['cfg']['smarty_compile_dir'] = realpath(dirname(__FILE__) . '/../templates_c/');
-
-	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
-	$GLOBALS['cfg']['auth_cookie_name'] = 'a';
-
-	$GLOBALS['cfg']['auth_cookie_secure'] = 0;		# see also: http://github.com/blog/737-sidejack-prevention
-	$GLOBALS['cfg']['auth_cookie_httponly'] = 0;
-
-	$GLOBALS['cfg']['crumb_ttl_default'] = 300;		# seconds
-
 	#
-	# Things you need to tweak
+	# Things you need to tweak before you get started
 	#
 
+	# Database configs
 	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/generate_secret.php
 
 	$GLOBALS['cfg']['db_main'] = array(
@@ -80,17 +28,88 @@
 		'auto_connect' => 1,
 	);
 
+	# Flickr configs
 	# http://www.flickr.com/services/apps/create/apply/
 
 	$GLOBALS['cfg']['flickr_api_key'] = 'TWEAK ME';
 	$GLOBALS['cfg']['flickr_api_secret'] = 'TWEAK ME';
 	$GLOBALS['cfg']['flickr_api_perms'] = 'read';
 
+	# Basic cookie/crypto configs
 	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/generate_secret.php
 
 	$GLOBALS['cfg']['crypto_cookie_secret'] = 'TWEAK ME';
 	$GLOBALS['cfg']['crypto_password_secret'] = 'TWEAK ME';
 	$GLOBALS['cfg']['crypto_crumb_secret'] = 'TWEAK ME';
+
+	#
+	# Things you may want to tweak (backups, registrations, invite codes)
+	#
+
+	# Flags to indicate whether Flickr should be polled for new photos to backup;
+	# whether users can register themselves as backup users; whether registerting
+	# also requires a valid invite code. Note that in order to use any of the
+	# god pages you will also need to enable and configure the poorman's god auth
+	# settings below.
+
+	# Backups - by default anyone who knows where your copy of
+	# parallel-flickr is (on the Internet) could register to have
+	# their photos (and likes) backed up. If you don't want to
+	# let anyone else backup their photos then you should disable
+	# the 'backups_enable_registration' flag. If you want
+	# to limit who can register take a look at the invite code
+	# flags below.
+
+	$GLOBALS['cfg']['enable_feature_backups'] = 1;
+	$GLOBALS['cfg']['backups_enable_registrations'] = 1;
+
+	# Invite codes – these are used to limit who can register
+	# to have their photos backed up. You'll need to do a
+	# few things to enable this:
+
+	# 1) enable the feature flags below for invite codes and
+	#    god auth (which is explained later)
+
+	# 2) generate a new secret for encrypting invite cookies
+	#    parallel-flickr/bin/generate_secret.php
+
+	# 3) set up poorman's 'god auth' – basically this is just
+	#    restricting access to a list of logged in user using
+	#    cookies; it works but I wouldn't call it "secure"
+
+	# Once that's done you can manage or create new invites
+	# here:
+
+	# $GLOBALS['cfg']['abs_root_url']/god/invites/
+	# $GLOBALS['cfg']['abs_root_url']/god/invites/generate/
+
+	# In addition, if a user tries to go to the backup page
+	# they've got stopped by an invite code wall which will
+	# allow them to request an invite code but you'll still
+	# need to send it manually (by pressing a button on the
+	# god page).
+
+	$GLOBALS['cfg']['enable_feature_invite_codes'] = 1;
+	$GLOBALS['cfg']['crypto_invite_secret'] = '';
+
+	#
+	# Things you may want to tweak (poorman's god auth)
+	#
+
+	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 0;
+
+	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
+
+		# poormans god auth is keyed off a user's UID
+		#
+		# xxx => array(
+		# 	'roles' => array( 'admin' ),
+		# ),
+	);
+
+	#
+	# Things you may want to tweak (storage)
+	#
 
 	# By default, parallel-flickr stores files on the local file system. It is possible
 	# to store your photos (and metadata) using Amazon's S3 service but you'll need to
@@ -114,10 +133,29 @@
 	$GLOBALS['cfg']['amazon_s3_bucket_name'] = 'TWEAK ME';
 
 	#
-	# Things you may want to tweak
+	# Things you may want to tweak (maps)
 	#
 
-	# Solr - used for search and fancy features like places and cameras
+	$GLOBALS['cfg']['enable_feature_slippymaps'] = 1;
+	$GLOBALS['cfg']['slippymap_provider'] = 'toner';	# assumes canned htmapl provider strings
+								# see also: http://htmapl.com/examples/providers.html
+
+	#
+	# Things you may want to tweak (Flickr PuSH feeds)
+	#
+
+	$GLOBALS['cfg']['enable_feature_flickr_push'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_registrations'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_photos_friends_faves'] = 1;
+	$GLOBALS['cfg']['flickr_push_enable_photos_recent_activity'] = 0;
+	$GLOBALS['cfg']['flickr_push_notification_email'] = '';	
+
+	#
+	# Things you may want to tweak (Solr)
+	#
+
+	# Solr is used for search and fancy features like places and cameras
 	# https://github.com/straup/parallel-flickr/tree/master/solr/
 	# https://lucene.apache.org/solr/#intro
 
@@ -127,15 +165,49 @@
 	# Hey look! Things that require Solr.
 
 	$GLOBALS['cfg']['enable_feature_places'] = 0;
-	$GLOBALS['cfg']['places_prefetch_data'] = 1;
-
 	$GLOBALS['cfg']['enable_feature_cameras'] = 0;
-
 	$GLOBALS['cfg']['enable_feature_archives'] = 0;
 
-	$GLOBALS['cfg']['enable_keyboard_browse'] = 0;
+	$GLOBALS['cfg']['places_prefetch_data'] = 1;
 
 	#
+	# Things you may want to tweak (misc. and silly stuff)
+	#
+
+	$GLOBALS['cfg']['enable_feature_sharkify'] = 1;		# http://www.iamcal.com/sharkify/
+
+	$GLOBALS['cfg']['enable_keyboard_browse'] = 1;
+
+	$GLOBALS['cfg']['enable_feature_path_alias_redirects'] = 0;
+
+	#
+	# Things you probably don't need to worry about
+	#
+
+	$GLOBALS['cfg']['enable_feature_signup'] = 1;
+	$GLOBALS['cfg']['enable_feature_signin'] = 1;
+	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;
+	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
+
+	# See this? It assumes everything is running on a single
+	# (read: not federated) database.
+
+	$GLOBALS['cfg']['db_enable_poormans_federation'] = 1;
+	$GLOBALS['cfg']['db_enable_poormans_ticketing'] = 1;
+
+	$GLOBALS['cfg']['abs_root_url']		= 'http://'.($_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : 'fake.com').'/';
+	$GLOBALS['cfg']['safe_abs_root_url']	= $GLOBALS['cfg']['abs_root_url'];
+
+	$GLOBALS['cfg']['smarty_template_dir'] = realpath(dirname(__FILE__) . '/../templates/');
+	$GLOBALS['cfg']['smarty_compile_dir'] = realpath(dirname(__FILE__) . '/../templates_c/');
+
+	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
+	$GLOBALS['cfg']['auth_cookie_name'] = 'a';
+
+	$GLOBALS['cfg']['auth_cookie_secure'] = 0;		# see also: http://github.com/blog/737-sidejack-prevention
+	$GLOBALS['cfg']['auth_cookie_httponly'] = 0;
+
+	$GLOBALS['cfg']['crumb_ttl_default'] = 300;		# seconds
 
 	$GLOBALS['cfg']['rewrite_static_urls'] = array(
 		# '/foo' => '/bar/',
@@ -144,21 +216,6 @@
 	$GLOBALS['cfg']['email_from_name']	= 'flamework app';
 	$GLOBALS['cfg']['email_from_email']	= 'admin@ourapp.com';
 	$GLOBALS['cfg']['auto_email_args']	= '-fadmin@ourapp.com';
-
-	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 0;
-
-	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
-
-		# poormans god auth is keyed off a user's UID
-		#
-		# xxx => array(
-		# 	'roles' => array( 'staff' ),
-		# ),
-	);
-
-	#
-	# Things you can probably not worry about
-	#
 
 	$GLOBALS['cfg']['user'] = null;
 
