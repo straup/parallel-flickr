@@ -37,6 +37,7 @@
 	</script>
 {/if}
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/cwf.css" />
+<link rel="stylesheet" type="text/css" media="screen and (max-device-width: 480px)" href="{$cfg.abs_root_url}css/cwf.mobile.css" />
 {/capture}
 {include file="inc_head.txt"}
 
