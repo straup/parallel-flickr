@@ -173,11 +173,11 @@ function cwf_init_shortcuts(){
 		}
 
 		else if (e.keyCode == 80){
-			cwf_toggle_pixel_mode();
+			cwf_toggle_pixel_mode(e.shiftKey);
 		}
 
 		else {
-			console.log(e.keyCode);
+			/* console.log(e); */
 		}
 	});
 
@@ -413,7 +413,7 @@ function cwf_show_photo(index){
 	$("#cwf_about").html(msg);
 }
 
-function cwf_toggle_pixel_mode(){
+function cwf_toggle_pixel_mode(do_fullscreen){
 
 	var a = $("#cwf_about");
 	var f = $("#footer");
@@ -429,7 +429,9 @@ function cwf_toggle_pixel_mode(){
 		a.hide();
 		f.hide();
 
-		cwf_set_fullscreen();
+		if (do_fullscreen){
+		    cwf_set_fullscreen();		    
+		}
 	}
 }	
 
