@@ -1,14 +1,21 @@
 {capture assign="page_title"}faves from your contacts{/capture}
 {capture assign="extra_head"}
+	<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.touchwipe.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/screenfull.min.js"></script>
+{if $cfg.environment=='prod'}
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.favorites.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/flickr.auth.min.js"></script>
+{else}
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.favorites.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/flickr.auth.js"></script>
+{/if}
 {if !$new_subscription}
 	<script type="text/javascript">
 

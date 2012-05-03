@@ -422,53 +422,17 @@ function cwf_toggle_pixel_mode(do_fullscreen){
 		a.show();
 		f.show();
 
-		cwf_cancel_fullscreen();
+		if (screenfull){
+			screenfull.exit();
+		}
 	}
 
 	else {
 		a.hide();
 		f.hide();
 
-		if (do_fullscreen){
-		    cwf_set_fullscreen();		    
+		if ((do_fullscreen) && (screenfull)){
+			screenfull.request();
 		}
-	}
-}	
-
-/* https://hacks.mozilla.org/2012/01/using-the-fullscreen-api-in-web-browsers/ */
-
-function cwf_set_fullscreen(el){
-
-	if (! el){
-		el = document.body;
-	}
-
-	if (el.requestFullscreen){
-		el.requestFullscreen();
-	}
-
-	else if (el.mozRequestFullScreen){
-		el.mozRequestFullScreen();
-	}
-
-	else if (el.webkitRequestFullScreen){
-		el.webkitRequestFullScreen();
-	}
-}
-
-function cwf_cancel_fullscreen(){
-
-	var el = document;
-
-	if (el.exitFullscreen){
-		el.exitFullscreen();
-	}
-
-	else if (el.mozCancelFullScreen){
-		el.mozCancelFullScreen();
-	}
-
-	else if (el.webkitCancelFullScreen){
-		el.webkitCancelFullScreen();
 	}
 }
