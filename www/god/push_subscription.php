@@ -6,6 +6,7 @@
 	features_ensure_enabled("flickr_push");
 
 	loadlib("flickr_push");
+	loadlib("flickr_push_photos");
 	loadlib("flickr_push_subscriptions");
 
 	$id = get_int32("id");
@@ -39,7 +40,10 @@
 
 	$sub['owner'] = users_get_by_id($sub['user_id']);
 
+	$photos = flickr_push_photos_for_subscription($sub);
+
 	$GLOBALS['smarty']->assign_by_ref("subscription", $sub);
+	$GLOBALS['smarty']->assign_by_ref("photos", $photos['rows']);
 
 	$GLOBALS['smarty']->display("page_god_push_subscription.txt");
 	exit();

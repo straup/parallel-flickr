@@ -25,7 +25,7 @@ th { text-align:left; }
 
 {/if}
 
-<form id="deleteme" action="{$cfg.abs_root_url}god/push/subscriptions/{$subscription.id|escape}" method="POST" style="float:right;">
+<form id="deleteme" action="{$cfg.abs_root_url}god/push/subscription/{$subscription.id|escape}" method="POST" style="float:right;">
 	{$crumb_key|crumb_input}
 	<input type="hidden" name="delete" value="1" />
 	<input type="submit" value="DELETE THIS FEED" />
@@ -49,9 +49,10 @@ $(document).ready(function(){
 <br clear="all" />
 
 <table>
-	<tr><th>ID</th><td>{$subscription.id|escape}</td></tr>
-	<tr><th>Owner</th><td>{$subscription.owner.username|escape}</td></tr>
-	<tr><th>Topic</th><td>{$subscription.str_topic|escape}</td></tr>
+	<tr><th>ID</th><td><strong>{$subscription.id|escape}</strong></td></tr>
+	<tr><th>Owner</th><td><a href="{$cfg.abs_root_url}god/push/subscriptions/{$subscription.user_id|escape}/">{$subscription.owner.username|escape}</a></td></tr>
+	<tr><th>Topic ID</th><td>{$subscription.topic_id|escape}</td></tr>
+	<tr><th>Topic Label</th><td>{$subscription.str_topic|escape}</td></tr>
 	<tr><th>Topic Args</th><td>{$subscription.topic_args|escape}</td></tr>
 	<tr><th>Secret URL</th><td>{$subscription.secret_url|escape}</td></tr>
 	<tr><th>Verify token</th><td>{$subscription.verify_token|escape}</td></tr>
@@ -59,5 +60,18 @@ $(document).ready(function(){
 	<tr><th>Verified</th><td>{if $subscription.verified}{$subscription.verified|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td></tr>
 	<tr><th>Last update</th><td>{if $subscription.last_update}{$subscription.last_update|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td></tr>
 </table>
+
+{if $photos|@count}
+<div style="margin-top:25px;">
+
+{foreach from=$photos item="row"}
+<div style="float:left;margin-right:10px; margin-bottom:10px;">
+<a href="http://www.flickr.com/photos/{$row.owner|escape}/{$row.photo_id|escape}/" target="_flickr" title="a photo by {$row.ownername|escape}"><img src="{$row.thumb_url}" /></a>
+</div>
+{/foreach}
+
+</div>
+<br clear="all" />
+{/if}
 
 {include file="inc_god_foot.txt"}

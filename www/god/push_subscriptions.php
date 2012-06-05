@@ -9,7 +9,7 @@
 	loadlib("flickr_push");
 	loadlib("flickr_push_subscriptions");
 
-	$topic_map = flickr_push_topic_map();
+	$topic_map = flickr_push_subscriptions_topic_map();
 	$GLOBALS['smarty']->assign_by_ref("topic_map", $topic_map);
 
 	if ($user_id = get_int32("user_id")){
@@ -32,7 +32,22 @@
 		$GLOBALS['smarty']->assign("crumb_key", $crumb_key);
 
 		if ((post_str("create") && (crumb_check($crumb_key)))){
-			# please write me
+
+			$topic_id = post_int32("topic_id");
+
+			if (flickr_push_subscriptions_is_valid_topic_id($topic_id)){
+
+				# HEY LOOK! THIS STILL DOESN'T DEAL WITH FEEDS THAT
+				# NEED OR HAVE TOPIC ARGS (20120605/straup)
+
+				$sub = array(
+					'user_id' => $owner['id'],
+					'topic_id' => $topic_id
+				);
+
+				$rsp = flickr_push_subscriptions_register_subscription($sub);
+				$GLOBALS['smarty']->assign_by_ref("create_sub", $rsp);
+			}
 		}
 	}
 
@@ -55,6 +70,7 @@
 	foreach ($rsp['rows'] as $row){
 
 		$row['owner'] = users_get_by_id($row['user_id']);
+		$row['str_topic'] = $topic_map[$row['topic_id']]['label'];
 		$subs[] = $row;
 	}
 

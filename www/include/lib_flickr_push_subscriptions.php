@@ -30,6 +30,23 @@
 
 	#################################################################
 
+	function flickr_push_subscriptions_is_valid_topic_id($id){
+
+		$map = flickr_push_subscriptions_topic_map();
+
+		if (! isset($map[$id])){
+			return 0;
+		}
+
+		if (! $map[$id]['enabled']){
+			return 0;
+		}
+
+		return 1;
+	}
+
+	#################################################################
+
 	function flickr_push_subscriptions_generate_secret_url(){
 
 		$tries = 0;
