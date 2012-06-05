@@ -23,8 +23,8 @@
 
 {/if}
 
-{if 0}
-<form id="createme" action="{$cfg.abs_root_url}god/push/subscriptions/" method="POST" style="float:right;">
+{if $is_backup_user}
+<form id="createme" action="{$cfg.abs_root_url}god/push/subscriptions/{$owner.id|escape}/" method="POST" style="float:right;">
 	{$crumb_key|crumb_input}
 	<input type="hidden" name="create" value="1" />
 	<select name="topic_id" id="topic">
@@ -70,8 +70,8 @@ $(document).ready(function(){
 {foreach from=$subscriptions item="row"}
 {assign var="topic_id" value=$row.topic_id}
 	<tr>
-		<td><a href="{$cfg.abs_root_url}god/push/subscriptions/{$row.id|escape}/">{$row.id|escape}</a></td>
-		<td><a href="">{$row.owner.username|escape}</a></td>
+		<td><a href="{$cfg.abs_root_url}god/push/subscription/{$row.id|escape}/">{$row.id|escape}</a></td>
+		<td><a href="{$cfg.abs_root_url}god/push/subscriptions/{$row.user_id|escape}/">{$row.owner.username|escape}</a></td>
 		<td>{$row.created|date_format:"%Y-%m-%d at %H:%M"|escape}</td>
 		<td>{if $row.verified}{$row.verified|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td>
 		<td>{if $row.last_update}{$row.last_update|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td>

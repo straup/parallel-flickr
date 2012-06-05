@@ -25,7 +25,6 @@ th { text-align:left; }
 
 {/if}
 
-{if 0}
 <form id="deleteme" action="{$cfg.abs_root_url}god/push/subscriptions/{$subscription.id|escape}" method="POST" style="float:right;">
 	{$crumb_key|crumb_input}
 	<input type="hidden" name="delete" value="1" />
@@ -48,7 +47,6 @@ $(document).ready(function(){
 </script>
 
 <br clear="all" />
-{/if}
 
 <table>
 	<tr><th>ID</th><td>{$subscription.id|escape}</td></tr>

@@ -5,17 +5,35 @@
 
 	features_ensure_enabled("flickr_push");
 
+	loadlib("flickr_backups");
 	loadlib("flickr_push");
 	loadlib("flickr_push_subscriptions");
 
 	$topic_map = flickr_push_topic_map();
 	$GLOBALS['smarty']->assign_by_ref("topic_map", $topic_map);
 
-	$crumb_key = "create_feed";
-	$GLOBALS['smarty']->assign("crumb_key", $crumb_key);
+	if ($user_id = get_int32("user_id")){
 
-	if ((post_str("create") && (crumb_check($crumb_key)))){
-		# please write me
+		$owner = users_get_by_id($user_id);
+
+		if (! $owner){
+			error_404();
+		}
+
+		$GLOBALS['smarty']->assign_by_ref("owner", $owner);
+	}
+
+	$is_backup_user = (($owner) && (flickr_backups_is_registered_user($owner))) ? 1 : 0;
+	$GLOBALS['smarty']->assign("is_backup_user", $is_backup_user);
+
+	if ($is_backup_user){
+
+		$crumb_key = "create_feed";
+		$GLOBALS['smarty']->assign("crumb_key", $crumb_key);
+
+		if ((post_str("create") && (crumb_check($crumb_key)))){
+			# please write me
+		}
 	}
 
 	$more = array();
@@ -24,7 +42,14 @@
 		$more['page'] = $page;
 	}
 
-	$rsp = flickr_push_subscriptions_get_subscriptions($more);
+	if ($owner){
+		$rsp = flickr_push_subscriptions_get_subscriptions_for_user($owner, $more);
+	}
+
+	else {
+		$rsp = flickr_push_subscriptions_get_subscriptions($more);
+	}
+
 	$subs = array();
 
 	foreach ($rsp['rows'] as $row){

@@ -19,7 +19,15 @@
 	$GLOBALS['smarty']->assign("crumb_key", $crumb_key);
 
 	if ((post_str("delete") && (crumb_check($crumb_key)))){
-		# please write me
+
+		$feed_rsp = flickr_push_unsubscribe($sub);
+		$GLOBALS['smarty']->assign("delete_feed", $feed_rsp);
+
+		if ($feed_rsp['ok']){
+			$sub_rsp = flickr_push_subscriptions_delete($sub);
+			$GLOBALS['smarty']->assign("delete_sub", $sub_rsp);
+		}
+
 	}
 
 	$topic_map = flickr_push_topic_map();

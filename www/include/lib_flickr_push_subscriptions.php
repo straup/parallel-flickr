@@ -107,9 +107,20 @@
 
 	#################################################################
 
-	function flickr_push_subscriptions_get_subscriptions($args){
+	function flickr_push_subscriptions_get_subscriptions($more=array()){
 
 		$sql = "SELECT * FROM FlickrPushSubscriptions";
+		$rsp = db_fetch_paginated($sql, $more);
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_push_subscriptions_get_subscriptions_for_user(&$user, $more=array()){
+
+		$enc_user = AddSlashes($user['id']);
+		$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_user}'";
 		$rsp = db_fetch_paginated($sql, $args);
 
 		return $rsp;

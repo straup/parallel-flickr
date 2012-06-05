@@ -17,4 +17,8 @@ RewriteRule	invite/([a-zA-Z0-9]+)/?$	invite.php?code=$1&%{QUERY_STRING}	[L]
 
 RewriteRule	push(/page([0-9]+))?/?$		push_subscriptions.php?page=$2&{QUERY_STRING}	[L]
 RewriteRule	push/subscriptions(/page([0-9]+))?/?$		push_subscriptions.php?page=$2&%{QUERY_STRING}	[L]
-RewriteRule	push/subscriptions/([0-9]+)/?$		push_subscription.php?id=$1&%{QUERY_STRING}	[L]
+
+# Note: singular (individual feed) vs. plural (all feeds for a user)
+RewriteRule	push/subscriptions/([0-9]+)(/page([0-9]+))?/?$		push_subscriptions.php?user_id=$1&page=$3%{QUERY_STRING}	[L]
+
+RewriteRule	push/subscription/([0-9]+)/?$		push_subscription.php?id=$1&%{QUERY_STRING}	[L]
