@@ -57,6 +57,7 @@ $(document).ready(function(){
 		<th>Topic ID</th>
 		<th>Topic Label</th>
 		<th>Topic Args</th>
+		<th>Is PuSH backup</th>
 	</tr>
 {foreach from=$subscriptions item="row"}
 {assign var="topic_id" value=$row.topic_id}
@@ -68,7 +69,8 @@ $(document).ready(function(){
 		<td>{if $row.last_update}{$row.last_update|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td>
 		<td>{$row.topic_id|escape}</td>
 		<td>{$row.str_topic|escape}</td>
-		<td>{$row.topic_args|escape}</td>
+		<td style="font-size:small;">{$row.topic_args|escape}</td>
+		<td>{$row.is_push_backup|escape}</td>
 	</tr>
 {/foreach}
 </table>

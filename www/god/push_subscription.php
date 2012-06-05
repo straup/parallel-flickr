@@ -6,6 +6,7 @@
 	features_ensure_enabled("flickr_push");
 
 	loadlib("flickr_push");
+	loadlib("flickr_backups");
 	loadlib("flickr_push_photos");
 	loadlib("flickr_push_subscriptions");
 
@@ -38,9 +39,13 @@
 		$sub['last_update_details'] = json_decode($sub['last_update_details'], "as hash");
 	}
 
-	$sub['owner'] = users_get_by_id($sub['user_id']);
+	$owner = users_get_by_id($sub['user_id']);
+	$sub['owner'] = $owner;
 
 	$photos = flickr_push_photos_for_subscription($sub);
+
+	$is_push_backup = flickr_push_subscriptions_is_push_backup($sub);
+	$GLOBALS['smarty']->assign("is_push_backup", $is_push_backup);
 
 	$GLOBALS['smarty']->assign_by_ref("subscription", $sub);
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos['rows']);

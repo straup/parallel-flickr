@@ -47,6 +47,25 @@
 
 	#################################################################
 
+	function flickr_push_subscriptions_is_push_backup(&$subscription){
+
+		loadlib("flickr_backups");
+
+		$owner = users_get_by_id($subscription['user_id']);
+
+		if (! flickr_backups_is_registered_user($owner)){
+			return 0;
+		}
+
+		if (! flickr_backups_is_registered_subscription($subscription)){
+			return 0;
+		}
+
+		return 1;
+	}
+
+	#################################################################
+
 	function flickr_push_subscriptions_generate_secret_url(){
 
 		$tries = 0;

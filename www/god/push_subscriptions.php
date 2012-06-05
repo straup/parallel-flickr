@@ -71,6 +71,8 @@
 
 		$row['owner'] = users_get_by_id($row['user_id']);
 		$row['str_topic'] = $topic_map[$row['topic_id']]['label'];
+
+		$row['is_push_backup'] = flickr_push_subscriptions_is_push_backup($row);
 		$subs[] = $row;
 	}
 

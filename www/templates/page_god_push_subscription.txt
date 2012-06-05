@@ -54,6 +54,7 @@ $(document).ready(function(){
 	<tr><th>Topic ID</th><td>{$subscription.topic_id|escape}</td></tr>
 	<tr><th>Topic Label</th><td>{$subscription.str_topic|escape}</td></tr>
 	<tr><th>Topic Args</th><td>{$subscription.topic_args|escape}</td></tr>
+	<tr><th>Is PuSH Backup</th><td>{$is_push_backup|escape}</td></tr>
 	<tr><th>Secret URL</th><td>{$subscription.secret_url|escape}</td></tr>
 	<tr><th>Verify token</th><td>{$subscription.verify_token|escape}</td></tr>
 	<tr><th>Created</th><td>{$subscription.created|date_format:"%Y-%m-%d at %H:%M"|escape}</td></tr>

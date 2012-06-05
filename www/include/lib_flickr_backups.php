@@ -116,6 +116,23 @@
 
 	#################################################################
 
+	function flickr_backups_is_registered_subscription(&$sub){
+
+		loadlib("flickr_push");
+		$map = flickr_push_topic_map("string keys");
+
+		# for now, anyway...
+
+		$valid = array(
+			$map['my_photos'],
+			$map['my_faves'],
+		);
+
+		return (in_array($sub['topic_id'], $valid)) ? 1 : 0;
+	}
+
+	#################################################################
+
 	function flickr_backups_for_user(&$user, $type_id=null){
 
 		$enc_user = AddSlashes($user['id']);
