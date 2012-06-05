@@ -128,15 +128,12 @@
 
 		if (($do_push_backups) && ($is_push_backup)){
 
-			$method = 'flickr.photos.getInfo';
-
 			$args = array(
 				'photo_id' => $photo_id,
 				'auth_token' => $flickr_user['auth_token'],
 			);
 
-			$api_call = flickr_api_call_build($method, $args);
-			$to_backup[] = $api_call;
+			$to_backup[] = $args;
 		}
 
 		if ($rsp['ok']){
@@ -237,9 +234,10 @@
 		loadlib("http");
 		$reqs = array();
 
-		foreach ($to_backup as $api_call){
+		foreach ($to_backup as $args){
 
-			list($url, $args) = $api_call;
+			list($url, $args) = flickr_api_call_build('flickr.photos.getInfo', $args);
+
 			$url = $url . "?" . http_build_query($args);
 
 			$reqs[] = array(
