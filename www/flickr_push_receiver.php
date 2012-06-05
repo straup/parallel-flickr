@@ -119,6 +119,16 @@
 
 		if (($do_push_backups) && ($is_push_backup)){
 
+			$fh = fopen("/tmp/push-backup", "w");
+			fwrite($fh, var_export($e, 1));
+			fclose($fh);
+
+			# TO DO: $convert $e (an atom thingy) in to a SPR
+			# with extras (lib_flickr_photos_import ~ ln. 30)
+
+			# $photo = array();
+			# $more = array();
+			# flickr_photos_import_photo($photo, $more);
 		}
 
 		if ($rsp['ok']){
