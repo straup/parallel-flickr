@@ -1,0 +1,85 @@
+{capture assign="page_title"}push | subscriptions{/capture}
+{include file="inc_god_head.txt"}
+
+{if $smarty.get.deleted}
+<p class="confirm">Okay, that subscription feed has been deleted.</p>
+{/if}
+
+{if $create_sub or $create_feed}
+
+{if $create_sub.ok}
+
+<p class="confirm">You subscription has been added to the database.</p>
+
+{if $create_feed.ok}
+<p class="confirm">You subscription has been registered with Instagram.</p>
+{else}
+<p class="error">There was a problem subscribing to this feed with Instagram: {$create_feed.error|escape}.</p>
+{/if}
+
+{else}
+<p class="error">There was a problem adding this subscription to the database: {$create_sub.error|escape}.</p>
+{/if}
+
+{/if}
+
+{if 0}
+<form id="createme" action="{$cfg.abs_root_url}god/push/subscriptions/" method="POST" style="float:right;">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="create" value="1" />
+	<select name="topic_id" id="topic">
+		<option>Please select a subscription type</option>
+{foreach from=$topic_map item="label" key="topic_id"}
+		<option value="{$topic_id|escape}">{$label|escape}</option>
+{/foreach}
+	</select>
+	<input type="submit" value="CREATE NEW FEED" />
+</form>
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+	$("#createme").submit(function(){
+
+		var t = $("#topic").val();
+
+		if (t==''){
+			alert("You forgot to choose a feed topic!");
+			return false;
+		}
+	});
+});
+{/literal}
+</script>
+
+<br clear="all" />
+{/if}
+
+{if $subscriptions|@count}
+
+<table>
+	<tr>
+		<th>ID</th>
+		<th>Created</th>
+		<th>Verified</th>
+		<th>Last update</th>
+		<th>Topic</th>
+	</tr>
+{foreach from=$subscriptions item="row"}
+{assign var="topic_id" value=$row.topic_id}
+	<tr>
+		<td><a href="{$cfg.abs_root_url}god/push/subscriptions/{$row.id|escape}/">{$row.id|escape}</a></td>
+		<td>{$row.created|date_format:"%Y-%m-%d at %H:%M"|escape}</td>
+		<td>{if $row.verified}{$row.verified|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td>
+		<td>{if $row.last_update}{$row.last_update|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td>
+		<td>{$topic_map.$topic_id|escape}</td>
+	</tr>
+{/foreach}
+</table>
+{include file="inc_pagination.txt"}
+
+{else}
+<p>You have not set up any subscriptions yet.</p>
+{/if}
+
+{include file="inc_god_foot.txt"}

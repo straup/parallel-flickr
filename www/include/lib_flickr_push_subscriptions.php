@@ -80,6 +80,16 @@
 
 	#################################################################
 
+	function flickr_push_subscriptions_get_subscriptions($args){
+
+		$sql = "SELECT * FROM FlickrPushSubscriptions";
+		$rsp = db_fetch_paginated($sql, $args);
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	function flickr_push_subscriptions_get_by_user_and_topic(&$user, $topic_id, $topic_args=null){
 
 		if ($topic_args){

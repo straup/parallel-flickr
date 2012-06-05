@@ -14,3 +14,7 @@ RewriteRule	user/([0-9]+)/?$		user.php?user_id=$1&%{QUERY_STRING}	[L]
 RewriteRule	invites/?$			invites.php?%{QUERY_STRING}		[L]
 RewriteRule	invites/generate/?$		invites_generate.php?code=$1&%{QUERY_STRING}	[L]
 RewriteRule	invite/([a-zA-Z0-9]+)/?$	invite.php?code=$1&%{QUERY_STRING}	[L]
+
+RewriteRule	push(/page([0-9]+))?/?$		push_subscriptions.php?page=$2&{QUERY_STRING}	[L]
+RewriteRule	push/subscriptions(/page([0-9]+))?/?$		push_subscriptions.php?page=$2&{QUERY_STRING}	[L]
+RewriteRule	push/subscriptions/([0-9]+)/?$		push_subscription.php?page=$2&{QUERY_STRING}	[L]
