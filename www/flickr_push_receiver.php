@@ -6,7 +6,11 @@
 
 	loadlib("flickr_push_subscriptions");
 	loadlib("flickr_push_photos");
+
 	loadlib("flickr_backups");
+	loadlib("flickr_users");
+	loadlib("flickr_api");
+
 	loadlib("syndication_atom");
 
 	$secret_url = get_str("secret_url");
@@ -65,10 +69,12 @@
 	$atom = syndication_atom_parse_str($xml);
 
 	$user = users_get_by_id($subscription['user_id']);
+	$flickr_user = flickr_users_get_by_user_id($user['id']);
 
 	$do_push_backups = features_is_enabled("flickr_push_backups");
 	$is_push_backup = flickr_push_subscriptions_is_push_backup($subscription);
 
+	$to_backup = array();
 	$new = 0;
 
 	foreach ($atom->items as $e){
@@ -117,18 +123,20 @@
 
 		$rsp = flickr_push_photos_record($user, $photo_data);
 
+		# You may be asking yourself: OMGWTFBBQ??!?!?
+		# The reasons are discussed below (20120605/straup)
+
 		if (($do_push_backups) && ($is_push_backup)){
 
-			$fh = fopen("/tmp/push-backup", "w");
-			fwrite($fh, var_export($e, 1));
-			fclose($fh);
+			$method = 'flickr.photos.getInfo';
 
-			# TO DO: $convert $e (an atom thingy) in to a SPR
-			# with extras (lib_flickr_photos_import ~ ln. 30)
+			$args = array(
+				'photo_id' => $photo_id,
+				'auth_token' => $flickr_user['auth_token'],
+			);
 
-			# $photo = array();
-			# $more = array();
-			# flickr_photos_import_photo($photo, $more);
+			$api_call = flickr_api_call_build($method, $args);
+			$to_backup[] = $api_call;
 		}
 
 		if ($rsp['ok']){
@@ -150,5 +158,101 @@
 	}
 
 	flickr_push_photos_purge();
+
+	# Okay, now we're going to deal with push backups. It's a bit
+        # complicated, for historical reasons outlined below. The term
+	# 'SPR' refers to a 'standard photo response' (SPR) which Kellan
+	# wrote a good blog post on while back. (20120605/straup)
+
+	# http://code.flickr.com/blog/2008/08/19/standard-photos-response-apis-for-civilized-age/
+
+	# asc: do the push/atom feeds return a bunch of exif gobbledygook
+	#   for [redacted] 's benefit?
+	# nw: dunno what the original reason for all goblledygook
+	# nw: I just used the existing rss feed templates
+	# asc: right
+	# asc: hrmm… that complicates things
+	# asc: because all the import_* stuff is predicated on having access
+	#   to a bunch of details not included in the rss/atom feed specs
+	# nw: sadly, i don't have commit access anymore
+	# nw: what do you need changed?
+	# asc: the short version – the one where I couldn't say exactly how
+	#   it affects things – is to be able to have the push stuff return a SPR
+	# asc: SPR + extras, really
+	# asc: which would mean… I guess… passing in another / different
+	#   parameter for the "output" 
+	# asc: distinct from the format
+	# asc: so (and I'm just making shit up now)
+	# asc: { 'format': 'json', 'output': 'spr', 'extras': 'tags,geo,etc' }
+	# asc: that's what you'd pass along when you subscribed to something
+	# nw: yeah I see
+	# nw: it really wouldn't be atom
+	# asc: right
+	# asc: well, atom is kind of stupid to start with
+	# asc: so there's that
+	# nw: yeah
+	# nw: actually that would make sense and is a good idea
+	# asc: shame we don't work at flickr anymore...
+	# asc: I guess what I'll do is
+	# asc: - bucket all the photos that need to be backed up (for
+	#   example, not your contacts faves) 
+	# asc: - issue a big ass multi_http request at the end to
+	#   photos.getInfo
+	# asc: - assume that it will all come back fast enough
+	# nw: ugh
+	# asc: - and then build SRP blobs
+	# asc: and feed them to the import_* functions
+	# asc: also, I am totally including an abridged version of this
+	#   conversation in the comments ;-)
+	# nw: har
+	# nw: If I had been thinking clearly I would have built this
+	#   in before i left
+	# nw: or more to the point, just made my/ourselves an output
+	#   format that included everything
+	# nw: in json
+	# asc: yeah
+	# asc: you did the right thing
+	# asc: following the spec
+	# asc: it's just that now it's clear where the stress points are
+	# asc: or at least one of them
+	# asc: and there's no way to fix it :-P
+	# nw: after all it is just passing a photo object into a
+	#   template
+	# nw: so it would be make a new template
+	# nw: or even extend the json one
+	# nw: and put extra fields in it
+	# nw: what data are you missing?
+	# nw: so some of it is only for owners
+	# nw: which would make sense as to why I didn't put it in
+	#   before :)
+	# asc: yeah
+	# nw: there would have to be a little trickiness to wire it
+	#   up so that you could only use that format if you were getting your photos
+	# nw: or just remove the stuff you're not authed for
+
+	# So, instead we're going to call flickr.photos.getInfo a bunch...
+
+ 	if (count($to_backup)){
+
+		loadlib("http");
+		$reqs = array();
+
+		foreach ($to_backup as $api_call){
+
+			list($url, $args) = $api_call;
+			$url = $url . "?" . http_build_query($args);
+
+			$reqs[] = array(
+				'method' => 'GET',
+				'url' => $url,
+			);
+		}
+
+		$multi_rsp = http_multi($reqs);
+
+		# TO DO: convert the getInfo response into a SPR
+		# then call: flickr_photos_import_photo()
+	}
+
 	exit();
 ?>
