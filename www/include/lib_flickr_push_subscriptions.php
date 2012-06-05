@@ -53,6 +53,33 @@
 
 	#################################################################
 
+	function flickr_push_subscriptions_get_by_id($id){
+
+		$cache_key = "flickr_push_subscriptions_{$id}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			$row = $cache['data'];
+		}
+
+		else {
+
+			$enc_id = AddSlashes($id);
+			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE id='{$enc_id}'";
+
+			$rsp = db_fetch($sql);
+			$row = db_single($rsp);
+
+			if ($row){
+				cache_set($cache_key, $row, "cache locally");
+			}
+		}
+
+		return $row;
+	}
+
+	#################################################################
+
 	function flickr_push_subscriptions_get_by_secret_url($url){
 
 		$cache_key = "flickr_push_subscriptions_secret_{$url}";

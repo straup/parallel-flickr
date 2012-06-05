@@ -3,9 +3,7 @@
 	include("../include/init.php");
 	loadlib("god");
 
-	if (! $GLOBALS['cfg']['enable_feature_flickr_push']){
-		error_disabled();
-	}
+	features_ensure_enabled("flickr_push");
 
 	loadlib("flickr_push");
 	loadlib("flickr_push_subscriptions");
@@ -21,21 +19,7 @@
 	$GLOBALS['smarty']->assign("crumb_key", $crumb_key);
 
 	if ((post_str("delete") && (crumb_check($crumb_key)))){
-
-		$rsp = flickr_push_unsubscribe($sub);
-		$GLOBALS['smarty']->assign_by_ref("delete_feed", $rsp);
-
-		if ($rsp['ok']){
-			$rsp = flickr_push_subscriptions_delete($sub);
-			$GLOBALS['smarty']->assign_by_ref("delete_sub", $rsp);
-
-			if ($rsp['ok']){
-				$url = "{$GLOBALS['cfg']['abs_root_url']}god/push/subscriptions?deleted=1";
-
-				header("location: $url");
-				exit();
-			}
-		}
+		# please write me
 	}
 
 	$topic_map = flickr_push_topic_map();
@@ -44,6 +28,8 @@
 	if ($sub['last_update_details']){
 		$sub['last_update_details'] = json_decode($sub['last_update_details'], "as hash");
 	}
+
+	$sub['owner'] = users_get_by_id($sub['user_id']);
 
 	$GLOBALS['smarty']->assign_by_ref("subscription", $sub);
 

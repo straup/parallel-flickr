@@ -52,14 +52,14 @@ $(document).ready(function(){
 
 <table>
 	<tr><th>ID</th><td>{$subscription.id|escape}</td></tr>
+	<tr><th>Owner</th><td>{$subscription.owner.username|escape}</td></tr>
 	<tr><th>Topic</th><td>{$subscription.str_topic|escape}</td></tr>
-	<tr><th>Flickr ID</th><td>{$subscription.flickr_subscription_id|escape}</td></tr>
+	<tr><th>Topic Args</th><td>{$subscription.topic_args|escape}</td></tr>
 	<tr><th>Secret URL</th><td>{$subscription.secret_url|escape}</td></tr>
 	<tr><th>Verify token</th><td>{$subscription.verify_token|escape}</td></tr>
 	<tr><th>Created</th><td>{$subscription.created|date_format:"%Y-%m-%d at %H:%M"|escape}</td></tr>
 	<tr><th>Verified</th><td>{if $subscription.verified}{$subscription.verified|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td></tr>
 	<tr><th>Last update</th><td>{if $subscription.last_update}{$subscription.last_update|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td></tr>
-	<tr><th valign="top">Details</th><td style="font-size:11px;">{if $subscription.last_update_details}{$subscription.last_update_details|@dumper}{else}&#8212;{/if}</td></tr>
 </table>
 
 {include file="inc_god_foot.txt"}
