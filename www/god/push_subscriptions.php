@@ -24,9 +24,16 @@
 		$more['page'] = $page;
 	}
 
-	# TO DO: because subscriptions are federated we need a lookup table...
 	$rsp = flickr_push_subscriptions_get_subscriptions($more);
-	$GLOBALS['smarty']->assign_by_ref("subscriptions", $rsp['rows']);
+	$subs = array();
+
+	foreach ($rsp['rows'] as $row){
+
+		$row['owner'] = users_get_by_id($row['user_id']);
+		$subs[] = $row;
+	}
+
+	$GLOBALS['smarty']->assign_by_ref("subscriptions", $subs);
 
 	$GLOBALS['smarty']->display("page_god_push_subscriptions.txt");
 	exit();
