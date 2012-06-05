@@ -2,9 +2,7 @@
 
 	include("include/init.php");
 
-	if (! $GLOBALS['cfg']['enable_feature_flickr_push']){
-		error_disabled();
-	}
+	features_ensure_enabled("flickr_push");
 
 	loadlib("flickr_push_subscriptions");
 	loadlib("flickr_push_photos");
@@ -67,8 +65,9 @@
 	$atom = syndication_atom_parse_str($xml);
 
 	$user = users_get_by_id($subscription['user_id']);
-	$is_backup_user = flickr_backups_is_registered_user($user);
-	$is_backup_feed = flickr_backups_is_registered_subscription($subscription);
+
+	$do_push_backups = features_is_enabled("flickr_push_backups");
+	$is_push_backup = flickr_push_subscriptions_is_push_backup($subscription);
 
 	$new = 0;
 
@@ -118,7 +117,7 @@
 
 		$rsp = flickr_push_photos_record($user, $photo_data);
 
-		if (($is_backup_user) && ($is_backup_subscription)){
+		if (($do_push_backups) && ($is_push_backup)){
 
 		}
 

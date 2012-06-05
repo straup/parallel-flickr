@@ -28,8 +28,14 @@
 		if ($feed_rsp['ok']){
 			$sub_rsp = flickr_push_subscriptions_delete($sub);
 			$GLOBALS['smarty']->assign("delete_sub", $sub_rsp);
-		}
 
+			if ($sub_rsp['ok']){
+
+				$redir = "{$GLOBALS['cfg']['abs_root_url']}god/push/subscriptions/{$sub['user_id']}/";
+				header("location: {$redir}");
+				exit();
+			}
+		}
 	}
 
 	$topic_map = flickr_push_topic_map();
