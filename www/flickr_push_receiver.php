@@ -6,6 +6,7 @@
 
 	loadlib("flickr_push_subscriptions");
 	loadlib("flickr_push_photos");
+	loadlib("flickr_push_utils");
 
 	loadlib("flickr_backups");
 	loadlib("flickr_users");
@@ -248,8 +249,24 @@
 
 		$multi_rsp = http_multi($reqs);
 
-		# TO DO: convert the getInfo response into a SPR
-		# then call: flickr_photos_import_photo()
+		foreach ($multi_rsp as $rsp){
+
+			$rsp = flickr_api_parse_response($rsp);
+
+			if (! $rsp['ok']){
+				continue;
+			}
+
+			$photo = $rsp['rsp']['photo'];
+			$spr = flickr_push_utils_info2spr($photo);
+
+			# TO DO: figure out whether we're importing a fave or photo...
+
+			# $fh = fopen("/tmp/push-flickr", "w");
+			# fwrite($fh, var_export($photo, 1));
+			# fwrite($fh, var_export($spr, 1));
+			# fclose($fh);
+		}
 	}
 
 	exit();

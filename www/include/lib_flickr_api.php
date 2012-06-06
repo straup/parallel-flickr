@@ -89,6 +89,13 @@
 		# $url = $url . "?" . http_build_query($args);
 		# $rsp = http_get($url);
 
+		return flickr_api_parse_response($rsp);
+	}
+
+	#################################################################
+
+	function flickr_api_parse_response($rsp){
+
 		if (! $rsp['ok']){
 			return $rsp;
 		}
