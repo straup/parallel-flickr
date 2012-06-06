@@ -12,4 +12,8 @@
 	<li><a href="{$cfg.abs_root_url}god/invites/generate/">Invite generator</a></li>
 </ul>
 
+<ul>
+	<li><a href="{$cfg.abs_root_url}god/push/">PuSH subscriptions</a></li>
+</ul>
+
 {include file="inc_god_foot.txt"}
