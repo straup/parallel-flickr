@@ -153,8 +153,15 @@
 
 	# This is off by default because it requires that you ensure that
 	# the directory specified in $GLOBALS['cfg']['flickr_static_path']
-	# is writeable by the web server (or that you are storing photos
-	# using S3).
+	# is both:
+	# 
+	# Writeable by the web server and that whichever users who may run
+	# the bin/backup_*.php scripts are in a shared (unix) group with
+	# the web server user account.
+	#
+	# If you are already storing your photos using Amazon's S3 service
+	# (see above) then you don't need to worry about these unix-specific
+	# permissions issues.
 
 	$GLOBALS['cfg']['enable_feature_flickr_push_backups'] = 0;
 

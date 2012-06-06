@@ -24,7 +24,7 @@
 			'media' => $info['media'],
 			'media_status' => '',
 			'dateupload' => $info['dates']['posted'],
-			'datetaken' => strtotime($info['dates']['taken']),
+			'datetaken' => $info['dates']['taken'],
 			'datetakengranularity' => $info['dates']['takengranularity'],
 			'latitude' => 0,
 			'longitude' => 0,
