@@ -10,6 +10,7 @@
 		$spr = array(
 			'id' => $info['id'],
 			'owner' => $info['owner']['nsid'],
+			'ownername' => $info['owner']['username'],
 			'secret' => $info['secret'],
 			'server' => $info['server'],
 			'farm' => $info['farm'],

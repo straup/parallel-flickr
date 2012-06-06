@@ -85,7 +85,7 @@
 
 		if ($_photo = flickr_photos_get_by_id($photo['id'])){
 
-			echo "update photo {$photo['id']}\n";
+			log_info("update photo {$photo['id']}");
 			# TO DO: make this less stupid...
 
 			unset($photo['id']);
@@ -96,13 +96,12 @@
 
 		else {
 
-			echo "add photo {$photo['id']}\n";
+			log_info("add photo {$photo['id']}");
 
 			$rsp = flickr_photos_add_photo($photo);
 
 			if (! $rsp['ok']){
-				dumper("OMGWTF");
-				dumper($rsp);
+				log_info($rsp);
 			}
 
 			flickr_photos_lookup_add($photo['id'], $photo['user_id']);
@@ -404,7 +403,7 @@
 		}
 
 		$count = count($multi);
-		dumper("fetching {$count} URIs for photo {$photo['id']}");
+		log_info("fetching {$count} URIs...");
 
 		$rsp = http_multi($multi);
 
@@ -415,7 +414,7 @@
 
 			list($remote, $local) = $_req;
 
-			# dumper("{$local} : {$_rsp['ok']}");
+			log_info("{$local} : {$_rsp['ok']}");
 
 			if (! $_rsp['ok']){
 
@@ -423,7 +422,7 @@
 
 				$will_retry = ($retries) ? 1 : 0;
 
-				dumper("failed to fetch {$remote}: {$rsp['error']} will retry: {$will_retry}");
+				log_info("failed to fetch {$remote}: {$rsp['error']} will retry: {$will_retry}");
 				continue;
 			} 
 
@@ -462,7 +461,7 @@
 			}
 
 			_flickr_photos_import_store($local, $data);
-			dumper("wrote {$local}");
+			log_info("wrote {$local}");
 		}
 
 		if ((count($failed)) && ($retries)){
@@ -571,7 +570,7 @@
 		$fh = fopen($path, "w");
 
 		if (! $fh){
-			echo "failed to create filehandle for '{$path}'\n";
+			log_info("failed to create filehandle for '{$path}'");
 			return 0;
 		}
 

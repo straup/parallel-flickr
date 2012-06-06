@@ -44,7 +44,6 @@
 		# Temporary – this should never happen
 
 		if (! $cluster_id){
-			dumper($lookup);
 			return null;
 		}
 
