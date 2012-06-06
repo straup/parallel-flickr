@@ -145,7 +145,7 @@
 
 	function flickr_push_subscriptions_get_subscriptions($more=array()){
 
-		$sql = "SELECT * FROM FlickrPushSubscriptions";
+		$sql = "SELECT * FROM FlickrPushSubscriptions ORDER BY id";
 		$rsp = db_fetch_paginated($sql, $more);
 
 		return $rsp;
@@ -156,7 +156,7 @@
 	function flickr_push_subscriptions_get_subscriptions_for_user(&$user, $more=array()){
 
 		$enc_user = AddSlashes($user['id']);
-		$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_user}'";
+		$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_user}' ORDER BY id";
 		$rsp = db_fetch_paginated($sql, $args);
 
 		return $rsp;

@@ -230,9 +230,15 @@
 
 	# So, instead we're going to call flickr.photos.getInfo a bunch...
 
+	# Note: this assumes that $to_backups will simply be empty if the
+        # various feature flags around push backups are disabled.
+
  	if (count($to_backup)){
 
 		loadlib("http");
+		loadlib("flickr_photos_import");
+		loadlib("flickr_faves_import");
+
 		$reqs = array();
 
 		foreach ($to_backup as $args){
@@ -249,6 +255,10 @@
 
 		$multi_rsp = http_multi($reqs);
 
+		$topic_map = flickr_push_topic_map();
+		$topic_id = $subscription['topic_id'];
+		$topic = $topic_map[$topic_id];
+
 		foreach ($multi_rsp as $rsp){
 
 			$rsp = flickr_api_parse_response($rsp);
@@ -260,13 +270,22 @@
 			$photo = $rsp['rsp']['photo'];
 			$spr = flickr_push_utils_info2spr($photo);
 
-			# TO DO: figure out whether we're importing a fave or photo...
+			$import_rsp = null;
 
-			# $fh = fopen("/tmp/push-flickr", "w");
-			# fwrite($fh, var_export($photo, 1));
-			# fwrite($fh, var_export($spr, 1));
-			# fclose($fh);
+			if ($topic == 'my_photos'){
+				# $import_rsp = flickr_photos_import_photo($spr);
+			}
+
+			else if ($topic == 'my_faves'){
+				# $import_rsp = flickr_faves_import_photo($spr, $user);
+			}
+
+			else {}
+
+			# log_info("[PUSH] {$topic} ({$user['id']}) : " . var_export($import_rsp, 1));
+			# log_info("[PUSH] SPR " . var_export($spr, 1));
 		}
+		
 	}
 
 	exit();
