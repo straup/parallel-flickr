@@ -283,6 +283,10 @@
 				$import_rsp = flickr_faves_import_photo($spr, $user);
 			}
 
+			else if ($topic == 'commons'){
+				$import_rsp = flickr_photos_import_photo($spr);
+			}
+
 			else {
 				# log_info("skip photo for '{$user['id']}' : '{$topic}'");
 			}

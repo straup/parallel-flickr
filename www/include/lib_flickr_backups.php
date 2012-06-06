@@ -126,6 +126,7 @@
 		$valid = array(
 			$map['my_photos'],
 			$map['my_faves'],
+			$map['commons'],
 		);
 
 		return (in_array($sub['topic_id'], $valid)) ? 1 : 0;

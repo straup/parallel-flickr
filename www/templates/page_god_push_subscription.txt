@@ -67,7 +67,7 @@ $(document).ready(function(){
 
 {foreach from=$photos item="row"}
 <div style="float:left;margin-right:10px; margin-bottom:10px;">
-<a href="http://www.flickr.com/photos/{$row.owner|escape}/{$row.photo_id|escape}/" target="_flickr" title="a photo by {$row.ownername|escape}"><img src="{$row.thumb_url}" /></a>
+<a href="{$cfg.abs_root_url}photos/{$row.owner|escape}/{$row.photo_id|escape}/" target="_flickr" title="a photo by {$row.ownername|escape}"><img src="{$row.thumb_url}" /></a>
 </div>
 {/foreach}
 
