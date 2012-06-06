@@ -72,14 +72,17 @@
 
 	function flickr_photos_import_photo($photo, $more=array()){
 
+		log_info("get ready to import a photo...");
+
 		$user = flickr_users_ensure_user_account($photo['owner'], $photo['ownername']);
 
 		if ((! $user) || (! $user['id'])){
-
 			return not_okay("failed to retrieve user (photo owner)");
 		}
 
 		$photo = _flickr_photos_import_prepare_photo($user, $photo);
+
+		# log_info("photo..." . var_export($photo, 1));
 
 		# TO DO: error handling...
 
@@ -101,7 +104,8 @@
 			$rsp = flickr_photos_add_photo($photo);
 
 			if (! $rsp['ok']){
-				log_info($rsp);
+				log_info("FAILED to add photo {$photo['id']} :"  . var_export($rsp, 1));
+				return $rsp;
 			}
 
 			flickr_photos_lookup_add($photo['id'], $photo['user_id']);

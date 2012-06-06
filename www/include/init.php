@@ -294,6 +294,7 @@
 			$out['error_code'] = $code;
 		}
 
+		log_info($msg);
 		return $out;
 	}
 

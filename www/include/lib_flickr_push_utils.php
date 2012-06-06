@@ -22,20 +22,15 @@
 			'isfamily' => $info['visibility']['isfamily'],
 			'tags' => '',
 			'media' => $info['media'],
-			'mediastatus' => '',
+			'media_status' => '',
 			'dateupload' => $info['dates']['posted'],
 			'datetaken' => strtotime($info['dates']['taken']),
 			'datetakengranularity' => $info['dates']['takengranularity'],
 			'latitude' => 0,
 			'longitude' => 0,
 			'accuracy' => 0,
-			'context' => 0,
-			'place_id' => '',
-			'woeid' => 0,
-			'geo_is_family' => 0,
-			'geo_is_friend' => 0,
-			'geo_is_contact' => 0,
-			'geo_is_public' => 0,
+
+			# remaining geo stuff is added below...
 		);
 
 		$tags = array();
@@ -51,6 +46,10 @@
 			$spr['latitude'] = $info['location']['latitude'];
 			$spr['longitude'] = $info['location']['longitude'];
 			$spr['accuracy'] = $info['location']['accuracy'];
+		}
+
+		if ($spr['accuracy']){
+
 			$spr['context'] = $info['location']['context'];
 
 			$spr['geo_is_family'] = $info['location']['geoperms']['isfamily'];
