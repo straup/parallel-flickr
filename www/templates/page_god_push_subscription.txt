@@ -63,7 +63,7 @@ $(document).ready(function(){
 </table>
 
 {if $photos|@count}
-<div style="margin-top:25px;">
+<div style="margin-top:25px;margin-bottom:50px;">
 
 {foreach from=$photos item="row"}
 <div style="float:left;margin-right:10px; margin-bottom:10px;">
@@ -71,8 +71,8 @@ $(document).ready(function(){
 </div>
 {/foreach}
 
-</div>
 <br clear="all" />
+</div>
 {/if}
 
 {include file="inc_god_foot.txt"}

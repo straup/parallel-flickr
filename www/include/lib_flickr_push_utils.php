@@ -3,7 +3,8 @@
 	#################################################################
 
 	# Yes, this makes me cry too; see notes in flickr_push_receiver.php
-	# for details (20120605/straup)
+	# for details. And yes, this feels specific to the push stuff. At
+	# least until it's proven otherwise... (20120606/straup)
 
 	function flickr_push_utils_info2spr(&$info){
 
@@ -48,6 +49,11 @@
 			$spr['accuracy'] = $info['location']['accuracy'];
 		}
 
+		# As noted elsewhere this is ultimately my fault (for not just
+		# adding a 'hasgeo' attribute in API responses when I still
+		# worked at Flickr). I'm sorry. Every time I have to do this...
+		# (20120606/straup)
+	
 		if ($spr['accuracy']){
 
 			$spr['context'] = $info['location']['context'];
