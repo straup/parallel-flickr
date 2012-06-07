@@ -74,6 +74,7 @@
 
 	$do_push_backups = features_is_enabled("flickr_push_backups");
 	$is_push_backup = flickr_push_subscriptions_is_push_backup($subscription);
+	$is_backup_user = flickr_backups_is_registered_user($user, "ensure enabled");
 
 	$to_backup = array();
 	$new = 0;
@@ -127,7 +128,7 @@
 		# You may be asking yourself: OMGWTFBBQ??!?!?
 		# The reasons are discussed below (20120605/straup)
 
-		if (($do_push_backups) && ($is_push_backup)){
+		if (($do_push_backups) && ($is_push_backup) && ($is_backup_user)){
 
 			$args = array(
 				'photo_id' => $photo_id,

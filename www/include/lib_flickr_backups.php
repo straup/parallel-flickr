@@ -87,7 +87,7 @@
 
 	#################################################################
 
-	function flickr_backups_users(){
+	function flickr_backups_users($ensure_enabled=1){
 
 		$sql = "SELECT DISTINCT(user_id) FROM FlickrBackups";
 		$rsp = db_fetch($sql);
@@ -95,6 +95,11 @@
 		$users = array();
 
 		foreach ($rsp['rows'] as $row){
+
+			if (($ensure_enabled) && ($row['disabled'])){
+				continue;
+			}
+
 			$users[] = users_get_by_id($row['user_id']);
 		}
 
@@ -103,7 +108,7 @@
 
 	#################################################################
 
-	function flickr_backups_is_registered_user(&$user){
+	function flickr_backups_is_registered_user(&$user, $ensure_enabled=0){
 
 		$enc_user = AddSlashes($user['id']);
 		$sql = "SELECT * FROM FlickrBackups WHERE user_id='{$enc_user}'";
@@ -111,7 +116,15 @@
 		$rsp = db_fetch($sql);
 		$row = db_single($rsp);
 
-		return ($row) ? 1 : 0;
+		if (! $row){
+			return 0;
+		}
+
+		if (($ensure_enabled) && ($row['disabled'])){
+			return 0;
+		}
+
+		return 1;
 	}
 
 	#################################################################
