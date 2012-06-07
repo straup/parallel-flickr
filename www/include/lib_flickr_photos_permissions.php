@@ -23,7 +23,7 @@
 
 	#################################################################
 
-	function flickr_photos_permissions_can_view_photo(&$photo, $viewer_id=0){
+	function flickr_photos_permissions_can_view_photo(&$photo, $viewer_id=0, $more=array()){
 
 		if (($viewer_id) && ($photo['user_id'] == $viewer_id)){
 			return 1;
@@ -51,6 +51,16 @@
 
 			if ($perms == 'friends and family'){
 				return (in_array($str_rel, array('friends', 'family'))) ? 1 : 0;
+			}
+		}
+
+		if (($viewer_id) && (isset($more['allow_if_is_faved']))){
+
+			loadlib("flickr_faves");
+			$viewer = users_get_by_id($viewer_id);
+
+			if (flickr_faves_is_faved_by_user($viewer, $photo['id'])){
+				return 1;
 			}
 		}
 

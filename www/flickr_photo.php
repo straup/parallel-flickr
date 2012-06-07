@@ -37,11 +37,14 @@
 	}
 
 	if ($photo['deleted']){
-		$GLOBALS['smarty']->display("page_photo_deleted.txt");
-		exit();
+		error_410();
 	}
 
-	if (! flickr_photos_permissions_can_view_photo($photo, $GLOBALS['cfg']['user']['id'])){
+	$perms_more = array(
+		'allow_if_is_faved' => 1
+	);
+
+	if (! flickr_photos_permissions_can_view_photo($photo, $GLOBALS['cfg']['user']['id'], $perms_more)){
 		error_403();
 	}
 

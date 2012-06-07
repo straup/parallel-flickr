@@ -1,0 +1,13 @@
+{"HTTP/1.1 410 Gone"|header}{include file='inc_head.txt' page_title='All gone. Bye bye!'}
+
+<h1>This page doesn't exist anymore. Poof!</h1>
+
+{if $message}
+<p>{$message|escape}</p>
+{/if}
+
+<div class="admin-section">
+	<pre class="admin-debug">{$debug_block}</pre>
+</div>
+
+{include file='inc_foot.txt'}
