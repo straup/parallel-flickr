@@ -54,6 +54,14 @@
 			}
 		}
 
+		# Note: this is predicated on the assumption that the user
+                # actually has permissions to view the photo otherwise the
+		# backup/import code would not have downloaded the photo; the
+		# problem is not a flickr permissions issue but due to the
+		# fact that the photo owner is not a registered parallel-flickr
+		# user and hence their contact list is not present.
+		# (20120607/straup)
+	
 		if (($viewer_id) && (isset($more['allow_if_is_faved']))){
 
 			loadlib("flickr_faves");
