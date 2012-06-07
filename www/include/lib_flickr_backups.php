@@ -5,6 +5,8 @@
 	loadlib("flickr_geobookmarks_import");
 	loadlib("flickr_photos_import");
 	loadlib("flickr_faves_import");
+	loadlib("flickr_push");
+	loadlib("flickr_push_subscriptions");
 
 	# TO DO: add an optional flag that lets you offset the last mindate
 	# by (n) seconds in case you need to backfill but not all the way back
@@ -64,6 +66,10 @@
 
 		else {}
 
+		if ($rsp['ok']){
+			$push_rsp = flickr_backups_manage_push_subscription($rsp['backup']);
+		}
+
 		return $rsp;
 	}
 
@@ -82,7 +88,46 @@
 
 		$where = "user_id='{$enc_user}' AND type_id='{$enc_type}'";
 
-		return db_update('FlickrBackups', $hash, $where);
+		$rsp = db_update('FlickrBackups', $hash, $where);
+
+		if ($rsp['ok']){
+
+			$backup = array_merge($backup, $update);
+			$push_rsp = flickr_backups_manage_push_subscriptions($backup);
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_backups_manage_push_subscription(&$backup){
+
+		$push_features = array("flickr_push", "flickr_push_backups");
+
+		if (! features_is_enabled($push_features)){
+			return okay();
+		}
+
+		$sub = array(
+			'user_id' => $backup['user_id'],
+			'topic_id' => $backup['type_id'],
+		);
+
+		if (! flickr_backups_is_registered_push_subscription($sub)){
+			return okay();
+		}
+
+		if ($backup['disabled']){
+			# TO DO: please write me...
+			# $push_rsp = flickr_push_subscriptions_remove_subscription($sub);
+		}
+
+		else {
+			# $push_rsp = flickr_push_subscriptions_register_subscription($sub);
+		}
+
+		return $push_rsp;
 	}
 
 	#################################################################
@@ -130,6 +175,10 @@
 	#################################################################
 
 	function flickr_backups_is_registered_subscription(&$sub){
+		return flickr_backups_is_registered_push_subscription($sub);
+	}
+
+	function flickr_backups_is_registered_push_subscription(&$sub){
 
 		loadlib("flickr_push");
 		$map = flickr_push_topic_map("string keys");
