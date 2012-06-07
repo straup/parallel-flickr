@@ -571,6 +571,11 @@
 
 	function _flickr_photos_import_store($path, &$bits){
 
+		# TO DO: umask nonsense if push backups are enabled
+		# $do_umask_dance = features_is_enabled(array('flickr_push', 'flickr_push_backups'));
+		# $old_umask = umask();
+		# umask(0664);
+
 		$fh = fopen($path, "w");
 
 		if (! $fh){
@@ -581,6 +586,7 @@
 		fwrite($fh, $bits);
 		fclose($fh);
 
+		# umask($old_umask);
 		return 1;
 	}
 
