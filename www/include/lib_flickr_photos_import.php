@@ -571,11 +571,6 @@
 
 	function _flickr_photos_import_store($path, &$bits){
 
-		# TO DO: umask nonsense if push backups are enabled
-		# $do_umask_dance = features_is_enabled(array('flickr_push', 'flickr_push_backups'));
-		# $old_umask = umask();
-		# umask(0664);
-
 		$fh = fopen($path, "w");
 
 		if (! $fh){
@@ -586,7 +581,19 @@
 		fwrite($fh, $bits);
 		fclose($fh);
 
-		# umask($old_umask);
+		# The perms dance (ensuring that all files are group writable
+		# is necessary if we're doing push-based backups since when a
+		# push update comes through the web server needs to be able to
+		# write (or update) the file. But we also need to be able to
+		# write (or update) files using the backup scripts in the bin
+		# directory. Good times. (20120607/straup)
+
+		$do_perms_dance = features_is_enabled(array('flickr_push', 'flickr_push_backups'));
+
+		if ($do_perms_dance){
+			chmod($path, 0664);
+		}
+
 		return 1;
 	}
 
