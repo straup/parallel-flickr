@@ -591,7 +591,14 @@
 		$do_perms_dance = features_is_enabled(array('flickr_push', 'flickr_push_backups'));
 
 		if ($do_perms_dance){
-			chmod($path, 0664);
+
+			$stat = stat($path);
+			$owner = $stat['uid'];
+			$whoami = getmyuid();
+
+			if ($whoami == $owner){
+				chmod($path, 0664);
+			}
 		}
 
 		return 1;

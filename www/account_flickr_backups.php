@@ -28,9 +28,7 @@
 		}
 	}
 
-	if (! $GLOBALS['cfg']['enable_feature_backups']){
-		error_disabled();
-	}
+	features_ensure_enabled("backups");
 
 	$map = flickr_backups_type_map('string keys');
 	$GLOBALS['smarty']->assign_by_ref("map", $map);
