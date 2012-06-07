@@ -60,6 +60,30 @@ Here's my a once-a-day example, which works for a moderate level of activity:
     15 3 * * * php /full/path/to/parallel-flickr/bin/backup_faves.php
     30 3 * * * php /full/path/to/parallel-flickr/bin/backup_photos.php
 
+Automagic backing up of your photos (using the Flickr PuSH feeds)
+--
+
+parallel-flickr can also be configured to archive the photos for registered users
+using the [real-time photo update PuSH feeds](http://code.flickr.com/blog/2011/06/30/dont-be-so-pushy/)
+from Flickr.
+
+By default this functionality is disabled  default because in order to use it
+you need to ensure that the directory specified in the
+$GLOBALS['cfg']['flickrstatic_path'] config variable is writeable by the web
+server. To enable the PuSH features you'll need to update the following in your
+config file: 
+
+	$GLOBALS['cfg']['flickr_push'] = 1;
+	$GLOBALS['cfg']['flickr_push_backups'] = 1;	
+
+[TBW]
+
+	http://your-website.com/god/push/subscriptions/
+
+Note that you'll need to have poor man's god auth enabled,
+[in the config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example),
+for that 'god' URL to work.
+
 TO DO:
 --
 
