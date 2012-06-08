@@ -1,0 +1,2 @@
+ALTER TABLE FlickrPushSubscriptions ADD PRIMARY KEY (`id`);
+DROP INDEX `by_subid` ON FlickrPushSubscriptions;
