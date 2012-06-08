@@ -28,9 +28,9 @@
 {assign var="b" value=$backups.$type}
 <tr>
 	<td><strong>{$type|escape}</strong></td>
-	<td>{$b.date_created|escape}</td>
-	<td>{$b.date_firstupdate|escape}</td>
-	<td>{$b.date_lastupdate|escape}</td>
+	<td>{$b.date_created|date_format:"%Y-%m-%d %H:%M"|escape}</td>
+	<td>{$b.date_firstupdate|date_format:"%Y-%m-%d %H:%M"|escape}</td>
+	<td>{$b.date_lastupdate|date_format:"%Y-%m-%d %H:%M"|escape}</td>
 	<td>{$b.details|escape}</td>
 	<td>
 		<form method="POST">
