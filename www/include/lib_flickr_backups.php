@@ -32,6 +32,25 @@
 
 	#################################################################
 
+	function flickr_backups_push_topics_map(){
+
+		$backup_map = flickr_backups_type_map("string keys");
+		$push_map = flickr_push_topic_map("string keys");
+
+		$map = array(
+			$backup_map['photos'] => $push_map['my_photos'],
+			$backup_map['faves'] => $push_map['my_faves'],
+		);
+
+		if ($push_keys){
+			$map = array_flip($map);
+		}
+
+		return $map;
+	}
+
+	#################################################################
+
 	function flickr_backups_create(&$user, $type_id){
 
 		$now = time();
@@ -67,7 +86,8 @@
 		else {}
 
 		if ($rsp['ok']){
-			$push_rsp = flickr_backups_manage_push_subscription($rsp['backup']);
+			$push_rsp = _flickr_backups_manage_push_subscription($rsp['backup']);
+			$rsp['push_backup'] = $push_rsp;
 		}
 
 		return $rsp;
@@ -93,7 +113,8 @@
 		if (($rsp['ok']) && (isset($update['disabled']))){
 
 			$backup = array_merge($backup, $update);
-			$push_rsp = flickr_backups_manage_push_subscription($backup);
+			$push_rsp = _flickr_backups_manage_push_subscription($backup);
+			$rsp['push_backup'] = $push_rsp;
 		}
 
 		return $rsp;
@@ -101,32 +122,68 @@
 
 	#################################################################
 
-	function flickr_backups_manage_push_subscription(&$backup){
+	# Note: we return three possible values instead of the usual two:
+	# okay, not_okay and null. This is mostly so that we can distinguish
+	# between backup types that are relevant to push backups (okay and
+	# not_okay) and those that aren't (null). It's not sexy but then
+	# again... who cares? (20120608/straup)
 
-		log_info("skipping push stuff for now...");
-		return;
+	function _flickr_backups_manage_push_subscription(&$backup){
 
 		$push_features = array("flickr_push", "flickr_push_backups");
 
 		if (! features_is_enabled($push_features)){
-			return okay();
+			return null;
 		}
 
+		# First, figure out if this backup type is a valid push
+		# backup topic - this duplicates most/all of the code in
+		# flickr_backups_is_push_backups but since we'll need the
+		# stub subscription (and the topic map) in order to create
+		# new subscriptions we're just not going to worry about it
+		# too much (20120608/straup)
+
+		$type_id = $backup['type_id'];
+
+		$map = flickr_backups_push_topics_map();
+
+		if (! isset($map[$type_id])){
+			return null;
+		}
+
+		# Stub subscription data
+
+		$user = users_get_by_id($backup['user_id']);
+		$topic_id = $map[$type_id];
+
 		$sub = array(
-			'user_id' => $backup['user_id'],
-			'topic_id' => $backup['type_id'],
+			'user_id' => $user['id'],
+			'topic_id' => $topic_id,
 		);
 
 		if (! flickr_backups_is_registered_push_subscription($sub)){
-			return okay();
+			return null;
 		}
 
 		if ($backup['disabled']){
-			# $push_rsp = flickr_push_subscriptions_remove_subscription($sub);
+
+			# Okay, now fetch the actual subscription in order to unsubscribe
+
+			$sub = flickr_push_subscriptions_get_by_user_and_topic($user, $topic_id);
+
+			# Keeping in mind that it may not actually exist...
+
+			if (! $sub){
+				return okay();
+			}
+
+			$push_rsp = flickr_push_subscriptions_remove_subscription($sub);
 		}
 
+		# This is a new subscription
+
 		else {
-			# $push_rsp = flickr_push_subscriptions_register_subscription($sub);
+			$push_rsp = flickr_push_subscriptions_register_subscription($sub);
 		}
 
 		return $push_rsp;
@@ -151,6 +208,51 @@
 		}
 
 		return $users;
+	}
+
+	#################################################################
+
+	function flickr_backups_is_push_backup(&$backup, $check_subscription=0){
+
+		$push_features = array(
+			"flickr_push",
+			"flickr_push_backups",
+		);
+
+		if (! features_is_enabled($push_features)){
+			return 0;
+		}
+
+		$type_id = $backup['type_id'];
+
+		$map = flickr_backups_push_topics_map();
+
+		if (! isset($map[$type_id])){
+			return 0;
+		}
+
+		# Stub subscription data
+
+		$user = users_get_by_id($backup['user_id']);
+		$topic_id = $map[$type_id];
+
+		$sub = array(
+			'user_id' => $user['id'],
+			'topic_id' => $topic_id,
+		);
+
+		if (! flickr_backups_is_registered_push_subscription($sub)){
+			return 0;
+		}
+
+		if ($check_subscription){
+
+			if (! flickr_push_subscriptions_get_by_user_and_topic($user, $topic_id)){
+				return 0;
+			}
+		}
+
+		return 1;
 	}
 
 	#################################################################
@@ -215,8 +317,11 @@
 		$map = flickr_backups_type_map();
 
 		foreach($rsp['rows'] as $row){
+
+			$row['is_push_backup'] = flickr_backups_is_push_backup($row, 'check subscription');
+
 			$type = $map[$row['type_id']];
-			$backups[$type] = $row;
+			$backups[$type] = $row;		
 		}
 
 		return $backups;

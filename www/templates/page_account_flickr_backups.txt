@@ -2,6 +2,37 @@
 {include file="inc_head.txt"}
 {include file="inc_account_head.txt"}
 
+{if $update_rsp}
+
+{if $update_rsp.ok}
+<p class="confirm">Okay! Your backup has been updated</p>
+{else}
+<p class="error">Ack! There was an error updating your backup: {$rsp.error|escape}</p>
+{/if}
+
+{if $update_rsp.push_backup}
+{if $update_rsp.push_backup.ok}
+<p class="confirm">Also, push backups have been updated accordingly.</p>
+{else}
+<p class="error">Hrmph...there was an error updating your push backup settings: {$rsp.push_backup.error|escape}</p>
+{/if}
+{/if}
+
+{/if}
+
+{if $created and $details}
+
+{foreach from=$details item="rsp" name="details"}
+
+{if $rsp.push_backup and !$rsp.push_backup.ok}
+{assign var="type_id" value=$rsp.type_id}
+<p class="error">Hrmph... there was a problem creating a push feed for the {$map.$type_id|escape} backups: {$rsp.push_backup.error|escape}</p> 
+{/if}
+
+{/foreach}
+
+{/if}
+
 <h2>Flickr Backups</h2>
 
 {if !$backups|@count}
@@ -21,6 +52,7 @@
 	<th>Imported</th>
 	<th>Updated</th>
 	<th>Details</th>
+	<th>Is PuSH backup</th>
 	<th>&#160;</th>
 </tr>
 
@@ -32,6 +64,7 @@
 	<td>{$b.date_firstupdate|date_format:"%Y-%m-%d %H:%M"|escape}</td>
 	<td>{$b.date_lastupdate|date_format:"%Y-%m-%d %H:%M"|escape}</td>
 	<td>{$b.details|escape}</td>
+	<td>{$b.is_push_backup|escape}</td>
 	<td>
 		<form method="POST">
 		{$crumb_key|crumb_input}

@@ -43,14 +43,20 @@
 		if (post_str("setup")){
 
 			$created = array();
+			$details = array();
 
 			foreach ($map as $ignore => $type_id){
 
 				$rsp = flickr_backups_create($GLOBALS['cfg']['user'], $type_id);
 				$created[$type_id] = (($rsp['ok']) || ($rsp['error_code'] == 1062)) ? 1 : 0;
+
+				$rsp['type_id'] = $type_id;
+				$details[] = $rsp;
 			}
 
 			$GLOBALS['smarty']->assign_by_ref("created", $created);
+			$GLOBALS['smarty']->assign_by_ref("created_details", $details);
+
 			$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
 		}
 
@@ -67,6 +73,8 @@
 				if ($rsp['ok']){
 					$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
 				}
+
+				$GLOBALS['smarty']->assign_by_ref("update_rsp", $rsp);
 			}
 		}
 
@@ -76,6 +84,6 @@
 
 	$GLOBALS['smarty']->assign_by_ref("backups", $backups);
 
-	$GLOBALS['smarty']->display("page_account_backups.txt");
+	$GLOBALS['smarty']->display("page_account_flickr_backups.txt");
 	exit();
 ?>
