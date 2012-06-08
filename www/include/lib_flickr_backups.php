@@ -90,10 +90,10 @@
 
 		$rsp = db_update('FlickrBackups', $hash, $where);
 
-		if ($rsp['ok']){
+		if (($rsp['ok']) && (isset($update['disabled']))){
 
 			$backup = array_merge($backup, $update);
-			$push_rsp = flickr_backups_manage_push_subscriptions($backup);
+			$push_rsp = flickr_backups_manage_push_subscription($backup);
 		}
 
 		return $rsp;
@@ -102,6 +102,9 @@
 	#################################################################
 
 	function flickr_backups_manage_push_subscription(&$backup){
+
+		log_info("skipping push stuff for now...");
+		return;
 
 		$push_features = array("flickr_push", "flickr_push_backups");
 
