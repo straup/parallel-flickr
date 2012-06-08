@@ -324,6 +324,23 @@
 
 	#################################################################
 
+	# this both removes the subscription from the database and unsubscribes
+	# it with the flickr.push API
+
+	function flickr_push_subscriptions_remove_subscription($subscription, $force=0){
+
+		$flickr_rsp = flickr_push_unsubscribe($subscription);
+
+		if ((! $flickr_rsp['ok']) && (! $force)){
+			return $flickr_rsp;
+		}
+
+		$rsp = flickr_push_subscriptions_delete($subscription);
+		return $rsp;
+	}
+
+	#################################################################
+
 	function flickr_push_subscriptions_delete(&$subscription){
 
 		$user = users_get_by_id($subscription['user_id']);

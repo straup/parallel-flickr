@@ -119,7 +119,6 @@
 		}
 
 		if ($backup['disabled']){
-			# TO DO: please write me...
 			# $push_rsp = flickr_push_subscriptions_remove_subscription($sub);
 		}
 
