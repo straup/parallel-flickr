@@ -3,11 +3,28 @@
 {include file="inc_account_head.txt"}
 
 {if $update_rsp}
+{if $update_rsp.context=='push'}
 
 {if $update_rsp.ok}
-<p class="confirm">Okay! Your backup has been updated</p>
+	{if $update_rsp.action=='start'}
+	<p class="confirm">Great! PuSH feeds for those backups have been updated.</p>
+	{else}
+	<p class="confirm">Okay. PuSH feeds for those backups have been stopped.</p>
+	{/if}
 {else}
-<p class="error">Ack! There was an error updating your backup: {$rsp.error|escape}</p>
+	{if $update_rsp.action=='start'}
+	<p class="error">Ack! There was a problem setting up PuSH feeds for those backups: {$rsp.error|escape}</p>
+	{else}
+	<p class="error">Ack! There was a problem disabling PuSH feeds for those backups: {$rsp.error|escape}</p>
+	{/if}
+{/if}
+
+{else}
+
+{if $update_rsp.ok}
+<p class="confirm">Okay! Your backups have been updated.</p>
+{else}
+<p class="error">Ack! There was an error updating your backups: {$rsp.error|escape}</p>
 {/if}
 
 {if $update_rsp.push_backup}
@@ -18,6 +35,7 @@
 {/if}
 {/if}
 
+{/if}
 {/if}
 
 {if $created and $details}
@@ -52,7 +70,7 @@
 	<th>Imported</th>
 	<th>Updated</th>
 	<th>Details</th>
-	<th>Is PuSH backup</th>
+	<th>PuSH backups</th>
 	<th>&#160;</th>
 </tr>
 
@@ -64,11 +82,33 @@
 	<td>{$b.date_firstupdate|date_format:"%Y-%m-%d %H:%M"|escape}</td>
 	<td>{$b.date_lastupdate|date_format:"%Y-%m-%d %H:%M"|escape}</td>
 	<td>{$b.details|escape}</td>
-	<td>{$b.is_push_backup|escape}</td>
 	<td>
-		<form method="POST">
+	{if $b.disabled or !"flickr_push"|@features_is_enabled or !"flickr_push_backups"|@features_is_enabled}
+		&#8212;
+	{else}
+		{if $b.is_push_backup}
+		<form method="POST" action="{$cfg.abs_root_url}account/flickr/backups/">
 		{$crumb_key|crumb_input}
 		<input type="hidden" name="type" value="{$type|escape}" />
+		<input type="hidden" name="context" value="push" />
+		{if $b.has_push_backup}
+		<input type="hidden" name="action" value="stop" />
+		<input type="submit" value="disable" />
+		{else}
+		<input type="hidden" name="action" value="start" />
+		<input type="submit" value="enable" />
+		{/if}
+		</form>
+		{else}
+		&#8212;
+		{/if}
+	{/if}
+	</td>
+	<td>
+		<form method="POST" action="{$cfg.abs_root_url}account/flickr/backups/">
+		{$crumb_key|crumb_input}
+		<input type="hidden" name="type" value="{$type|escape}" />
+
 		{if $b.disabled}
 		<input type="hidden" name="action" value="start" />
 		<input type="submit" value="re-start" />

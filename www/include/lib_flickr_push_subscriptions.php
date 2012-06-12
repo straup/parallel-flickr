@@ -189,7 +189,11 @@
 
 			$enc_args = ($topic_args) ? AddSlashes($topic_args) : "";
 
-			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND topic_id='{$enc_topic}' AND topic_args='{$enc_args}'";
+			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND topic_id='{$enc_topic}'";
+
+			if ($enc_args){
+				$sql .= " AND topic_args='{$enc_args}'";
+			}
 
 			$rsp = db_fetch($sql);
 			$row = db_single($rsp);
@@ -228,7 +232,7 @@
 
 	function flickr_push_subscriptions_for_user(&$user){
 
-		$cache_key = "flickr_push_subscriptions_for_user_{$user['id']}";
+		$cache_key = "flickr_push_subscriptions_user_{$user['id']}";
 		$cache = cache_get($cache_key);
 
 		if ($cache['ok']){
@@ -336,6 +340,11 @@
 		}
 
 		$rsp = flickr_push_subscriptions_delete($subscription);
+
+		if ($rsp['ok']){
+			_flickr_push_subscriptions_purge_cache_keys($subscription);
+		}
+
 		return $rsp;
 	}
 
@@ -353,7 +362,7 @@
 		$rsp = db_write_users($cluster_id, $sql);
 
 		if ($rsp['ok']){
-			_flickr_push_subscriptions_purge_cache_keys($subscriptions);
+			_flickr_push_subscriptions_purge_cache_keys($subscription);
 		}
 
 		return $rsp;
@@ -378,7 +387,7 @@
 		$rsp = db_update_users($cluster_id, 'FlickrPushSubscriptions', $hash, $where);
 
 		if ($rsp['ok']){
-			_flickr_push_subscriptions_purge_cache_keys($subscriptions);
+			_flickr_push_subscriptions_purge_cache_keys($subscription);
 		}
 
 		return $rsp;
@@ -389,13 +398,13 @@
 	function _flickr_push_subscriptions_purge_cache_keys(&$subscription){
 
 		$secret_key = "flickr_push_subscriptions_secret_{$subscription['secret_url']}";
-		$topic_key = "flickr_push_subscriptions_user_{$user['id']}_{$subscription['topic_id']}";
+		$topic_key = "flickr_push_subscriptions_user_{$subscription['user_id']}_{$subscription['topic_id']}";
 
 		if ($topic_args = $subscription['topic_args']){
 			$topic_key .= "#" . md5($topic_args);
 		}
 
-		$user_key = "flickr_push_subscriptions_for_user_{$user['id']}";
+		$user_key = "flickr_push_subscriptions_for_user_{$subscription['user_id']}";
 
 		$cache_keys = array(
 			$secret_key,

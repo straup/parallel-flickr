@@ -65,15 +65,28 @@
 			if ((isset($map[$type])) && (isset($backups[$type]))){
 			
 				$backup = $backups[$type];
-				$disabled = (post_str('action') == 'stop') ? 1 : 0;
-				$update = array('disabled' => $disabled);
+				$action = post_str("action");
+				$context = post_str("context");
 
-				$rsp = flickr_backups_update($backup, $update);
+				if ($context=="push"){
+
+					$enabled = ($action == 'start') ? 1 : 0;
+					$rsp = flickr_backups_toggle_push_subscription($backup, $enabled);
+				}
+
+				else {
+					$disabled = ($action == 'stop') ? 1 : 0;
+					$update = array('disabled' => $disabled);
+
+					$rsp = flickr_backups_update($backup, $update);
+				}
 
 				if ($rsp['ok']){
 					$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
 				}
 
+				$rsp['action'] = $action;
+				$rsp['context'] = $context;
 				$GLOBALS['smarty']->assign_by_ref("update_rsp", $rsp);
 			}
 		}

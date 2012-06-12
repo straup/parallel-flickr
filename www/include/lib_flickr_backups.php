@@ -86,7 +86,8 @@
 		else {}
 
 		if ($rsp['ok']){
-			$push_rsp = _flickr_backups_manage_push_subscription($rsp['backup']);
+			$enabled = ($rsp['backup']['disabled']) ? 0 : 1;
+			$push_rsp = flickr_backups_toggle_push_subscription($rsp['backup'], $enabled);
 			$rsp['push_backup'] = $push_rsp;
 		}
 
@@ -113,7 +114,10 @@
 		if (($rsp['ok']) && (isset($update['disabled']))){
 
 			$backup = array_merge($backup, $update);
-			$push_rsp = _flickr_backups_manage_push_subscription($backup);
+
+			$enabled = ($update['disabled']) ? 0 : 1;
+			$push_rsp = flickr_backups_toggle_push_subscription($backup, $enabled);
+
 			$rsp['push_backup'] = $push_rsp;
 		}
 
@@ -128,7 +132,7 @@
 	# not_okay) and those that aren't (null). It's not sexy but then
 	# again... who cares? (20120608/straup)
 
-	function _flickr_backups_manage_push_subscription(&$backup){
+	function flickr_backups_toggle_push_subscription(&$backup, $enable){
 
 		$push_features = array("flickr_push", "flickr_push_backups");
 
@@ -165,7 +169,11 @@
 			return null;
 		}
 
-		if ($backup['disabled']){
+		if ($enable){
+			$push_rsp = flickr_push_subscriptions_register_subscription($sub);
+		}
+
+		else {
 
 			# Okay, now fetch the actual subscription in order to unsubscribe
 
@@ -177,13 +185,7 @@
 				return okay();
 			}
 
-			$push_rsp = flickr_push_subscriptions_remove_subscription($sub);
-		}
-
-		# This is a new subscription
-
-		else {
-			$push_rsp = flickr_push_subscriptions_register_subscription($sub);
+			$push_rsp = flickr_push_subscriptions_remove_subscription($sub, 1);
 		}
 
 		return $push_rsp;
@@ -208,6 +210,13 @@
 		}
 
 		return $users;
+	}
+
+	#################################################################
+
+	function flickr_backups_has_push_backup(&$backup){
+
+		return flickr_backups_is_push_backup($backup, "check subscription");
 	}
 
 	#################################################################
@@ -318,7 +327,12 @@
 
 		foreach($rsp['rows'] as $row){
 
-			$row['is_push_backup'] = flickr_backups_is_push_backup($row, 'check subscription');
+			$row['is_push_backup'] = flickr_backups_is_push_backup($row);
+			$row['has_push_backup'] = 0;
+
+			if ($row['is_push_backup']){
+				$row['has_push_backup'] = flickr_backups_has_push_backup($row, 'check subscription');
+			}
 
 			$type = $map[$row['type_id']];
 			$backups[$type] = $row;		

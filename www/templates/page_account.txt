@@ -6,8 +6,14 @@
 {if $smarty.get.password}<p class="message">Your password has been updated.</p>{/if}
 
 <ul>
-	<li><a href="/account/password/">Change your password</a></li>
-	<li><a href="/account/delete/">Delete your account</a></li>
+{if "account_delete"|@features_is_enabled}
+	<li><a href="{$cfg.abs_root_url}account/delete/">Delete your account</a></li>
+{/if}
+
+{if $is_backup_user}
+	<li><a href="{$cfg.abs_root_url}account/flickr/backups/">Configure your Flickr backups</a></li>
+{/if}
+
 </ul>
 
 {include file="inc_foot.txt"}
