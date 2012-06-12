@@ -23,7 +23,7 @@
 
 		loadlib('random');
 
-		$user['password'] = login_encrypt_password($user['password']);
+		$user['password'] = passwords_encrypt_password($user['password']);
 		$user['created'] = time();
 		$user['conf_code'] = random_string(24);
 
@@ -86,7 +86,7 @@
 
 	function users_update_password(&$user, $new_password){
 
-		$enc_password = login_encrypt_password($new_password);
+		$enc_password = passwords_encrypt_password($new_password);
 
 		return users_update_user($user, array(
 			'password' => AddSlashes($enc_password),
@@ -175,7 +175,7 @@
 			return null;
 		}
 
-		if ($user['password'] != login_encrypt_password($password)){
+		if (! passwords_validate_password($password, $user['password'])){
 			return null;
 		}
 

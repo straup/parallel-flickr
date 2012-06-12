@@ -29,8 +29,7 @@
 
 		$ok = 1;
 
-		if (login_encrypt_password($old_pass) !== $GLOBALS['cfg']['user']['password']){
-
+		if (! passwords_validate_password_for_user($old_pass, $GLOBALS['cfg']['user'])){
 			$smarty->assign('error_oldpass_mismatch', 1);
 			$ok = 0;
 		}
@@ -48,10 +47,7 @@
 		}
 
 		if ($ok){
-
-			$rsp = users_update_password($GLOBALS['cfg']['user'], $new_pass1);
-
-			if (! $rsp['ok']){
+			if (! users_update_password($GLOBALS['cfg']['user'], $new_pass1)){
 
 				$smarty->assign('error_fail', 1);
 				$ok = 0;

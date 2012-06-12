@@ -213,6 +213,7 @@
 	}
 
 	loadlib('features');
+	loadlib('passwords');
 	loadlib('error');
 	loadlib('sanitize');
 	loadlib('db');
@@ -222,10 +223,7 @@
 	loadlib('crumb');
 	loadlib('login');
 	loadlib('email');
-	#loadlib('args');
-	#loadlib('calendar');
 	loadlib('users');
-	#loadlib('versions');
 	loadlib('http');
 	loadlib('sanitize');
 	loadlib('filter');

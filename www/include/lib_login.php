@@ -137,12 +137,6 @@
 
 	#################################################################
 
-	function login_encrypt_password($pass){
-		return hash_hmac("sha256", $pass, $GLOBALS['cfg']['crypto_password_secret']);
-	}
-
-	#################################################################
-
 	function login_get_cookie($name){
 		return $_COOKIE[$name];
 	}
