@@ -20,7 +20,8 @@
 	<select name="topic_id" id="topic">
 		<option>Please select a subscription type</option>
 {foreach from=$topic_map item="row" key="topic_id"}
-		<option value="{$topic_id|escape}"{if !$row.enabled} disabled="disabled"{/if}>{$row.label|escape}</option>
+		{* see the part where we're checking 'requires_args' – some day we will allow args to be defined... *}
+		<option value="{$topic_id|escape}"{if !$row.enabled or $row.requires_args} disabled="disabled"{/if}>{$row.label|escape}</option>
 {/foreach}
 	</select>
 	<input type="submit" value="CREATE NEW FEED" />

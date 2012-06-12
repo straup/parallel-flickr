@@ -40,6 +40,15 @@
 				# HEY LOOK! THIS STILL DOESN'T DEAL WITH FEEDS THAT
 				# NEED OR HAVE TOPIC ARGS (20120605/straup)
 
+				# As a practical matter that just means that the
+				# API call to register a subscription with
+				# Flickr will fail. Since we're already
+				# disabling these topics at the template layer I
+				# am less inclined to also check here. If
+				# someone is passing args that means they're
+				# just doofing around and well, you know,
+				# whatever... (20120612/straup)
+	
 				$sub = array(
 					'user_id' => $owner['id'],
 					'topic_id' => $topic_id

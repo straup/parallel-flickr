@@ -20,9 +20,9 @@
 			4 => array('label' => 'your faves', 'enabled' => 1, 'has_args' => 0),
 			5 => array('label' => 'photos of you', 'enabled' => 0, 'has_args' => 0),
 			6 => array('label' => 'photos of your contacts', 'enabled' => 0, 'has_args' => 0),
-			7 => array('label' => 'geotagged photos', 'enabled' => 0, 'has_args' => 1),
+			7 => array('label' => 'geotagged photos', 'enabled' => 0, 'has_args' => 1, 'requires_args' => 1),
 			8 => array('label' => 'photos from the Commons', 'enabled' => 1, 'has_args' => 0),
-			9 => array('label' => 'photos with tags', 'enabled' => 1, 'has_args' => 1),
+			9 => array('label' => 'photos with tags', 'enabled' => 1, 'has_args' => 1, 'requires_args' => 1),
 		);
 
 		return $map;
