@@ -24,7 +24,7 @@
 		$sz = "z";
 		$ext = "jpg";
 
-		$root = $GLOBALS['cfg']['flickr_static_url'];
+		$root = $GLOBALS['cfg']['abs_root_url'] . $GLOBALS['cfg']['flickr_static_url'];
 		$path = flickr_photos_id_to_path($photo['id']);
 		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
 
@@ -46,7 +46,7 @@
 		$sz = "o";
 		$ext = $photo['originalformat'];
 
-		$root = $GLOBALS['cfg']['flickr_static_url'];
+		$root = $GLOBALS['cfg']['abs_root_url'] . $GLOBALS['cfg']['flickr_static_url'];
 		$path = flickr_photos_id_to_path($photo['id']);
 		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
 

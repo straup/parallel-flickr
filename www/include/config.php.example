@@ -116,11 +116,12 @@
 	# enable/configure it below.
 
 	# The 'flickr_static_url/path' flags needs to match the Alias directive
-	# in your Apache config. See also:
-	# https://github.com/straup/parallel-flickr/blob/master/apache/parallel-flickr.conf.example
+	# in your Apache config. Not that the 'flickr_static_url' config is a
+	# relative path; relative to the root URL which is assigned separately.
+	# See also: https://github.com/straup/parallel-flickr/blob/master/apache/parallel-flickr.conf.example
 
 	$GLOBALS['cfg']['flickr_static_path'] = "TWEAK ME";
-	$GLOBALS['cfg']['flickr_static_url'] = $GLOBALS['cfg']['abs_root_url'] . "static/";
+	$GLOBALS['cfg']['flickr_static_url'] = "static/";
 
 	# If you want to store your photos (and metadata) using Amazon's S3
 	# service you'll need to enable this feature flag and fill in the
