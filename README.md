@@ -100,7 +100,7 @@ config file:
 The easiest way to enable PuSH backups is to go to the Flickr backups account
 page (on your version of parallel-flickr). That is:
 
-	http://your-website.com/account/flickr/backup/
+	http://your-website.com/account/flickr/backups/
 
 If you've never setup backups before and the `flickr_push` configs described
 above have been enabled then PuSH backups will be enabled at the same time that
