@@ -234,6 +234,12 @@
 
 	$GLOBALS['cfg']['user'] = null;
 
+	# This is only relevant if are running parallel-flickr on a machine where you
+	# can not make the www/templates_c folder writeable by the web server. If that's
+	# the case set this to 0 but understand that you'll need to pre-compile all
+	# of your templates before they can be used by the site.
+	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/compile-templates.php
+
 	$GLOBALS['cfg']['smarty_compile'] = 1;
 
 	$GLOBALS['cfg']['http_timeout'] = 3;
@@ -245,7 +251,7 @@
 	$GLOBALS['cfg']['pagination_assign_smarty_variable'] = 1;
 	$GLOBALS['cfg']['pagination_per_page'] = 10;
 	$GLOBALS['cfg']['pagination_spill'] = 2;
-	$GLOBALS['cfg']['pagination_style'] = 'plain';
+	$GLOBALS['cfg']['pagination_style'] = 'pretty';
 
 	#
 	# enable this flag to show a full call chain (instead of just the

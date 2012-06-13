@@ -1,3 +1,8 @@
+it: clean
+so: all
+
+all: todo js templates
+
 todo:
 	touch TODO.txt
 	echo "# This file was generated automatically by grep-ing for 'TO DO' in the source code." > ./TODO.txt
@@ -20,5 +25,12 @@ js:
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/flickr.auth.js > www/javascript/flickr.auth.min.js
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/photo.favorites.js > www/javascript/photo.favorites.min.js
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/sharkify.js > www/javascript/sharkify.min.js
+
+templates:
+	php -q ./bin/compile-templates.php
+
+secret:
+	php -q ./bin/generate_secret.php
+
 clean:
 	rm -f ./TODO.txt
