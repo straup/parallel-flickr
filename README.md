@@ -94,8 +94,8 @@ service to store your photos, described above._
 To enable the PuSH features you'll need to update the following settings in your
 config file: 
 
-	$GLOBALS['cfg']['flickr_push'] = 1;
-	$GLOBALS['cfg']['flickr_push_backups'] = 1;	
+	$GLOBALS['cfg']['enable_feature_flickr_push'] = 1;
+	$GLOBALS['cfg']['enable_feature_flickr_push_backups'] = 1;	
 
 The easiest way to enable PuSH backups is to go to the Flickr backups account
 page (on your version of parallel-flickr). That is:
