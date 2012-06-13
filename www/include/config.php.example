@@ -166,9 +166,6 @@
 
 	$GLOBALS['cfg']['enable_feature_flickr_push_backups'] = 0;
 
-	$GLOBALS['cfg']['flickr_push'] = 0;
-	$GLOBALS['cfg']['flickr_push_backups'] = 0;
-
 	#
 	# Things you may want to tweak (Solr)
 	#

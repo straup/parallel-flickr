@@ -10,7 +10,7 @@
 	<li><a href="{$cfg.abs_root_url}account/delete/">Delete your account</a></li>
 {/if}
 
-{if $is_backup_user}
+{if $can_backup}
 	<li><a href="{$cfg.abs_root_url}account/flickr/backups/">Configure your Flickr backups</a></li>
 {/if}
 
