@@ -137,6 +137,21 @@ function cwf_init_layout(){
 
 function cwf_init_shortcuts(){
 
+		var auto = false;
+		var auto_timeout = null;
+
+		var automatic = function(delay){
+
+			if (! delay){
+				delay = 20000;
+			}
+
+			auto_timeout = setTimeout(function(){
+				cwf_show_next_photo("overflow");
+				automatic();
+			}, delay);
+		};
+
 		var left = function(){
 			cwf_show_previous_photo("overflow");
 		};
@@ -170,6 +185,21 @@ function cwf_init_shortcuts(){
 
 		else if (e.keyCode == 40){
 			down();
+		}
+
+		/* to do: notifications */
+		/* to do: automode on shake */
+
+		else if (e.keyCode == 65){
+			auto = (auto) ? 0 : 1;
+
+			if (auto){
+				automatic(1000);
+			}
+
+			else {
+				clearTimeout(auto_timeout);
+			}
 		}
 
 		else if (e.keyCode == 80){
