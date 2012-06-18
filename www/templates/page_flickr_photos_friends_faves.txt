@@ -44,6 +44,8 @@
 {/literal}
 {/if}
 
+/* alert(window.navigator.standalone); */
+
 	</script>
 {/if}
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/cwf.css" />

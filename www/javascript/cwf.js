@@ -231,7 +231,9 @@ function cwf_init_shortcuts(){
 	});
 
 	$.shake({
-		callback: toggle_automatic
+		callback: toggle_automatic,
+		shakethreshold: 5,
+		debounce: 1000,
 	});
 }
 
