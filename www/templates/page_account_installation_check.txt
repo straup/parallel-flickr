@@ -1,0 +1,18 @@
+{capture assign="page_title"}your parallel-flickr installation check{/capture}
+{include file="inc_head.txt"}
+{include file="inc_account_head.txt"}
+
+<div style="background-color:yellow;border:1px solid red;padding:10px;">Warning: This page does various sanity checks for your hosting to make sure that parallel-flickr can run properly. Information about your system can and will be leaked if this file is left hanging around. After checking that things work, please move this file back out of the web root or delete it.</div>
+
+<div style="font-weight:bold;text-decoration:underline;margin:10px 0px;">Static File Storage</div>
+{if $is_s3}
+	<p>You have S3 enabled. If you can run any of the backup scripts and see photos being stored, it works!</p>
+{else}
+	{if $can_write}
+		<p>Your web server <span style="color:green;font-weight:bold;text-decoration:underline;">can</span> write to your static storage directory. This is good as it means you can make use of the push backups features, amongst other things.</p>
+	{else}
+		<p>If you want to make use of the PuSH backup scripts, you'll need to make sure that "{$cfg.flickr_static_path|escape}" is writable by your web server. Currently it is not!</p>
+	{/if}
+{/if}
+
+{include file="inc_foot.txt"}

@@ -41,7 +41,11 @@ _These instructions are incomplete. They'll probably work but I have tested them
 
 	$> cp www/include/config.php.example www/include/config.php
 
+	$> cp installer/account_installation_check.php www/
+
 	TO DO: updating the config file, see also: https://github.com/straup/flamework-tools/blob/master/bin/make-project.sh 
+
+	Now, go to http://YOURDOMAINNAME.com/account_installation_check.php and see if all the checks pass. Once all is green, delete this file or move it back out of `www`.
 
 * That's it.
 
