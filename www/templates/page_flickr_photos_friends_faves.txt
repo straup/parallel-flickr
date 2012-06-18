@@ -2,15 +2,18 @@
 {capture assign="extra_head"}
 	<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.backstretch.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.touchwipe.min.js"></script>
+
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
+{if 0}
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.ios-shake.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.touchwipe.min.js"></script>
+{/if}
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-swooshy-swoosh.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/screenfull.min.js"></script>
 {if $cfg.environment=='prod'}
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.favorites.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/flickr.auth.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.bundle.min.js"></script>
 {else}
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/cwf.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.favorites.js"></script>

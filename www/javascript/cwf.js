@@ -152,6 +152,21 @@ function cwf_init_shortcuts(){
 			}, delay);
 		};
 
+		var toggle_automatic = function(){
+
+			auto = (auto) ? 0 : 1;
+
+			if (auto){
+				cwf_toggle_pixel_mode(1);
+				automatic(1000);
+			}
+
+			else {
+				clearTimeout(auto_timeout);
+				cwf_toggle_pixel_mode();
+			}
+		};
+
 		var left = function(){
 			cwf_show_previous_photo("overflow");
 		};
@@ -191,15 +206,7 @@ function cwf_init_shortcuts(){
 		/* to do: automode on shake */
 
 		else if (e.keyCode == 65){
-			auto = (auto) ? 0 : 1;
-
-			if (auto){
-				automatic(1000);
-			}
-
-			else {
-				clearTimeout(auto_timeout);
-			}
+			toggle_automatic();
 		}
 
 		else if (e.keyCode == 80){
@@ -221,6 +228,10 @@ function cwf_init_shortcuts(){
 		min_move_x: 20,
 		min_move_y: 20,
 		preventDefaultEvents: true
+	});
+
+	$.shake({
+		callback: toggle_automatic
 	});
 }
 
