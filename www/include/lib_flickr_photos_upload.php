@@ -31,13 +31,13 @@
 
 		$do_filtr = 0;
 
-		if ((features_is_enabled("uploads_filtr")) && (isset($more['filtr']))){
-			$do_filtr = filtr_is_valid_filtr($more['filtr']);
+		if ((features_is_enabled("uploads_filtr")) && (isset($args['filtr']))){
+			$do_filtr = filtr_is_valid_filtr($args['filtr']);
 		}
 
 		if ($do_filtr){
 
-			$rsp = filtr($more['filtr'], array($file));
+			$rsp = filtr($args['filtr'], array($file));
 
 			if (! $rsp['ok']){
 				return $rsp;

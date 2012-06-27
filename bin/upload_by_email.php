@@ -25,7 +25,7 @@
 
 	$parser = new MimeMailParser();  
 	$parser->setStream(STDIN);  
-  
+
 	$to = $parser->getHeader('to');  
 
 	if (! preg_match($re, $to, $m)){
@@ -65,6 +65,14 @@
 		log_rawr("no attachments");
 	}
 
+	$subject = $parser->getHeader('subject');  
+	$filtr = null;
+
+	if (preg_match("/(\s?f:([a-z]+))/i", $subject, $m)){
+		$filtr = $m[2];
+		$subject = str_replace($m[1], "", $subject);
+	}
+
 	$uploads = array();
 
 	$tmpdir = sys_get_temp_dir();
@@ -75,11 +83,13 @@
 
 	foreach ($attachments as $att){
 
+		$type = $att->content_type;
+
 		# Flickr goes to a lot of trouble to pull images out
 		# of HTML forms and remote services. parallel-flickr
 		# does not. (20120209/straup)
 
-		if (! preg_match("/^image\//", $att->content_type)){
+		if (! preg_match("/^image\//", $type)){
 			continue;
 		}
 
@@ -121,6 +131,10 @@
 	foreach ($uploads as $path){
 
 		$args = array();
+
+		if (($filtr) && features_is_enabled("uploads_filtr")){
+			$args['filtr'] = $filtr;
+		}
 
 		$rsp = flickr_photos_upload($user, $path, $args);
 
