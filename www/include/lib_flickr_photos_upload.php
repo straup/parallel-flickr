@@ -21,7 +21,7 @@
 
 		$args['auth_token'] = $flickr_user['auth_token'];
 
-		if ($GLOBALS['cfg']['enable_feature_uploads_shoutout']){
+		if (features_is_enabled("uploads_shoutout")){
 			$args['tags'] .= " uploaded:by=parallel-flickr";
 		}
 
@@ -44,6 +44,11 @@
 			}
 
 			rename($rsp['path'], $file);
+
+			if (features_is_enabled("uploads_shoutout")){
+				$args['tags'] .= " filtr:process={$args['filtr']}";
+			}
+
 		}
 
 		# default upload perms?
