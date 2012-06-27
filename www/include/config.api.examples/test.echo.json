@@ -1,0 +1,5 @@
+{
+	"stat":"ok",
+	"method":"test.echo",
+	"foo":"bar"
+}

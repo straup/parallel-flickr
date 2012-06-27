@@ -17,6 +17,10 @@
 		$base_url = isset($GLOBALS['cfg']) && isset($GLOBALS['cfg']['abs_root_url'])
 		    ? rtrim($GLOBALS['cfg']['abs_root_url'], '/')
 		    : '';
+
+		if (! $redir){
+			$redir = ltrim($_SERVER['REQUEST_URI'], "/");
+		}
 		
 		if ($redir){
 			header("Location: {$base_url}/signin/?redir=".urlencode($redir));
@@ -129,12 +133,6 @@
 
 		$cookie = implode(":", array($user['id'], $user['password']));
 		return crypto_encrypt($cookie, $GLOBALS['cfg']['crypto_cookie_secret']);
-	}
-
-	#################################################################
-
-	function login_encrypt_password($pass){
-		return hash_hmac("sha256", $pass, $GLOBALS['cfg']['crypto_password_secret']);
 	}
 
 	#################################################################

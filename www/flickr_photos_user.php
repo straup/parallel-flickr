@@ -27,6 +27,11 @@
 		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
 
+	$with = get_int64('with');
+	if ($with) {
+		$more['with'] = $with;
+	}
+
 	$rsp = flickr_photos_for_user($owner, $more);
 	$photos = $rsp['rows'];
 

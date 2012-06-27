@@ -1,0 +1,41 @@
+{
+    "methods": [
+        {
+            "description": "Return the list of available API response methods.", 
+            "errors": [], 
+            "example": "...", 
+            "method": "GET", 
+            "name": "api.spec.methods", 
+            "parameters": [], 
+            "requires_auth": 0
+        }, 
+        {
+            "description": "Return the list of valid API response formats, including the default format", 
+            "errors": [], 
+            "example": "{\n\t\"stat\":\"ok\",\n\t\"formats\":[\"json\"],\n\t\"default_format\":\"json\"\n}\n", 
+            "method": "GET", 
+            "name": "api.spec.formats", 
+            "parameters": [], 
+            "requires_auth": 0
+        }, 
+        {
+            "description": "A testing method which echo's all parameters back in the response.", 
+            "errors": [], 
+            "example": "{\n\t\"stat\":\"ok\",\n\t\"method\":\"test.echo\",\n\t\"foo\":\"bar\"\n}\n", 
+            "method": "GET", 
+            "name": "test.echo", 
+            "parameters": [], 
+            "requires_auth": 0
+        }, 
+        {
+            "description": "Return a test error from the API", 
+            "errors": [], 
+            "example": "{\n\t\"stat\": \"error\",\n\t\"error\":{\n\t\t\"code\":500,\n\t\t\"error\":\"This is the network of our disconnect\"\n\t}\n}\n", 
+            "method": "GET", 
+            "name": "test.error", 
+            "parameters": [], 
+            "requires_auth": 0
+        }
+    ], 
+    "stat": "ok"
+}

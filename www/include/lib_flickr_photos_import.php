@@ -72,20 +72,24 @@
 
 	function flickr_photos_import_photo($photo, $more=array()){
 
+		log_info("get ready to import a photo...");
+
 		$user = flickr_users_ensure_user_account($photo['owner'], $photo['ownername']);
 
 		if ((! $user) || (! $user['id'])){
-
 			return not_okay("failed to retrieve user (photo owner)");
 		}
 
 		$photo = _flickr_photos_import_prepare_photo($user, $photo);
 
+		# log_info("photo..." . var_export($photo, 1));
+
 		# TO DO: error handling...
 
 		if ($_photo = flickr_photos_get_by_id($photo['id'])){
 
-			# echo "update photo {$photo['id']}\n";
+			log_info("update photo {$photo['id']}");
+
 			# TO DO: make this less stupid...
 
 			unset($photo['id']);
@@ -96,12 +100,13 @@
 
 		else {
 
-			# echo "add photo {$photo['id']}\n";
+			log_info("add photo {$photo['id']}");
 
 			$rsp = flickr_photos_add_photo($photo);
 
 			if (! $rsp['ok']){
-				dumper($rsp);
+				log_info("FAILED to add photo {$photo['id']} :"  . var_export($rsp, 1));
+				return $rsp;
 			}
 
 			flickr_photos_lookup_add($photo['id'], $photo['user_id']);
@@ -162,6 +167,13 @@
 	}
 
 	#################################################################
+
+	# TO DO: this is not critical but it seems like it would be nice
+	# to make it possible to indicate which of the available photo sizes
+	# to download. Basically just an array in $GLOBALS['cfg'] that lists
+	# photo 'extensions' as defined by flickr.photos.getSizes. This should
+	# probably come *after* the storage (fs/s3) stuff is sorted out.
+	# (20120320/straup)
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
 		
@@ -405,7 +417,7 @@
 		}
 
 		$count = count($multi);
-		dumper("fetching {$count} URIs for photo {$photo['id']}");
+		log_info("fetching {$count} URIs...");
 
 		$rsp = http_multi($multi);
 
@@ -416,7 +428,7 @@
 
 			list($remote, $local) = $_req;
 
-			# dumper("{$local} : {$_rsp['ok']}");
+			log_info("{$local} : {$_rsp['ok']}");
 
 			if (! $_rsp['ok']){
 
@@ -424,7 +436,7 @@
 
 				$will_retry = ($retries) ? 1 : 0;
 
-				dumper("failed to fetch {$remote}: {$rsp['error']} will retry: {$will_retry}");
+				log_info("failed to fetch {$remote}: {$rsp['error']} will retry: {$will_retry}");
 				continue;
 			} 
 
@@ -463,7 +475,7 @@
 			}
 
 			_flickr_photos_import_store($local, $data);
-			dumper("wrote {$local}");
+			log_info("wrote {$local}");
 		}
 
 		if ((count($failed)) && ($retries)){
@@ -572,12 +584,32 @@
 		$fh = fopen($path, "w");
 
 		if (! $fh){
-			# echo "failed to create filehandle for '{$path}'\n";
+			log_info("failed to create filehandle for '{$path}'");
 			return 0;
 		}
 
 		fwrite($fh, $bits);
 		fclose($fh);
+
+		# The perms dance (ensuring that all files are group writable
+		# is necessary if we're doing push-based backups since when a
+		# push update comes through the web server needs to be able to
+		# write (or update) the file. But we also need to be able to
+		# write (or update) files using the backup scripts in the bin
+		# directory. Good times. (20120607/straup)
+
+		$do_perms_dance = features_is_enabled(array('flickr_push', 'flickr_push_backups'));
+
+		if ($do_perms_dance){
+
+			$stat = stat($path);
+			$owner = $stat['uid'];
+			$whoami = getmyuid();
+
+			if ($whoami == $owner){
+				chmod($path, 0664);
+			}
+		}
 
 		return 1;
 	}

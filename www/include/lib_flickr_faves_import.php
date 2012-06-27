@@ -61,13 +61,7 @@
 
 			foreach ($photos as $photo){
 
-				$ph_rsp = flickr_photos_import_photo($photo);
-
-				if (! $ph_rsp['ok']){
-					return $ph_rsp;
-				}
-
-				$fave_rsp = flickr_faves_add_fave($user, $ph_rsp['photo'], $photo['date_faved']);
+				$fave_rsp = flickr_faves_import_photo($photo, $user);
 
 				if ($fave_rsp['ok']){
 					$count++;
@@ -85,4 +79,19 @@
 
 	#################################################################
 
+	# $user is the person faving the photo
+
+	function flickr_faves_import_photo(&$photo, &$user){
+
+		$ph_rsp = flickr_photos_import_photo($photo);
+
+		if (! $ph_rsp['ok']){
+			return $ph_rsp;
+		}
+
+		$fave_rsp = flickr_faves_add_fave($user, $ph_rsp['photo'], $photo['date_faved']);
+		return $fave_rsp;
+	}
+
+	#################################################################
 ?>

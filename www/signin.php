@@ -5,10 +5,7 @@
 
 	include("include/init.php");
 
-	if (!$GLOBALS['cfg']['enable_feature_signin']){
-		$smarty->display('page_signin_disabled.txt');
-		exit;
-	}
+	features_ensure_enabled("signin");
 
 	login_ensure_loggedout();
 
@@ -77,10 +74,8 @@
 		#
 
 		if ($ok){
-			$enc_password = login_encrypt_password($password, $GLOBALS['cfg']['crypto_password_secret']);
 
-			if ($enc_password != $user['password']){
-
+			if (! passwords_validate_password_for_user($password, $user)){
 				$smarty->assign('error_password', 1);
 				$ok = 0;
 			}

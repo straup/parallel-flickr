@@ -1,0 +1,78 @@
+{capture assign="page_title"}push | subscriptions | {$subscription.id}{/capture}
+{include file="inc_god_head.txt"}
+
+<style type="text/css">
+{literal}
+pre { max-width: 600px; overflow-x:scroll; }
+th { text-align:left; }
+{/literal}
+</style>
+
+{if $delete_sub or $delete_feed}
+
+{if $delete_feed.ok}
+<p class="confirm">The Flickr subscription for this feed has been deleted.</p>
+
+{if $delete_sub.ok}
+{* we should never get here *}
+{else}
+<p class="error">There was a problem deleting this subscription from the database: {$delete_sub.error|escape}</p>
+{/if}
+
+{else}
+<p class="error">There was a problem unsubscribing from this Flickr feed: {$delete_feed.error|escape}</p>
+{/if}
+
+{/if}
+
+<form id="deleteme" action="{$cfg.abs_root_url}god/push/subscription/{$subscription.id|escape}" method="POST" style="float:right;">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="delete" value="1" />
+	<input type="submit" value="DELETE THIS FEED" />
+</form>
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+	$("#deleteme").submit(function(){
+
+		var q = "Are you sure you want to delete this feed?";
+
+		if (! confirm(q)){
+			return false;
+		}
+	});
+});
+{/literal}
+</script>
+
+<br clear="all" />
+
+<table>
+	<tr><th>ID</th><td><strong>{$subscription.id|escape}</strong></td></tr>
+	<tr><th>Owner</th><td><a href="{$cfg.abs_root_url}god/push/subscriptions/{$subscription.user_id|escape}/">{$subscription.owner.username|escape}</a></td></tr>
+	<tr><th>Topic ID</th><td>{$subscription.topic_id|escape}</td></tr>
+	<tr><th>Topic Label</th><td>{$subscription.str_topic|escape}</td></tr>
+	<tr><th>Topic Args</th><td>{$subscription.topic_args|escape}</td></tr>
+	<tr><th>Is PuSH Backup</th><td>{$is_push_backup|escape}</td></tr>
+	<tr><th>Secret URL</th><td>{$subscription.secret_url|escape}</td></tr>
+	<tr><th>Verify token</th><td>{$subscription.verify_token|escape}</td></tr>
+	<tr><th>Created</th><td>{$subscription.created|date_format:"%Y-%m-%d at %H:%M"|escape}</td></tr>
+	<tr><th>Verified</th><td>{if $subscription.verified}{$subscription.verified|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td></tr>
+	<tr><th>Last update</th><td>{if $subscription.last_update}{$subscription.last_update|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td></tr>
+</table>
+
+{if $photos|@count}
+<div style="margin-top:25px;margin-bottom:50px;">
+
+{foreach from=$photos item="row"}
+<div style="float:left;margin-right:10px; margin-bottom:10px;">
+<a href="{$cfg.abs_root_url}photos/{$row.owner|escape}/{$row.photo_id|escape}/" target="_flickr" title="a photo by {$row.ownername|escape}"><img src="{$row.thumb_url}" /></a>
+</div>
+{/foreach}
+
+<br clear="all" />
+</div>
+{/if}
+
+{include file="inc_god_foot.txt"}

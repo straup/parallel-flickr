@@ -7,7 +7,7 @@
 {if $error_notsent}	<p class="error">Something went wrong :(</p>{/if}
 
 
-<form action="/forgot/" method="post" accept-encoding="UTF-8">
+<form action="{$cfg.abs_root_url}forgot/" method="post" accept-encoding="UTF-8">
 	<input type="hidden" name="remind" value="1" />
 	<label for="email">Email:</label> <input type="text" name="email" size="40" value="" /><br />
 	<input type="SUBMIT" value="SEND PASSWORD REMINDER" />

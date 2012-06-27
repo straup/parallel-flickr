@@ -28,10 +28,6 @@
 		exit;
 	}
 
-
-	#
-	# output
-	#
-
 	$smarty->display("page_signout.txt");
+	exit();
 ?>

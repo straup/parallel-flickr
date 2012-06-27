@@ -10,14 +10,13 @@
 	include("include/init.php");
 	loadlib("flickr_backups");
 	
-#	log_add_handler('debug', 'error_log');
-
-	if (! $GLOBALS['cfg']['enable_feature_backups']){
+	if (! features_is_enabled("backups")){
 		echo "backups are currently disabled\n";
 		exit();
 	}
 
 	foreach (flickr_backups_users() as $user){
+		log_info("backup photos for {$user['username']}");
 		$rsp = flickr_backups_get_photos($user);
 		dumper($rsp);
 	}

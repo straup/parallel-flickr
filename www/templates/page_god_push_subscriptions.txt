@@ -1,0 +1,84 @@
+{capture assign="page_title"}push | subscriptions{/capture}
+{include file="inc_god_head.txt"}
+
+{if $smarty.get.deleted}
+<p class="confirm">Okay, that subscription feed has been deleted.</p>
+{/if}
+
+{if $create_sub}
+{if $create_sub.ok}
+<p class="confirm">The subscription for {$owner.username|escape} has been registered.</p>
+{else}
+<p class="error">There was a problem registering that subscription: {$create_sub.error|escape}.</p>
+{/if}
+{/if}
+
+{if $is_backup_user}
+<form id="createme" action="{$cfg.abs_root_url}god/push/subscriptions/{$owner.id|escape}/" method="POST" style="float:right;">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="create" value="1" />
+	<select name="topic_id" id="topic">
+		<option>Please select a subscription type</option>
+{foreach from=$topic_map item="row" key="topic_id"}
+		{* see the part where we're checking 'requires_args' – some day we will allow args to be defined... *}
+		<option value="{$topic_id|escape}"{if !$row.enabled or $row.requires_args} disabled="disabled"{/if}>{$row.label|escape}</option>
+{/foreach}
+	</select>
+	<input type="submit" value="CREATE NEW FEED" />
+</form>
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+	$("#createme").submit(function(){
+
+		var t = $("#topic").val();
+
+		if (t==''){
+			alert("You forgot to choose a feed topic!");
+			return false;
+		}
+	});
+});
+{/literal}
+</script>
+
+<br clear="all" />
+{/if}
+
+{if $subscriptions|@count}
+
+<table>
+	<tr>
+		<th>ID</th>
+		<th>Onwer</th>
+		<th>Created</th>
+		<th>Verified</th>
+		<th>Last update</th>
+		<th>Topic ID</th>
+		<th>Topic Label</th>
+		<th>Topic Args</th>
+		<th>Is PuSH backup</th>
+	</tr>
+{foreach from=$subscriptions item="row"}
+{assign var="topic_id" value=$row.topic_id}
+	<tr>
+		<td><a href="{$cfg.abs_root_url}god/push/subscription/{$row.id|escape}/">{$row.id|escape}</a></td>
+		<td><a href="{$cfg.abs_root_url}god/push/subscriptions/{$row.user_id|escape}/">{$row.owner.username|escape}</a></td>
+		<td>{$row.created|date_format:"%Y-%m-%d at %H:%M"|escape}</td>
+		<td>{if $row.verified}{$row.verified|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td>
+		<td>{if $row.last_update}{$row.last_update|date_format:"%Y-%m-%d at %H:%M"|escape}{else}&#8212;{/if}</td>
+		<td>{$row.topic_id|escape}</td>
+		<td>{$row.str_topic|escape}</td>
+		<td style="font-size:small;">{$row.topic_args|escape}</td>
+		<td>{$row.is_push_backup|escape}</td>
+	</tr>
+{/foreach}
+</table>
+{include file="inc_pagination.txt"}
+
+{else}
+<p>You have not set up any subscriptions yet.</p>
+{/if}
+
+{include file="inc_god_foot.txt"}

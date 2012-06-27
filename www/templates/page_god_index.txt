@@ -3,16 +3,17 @@
 <h2>God</h2>
 
 <ul>
-	<li><a href="{$cfg.abs_root_url}god/users.php">Users</a></li>
+	<li><a href="{$cfg.abs_root_url}god/users/backup/">Registered backup users</a></li>
+	<li><a href="{$cfg.abs_root_url}god/users/">All users</a></li>
 </ul>
 
 <ul>
-	<li><a href="{$cfg.abs_root_url}god/invites.php">Invites</a></li>
-	<li><a href="{$cfg.abs_root_url}god/generate_invite.php">Invite generator</a></li>
+	<li><a href="{$cfg.abs_root_url}god/invites/">Invites</a></li>
+	<li><a href="{$cfg.abs_root_url}god/invites/generate/">Invite generator</a></li>
 </ul>
 
 <ul>
-	<li><a href="{$cfg.abs_root_url}god/recent_activity.php">Recent Activity</a></li>
+	<li><a href="{$cfg.abs_root_url}god/push/">PuSH subscriptions</a></li>
 </ul>
 
 {include file="inc_god_foot.txt"}

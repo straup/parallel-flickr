@@ -68,7 +68,7 @@ CREATE TABLE `FlickrPushSubscriptions` (
   `created` int(10) unsigned NOT NULL,
   `verified` int(10) unsigned NOT NULL,
   `last_update` int(10) unsigned NOT NULL,
-  UNIQUE KEY `by_subid` (`id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `by_topic` (`user_id`,`topic_id`, `topic_args`),
   KEY `by_user` (`user_id`,`topic_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

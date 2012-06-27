@@ -363,17 +363,22 @@
 		#
 		# build sql
 		#
-
-		$sql .= " LIMIT $start, $limit";
-
-		$ret = _db_fetch($sql, $cluster, $k);
-
-		$ret['pagination'] = array(
+		$pagination = array(
 			'total_count' => (int)$total_count,
 			'page' => $page,
 			'per_page' => $per_page,
 			'page_count' => $page_count,
 		);
+
+		if (isset($args['just_pagination'])) {
+			return $pagination;
+		}
+
+		$sql .= " LIMIT $start, $limit";
+
+		$ret = _db_fetch($sql, $cluster, $k);
+
+		$ret['pagination'] = $pagination;
 		
 		if ($GLOBALS['cfg']['pagination_assign_smarty_variable']) {
 			$GLOBALS['smarty']->assign('pagination', $ret['pagination']);

@@ -1,10 +1,8 @@
 <?php
 
-	include("include/init.php");
+	include("../include/init.php");
+	loadlib("god");
 
-	if (! auth_has_role('admin')){
-		error_404();
-	}
-
-
+	$GLOBALS['smarty']->display("page_god_index.txt");
+	exit();
 ?>

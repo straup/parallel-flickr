@@ -49,12 +49,11 @@ ErrorDocument 500 /500.php
 
 # Get mod_rewrite fired up
 RewriteEngine on
-RewriteBase /
 
 # Login stuff
 
-# RewriteRule ^invite/?$					invite.php?%{QUERY_STRING} [L]
-# RewriteRule ^invite(?:/([^/]+))?/?$				invite.php?code=$1&%{QUERY_STRING} [L]
+RewriteRule ^invite/?$						invite.php?%{QUERY_STRING} [L]
+RewriteRule ^invite(?:/([^/]+))?/?$				invite.php?code=$1&%{QUERY_STRING} [L]
 
 RewriteRule  ^auth/$			/auth_callback_flickr_flickrauth.php?%{QUERY_STRING}	[L]
 RewriteRule  ^signin/$			/signin_flickr_flickrauth.php?%{QUERY_STRING}		[L]
@@ -72,13 +71,16 @@ RewriteRule ^reset/([a-zA-Z0-9]+)/$	/reset.php?reset=$1	[L,QSA]
 # Account stuff
 
 RewriteRule  ^account/?$		account.php		[L]
-RewriteRule  ^account/backups/?$	account_backups.php		[L]
 RewriteRule  ^account/password/?$	account_password.php	[L]
 RewriteRule  ^account/delete/?$		account_delete.php	[L]
 RewriteRule  ^account/url/?$			account_path_aliases.php		[L]
 RewriteRule  ^account/path_alias(es)?/?$	account_path_aliases.php		[L]
 
+
 RewriteRule  ^account/uploadbyemail/?$		account_uploadbyemail.php		[L]
+
+RewriteRule  ^account/backups/?$	/account/flickr/backups/		[R]
+RewriteRule  ^account/flickr/backups/?$	account_flickr_backups.php		[L]
 
 RewriteRule  ^account/flickr/auth/?$		account_flickr_auth.php?%{QUERY_STRING}	[L]
 
@@ -103,6 +105,7 @@ RewriteRule ^photos/friends/faves(/page([0-9]+))?/?$			flickr_photos_friends_fav
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/activity/?$		flickr_photos_user_recent_activity.php?path=$2&nsid=$3&%{QUERY_STRING} [L]
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))(/page([0-9]+))?/?$	flickr_photos_user.php?path=$2&nsid=$3&page=$5&%{QUERY_STRING} [L]
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/with/([0-9]+)/?$	flickr_photos_user.php?path=$2&nsid=$3&with=$4&%{QUERY_STRING} [L]
 
 RewriteRule ^buddyicon/([0-9]+@N[0-9]+).jpg$ 					flickr_buddyicon.php?nsid=$1 [L]
 

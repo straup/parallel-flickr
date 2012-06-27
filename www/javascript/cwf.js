@@ -137,6 +137,36 @@ function cwf_init_layout(){
 
 function cwf_init_shortcuts(){
 
+		var auto = false;
+		var auto_timeout = null;
+
+		var automatic = function(delay){
+
+			if (! delay){
+				delay = 20000;
+			}
+
+			auto_timeout = setTimeout(function(){
+				cwf_show_next_photo("overflow");
+				automatic();
+			}, delay);
+		};
+
+		var toggle_automatic = function(){
+
+			auto = (auto) ? 0 : 1;
+
+			if (auto){
+				cwf_toggle_pixel_mode(1);
+				automatic(1000);
+			}
+
+			else {
+				clearTimeout(auto_timeout);
+				cwf_toggle_pixel_mode();
+			}
+		};
+
 		var left = function(){
 			cwf_show_previous_photo("overflow");
 		};
@@ -153,6 +183,7 @@ function cwf_init_shortcuts(){
 			cwf_show_photo((photos.length - 1));
 		};
 
+	
 		$(document).keydown(function(e){
 
 		if (e.keyCode == 37){
@@ -171,7 +202,20 @@ function cwf_init_shortcuts(){
 			down();
 		}
 
-		else {}
+		/* to do: notifications */
+		/* to do: automode on shake */
+
+		else if (e.keyCode == 65){
+			toggle_automatic();
+		}
+
+		else if (e.keyCode == 80){
+			cwf_toggle_pixel_mode(e.shiftKey);
+		}
+
+		else {
+			/* console.log(e); */
+		}
 	});
 
 	// http://www.netcu.de/jquery-touchwipe-iphone-ipad-library
@@ -184,6 +228,12 @@ function cwf_init_shortcuts(){
 		min_move_x: 20,
 		min_move_y: 20,
 		preventDefaultEvents: true
+	});
+
+	$.shake({
+		callback: toggle_automatic,
+		shakethreshold: 5,
+		debounce: 1000,
 	});
 }
 
@@ -231,6 +281,8 @@ function _cwf_check_photos_callback(rsp){
 	var new_photos = rsp['photos'];
 	var count_photos = new_photos.length;
 
+	/* console.log('pre: p:' + count_photos + ' u:' + count_updates); */
+
 	if (count_photos){
 
 		new_photos.reverse();
@@ -266,7 +318,7 @@ function _cwf_check_photos_callback(rsp){
 
 		var msg = "<a href=\"#\" onclick=\"cwf_show_photo(0);return false;\">";
 
-		/* msg += 'p:' + count_photos + ' u:' + count_updates + ' '; */
+		/* console.log('post: p:' + count_photos + ' u:' + count_updates); */
 		
 		if (count_updates > 1){
 			msg += "there are " + count_updates + " new faves";
@@ -402,4 +454,28 @@ function cwf_show_photo(index){
 
 	$.backstretch(thumb);
 	$("#cwf_about").html(msg);
+}
+
+function cwf_toggle_pixel_mode(do_fullscreen){
+
+	var a = $("#cwf_about");
+	var f = $("#footer");
+
+	if (a.css("display") == "none"){
+		a.show();
+		f.show();
+
+		if (screenfull){
+			screenfull.exit();
+		}
+	}
+
+	else {
+		a.hide();
+		f.hide();
+
+		if ((do_fullscreen) && (screenfull)){
+			screenfull.request();
+		}
+	}
 }

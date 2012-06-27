@@ -119,6 +119,15 @@
 
 	###############################################################################
 
+	function error_410($msg=''){
+
+		$GLOBALS['smarty']->assign("message", $msg);
+		$GLOBALS['smarty']->display('page_error_410.txt');
+		exit;
+	}
+
+	###############################################################################
+
 	function error_500($msg=null){
 
 		$GLOBALS['no_cache'] = 1;

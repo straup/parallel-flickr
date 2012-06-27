@@ -15,13 +15,13 @@
 
 {foreach from=$invites item="row"}
 	<tr{if $row.user_id} style="font-weight:700;"{elseif $row.sent} style="font-style:italic;color:#adadad;"{/if}>
-		<td><a href="{$cfg.abs_root_url}god/invite.php?code={$row.code|escape}">{$row.code|escape}</a></td>
+		<td><a href="{$cfg.abs_root_url}god/invite/{$row.code|escape}/">{$row.code|escape}</a></td>
 		<td>{$row.email|truncate:30:"..."|escape}</td>
-		<td>{if $row.user}<a href="{$cfg.abs_root_url}god/user.php?id={$row.user_id|escape}">{$row.user.username|escape}</a>{else}&#8212;{/if}</td>
+		<td>{if $row.user}<a href="{$cfg.abs_root_url}god/user/{$row.user_id|escape}/">{$row.user.username|escape}</a>{else}&#8212;{/if}</td>
 		<td>{$row.created|date_format:"%Y-%m-%d %I:%M"|escape}</td>
 		<td>{if $row.sent}{$row.sent|date_format:"%Y-%m-%d %I:%M"|escape}{else}&#8212;{/if}</td>
 		<td>{if $row.redeemed}{$row.redeemed|date_format:"%Y-%m-%d %I:%M"|escape}{else}&#8212;{/if}</td>
-		<td>{if $row.invited_by_user}<a href="{$cfg.abs_root_url}god/user.php?id={$row.invited_by|escape}">{$row.invited_by_user.username|escape}</a>{else}&#8212;{/if}</td>	
+		<td>{if $row.invited_by_user}<a href="{$cfg.abs_root_url}god/user/{$row.invited_by|escape}/">{$row.invited_by_user.username|escape}</a>{else}&#8212;{/if}</td>	
 	</tr>
 {/foreach}
 

@@ -20,12 +20,48 @@
 			4 => array('label' => 'your faves', 'enabled' => 1, 'has_args' => 0),
 			5 => array('label' => 'photos of you', 'enabled' => 0, 'has_args' => 0),
 			6 => array('label' => 'photos of your contacts', 'enabled' => 0, 'has_args' => 0),
-			7 => array('label' => 'geotagged photos', 'enabled' => 0, 'has_args' => 1),
+			7 => array('label' => 'geotagged photos', 'enabled' => 0, 'has_args' => 1, 'requires_args' => 1),
 			8 => array('label' => 'photos from the Commons', 'enabled' => 1, 'has_args' => 0),
-			9 => array('label' => 'photos with tags', 'enabled' => 1, 'has_args' => 1),
+			9 => array('label' => 'photos with tags', 'enabled' => 1, 'has_args' => 1, 'requires_args' => 1),
 		);
 
 		return $map;
+	}
+
+	#################################################################
+
+	function flickr_push_subscriptions_is_valid_topic_id($id){
+
+		$map = flickr_push_subscriptions_topic_map();
+
+		if (! isset($map[$id])){
+			return 0;
+		}
+
+		if (! $map[$id]['enabled']){
+			return 0;
+		}
+
+		return 1;
+	}
+
+	#################################################################
+
+	function flickr_push_subscriptions_is_push_backup(&$subscription){
+
+		loadlib("flickr_backups");
+
+		$owner = users_get_by_id($subscription['user_id']);
+
+		if (! flickr_backups_is_registered_user($owner)){
+			return 0;
+		}
+
+		if (! flickr_backups_is_registered_subscription($subscription)){
+			return 0;
+		}
+
+		return 1;
 	}
 
 	#################################################################
@@ -49,6 +85,33 @@
 				return null;
 			}
 		}
+	}
+
+	#################################################################
+
+	function flickr_push_subscriptions_get_by_id($id){
+
+		$cache_key = "flickr_push_subscriptions_{$id}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			$row = $cache['data'];
+		}
+
+		else {
+
+			$enc_id = AddSlashes($id);
+			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE id='{$enc_id}'";
+
+			$rsp = db_fetch($sql);
+			$row = db_single($rsp);
+
+			if ($row){
+				cache_set($cache_key, $row, "cache locally");
+			}
+		}
+
+		return $row;
 	}
 
 	#################################################################
@@ -80,6 +143,27 @@
 
 	#################################################################
 
+	function flickr_push_subscriptions_get_subscriptions($more=array()){
+
+		$sql = "SELECT * FROM FlickrPushSubscriptions ORDER BY id";
+		$rsp = db_fetch_paginated($sql, $more);
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_push_subscriptions_get_subscriptions_for_user(&$user, $more=array()){
+
+		$enc_user = AddSlashes($user['id']);
+		$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_user}' ORDER BY id";
+		$rsp = db_fetch_paginated($sql, $args);
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	function flickr_push_subscriptions_get_by_user_and_topic(&$user, $topic_id, $topic_args=null){
 
 		if ($topic_args){
@@ -105,7 +189,11 @@
 
 			$enc_args = ($topic_args) ? AddSlashes($topic_args) : "";
 
-			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND topic_id='{$enc_topic}' AND topic_args='{$enc_args}'";
+			$sql = "SELECT * FROM FlickrPushSubscriptions WHERE user_id='{$enc_id}' AND topic_id='{$enc_topic}'";
+
+			if ($enc_args){
+				$sql .= " AND topic_args='{$enc_args}'";
+			}
 
 			$rsp = db_fetch($sql);
 			$row = db_single($rsp);
@@ -144,7 +232,7 @@
 
 	function flickr_push_subscriptions_for_user(&$user){
 
-		$cache_key = "flickr_push_subscriptions_for_user_{$user['id']}";
+		$cache_key = "flickr_push_subscriptions_user_{$user['id']}";
 		$cache = cache_get($cache_key);
 
 		if ($cache['ok']){
@@ -240,6 +328,28 @@
 
 	#################################################################
 
+	# this both removes the subscription from the database and unsubscribes
+	# it with the flickr.push API
+
+	function flickr_push_subscriptions_remove_subscription($subscription, $force=0){
+
+		$flickr_rsp = flickr_push_unsubscribe($subscription);
+
+		if ((! $flickr_rsp['ok']) && (! $force)){
+			return $flickr_rsp;
+		}
+
+		$rsp = flickr_push_subscriptions_delete($subscription);
+
+		if ($rsp['ok']){
+			_flickr_push_subscriptions_purge_cache_keys($subscription);
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	function flickr_push_subscriptions_delete(&$subscription){
 
 		$user = users_get_by_id($subscription['user_id']);
@@ -252,7 +362,7 @@
 		$rsp = db_write_users($cluster_id, $sql);
 
 		if ($rsp['ok']){
-			_flickr_push_subscriptions_purge_cache_keys($subscriptions);
+			_flickr_push_subscriptions_purge_cache_keys($subscription);
 		}
 
 		return $rsp;
@@ -277,7 +387,7 @@
 		$rsp = db_update_users($cluster_id, 'FlickrPushSubscriptions', $hash, $where);
 
 		if ($rsp['ok']){
-			_flickr_push_subscriptions_purge_cache_keys($subscriptions);
+			_flickr_push_subscriptions_purge_cache_keys($subscription);
 		}
 
 		return $rsp;
@@ -288,13 +398,13 @@
 	function _flickr_push_subscriptions_purge_cache_keys(&$subscription){
 
 		$secret_key = "flickr_push_subscriptions_secret_{$subscription['secret_url']}";
-		$topic_key = "flickr_push_subscriptions_user_{$user['id']}_{$subscription['topic_id']}";
+		$topic_key = "flickr_push_subscriptions_user_{$subscription['user_id']}_{$subscription['topic_id']}";
 
 		if ($topic_args = $subscription['topic_args']){
 			$topic_key .= "#" . md5($topic_args);
 		}
 
-		$user_key = "flickr_push_subscriptions_for_user_{$user['id']}";
+		$user_key = "flickr_push_subscriptions_for_user_{$subscription['user_id']}";
 
 		$cache_keys = array(
 			$secret_key,

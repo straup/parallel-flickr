@@ -20,6 +20,19 @@ body {
     display:none;
 }
 
+#god {
+    margin-right: 10%;
+    margin-left: 10%;
+    margin-top: 5%;
+    text-align:left;
+}
+
+#god #nav {
+    display:block;
+    margin-bottom:25px;
+    font-size: small;
+}
+
 #footer {
     position:fixed;
     right: 0;

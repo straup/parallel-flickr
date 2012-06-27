@@ -1,6 +1,9 @@
+{capture assign="page_title"}users | {$user.username}{/capture}
 {include file="inc_god_head.txt"}
 
 {if !$user.id}
+
+<p class="error">Not a valid user, duh.</p>
 
 {else}
 
@@ -8,7 +11,47 @@
 
 <p>Account created: {$user.created|date_format:"%b %d, %Y at %l:%M %p"|escape}</p>
 
-[subscriptions go here]
+<p>Photos: <a href="{$user|@flickr_urls_photos_user}">{$user.count_photos|escape}</a></p>
+
+{if $user.count_faves}
+<p>Faves: <a href="{$user|@flickr_urls_faves_user}">{$user.count_faves|escape}</a></p>
+{/if}
+
+<p>
+{if $flickr_user.auth_token}
+{assign var="perms" value=$flickr_user.token_perms}
+This user has an auth token with <q>{$perms_map.$perms|escape}</q> permissions.
+{else}
+<em>This user has not logged in to the site.</em>
+{/if}
+</p>
+
+{if $user.backups}
+
+<h4>Backups</h4>
+
+<table>
+<tr>
+<th>Type</th>
+<th>Status</th>
+<th>First update</th>
+<th>Last update</th>
+<th>Details</th>
+</tr>
+
+{foreach from=$user.backups item="row" key="type"}
+<tr>
+<td><strong>{$type|escape}</strong></td>
+<td>{if $row.disabled}disabled{else}enabled{/if}</td>
+<td>{$row.date_firstupdate|date_format|escape}</td>
+<td>{$row.date_lastupdate|date_format|escape}</td>
+<td>{$row.details|escape}</td>
+</tr>
+{/foreach}
+
+</table>
+
+{/if}
 
 {/if}
 
