@@ -93,6 +93,15 @@
 
 	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;
 
+	$GLOBALS['cfg']['enable_feature_uploads_filtr'] = 0;
+
+	$GLOBALS['cfg']['filtr_valid_filtrs'] = array(
+		'postr',
+		'postcrd',
+		'pxl',
+		'rockstr'
+	);
+
 	# Invite codes – these are used to limit who can register
 	# to have their photos backed up. You'll need to do a
 	# few things to enable this:

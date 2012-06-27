@@ -4,6 +4,7 @@
 	loadlib("flickr_api");
 
 	loadlib("flickr_photos_import");
+	loadlib("filtr");
 
 	#################################################################
 
@@ -26,6 +27,23 @@
 
 		if (! isset($args['title'])){
 			$args['title'] = "Untitled Upload #" . time();
+		}
+
+		$do_filtr = 0;
+
+		if ((features_is_enabled("uploads_filtr")) && (isset($more['filtr']))){
+			$do_filtr = filtr_is_valid_filtr($more['filtr']);
+		}
+
+		if ($do_filtr){
+
+			$rsp = filtr($more['filtr'], array($file));
+
+			if (! $rsp['ok']){
+				return $rsp;
+			}
+
+			rename($rsp['path'], $file);
 		}
 
 		# default upload perms?
