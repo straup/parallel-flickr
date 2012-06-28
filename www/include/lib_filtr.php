@@ -1,5 +1,13 @@
 <?php
 
+	# As in ../../../filtr
+	#
+	# Obviously, if lib_filtr ever leaves as a thing not specific to
+	# parallel-flickr we'll need to revisit how this path is set but
+	# since we're not right now who cares, really? (20120628/straup)
+ 
+	$GLOBALS['filtr_root'] = rtrim(dirname(dirname(dirname(__FILE__))), "/") . "/filtr/";
+
 	#################################################################
 
 	function filtr_valid_filtrs(){
@@ -33,7 +41,9 @@
 		$tmp = sys_get_temp_dir();
 		$dest = tempnam($tmp, "filtr") . ".{$ext}";
 
-		$cmd = "{$GLOBALS['cfg']['filtr_path']} {$src} {$dest} {$filtr}";
+		$filtr_bin = $GLOBALS['filtr_root'] . "filtr";
+
+		$cmd = "{$filtr_bin} {$src} {$dest} {$filtr}";
 		$enc_cmd = escapeshellcmd($cmd);
 
 		$out = array();

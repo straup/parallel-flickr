@@ -96,6 +96,7 @@
 	$GLOBALS['cfg']['enable_feature_uploads_filtr'] = 0;
 
 	$GLOBALS['cfg']['filtr_valid_filtrs'] = array(
+		'dazd',
 		'postr',
 		'postcrd',
 		'pxl',
