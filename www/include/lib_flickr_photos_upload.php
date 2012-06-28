@@ -43,6 +43,8 @@
 				return $rsp;
 			}
 
+			# copy($file, '/tmp/wtf-o.jpg');
+			# copy($rsp['path'], '/tmp/wtf.jpg');
 			rename($rsp['path'], $file);
 
 			if (features_is_enabled("uploads_shoutout")){
@@ -52,7 +54,6 @@
 		}
 
 		# default upload perms?
-
 		$rsp = flickr_api_upload($file, $args);
 
 		$rsp['do_archive'] = $GLOBALS['cfg']['enable_feature_uploads_archive'];
