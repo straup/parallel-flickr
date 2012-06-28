@@ -1,0 +1,620 @@
+#!/bin/sh
+# $Id: filtr,v 1.54 2010/01/30 19:23:41 asc Exp $
+
+# package : filtr
+# version : 0.5
+# author : Aaron Straup Cope
+# url : http://github.com/straup/filtr
+# copyright : Copyright (c) 2005-2012 Aaron Straup Cope. All Rights Reserved.
+# license : Perl Artistic License. This is free software, you may use it and
+#           distribute it under the same terms as Perl itself.
+
+NAME="filtr"
+VERSION="0.5"
+
+case $1 in
+    ''|-h|-help|--help|-u|--usage|'-?')
+    echo "${NAME} ${VERSION}"
+    echo "Usage: `basename $0` in.jpg out.jpg [filtr|dazd|postr|postcrd|rockstr|pxl]"
+    echo "       `basename $0` in.mp4 out.jpg movr <filter>"
+    echo "       `basename $0` in1.jpg in2.jpg heathr <in1-filtr> <in2-filtr> out.jpg"
+    echo "       `basename $0` in1.jpg in2.jpg stndpipe <in1-filtr> <in2-filtr> out.jpg"
+    exit 0
+    ;;
+    *)
+    ;;
+esac
+
+# operating system nonsense
+
+OSTYPE=`uname`
+
+echo "[startup] ${NAME} ${VERSION}"
+echo "[startup] ${OSTYPE} ${PATH}"
+
+# bare-bones input
+
+export INPUT=$1
+export OUTPUT=$2
+export FILTER=$3
+
+# bare-bones sanity checking
+
+for file  in ${INPUT}
+do
+
+  if ! [ -e ${file} ]
+  then
+      echo "[startup] input file ${file} does not exist"
+      echo "[startup] exiting"
+      exit 1
+  fi
+done
+
+export DO_REPORT=1
+export DO_HEATHR=0
+
+# applications we'll need to do anything
+
+export FILTR=$0 
+export UTILS=`dirname $0`/utils
+export RECIPES=`dirname $0`/recipes
+export IDENTIFY="identify"
+export CONVERT="convert"
+export COMPOSITE="composite"
+export MONTAGE="montage"
+export FFMPEG="ffmpeg"
+export PERL="perl"
+export PYTHON="python"
+export MD5="md5"
+export MD5_ARGS="-q"
+export GS="gs"
+export JHEAD="jhead"
+
+# prefer graphicsmagick if present, update commands accordingly
+
+if test "`which gm`" != ""
+then
+    echo "[startup] found GraphicsMagic -- using that"
+
+    export IDENTIFY="gm identify"
+    export CONVERT="gm convert"
+    export COMPOSITE="gm composite"
+    export MONTAGE="gm montage"
+fi
+
+if test $OSTYPE = "FreeBSD"
+then
+    export MD5_ARGS="-q -r"
+fi
+
+# application support - image crunching
+
+echo "[startup] checking filtr dependencies"
+
+if test "`which gm`" = ""
+then
+    for app in $IDENTIFY $CONVERT $COMPOSITE $MONTAGE 
+    do
+      if test "`which ${app}`" = ""
+      then
+          echo "[startup] can not locate ${app}"
+          echo "[startup] Exiting"
+          exit 1
+      fi
+    done
+fi
+
+# Application support: various
+
+echo "[startup] checking metadata and related dependencies"
+
+export REQUIRE_PYTHON=0
+export HAS_JHEAD=0
+export HAS_MD5=0
+
+if test "`which ${JHEAD}`" != ""
+then
+    export HAS_JHEAD=1
+fi
+
+if test "`which ${MD5}`" != ""
+then
+    export HAS_MD5=1
+fi
+
+# FIX ME: assign require python if !HAS_JHEAD || !HAS_MD5
+
+if [ ${REQUIRE_PYTHON} -gt 0 ]
+then
+  if test "`which ${app}`" = ""
+  then
+      echo "[startup] can not locate ${app}"
+      echo "[startup] Exiting"
+      exit 1
+  fi
+
+  export PYTHONPATH=${UTILS}/lib/py:${PYTHONPATH}
+fi
+
+# application support for movr
+
+if [ test $FILTER = "movr" ]
+then
+    for app in $FFMPEG $PERL
+      do
+      	if test "`which ${app}`" = ""
+        then
+            echo "[startup] can not locate ${app} required for 'movr' filtr"
+            echo "[startup] Exiting"
+            exit 1
+        fi
+    done
+fi
+
+# App support for reporting
+
+if [ ${DO_REPORT} -gt 0 ]
+then
+    if test "`which gs`" = ""
+    then
+        echo "[startup] can not find 'gs' -- disabling reporting";
+        export DO_REPORT=0
+    fi
+fi
+
+# make sure there's a file to work with
+
+if ! [ -e ${INPUT} ]
+then
+    echo "[startup] can not locate file ${INPUT}"
+    echo "Exiting"
+    exit 1
+fi
+
+# which filtr is being run?
+
+case $FILTER in
+    postr|postcrd|rockstr|dazd|stndpipe|movr|pxl)
+    ;;
+    heathr)
+    export FILTER="stndpipe"
+    export DO_HEATHR=1
+    ;;
+    *)
+    export FILTER="filtr"
+    ;;
+esac
+
+# create a unique identifier for the working image
+
+if [ ${HAS_MD5} -gt 0 ]
+then
+    echo "[startup] using local ${MD5}"
+    export FILTR_UID=`${MD5} ${MD5_ARGS} ${INPUT} | awk '{split($1, parts, " "); print parts[1]; }'`
+else
+    echo "[startup] no local md5sum; using utils"
+    export FILTR_UID=`${PYTHON} ${UTILS}/md5sum.py ${INPUT} | awk '{split($1, parts, " "); print parts[1]; }'`
+fi
+
+echo "[startup] input UID is ${FILTR_UID}"
+
+# tmp/work files
+
+TMP=`mktemp -d`
+
+export ID="${TMP}/${FILTR_UID}-${FILTER}-id.txt"
+export LOMO="${TMP}/${FILTR_UID}-${FILTER}-lomo.png"
+export MASK="${TMP}/${FILTR_UID}-${FILTER}-mask.png"
+export NEW="${TMP}/${FILTR_UID}-${FILTER}-new.jpg"
+
+#
+# Report archives
+#
+
+YMD=`date "+%Y/%m/%d"`
+
+if ! [ -d ${TMP}/${YMD} ]
+then
+    echo "[startup] creating ${TMP}/${YMD}"
+    mkdir -p ${TMP}/${YMD}
+fi
+
+BASENAME=`echo ${INPUT} | awk '{split($1,parts,"/"); i=0; for (p in parts) { i = i + 1}; print parts[i];}'`
+BASENAME=`echo ${BASENAME} | awk '{split($1,parts,"."); i=0; for (p in parts) { i = i + 1}; print parts[i-1];}'`
+REPORT="${TMP}/${YMD}/${BASENAME}_${FILTR_UID}-${FILTER}.jpg"
+
+# clean up any old files before we get started
+
+if [ -e ${ID} ]
+then
+    echo "[startup] remove ${ID}"
+    rm ${ID}
+fi
+
+if [ -e ${MASK} ]
+then
+    echo "[startup] remove ${MASK}"
+    rm ${MASK}
+fi
+
+if [ -e ${NEW} ]
+then
+    echo "[startup] remove ${NEW}"
+    rm ${NEW}
+fi
+
+if [ -e ${LOMO} ]
+then
+    echo "[startup] remove ${LOMO}"
+    rm ${LOMO}
+fi
+
+#
+# Figure out dimensions
+#
+
+case $FILTER in
+    movr)
+    ;;
+    *)
+    ${IDENTIFY} ${INPUT} | awk '{ split($3,a,"+"); print a[1]; }' > ${ID}
+
+    export W_ORIG=`awk '{ split($1, dims,"x"); print dims[1]; }' ${ID}`
+    export H_ORIG=`awk '{ split($1, dims,"x"); print dims[2]; }' ${ID}`
+
+    export W_THUMB=`awk '{ split($1, dims,"x"); print dims[1] / 10; }' ${ID}`
+    export H_THUMB=`awk '{ split($1, dims,"x"); print dims[2] / 10; }' ${ID}`
+
+    export W_REPORT=`awk '{ split($1, dims,"x"); print dims[1] * .5; }' ${ID}`
+    export H_REPORT=`awk '{ split($1, dims,"x"); print dims[2] * .5; }' ${ID}`
+    ;;
+esac
+
+#
+# Actually do some work
+#
+
+echo "[startup] process ${INPUT} with ${FILTER} (${FILTR_UID})"
+
+case $FILTER in
+
+    postcrd)
+
+    ${RECIPES}/postcrd.sh
+
+    ;;
+
+    postr)
+
+    ${RECIPES}/postr.sh
+
+    ;;
+
+    pxl)
+
+    ${RECIPES}/pxl.sh
+
+    ;;
+
+    rockstr)
+
+    echo "[${FILTER}] create output"
+    ${CONVERT} -unsharp 1.5x1.5 -modulate 175,150 -contrast -contrast -contrast ${INPUT} ${OUTPUT}
+
+    echo "[${FILTER}] blur"
+    ${CONVERT} -gaussian 1x2 ${OUTPUT} ${OUTPUT}
+
+    echo "[${FILTER}] grayscale"
+    ${CONVERT} -depth 16 -colorspace GRAY -contrast -sharpen 5x5 ${OUTPUT} ${OUTPUT}
+
+    if [ ${DO_REPORT} -gt 0 ]
+    then
+        echo "[${FILTER}] generate report ${REPORT}"
+        ${MONTAGE} -geometry ${W_REPORT}x${H_REPORT}+5+5 -tile 2x2 ${INPUT} ${OUTPUT} ${REPORT}
+    fi
+
+    ;;
+
+    dazd)
+
+    echo "[${FILTER}] create output"
+    ${CONVERT} -unsharp 1.5x1.5 -modulate 175,150 -contrast -contrast -contrast ${INPUT} ${OUTPUT}
+
+    echo "[${FILTER}] blur"
+    ${CONVERT} -gaussian 1x2 ${OUTPUT} ${OUTPUT}
+
+    if [ ${DO_REPORT} -gt 0 ]
+    then
+        echo "[${FILTER}] generate report ${REPORT}"
+        ${MONTAGE} -geometry ${W_REPORT}x${H_REPORT}+5+5 -tile 2x2 ${INPUT} ${OUTPUT} ${REPORT}
+    fi
+
+    ;;
+
+    stndpipe)
+
+    INPUT2=${OUTPUT}
+    HFILTR=$4
+    HFILTR2=$5
+    OUTPUT=$6
+
+    if test ${DO_HEATHR} = "1"
+    then
+
+        cp ${INPUT} ${INPUT}.tmp
+        INPUT=${INPUT}.tmp
+
+        cp ${INPUT2} ${INPUT2}.tmp
+        INPUT2=${INPUT2}.tmp
+
+    fi
+
+    for img in ${INPUT} ${INPUT2}
+    do
+
+      echo "[${FILTER}] ${FILTR} ${img} ${img} ${HFILTR}"
+      ${FILTR} ${img} ${img} ${HFILTR}
+      HFILTR=${HFILTR2}
+    done
+
+    if test ${DO_HEATHR} = "1"
+    then
+
+        for img in ${INPUT} ${INPUT2}
+        do
+
+          ${IDENTIFY} ${img} | awk '{ split($3,a,"+"); print a[1]; }' > ${ID}
+          W_IMG=`awk '{ split($1, dims,"x"); print dims[1]; }' ${ID}`
+          H_IMG=`awk '{ split($1, dims,"x"); print dims[2]; }' ${ID}`
+
+          echo "[${FILTER}][heathr] img dimensions : ${W_IMG} x ${H_IMG}"
+          
+          CROP_TO=${W_IMG}
+          CROP_X=`awk "BEGIN { print ${W_IMG} - ${H_IMG} }"`
+          CROP_Y=0
+          
+          if [${W_IMG} -gt ${H_IMG}]
+          then
+              CROP_TO=${H_IMG}
+              CROP_Y=`awk "BEGIN { print ${H_IMG} - ${W_IMG} }"`
+              CROP_X=0
+          fi
+
+          echo "[${FILTER}][heathr] ${CONVERT} -crop ${CROP_TO}x${CROP_TO}+${CROP_X}+${CROP_Y} ${img} ${img}"
+          ${CONVERT} -crop ${CROP_TO}x${CROP_TO}+${CROP_X}+${CROP_Y} ${img} ${img}
+
+          echo "[${FILTER}][heathr] ${IDENTIFY} ${img}  > ${ID}"
+
+          ${IDENTIFY} ${img}  | awk '{ split($3,a,"+"); print a[1]; }' > ${ID}
+          W_IMG=`awk '{ split($1, dims,"x"); print dims[1]; }' ${ID}`
+          H_IMG=`awk '{ split($1, dims,"x"); print dims[2]; }' ${ID}`
+
+          BORDER_SIDES=`awk "BEGIN { print ${W_IMG} * .1 }"`
+          BORDER_TOP=`awk "BEGIN { print ${H_IMG} * .1 }"`
+          BORDER_BOTTOM=`awk "BEGIN { print ${H_IMG} * .3 }"`
+
+          echo "[${FILTER}][heathr] img borders ${BORDER_SIDES} ; ${BORDER_TOP} ; ${BORDER_BOTTOM}"
+          
+          W_CANVAS=`awk "BEGIN { print ${W_IMG} + (${BORDER_SIDES} * 2) }"`
+          H_CANVAS=`awk "BEGIN { print ${BORDER_TOP} + ${H_IMG} + ${BORDER_BOTTOM} }"`
+          
+          echo "[${FILTER}][heathr] img canvas ${W_CANVAS} x ${H_CANVAS}"
+          
+          CANVAS=${TMP}/${FILTR_UID}-blank.jpg
+          BG=${TMP}/${FILTR_UID}-bg.jpg
+          DRAFT=${TMP}/${FILTR_UID}-draft.jpg
+          
+          echo "[${FILTER}][heathr] ${CONVERT} -size ${W_CANVAS}x${H_CANVAS} xc:white ${CANVAS}"
+          ${CONVERT} -size ${W_CANVAS}x${H_CANVAS} xc:white ${CANVAS}
+          
+          # composite
+          
+          echo "[${FILTER}][heathr] ${COMPOSITE} -geometry +${BORDER_SIDES}+${BORDER_TOP} ${img} ${CANVAS} ${DRAFT}"
+          ${COMPOSITE} -geometry +${BORDER_SIDES}+${BORDER_TOP} ${img} ${CANVAS} ${DRAFT}
+
+          # generate the background
+	  # FIX ME: ensure the background is transparent
+
+          W_BG=`awk "BEGIN { print ${W_CANVAS} + 2 }"`
+          H_BG=`awk "BEGIN { print ${H_CANVAS} + 2 }"`
+
+          echo "[${FILTER}][heathr] ${CONVERT} -size ${W_BG}x${H_BG} xc:black ${BG}"
+          ${CONVERT} -size ${W_BG}x${H_BG} xc:black ${BG}
+          
+          # place the composite on the background
+          
+          echo "[${FILTER}][heathr] ${COMPOSITE} -geometry +1+1 ${DRAFT} ${BG} ${img}"
+          ${COMPOSITE} -geometry +1+1 ${DRAFT} ${BG} ${img}         
+          
+          rm -f ${ID}
+          rm -f ${DRAFT}
+          rm -f ${CANVAS}
+          rm -f ${BG}
+        done
+
+    # /heathr
+
+    fi
+
+    echo "[${FILTER}]  ${INPUT} ${INPUT2} heathr ${HFILTR} ${OUTPUT}"
+    echo "[${FILTER}] ${IDENTIFY} ${INPUT}  > ${ID}"
+
+    ${IDENTIFY} ${INPUT}  | awk '{ split($3,a,"+"); print a[1]; }' > ${ID}
+    W_ORIG=`awk '{ split($1, dims,"x"); print dims[1]; }' ${ID}`
+    H_ORIG=`awk '{ split($1, dims,"x"); print dims[2]; }' ${ID}`
+
+    ID2="${TMP}/${FILTR_UID}-${FILTER}-id2.txt"
+    echo "[${FILTER}] ${IDENTIFY} ${INPUT2}  > ${ID2}"
+
+    ${IDENTIFY} ${INPUT2} | awk '{ split($3,a,"+"); print a[1]; }' > ${ID2}
+    W_ORIG2=`awk '{ split($1, dims,"x"); print dims[1]; }' ${ID2}`
+    H_ORIG2=`awk '{ split($1, dims,"x"); print dims[2]; }' ${ID2}`
+
+    echo "[${FILTER}] dimensions : ${W_ORIG2} x ${H_ORIG2}"
+
+    W_HEATHR=`awk "BEGIN{ print ${W_ORIG}+${W_ORIG2} }"`
+
+    H_HEATHR=${H_ORIG}
+
+    if [ ${H_ORIG2} -gt ${H_ORIG} ]
+    then
+        H_HEATHR=${H_ORIG2}
+    fi 
+
+    echo "[${FILTER}] dims : ${W_HEATHR} x ${H_HEATHR}"
+
+    BORDER_CALC=${W_HEATHR}
+    echo "[${FILTER}] border calc : ${BORDER_CALC}"
+
+    if [ ${H_HEATHR} -gt ${W_HEATHR} ]
+    then
+        BORDER_CALC=${H_HEATHR}
+        echo "[${FILTER}] border calc reset : ${BORDER_CALC}"
+    fi 
+
+    # hrm...I *think* this is what I want it to do...
+
+    BORDER_SIDES=0  #`awk "BEGIN { print ${BORDER_CALC} * .1 }"`
+    BORDER_CENTER=`awk "BEGIN { print ${BORDER_CALC} * .005 }"`
+    BORDER_TOP=0    #`awk "BEGIN { print ${BORDER_CALC} * .1 }"`
+    BORDER_BOTTOM=0 #`awk "BEGIN { print ${BORDER_CALC} * .15 }"`
+
+    echo "[${FILTER}] borders ${BORDER_SIDES} ; ${BORDER_CENTER} ; ${BORDER_TOP} ; ${BORDER_BOTTOM}"
+
+    W_CANVAS=`awk "BEGIN { print ${W_HEATHR} + (${BORDER_SIDES} * 2) + ${BORDER_CENTER} }"`
+    H_CANVAS=`awk "BEGIN { print ${BORDER_TOP} + ${H_HEATHR} + ${BORDER_BOTTOM} }"`
+
+    echo "[${FILTER}] canvas ${W_CANVAS} x ${H_CANVAS}"
+
+    CANVAS=${TMP}/${FILTR_UID}-blank.jpg
+    DRAFT=${TMP}/${FILTR_UID}-draft.jpg
+
+    ${CONVERT} -size ${W_CANVAS}x${H_CANVAS} xc:white ${CANVAS}
+
+    W_OFFSET=`awk "BEGIN { print ${W_ORIG} + ${BORDER_SIDES} + ${BORDER_CENTER} }"`
+
+    echo "[${FILTER}] ${COMPOSITE} -geometry +${BORDER_SIDES}+${BORDER_TOP} ${INPUT} ${CANVAS} ${DRAFT}"
+    ${COMPOSITE} -quality 100 -geometry +${BORDER_SIDES}+${BORDER_TOP} ${INPUT} ${CANVAS} ${DRAFT}
+
+    echo "[${FILTER}] ${COMPOSITE} -geometry +${W_OFFSET}+${BORDER_TOP} ${INPUT2} ${DRAFT} ${OUTPUT}"
+    ${COMPOSITE} -quality 100 -geometry +${W_OFFSET}+${BORDER_TOP} ${INPUT2} ${DRAFT} ${OUTPUT}
+
+    echo "[${FILTER}] done!"
+
+    rm -f ${CANVAS}
+    rm -f ${DRAFT}
+    rm -f ${ID2}
+
+    if test ${DO_HEATHR} = "1"
+    then
+        rm -f ${INPUT}
+        rm -f ${INPUT2}
+    fi
+
+    ;;
+
+    movr)
+
+    MOVR=$4
+    IDENT=${FILTR_UID}"-ffmpeg"
+    TMP_FMT=${FILTR_UID}"-fr%02d.jpg"
+
+    echo "[${FILTER}] movring ${INPUT} (${TMP_FMT})"
+
+    ${FFMPEG} -i ${INPUT} 2> ${TMP}/${IDENT}
+
+    ${PERL} -MFile::Spec -Mstrict -e 'local $/; undef $/; my $txt = <>; $txt =~ /Duration:\s+(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?/m; my $hh = $1 * 60 * 60; my $mm = $2 * 60; my $ss = $3; if ($4) { $ss += 1; } my $d = $hh + $mm + $ss; for (my $i = 0; $i < $d; $i++) { my $outfile_name = sprintf("'${TMP_FMT}'",$i); my $outfile = File::Spec->catfile("'${TMP}'", $outfile_name); my $cmd = "'${FFMPEG}' -i '${INPUT}' -f singlejpeg -ss $i $outfile"; print "$cmd\n";  system($cmd); }' ${TMP}/${IDENT}
+
+    rm -f ${TMP}/${IDENT}
+
+    for img in `ls ${TMP}/${FILTR_UID}-fr*.jpg`
+    do
+      echo "[${FILTER}][movr] filtring ${img} (${img}.tmp) ${MOVR}"
+      ${FILTR} ${img} "${img}.tmp" ${MOVR}
+      rm -f ${img}
+    done
+
+    ${IDENTIFY} ${TMP}/${FILTR_UID}-fr01.jpg.tmp | awk '{ split($3,a,"+"); print a[1]; }' > ${ID}
+
+    W_FRAME=`awk '{ split($1, dims,"x"); print dims[1] / 2; }' ${ID}`
+    H_FRAME=`awk '{ split($1, dims,"x"); print dims[2] / 2; }' ${ID}`
+
+    echo "[${FILTER}] create ${OUTPUT} : ${W_FRAME} ${H_FRAME} per frame"
+
+    FRAMES=`ls ${TMP}/${FILTR_UID}-fr*.jpg.tmp | wc -l`    
+    TILES=`${PERL} -MPOSIX -e 'print POSIX::ceil(sqrt($ARGV[0]));' ${FRAMES}`
+
+    echo "[${FILTER}] ${FRAMES} frames makes ${TILES} tiles"
+
+    ${MONTAGE} -geometry ${W_FRAME}x${H_FRAME}+2+2 -tile ${TILES}x -bordercolor black `ls ${TMP}/${FILTR_UID}-fr*.jpg.tmp` ${OUTPUT}
+
+    for img in `ls ${TMP}/${FILTR_UID}-fr*.jpg.tmp`
+    do
+      echo "[${FILTER}] remove frame ${img}"
+      rm -f ${img}
+    done
+      
+    ;;
+
+    *)
+
+    echo "[${FILTER}] blur"
+    ${CONVERT} -size ${W_THUMB}x${H_THUMB} -contrast -gaussian 1x2 +matte ${INPUT} ${MASK}
+
+    echo "[${FILTER}] resize mask"
+    ${CONVERT} -resize ${W_ORIG}x${H_ORIG} -gaussian 0x5 -modulate 180,150 ${MASK} ${MASK}
+
+    echo "[${FILTER}] create lomo"
+    ${CONVERT} -unsharp 1.5x1.5 -contrast -modulate 100,120 ${INPUT} ${LOMO}
+
+    echo "[${FILTER}] compose"
+    ${COMPOSITE} -compose Multiply ${MASK} ${LOMO} ${NEW}
+
+    mv -f ${NEW} ${OUTPUT}
+
+    ;;
+
+esac
+
+# EXIF data
+
+# FIX ME: check to see if the file is a JPEG
+
+if [ ${HAS_JHEAD} -gt 0 ]
+then
+    echo "[exif] found jhead -- using that to transfer EXIF data"
+    ${JHEAD} -te ${INPUT} ${OUTPUT}
+else
+    echo "[exif] transfer EXIF data using Python"
+    ${PYTHON} ${UTILS}/mvexif.py ${INPUT} ${OUTPUT}
+fi
+
+
+# Clean up
+
+echo "[cleanup] clean up work files"
+
+if [ -e ${ID} ]
+then
+    echo "[cleanup] remove ${ID}"
+    rm ${ID}
+fi
+
+if [ -e ${MASK} ]
+then
+    echo "[cleanup] remove ${MASK}"
+    rm ${MASK}
+fi
+
+if [ -e ${LOMO} ]
+then
+    echo "[cleanup] remove ${LOMO}"
+    rm ${LOMO}
+fi
+
+if [ -d ${TMP} ]
+then
+    echo "[cleanup] remove ${TMP}"
+    rm -rf ${TMP}
+fi

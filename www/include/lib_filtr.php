@@ -28,12 +28,10 @@
 		$src = $files[0];
 
 		preg_match("/\.([a-z]+)$/i", $src, $m);
-		$ext = $m[1];
+		$ext = strtolower($m[1]);
 
 		$tmp = sys_get_temp_dir();
 		$dest = tempnam($tmp, "filtr") . ".{$ext}";
-
-		# FIX ME: use local (to parallel-flickr) copy of filtr
 
 		$cmd = "{$GLOBALS['cfg']['filtr_path']} {$src} {$dest} {$filtr}";
 		$enc_cmd = escapeshellcmd($cmd);
