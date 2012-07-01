@@ -34,9 +34,9 @@ echo "[startup] ${OSTYPE} ${PATH}"
 
 # bare-bones input
 
-export INPUT=$1
-export OUTPUT=$2
-export FILTER=$3
+INPUT=$1
+OUTPUT=$2
+FILTER=$3
 
 # bare-bones sanity checking
 
@@ -51,25 +51,25 @@ do
   fi
 done
 
-export DO_REPORT=1
-export DO_HEATHR=0
+DO_REPORT=0
+DO_HEATHR=0
 
 # applications we'll need to do anything
 
-export FILTR=$0 
-export UTILS=`dirname $0`/utils
-export RECIPES=`dirname $0`/recipes
-export IDENTIFY="identify"
-export CONVERT="convert"
-export COMPOSITE="composite"
-export MONTAGE="montage"
-export FFMPEG="ffmpeg"
-export PERL="perl"
-export PYTHON="python"
-export MD5="md5"
-export MD5_ARGS="-q"
-export GS="gs"
-export JHEAD="jhead"
+FILTR=$0 
+UTILS=`dirname $0`/utils
+RECIPES=`dirname $0`/recipes
+IDENTIFY="identify"
+CONVERT="convert"
+COMPOSITE="composite"
+MONTAGE="montage"
+FFMPEG="ffmpeg"
+PERL="perl"
+PYTHON="python"
+MD5="md5"
+MD5_ARGS="-q"
+GS="gs"
+JHEAD="jhead"
 
 # prefer graphicsmagick if present, update commands accordingly
 
@@ -77,15 +77,15 @@ if test "`which gm`" != ""
 then
     echo "[startup] found GraphicsMagic -- using that"
 
-    export IDENTIFY="gm identify"
-    export CONVERT="gm convert"
-    export COMPOSITE="gm composite"
-    export MONTAGE="gm montage"
+    IDENTIFY="gm identify"
+    CONVERT="gm convert"
+    COMPOSITE="gm composite"
+    MONTAGE="gm montage"
 fi
 
 if test $OSTYPE = "FreeBSD"
 then
-    export MD5_ARGS="-q -r"
+    MD5_ARGS="-q -r"
 fi
 
 # application support - image crunching
@@ -109,18 +109,18 @@ fi
 
 echo "[startup] checking metadata and related dependencies"
 
-export REQUIRE_PYTHON=0
-export HAS_JHEAD=0
-export HAS_MD5=0
+REQUIRE_PYTHON=0
+HAS_JHEAD=0
+HAS_MD5=0
 
 if test "`which ${JHEAD}`" != ""
 then
-    export HAS_JHEAD=1
+    HAS_JHEAD=1
 fi
 
 if test "`which ${MD5}`" != ""
 then
-    export HAS_MD5=1
+    HAS_MD5=1
 fi
 
 # FIX ME: assign require python if !HAS_JHEAD || !HAS_MD5
@@ -134,12 +134,12 @@ then
       exit 1
   fi
 
-  export PYTHONPATH=${UTILS}/lib/py:${PYTHONPATH}
+  PYTHONPATH=${UTILS}/lib/py:${PYTHONPATH}
 fi
 
 # application support for movr
 
-if [ test $FILTER = "movr" ]
+if [ $FILTER = "movr" ]
 then
     for app in $FFMPEG $PERL
       do
@@ -159,7 +159,7 @@ then
     if test "`which gs`" = ""
     then
         echo "[startup] can not find 'gs' -- disabling reporting";
-        export DO_REPORT=0
+        DO_REPORT=0
     fi
 fi
 
@@ -175,14 +175,14 @@ fi
 # which filtr is being run?
 
 case $FILTER in
-    postr|postcrd|rockstr|dazd|stndpipe|movr|pxl)
+    dazd|movr|postr|postcrd|pxl|rockstr|stndpipe|tilt)
     ;;
     heathr)
-    export FILTER="stndpipe"
-    export DO_HEATHR=1
+    FILTER="stndpipe"
+    DO_HEATHR=1
     ;;
     *)
-    export FILTER="filtr"
+    FILTER="filtr"
     ;;
 esac
 
@@ -191,33 +191,37 @@ esac
 if [ ${HAS_MD5} -gt 0 ]
 then
     echo "[startup] using local ${MD5}"
-    export FILTR_UID=`${MD5} ${MD5_ARGS} ${INPUT} | awk '{split($1, parts, " "); print parts[1]; }'`
+    FILTR_UID=`${MD5} ${MD5_ARGS} ${INPUT} | awk '{split($1, parts, " "); print parts[1]; }'`
 else
     echo "[startup] no local md5sum; using utils"
-    export FILTR_UID=`${PYTHON} ${UTILS}/md5sum.py ${INPUT} | awk '{split($1, parts, " "); print parts[1]; }'`
+    FILTR_UID=`${PYTHON} ${UTILS}/md5sum.py ${INPUT} | awk '{split($1, parts, " "); print parts[1]; }'`
 fi
 
 echo "[startup] input UID is ${FILTR_UID}"
 
 # tmp/work files
 
+# FIX ME: check OS...
+# TMP=`mktemp -d -t ${FILTR_UID}`
 TMP=`mktemp -d`
 
-export ID="${TMP}/${FILTR_UID}-${FILTER}-id.txt"
-export LOMO="${TMP}/${FILTR_UID}-${FILTER}-lomo.png"
-export MASK="${TMP}/${FILTR_UID}-${FILTER}-mask.png"
-export NEW="${TMP}/${FILTR_UID}-${FILTER}-new.jpg"
+ID="${TMP}/${FILTR_UID}-${FILTER}-id.txt"
+LOMO="${TMP}/${FILTR_UID}-${FILTER}-lomo.png"
+MASK="${TMP}/${FILTR_UID}-${FILTER}-mask.png"
+NEW="${TMP}/${FILTR_UID}-${FILTER}-new.jpg"
 
-#
 # Report archives
-#
 
-YMD=`date "+%Y/%m/%d"`
+if [ ${DO_REPORT} -gt 0 ]
+    then
 
-if ! [ -d ${TMP}/${YMD} ]
-then
-    echo "[startup] creating ${TMP}/${YMD}"
-    mkdir -p ${TMP}/${YMD}
+    YMD=`date "+%Y/%m/%d"`
+
+    if ! [ -d ${TMP}/${YMD} ]
+    then
+	echo "[startup] creating ${TMP}/${YMD}"
+	mkdir -p ${TMP}/${YMD}
+    fi
 fi
 
 BASENAME=`echo ${INPUT} | awk '{split($1,parts,"/"); i=0; for (p in parts) { i = i + 1}; print parts[i];}'`
@@ -250,9 +254,7 @@ then
     rm ${LOMO}
 fi
 
-#
-# Figure out dimensions
-#
+# Figure out dimensions (unless we're video)
 
 case $FILTER in
     movr)
@@ -260,14 +262,14 @@ case $FILTER in
     *)
     ${IDENTIFY} ${INPUT} | awk '{ split($3,a,"+"); print a[1]; }' > ${ID}
 
-    export W_ORIG=`awk '{ split($1, dims,"x"); print dims[1]; }' ${ID}`
-    export H_ORIG=`awk '{ split($1, dims,"x"); print dims[2]; }' ${ID}`
+    W_ORIG=`awk '{ split($1, dims,"x"); print dims[1]; }' ${ID}`
+    H_ORIG=`awk '{ split($1, dims,"x"); print dims[2]; }' ${ID}`
 
-    export W_THUMB=`awk '{ split($1, dims,"x"); print dims[1] / 10; }' ${ID}`
-    export H_THUMB=`awk '{ split($1, dims,"x"); print dims[2] / 10; }' ${ID}`
+    W_THUMB=`awk '{ split($1, dims,"x"); print dims[1] / 10; }' ${ID}`
+    H_THUMB=`awk '{ split($1, dims,"x"); print dims[2] / 10; }' ${ID}`
 
-    export W_REPORT=`awk '{ split($1, dims,"x"); print dims[1] * .5; }' ${ID}`
-    export H_REPORT=`awk '{ split($1, dims,"x"); print dims[2] * .5; }' ${ID}`
+    W_REPORT=`awk '{ split($1, dims,"x"); print dims[1] * .5; }' ${ID}`
+    H_REPORT=`awk '{ split($1, dims,"x"); print dims[2] * .5; }' ${ID}`
     ;;
 esac
 
@@ -279,21 +281,43 @@ echo "[startup] process ${INPUT} with ${FILTER} (${FILTR_UID})"
 
 case $FILTER in
 
-    postcrd)
+    postcrd|postr)
 
-    ${RECIPES}/postcrd.sh
+    echo "[${FILTER}] create mask"
+    ${CONVERT} -size ${W_THUMB}x${H_THUMB} -contrast -modulate 100,150 -gaussian 1x2 +matte ${INPUT} ${MASK}
 
-    ;;
+    echo "[${FILTER}] resize mask"
+    ${CONVERT} -resize ${W_ORIG}x${H_ORIG} -gaussian 0x5 -modulate 180,150 ${MASK} ${MASK}
 
-    postr)
+    echo "[${FILTER}] create lomo"
+    ${CONVERT} -unsharp 1.5x1.5 -modulate 175,100 -contrast -contrast -contrast ${INPUT} ${LOMO}
 
-    ${RECIPES}/postr.sh
+    echo "[${FILTER}] tweak lomo"
+    ${CONVERT} -gaussian 1x2 ${LOMO} ${LOMO}
+
+    echo "[${FILTER}] compose"
+    ${COMPOSITE} -compose multiply ${MASK} ${LOMO} ${NEW}
+
+    if [ $FILTER = "postr" ]
+    then
+	echo "[${FILTER}] recompose"
+	${COMPOSITE} -compose multiply ${INPUT} ${NEW} ${NEW}
+    fi
+
+    mv -f ${NEW} ${OUTPUT}
+
+    if [ ${DO_REPORT} -gt 0 ] 
+    then
+	echo "[${FILTER}] generate report ${REPORT}"
+	${MONTAGE} -geometry ${W_REPORT}x${H_REPORT}+5+5 -tile 2x2 ${INPUT} ${MASK} ${LOMO} ${OUTPUT} ${REPORT}
+    fi
 
     ;;
 
     pxl)
 
-    ${RECIPES}/pxl.sh
+    echo "[${FILTER}] triangulizorize"
+    ${PYTHON} ${UTILS}/triangulizor.py -f JPEG ${INPUT} ${OUTPUT}
 
     ;;
 
@@ -313,6 +337,15 @@ case $FILTER in
         echo "[${FILTER}] generate report ${REPORT}"
         ${MONTAGE} -geometry ${W_REPORT}x${H_REPORT}+5+5 -tile 2x2 ${INPUT} ${OUTPUT} ${REPORT}
     fi
+
+    ;;
+
+    tilt)
+
+	echo "[${FILTER}] this does not work yet"
+	exit
+
+	# ${CONVERT} \(${INPUT} -gamma 0.75 -modulate 100,130 -contrast\) \(+clone -sparse-color Barycentric '0,0 black 0,%h white' -function polynomial 4,-4,1 -level 0,50% \) -compose blur -set option:compose:args 5 -composite ${OUTPUT}
 
     ;;
 
