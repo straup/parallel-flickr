@@ -15,7 +15,7 @@ VERSION="0.5"
 case $1 in
     ''|-h|-help|--help|-u|--usage|'-?')
     echo "${NAME} ${VERSION}"
-    echo "Usage: `basename $0` in.jpg out.jpg [filtr|dazd|postr|postcrd|rockstr|pxl]"
+    echo "Usage: `basename $0` in.jpg out.jpg [filtr|dazd|postr|postcrd|rockstr|pxl|dthr]"
     echo "       `basename $0` in.mp4 out.jpg movr <filter>"
     echo "       `basename $0` in1.jpg in2.jpg heathr <in1-filtr> <in2-filtr> out.jpg"
     echo "       `basename $0` in1.jpg in2.jpg stndpipe <in1-filtr> <in2-filtr> out.jpg"
@@ -175,7 +175,7 @@ fi
 # which filtr is being run?
 
 case $FILTER in
-    dazd|movr|postr|postcrd|pxl|rockstr|stndpipe|tilt)
+    dazd|dthr|movr|postr|postcrd|pxl|rockstr|stndpipe|tilt)
     ;;
     heathr)
     FILTER="stndpipe"
@@ -201,9 +201,7 @@ echo "[startup] input UID is ${FILTR_UID}"
 
 # tmp/work files
 
-# FIX ME: check OS...
-# TMP=`mktemp -d -t ${FILTR_UID}`
-TMP=`mktemp -d`
+TMP=`mktemp -d -t ${FILTR_UID}`
 
 ID="${TMP}/${FILTR_UID}-${FILTER}-id.txt"
 LOMO="${TMP}/${FILTR_UID}-${FILTER}-lomo.png"
@@ -318,6 +316,13 @@ case $FILTER in
 
     echo "[${FILTER}] triangulizorize"
     ${PYTHON} ${UTILS}/triangulizor.py -f JPEG ${INPUT} ${OUTPUT}
+
+    ;;
+
+    dthr)
+
+    echo "[${FILTER}] dither"
+    ${PYTHON} ${UTILS}/dither.py ${INPUT} ${OUTPUT}
 
     ;;
 

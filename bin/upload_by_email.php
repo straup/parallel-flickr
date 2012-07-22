@@ -130,7 +130,9 @@
 
 	foreach ($uploads as $path){
 
-		$args = array();
+		$args = array(
+			'http_timeout' => 60
+		);
 
 		if (($filtr) && features_is_enabled("uploads_filtr")){
 			$args['filtr'] = $filtr;

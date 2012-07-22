@@ -53,8 +53,14 @@
 
 		}
 
+		$more = array();
+
+		if (isset($args['http_timeout'])){
+			$more['http_timeout'] = $args['http_timeout'];
+		}
+
 		# default upload perms?
-		$rsp = flickr_api_upload($file, $args);
+		$rsp = flickr_api_upload($file, $args, $more);
 
 		$rsp['do_archive'] = $GLOBALS['cfg']['enable_feature_uploads_archive'];
 		$rsp['archived_ok'] = 0;
