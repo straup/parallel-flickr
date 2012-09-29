@@ -10,8 +10,18 @@
 		error_disabled();
 	}
 
+	$auth_url = $_SERVER['HTTP_X_AUTH_SERVICE_PROVIDER'];
+
+	// Unless we validated which service is the auth provider, anyone
+	// could send a valid user ID and post on behalf of known p-flickr
+	// and twitter users. Also, there may be more providers but Twitter
+	// is the big one.
+	if (! preg_match("#^https://api.twitter.com/#", $auth_url)) {
+		exit;
+	}
+
 	$headers = array('Authorization' => $_SERVER['HTTP_X_VERIFY_CREDENTIALS_AUTHORIZATION']);
-	$res = http_get($_SERVER['HTTP_X_AUTH_SERVICE_PROVIDER'], $headers);
+	$res = http_get($auth_url, $headers);
 
 	if (! $res['ok']) {
 		exit;
