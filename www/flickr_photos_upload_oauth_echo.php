@@ -6,6 +6,10 @@
 	loadlib("flickr_backups");
 	loadlib('flickr_photos_upload');
 
+	if (! $GLOBALS['cfg']['enable_feature_oauth_upload']) {
+		error_disabled();
+	}
+
 	if (! $GLOBALS['cfg']['enable_feature_uploads']){
 		error_disabled();
 	}
@@ -30,9 +34,12 @@
 	$body = json_decode($res['body'], true);
 	$twitter_id = $body['id'];
 
-	// TODO: look up id here
-	//nolancaudill3:853340942 maps to flickruser id  399
-	$user = users_get_by_id(399);
+	// TODO: this should really be a page that user's can access through settings
+	if (! isset($GLOBALS['cfg']['oauth_upload_user_mapping'][$twitter_id])) {
+		exit;
+	}
+
+	$user = users_get_by_id($GLOBALS['cfg']['oauth_upload_user_mapping'][$twitter_id]);
 
 	$is_registered = flickr_backups_is_registered_user($user);
 	$can_upload = $is_registered;
@@ -52,7 +59,11 @@
 		exit;
 	}
 
-	$res = flickr_photos_upload($user, $filepath);
+	$args = array(
+		'title' => $_POST['message'],
+	);
+
+	$res = flickr_photos_upload($user, $filepath, $args);
 
 	if ($res['ok']) {
 		print "<mediaurl>http://www.flickr.com/photos/{$flickr_user['nsid']}/{$res['photo_id']}/</mediaurl>";
