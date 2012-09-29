@@ -59,8 +59,11 @@
 		exit;
 	}
 
+	// See that blank space? If a Twitter message starts with an '@' symbol,
+	// that gets interpreted by curl as a *filepath*. Flickr strips that 
+	// blank space on save so this hack gets around that (nolan-20120929)
 	$args = array(
-		'title' => $_POST['message'],
+		'title' => ' ' . $_POST['message'],
 	);
 
 	$res = flickr_photos_upload($user, $filepath, $args);
