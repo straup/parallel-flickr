@@ -230,11 +230,13 @@ function cwf_init_shortcuts(){
 		preventDefaultEvents: true
 	});
 
+    /*
 	$.shake({
 		callback: toggle_automatic,
 		shakethreshold: 5,
 		debounce: 1000,
 	});
+     */
 }
 
 function cwf_schedule_check_photos(older_than){

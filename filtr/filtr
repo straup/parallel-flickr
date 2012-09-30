@@ -175,7 +175,7 @@ fi
 # which filtr is being run?
 
 case $FILTER in
-    dazd|dthr|movr|postr|postcrd|pxl|rockstr|stndpipe|tilt)
+    dazd|dthr|movr|postr|postcrd|pxl|pxldthr|rockstr|stndpipe|tilt)
     ;;
     heathr)
     FILTER="stndpipe"
@@ -201,7 +201,7 @@ echo "[startup] input UID is ${FILTR_UID}"
 
 # tmp/work files
 
-TMP=`mktemp -d -t ${FILTR_UID}`
+TMP=`mktemp -d -t ${FILTR_UID}XXXXXXXXXX`
 
 ID="${TMP}/${FILTR_UID}-${FILTER}-id.txt"
 LOMO="${TMP}/${FILTR_UID}-${FILTER}-lomo.png"
@@ -323,6 +323,22 @@ case $FILTER in
 
     echo "[${FILTER}] dither"
     ${PYTHON} ${UTILS}/dither.py ${INPUT} ${OUTPUT}
+
+    ;;
+
+    pxldthr)
+
+    # sudo call functions and/or filtr itself...
+
+    PXLTMP="${TMP}/${FILTR_UID}-${FILTER}-tmp.jpg"
+
+    echo "[${FILTER}] triangulizorize"
+    ${PYTHON} ${UTILS}/triangulizor.py -f JPEG ${INPUT} ${PXLTMP}
+
+    echo "[${FILTER}] dither"
+    ${PYTHON} ${UTILS}/dither.py ${PXLTMP} ${OUTPUT}
+
+    rm ${PXLTMP}
 
     ;;
 
