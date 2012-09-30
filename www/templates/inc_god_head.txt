@@ -1,7 +1,7 @@
 {utf8_headers}
 <html>
 	<head>
-		<title>thisicantt.at | god{if $page_title} | {$page_title|escape}{/if}</title>
+		<title>{$cfg.site_name} | god{if $page_title} | {$page_title|escape}{/if}</title>
 
 		<meta content='width=device-width,maximum-scale=1.0,initial-scale=1.0,user-scalable=0' name='viewport'>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
