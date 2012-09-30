@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS `InviteCodes`;
+
+CREATE TABLE `InviteCodes` (
+  `code` char(12) CHARACTER SET latin1 NOT NULL,
+  `email` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `created` int(10) unsigned NOT NULL,
+  `redeemed` int(10) unsigned NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `sent` int(10) unsigned NOT NULL,
+  `invited_by` int(11) unsigned NOT NULL,
+  UNIQUE KEY `by_code` (`code`),
+  KEY `by_email` (`email`),
+  KEY `by_created` (`created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
