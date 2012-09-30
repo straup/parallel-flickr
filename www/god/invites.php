@@ -13,9 +13,11 @@
 
 	$rsp = invite_codes_get_all($args);
 
+	$rows = $rsp['rows'] ? $rsp['rows'] : array();
+
 	$invites = array();
 
-	foreach ($rsp['rows'] as $row){
+	foreach ($rows as $row){
 
 		if ($row['user_id']){
 			$row['user'] = users_get_by_id($row['user_id']);

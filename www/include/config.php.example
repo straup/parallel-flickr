@@ -68,6 +68,15 @@
 
 	$GLOBALS['cfg']['enable_feature_uploads'] = 0;
 
+	# OAuth Echo Upload (think custom image backend for Twitter clients like tweetbot)
+	# This URL is handy to get the twitter user_id: http://www.idfromuser.com/
+	# Also, some day this should be a user settings page. Some day.
+
+	$GLOBALS['cfg']['enable_feature_oauth_upload'] = 0;
+	$GLOBALS['cfg']['oauth_upload_user_mapping'] = array(
+		// twitter user_id => p-flickr user_id
+	);
+
 	# store files locally (and in the database) as they are uploaded
 	# to flickr; note that you will need to ensure that Apache has
 	# write permissions on 	$GLOBALS['cfg']['flickr_static_path']

@@ -91,6 +91,10 @@ RewriteRule  ^api/methods/?$		api_methods.php	[L]
 RewriteRule  ^api/methods/(.*)/?$	api_method.php?method=$1&%{QUERY_STRING}		[L]
 RewriteRule  ^api/rest/(.*)/?$		api_rest.php?method=$1&%{QUERY_STRING}		[L]
 
+# Misc
+
+RewriteRule ^photos/upload/oauthecho/?$			flickr_photos_upload_oauth_echo.php [L]
+
 # Flickr stuff
 
 RewriteRule ^photos/upload/?$			flickr_photos_upload.php?%{QUERY_STRING} [L] 
