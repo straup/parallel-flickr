@@ -8,6 +8,8 @@
 	loadlib("flickr_push_photos");
 	loadlib("flickr_push_utils");
 
+	loadlib("flickr_push_littleprinter");
+
 	loadlib("flickr_backups");
 	loadlib("flickr_users");
 	loadlib("flickr_api");
@@ -286,6 +288,8 @@
 
 			else if ($topic == 'commons'){
 				$import_rsp = flickr_photos_import_photo($spr);
+
+				# $rsp = flickr_push_littleprinter($spr);				
 			}
 
 			else {
