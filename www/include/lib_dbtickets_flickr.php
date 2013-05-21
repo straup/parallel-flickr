@@ -20,8 +20,8 @@
 		);
 
 		$more = array(
-			'http_timeout' = $args['http_timeout'],
-		}
+			'http_timeout' => 10,
+		);
 
 		$rsp = flickr_api_upload($tmp_file, $args, $more);
 
