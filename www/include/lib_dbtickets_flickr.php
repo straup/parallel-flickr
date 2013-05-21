@@ -3,6 +3,13 @@
 	loadlib("flickr_api");
 
 	########################################################################
+
+	# TO DO: figure out if this should use a given user's account or always
+	# just use $GLOBALS['cfg']['dbtickets_flickr_auth_token'] – I am inclined
+	# towards the latter solution but I'm not sure. Doing the former would
+	# also mean patching the push feeds receiver to ignore certain photos
+	# based on something like a tag (for example 'flickr:push=ignore). Dunno.
+	# (20130520/straup)
 	
 	function dbtickets_flickr_create(){
 
@@ -17,10 +24,12 @@
 
 		$args = array(
 			'auth_token' => $auth_token,
+			'is_public' => 0,
+			# 'tags' => 'flickr:push=ignore',
 		);
 
 		$more = array(
-			'http_timeout' => 10,
+			'http_timeout' => 30,
 		);
 
 		$rsp = flickr_api_upload($tmp_file, $args, $more);
