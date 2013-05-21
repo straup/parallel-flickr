@@ -25,10 +25,12 @@
 		exit();
 	}
 
-	$frob = $rsp['rsp']['frob']['_content'];
+	$perms = "delete";
 	$extra = null;
 
-	$url = flickr_api_auth_url("write", $extra, $frob);
+	$frob = $rsp['rsp']['frob']['_content'];
+
+	$url = flickr_api_auth_url($perms, $extra, $frob);
 	echo $url . "\n";
 
 	$stdin = fopen('php://stdin', 'r');

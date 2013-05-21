@@ -25,6 +25,8 @@
 
 		$rsp = flickr_api_upload($tmp_file, $args, $more);
 
+		unlink($tmp_file);
+
 		if (! $rsp['ok']){
 			return $rsp;
 		}
