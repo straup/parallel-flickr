@@ -216,7 +216,8 @@
 
  		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
-		$rsp = dbticket_flickr_create();
+		$rsp = dbtickets_flickr_create();
+		# dumper($rsp);
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -264,7 +265,7 @@
 			'isfamily' => 0,
 
 			'originalsecret' =>  $secret_orig,
-			'originalformat' => $format,
+			'originalformat' => $format_orig,
 			'media' => $media,
 			'dateupload' => $upload,
 			'datetaken' => $taken,
@@ -291,6 +292,8 @@
 		}
 		*/
 
+		# dumper($spr);
+
 		# TO DO: make functions for all this stuff
 		# note: not checking for video-ness
 
@@ -299,7 +302,7 @@
 
 		# TO DO: resize photos...
 
-		$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
+		$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo_id);
 
 		if (! file_exists($root)){
 			mkdir($root, 0755, true);
@@ -308,11 +311,13 @@
 		$orig = $root . $orig;
 		$info = $root . $info;
 
+		# dumper(array($orig, $info));
+
 		# Write the files to disk
 
 		copy($file, $orig);
 
-		$fh = open($info, 'w');
+		$fh = fopen($info, 'w');
 		fwrite($fh, json_encode($spr));
 		fclose($fh);
 
@@ -325,6 +330,8 @@
 
 		# see this: we're passing $spr not $photo
 		$ph_rsp = flickr_photos_import_photo($spr, $more);
+
+		# dumper($ph_rsp);
 
 		$rsp['archived_ok'] = $ph_rsp['ok'];
 

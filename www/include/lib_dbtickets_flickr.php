@@ -13,6 +13,18 @@
 	
 	function dbtickets_flickr_create(){
 
+		# This is a terrible fucking hack to account for the fact that p-flickr
+		# is a 'web app' and tries to redirect. This is not the way it should be
+		# it's just a way to make shit work at 8 in the morning (20130521/straup)
+
+		$api_key = $GLOBALS['cfg']['flickr_api_key'];
+		$api_secret = $GLOBALS['cfg']['flickr_api_secret'];
+
+		$GLOBALS['cfg']['flickr_api_key'] = $GLOBALS['cfg']['dbtickets_flickr_api_key'];
+		$GLOBALS['cfg']['flickr_api_secret'] = $GLOBALS['cfg']['dbtickets_flickr_api_secret'];
+
+		#
+
 		$tmp_dir = sys_get_temp_dir();
 		$tmp_file = tempnam($tmp_dir, "dbtickets_flickr") . ".gif";
 
@@ -48,6 +60,11 @@
 		);
 
 		$rsp = flickr_api_call('flickr.photos.delete', $args);
+
+		# See above
+
+		$GLOBALS['cfg']['flickr_api_key'] = $api_key;
+		$GLOBALS['cfg']['flickr_api_secret'] = $api_secret;
 
 		return array(
 			'ok' => 1,

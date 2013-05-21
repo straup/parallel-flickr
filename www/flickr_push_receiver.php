@@ -79,6 +79,8 @@
 	$is_backup_user = flickr_backups_is_registered_user($user, "ensure enabled");
 
 	$to_backup = array();
+	$wtf = array();
+
 	$new = 0;
 
 	foreach ($atom->items as $e){
@@ -124,6 +126,9 @@
 			'photo_id' => $photo_id,
 			'photo_data' => $enc_photo,
 		);
+
+		$debug = "user: {$user['id']} topic: {$subscription['topic_id']} photo: {$photo_id}";
+		$wtf[] = $debug;
 
 		$rsp = flickr_push_photos_record($user, $photo_data);
 
@@ -273,7 +278,7 @@
 			$photo = $rsp['rsp']['photo'];
 			$spr = flickr_push_utils_info2spr($photo);
 
-			# log_info("[PUSH] {$topic} ({$user['id']}) start import...");
+			log_info("[PUSH] wtf: {$topic} ({$user['id']}) start import...");
 			# log_info("[PUSH] SPR " . var_export($spr, 1));
 
 			$import_rsp = null;
@@ -299,6 +304,14 @@
 			# log_info("[PUSH] {$topic} ({$user['id']}) : " . var_export($import_rsp, 1));
 		}
 		
+	}
+
+	# log_info("[PUSH] wtf: " . count($wtf));
+
+	if (count($wtf)){
+		$msg = implode("\n", $wtf);
+		log_info("[PUSH] wtf: " . $msg);
+		# mail('aaron@aaronland.net', 'parallel-flickr push debug', $msg);
 	}
 
 	exit();
