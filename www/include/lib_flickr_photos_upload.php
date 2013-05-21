@@ -230,6 +230,8 @@
 
 		# TO DO: filtr stuff...
 
+		# TO DO: metadata extract
+
 		$server = 0;
 		$farm = 0;
 
@@ -260,6 +262,7 @@
 			'ispublic' => 0,	
 			'isfriend' => 0,
 			'isfamily' => 0,
+
 			'originalsecret' =>  $secret_orig,
 			'originalformat' => $format,
 			'media' => $media,
@@ -267,8 +270,10 @@
 			'datetaken' => $taken,
 		);
 
-		$tags = array();
-		$spr['tags'] = join(" ", $tags);
+		# $tags = array();
+		# $spr['tags'] = join(" ", $tags);
+
+		# See above inre: EXIF data...
 
 		/*
 		$hasgeo = (isset($photo['location'])) ? 1 : 0;
@@ -292,10 +297,24 @@
 		$orig = "{$secret_orig}_{$photo_id}_o.{$format_orig}";
 		$info = "{$secret_orig}_{$photo_id}_i.json";
 
+		# TO DO: resize photos...
+
 		$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
+
+		if (! file_exists($root)){
+			mkdir($root, 0755, true);
+		}
 
 		$orig = $root . $orig;
 		$info = $root . $info;
+
+		# Write the files to disk
+
+		copy($file, $orig);
+
+		$fh = open($info, 'w');
+		fwrite($fh, json_encode($spr));
+		fclose($fh);
 
 		# TO DO: all the stuff that's commented out in the actual
 		# upload to flickr code... (20130520/straup)
@@ -310,7 +329,6 @@
 		$rsp['archived_ok'] = $ph_rsp['ok'];
 
 		return $rsp;
-
 	}
 
 	#################################################################
