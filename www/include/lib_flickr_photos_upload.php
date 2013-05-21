@@ -207,4 +207,112 @@
 
 	#################################################################
 
-?>
+	# Please rename me...
+
+	function flickr_photos_upload_but_not(&$user, $file, $args=array()){
+
+		loadlib("dbtickets_flickr");
+		loadlib("random");
+
+ 		$flickr_user = flickr_users_get_by_user_id($user['id']);
+
+		$rsp = dbticket_flickr_create();
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$photo_id = $rsp['id'];
+
+		if (! isset($args['title'])){
+			$args['title'] = "Untitled Upload #" . time();
+		}
+
+		# TO DO: filtr stuff...
+
+		$server = 0;
+		$farm = 0;
+
+		$secret = random_string(10);
+		$secret_orig = random_string(10);
+
+		$format_orig = 'jpg';	# FIX ME...
+		$media = 'photo';
+
+		$now = time();
+		$fmt = "Y-m-d H:i:s";
+
+		$upload = $now;
+		$taken = gmdate($fmt, $now);	# read from exif or something
+
+		$spr = array(
+			'id' => $photo_id,
+			'owner' =>  $flickr_user['nsid'],
+			'secret' =>  $secret,
+			'server' => $server,
+			'farm' => $farm,
+			'title' => $args['title'],
+
+			# TO DO: fix these and the others... oh god...
+			# do I have to build a permissions system?
+			# (20130520/straup)
+
+			'ispublic' => 0,	
+			'isfriend' => 0,
+			'isfamily' => 0,
+			'originalsecret' =>  $secret_orig,
+			'originalformat' => $format,
+			'media' => $media,
+			'dateupload' => $upload,
+			'datetaken' => $taken,
+		);
+
+		$tags = array();
+		$spr['tags'] = join(" ", $tags);
+
+		/*
+		$hasgeo = (isset($photo['location'])) ? 1 : 0;
+
+		if ($hasgeo){
+			$spr['latitude'] = $photo['location']['latitude'];
+			$spr['longitude'] = $photo['location']['longitude'];
+			$spr['accuracy'] = $photo['location']['accuracy'];
+			$spr['context'] = $photo['location']['context'];
+			$spr['woeid'] = $photo['location']['woeid'];
+			$spr['geo_is_public'] = $photo['geoperms']['ispublic'];
+			$spr['geo_is_contact'] = $photo['geoperms']['iscontact'];
+			$spr['geo_is_friend'] = $photo['geoperms']['isfriend'];
+			$spr['geo_is_family'] = $photo['geoperms']['isfamily'];
+		}
+		*/
+
+		# TO DO: make functions for all this stuff
+		# note: not checking for video-ness
+
+		$orig = "{$secret_orig}_{$photo_id}_o.{$format_orig}";
+		$info = "{$secret_orig}_{$photo_id}_i.json";
+
+		$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
+
+		$orig = $root . $orig;
+		$info = $root . $info;
+
+		# TO DO: all the stuff that's commented out in the actual
+		# upload to flickr code... (20130520/straup)
+
+		$more = array(
+			'donot_import_files' => 1
+		);
+
+		# see this: we're passing $spr not $photo
+		$ph_rsp = flickr_photos_import_photo($spr, $more);
+
+		$rsp['archived_ok'] = $ph_rsp['ok'];
+
+		return $rsp;
+
+	}
+
+	#################################################################
+
+	# the end
