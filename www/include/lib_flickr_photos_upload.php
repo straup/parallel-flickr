@@ -217,7 +217,6 @@
  		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
 		$rsp = dbtickets_flickr_create();
-		# dumper($rsp);
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -297,12 +296,10 @@
 		# TO DO: make functions for all this stuff
 		# note: not checking for video-ness
 
-		$orig = "{$secret_orig}_{$photo_id}_o.{$format_orig}";
-		$info = "{$secret_orig}_{$photo_id}_i.json";
+		$orig = "{$photo_id}_{$secret_orig}_o.{$format_orig}";
+		$info = "{$photo_id}_{$secret_orig}_i.json";
 
-		# TO DO: resize photos...
-
-		$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo_id);
+		$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo_id) . "/";
 
 		if (! file_exists($root)){
 			mkdir($root, 0755, true);
@@ -315,7 +312,54 @@
 
 		# Write the files to disk
 
+		# TO DO: clean up if other stuff fails (?)
+
 		copy($file, $orig);
+
+		# Resize – put me in a function or something...
+
+		# TO DO: make sure the photo isn't smaller that the
+		# stuff listed in $resize
+
+		$im = imagecreatefromjpeg($orig);
+		list($w, $h, $type, $attr) = getimagesize($orig);
+
+		$resize = array(
+			640 => 'z',
+		);
+
+		foreach ($resize as $sz => $ext){
+
+			$small_path = "{$photo_id}_{$secret}";
+
+			if ($ext){
+				$small_path .= "_{$ext}";
+			}
+
+			$small_path .= ".jpg";
+
+			$small_path = $root . $small_path;
+
+			if ($w > $h){
+				$ratio = $sz / $w;
+				$width = $sz;
+				$height = $h * $ratio;
+			}
+
+			else {
+				$ratio = $sz / $h;
+				$height = $sz;
+				$width = $w * $ratio;
+			}
+
+			# dumper("W,H: {$w},{$h} W,H:{$width},{$height}");
+
+			$small_im = imagecreatetruecolor($width, $height);
+			imagecopyresampled($small_im, $im, 0, 0, 0, 0, $width, $height, $w, $h);
+			imagejpeg($small_im, $small_path);
+		}
+
+		# write the JSON
 
 		$fh = fopen($info, 'w');
 		fwrite($fh, json_encode($spr));
