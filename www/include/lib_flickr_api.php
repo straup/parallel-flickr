@@ -31,12 +31,18 @@
 
 	#################################################################
 
-	function flickr_api_auth_url($perms, $extra=null){
+	function flickr_api_auth_url($perms, $extra=null, $frob=null){
 
 		$args = array(
 			'api_key' => $GLOBALS['cfg']['flickr_api_key'],
 			'perms' => $perms,
 		);
+
+		# OH GOD... fix me...
+
+		if ($frob){
+			$args['frob'] = $frob;
+		}
 
 		if ($extra){
 
