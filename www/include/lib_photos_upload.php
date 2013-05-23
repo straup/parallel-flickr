@@ -74,6 +74,37 @@
 			'datetaken' => $taken,
 		);
 
+		# This is not awesome but it will do for now...
+
+		if ($p = $args['perms']){
+		
+			if ($p == 'p'){
+				$spr['ispublic'] = 1;
+				$spr['isfriend'] = 0;
+				$spr['isfamily'] = 0;
+			}
+
+			else if ($p == 'fr'){
+				$spr['ispublic'] = 0;
+				$spr['isfriend'] = 1;
+				$spr['isfamily'] = 0;
+			}
+
+			else if ($p == 'fa'){
+				$spr['ispublic'] = 0;
+				$spr['isfriend'] = 0;
+				$spr['isfamily'] = 1;
+			}
+
+			else if ($p == 'fa'){
+				$spr['ispublic'] = 0;
+				$spr['isfriend'] = 1;
+				$spr['isfamily'] = 1;
+			}
+
+			else {}
+		}
+
 		# $tags = array();
 		# $spr['tags'] = join(" ", $tags);
 
@@ -168,6 +199,15 @@
 			'title' => "Untitled Pointer #{$photo_id}",
 		);
 
+		foreach (array('ispublic', 'isfriend', 'isfamily') as $key){
+
+			if (array_key_exists($key, $spr)){
+				# sigh... yes (see above)
+				$fl_key = str_replace("is", "is_", $key);
+				$fl_args[$fl_key] = $spr[$key];
+			}
+		}
+
 		$fl_rsp = photos_upload_flickr_preview($user, $file, $fl_args);
 
 		$rsp['flickr'] = $fl_rsp;
@@ -192,7 +232,10 @@
 			return $rsp;
 		}
 
-		$rsp = photos_resize($tiny, $small, 240);
+		# < 300px seems to cause pxl to give and return the
+		# original photo (20130523/straup)
+
+		$rsp = photos_resize($tiny, $small, 300);
 
 		if (! $rsp['ok']){
 			return $rsp;

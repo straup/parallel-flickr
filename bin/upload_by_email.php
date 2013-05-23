@@ -5,7 +5,7 @@
 
 	include("include/init.php");
 
-	loadlib("flickr_photos_upload");
+	loadlib("photos_upload");
 	loadlib("flickr_users");
 	loadlib("flickr_backups");
 
@@ -67,9 +67,15 @@
 
 	$subject = $parser->getHeader('subject');  
 	$filtr = null;
+	$perms = null;
 
 	if (preg_match("/(\s?f:([a-z]+))/i", $subject, $m)){
 		$filtr = $m[2];
+		$subject = str_replace($m[1], "", $subject);
+	}
+
+	if (preg_match("/(\s?p:([a-z]+))/i", $subject, $m)){
+		$perms = $m[2];
 		$subject = str_replace($m[1], "", $subject);
 	}
 
@@ -131,14 +137,18 @@
 	foreach ($uploads as $path){
 
 		$args = array(
-			'http_timeout' => 60
+			'http_timeout' => 60,
+			'perms' => $perms,
 		);
 
 		if (($filtr) && features_is_enabled("uploads_filtr")){
 			$args['filtr'] = $filtr;
 		}
 
-		$rsp = flickr_photos_upload($user, $path, $args);
+		# TO DO: a conditional/preference...
+		# $rsp = flickr_photos_upload($user, $path, $args);
+
+		$rsp = photos_upload($user, $path, $args);
 
 		# THROW AN ERROR ?
 
@@ -148,7 +158,7 @@
 			continue;
 		}
 
-
+		dumper($rsp);
 	}
 
 	foreach ($uploads as $path){
