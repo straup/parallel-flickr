@@ -3,6 +3,7 @@
 	loadlib("flickr_users");
 	loadlib("flickr_api");
 
+	loadlib("flickr_photos_upload");
 	loadlib("flickr_photos_import");
 	loadlib("filtr");
 
@@ -163,25 +164,49 @@
 
 		$rsp['archived_ok'] = $ph_rsp['ok'];
 
+		$fl_args = array(
+			'title' => "Untitled Pointer #{$photo_id}",
+		);
+
+		$fl_rsp = photos_upload_flickr_preview($user, $file, $fl_args);
+
+		$rsp['flickr'] = $fl_rsp;
+
 		return $rsp;
 	}
 
 	#################################################################
 
+	# TO DO: ensure filtr
 	# TO DO: error handling
 	# TO DO: a better name
 
 	function photos_upload_flickr_preview(&$user, $file, $args=array()){
 
-		$small = tempnam(sys_get_temp_dir(), 'preview');
-		$rsp = photos_resize($file, $small, 500);
+		$tiny = tempnam(sys_get_temp_dir(), 'preview-t');
+		$small = tempnam(sys_get_temp_dir(), 'preview-s');
 
-		# just pass $args['filtr'] = 'pxl' instead?
+		$rsp = photos_resize($file, $tiny, 20);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$rsp = photos_resize($tiny, $small, 240);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
 
 		$rsp = filtr('pxl', array($small));
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
 		$preview = $rsp['path'];
 
-		return flickr_photos_upload($user, $preview);
+		return flickr_photos_upload($user, $preview, $args);
 	}
 
 	#################################################################

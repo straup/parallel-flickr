@@ -30,7 +30,7 @@
 		imagejpeg($resized, $dest);
 
 		return array(
-			'ok' = 1,			
+			'ok' => 1,
 		);
 	}
 
