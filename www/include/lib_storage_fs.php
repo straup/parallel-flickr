@@ -14,10 +14,17 @@
 			return array('ok' => 0, 'error' => 'File not found');
 		}
 
-		# TO DO: return what exactly? filehandle or ... ?
+		$fh = fopen($path, 'r');
+
+		if (! $fh){
+			return array('ok' => 0, 'error' => 'Failed to open file');
+		}
 
 		return array(
-			'ok' => 1
+			'ok' => 1,
+			'path' => $path,
+			'uri' => $uri,
+			'fh' => $fh,
 		);
 	}
 
