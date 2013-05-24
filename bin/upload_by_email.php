@@ -27,6 +27,7 @@
 	$parser->setStream(STDIN);  
 
 	$to = $parser->getHeader('to');  
+	$from = $parser->getHeader('from');  
 
 	if (! preg_match($re, $to, $m)){
 		log_rawr("failed to parse upload by email address");
@@ -145,6 +146,12 @@
 			$args['filtr'] = $filtr;
 		}
 
+		$whoami = posix_getuid();
+
+		$fh = fopen("/tmp/upload-by-email.wtf", "a");
+		fwrite($fh, "upload {$path} as '{$whoami}'\n");
+		fclose($fh);
+
 		# TO DO: a conditional/preference...
 		# $rsp = flickr_photos_upload($user, $path, $args);
 
@@ -155,6 +162,12 @@
 		if (! $rsp['ok']){
 
 			echo "failed to upload '{$path}' : {$rsp['error']}";
+
+			$fh = fopen("/tmp/upload-by-email.wtf", "a");
+			fwrite($fh, var_export($rsp, 1));
+			fclose($fh);
+
+			email($from, "Your upload failed", var_export($rsp, 1));
 			continue;
 		}
 
