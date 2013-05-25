@@ -6,12 +6,17 @@
 	#################################################################
 
 	function flickr_urls_photo_thumb_flickr(&$photo){
+
+		if (! $photo['farm']){
+			return flickr_urls_photo_static($photo, "t");
+		}
+
 		return "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}_{$photo['secret']}_t.jpg";
 	}
 
 	#################################################################
 
-	function flickr_urls_photo_static(&$photo){
+	function flickr_urls_photo_static(&$photo, $sz="z"){
 
 		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
 			loadlib('storage_s3');
@@ -21,7 +26,6 @@
 		# else 
 		
 		$secret = $photo['secret'];
-		$sz = "z";
 		$ext = "jpg";
 
 		$root = $GLOBALS['cfg']['abs_root_url'] . $GLOBALS['cfg']['flickr_static_url'];
