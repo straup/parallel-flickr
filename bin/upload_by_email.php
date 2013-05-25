@@ -167,7 +167,6 @@
 			fwrite($fh, var_export($rsp, 1));
 			fclose($fh);
 
-			email($from, "Your upload failed", var_export($rsp, 1));
 			continue;
 		}
 

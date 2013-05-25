@@ -18,9 +18,15 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
 	method = None
         path = None
 
+        bytes_rcvd = 0
+
         while True:
 
-            data = self.request.recv(1024)
+            data = self.request.recv(2048)
+            bytes_rcvd += len(data)
+
+            # TO DO: check max_bytes here...
+            # logging.debug("read %s bytes" % bytes_rcvd)
 
             if not data:
                 break
@@ -28,12 +34,19 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
 
                 if not method or not path:
                     parts = data.split("\C")
+
                     method = parts[0]
                     path = parts[1]
 
                     if not method in ('PUT'):
                         logging.error("invalid method: %s" % method)
                         msg = json.dumps({'ok': 0, 'error': 'Invalid method'})
+                        self.request.send(msg)
+                        break
+
+                    if not path:
+                        logging.error("missing path")
+                        msg = json.dumps({'ok': 0, 'error': 'Missing path'})
                         self.request.send(msg)
                         break
 
@@ -45,11 +58,12 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
 
                     data = "".join(parts[2:])
 
-                if not data.endswith("\0"):
-                    buffer.append(data)
-                else:
+                buffer.append(data)
 
-                    buffer.append(data[:-1])
+                if buffer[-1].endswith("\0"):
+
+                    buffer = "".join(buffer)
+                    buffer = buffer[:-1]
 
                     root = self.server.storage_root
                     abs_path = os.path.join(root, path)
@@ -65,7 +79,7 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
                         logging.debug("store %s" % abs_path)
 
                         fh = open(abs_path, 'wb')
-                        fh.write("".join(buffer))
+                        fh.write(buffer)
                         fh.close()
 
                         rsp = {'ok': 1, 'path': abs_path}

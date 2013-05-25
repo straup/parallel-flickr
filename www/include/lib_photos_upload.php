@@ -9,9 +9,10 @@
 
 	loadlib("photos_resize");
 
-	#################################################################
+	loadlib("storage");
+	loadlib("storage_storagemaster");
 
-	# Please rename me...
+	#################################################################
 
 	function photos_upload(&$user, $file, $args=array()){
 
@@ -131,32 +132,27 @@
 		# TO DO: make functions for all this stuff
 		# note: not checking for video-ness
 
+		$root = flickr_photos_id_to_path($photo_id) . "/";
+
 		$orig = "{$photo_id}_{$secret_orig}_o.{$format_orig}";
 		$info = "{$photo_id}_{$secret_orig}_i.json";
-
-		$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo_id) . "/";
-
-		if (! file_exists($root)){
-			mkdir($root, 0755, true);
-		}
 
 		$orig = $root . $orig;
 		$info = $root . $info;
 
 		# dumper(array($orig, $info));
 
-		# Write the files to disk
+		$bytes = photos_upload_path_to_bytes($file);
 
-		# TO DO: clean up if other stuff fails (?)
+		$rsp = storage_put_file($orig, $bytes);
+		# dumper($rsp);
 
-		if (! copy($file, $orig)){
-			return array('ok' => 0, 'error' => "Failed to copy {$file} to {$orig}");
+		if (! $rsp['ok']){
+			return $rsp;
 		}
 
-		# Resize – put me in a function or something...
-
-		# TO DO: make sure the photo isn't smaller that the
-		# stuff listed in $resize
+		# Resize – put me in a function or something or more
+		# likely a whole other image daemon service...
 
 		$resize = array(
 			640 => 'z',
@@ -164,24 +160,40 @@
 
 		foreach ($resize as $sz => $ext){
 
-			$small_path = "{$photo_id}_{$secret}";
+			# TO DO: make sure the photo isn't smaller that the
+			# stuff listed in $resize
+
+			$small_fname = "{$photo_id}_{$secret}";
 
 			if ($ext){
-				$small_path .= "_{$ext}";
+				$small_fname .= "_{$ext}";
 			}
 
-			$small_path .= ".jpg";
+			$small_fname .= ".jpg";
+			$small_path = $root . $small_fname;
 
-			$small_path = $root . $small_path;
+			$resized = sys_get_temp_dir() . "/" . $small_fname;
 
-			$rsp = photos_resize($orig, $small_path, $sz);
+			$rsp = photos_resize($file, $resized, $sz);
+
+			if (! $rsp['ok']){
+				continue;
+			}
+
+			$bytes = photos_upload_path_to_bytes($resized);
+			unlink($resized);
+
+			$rsp = storage_put_file($small_path, $bytes);
+
+			if (! $rsp['ok']){
+				return $rsp;
+			}
 		}
 
 		# write the JSON
 
-		$fh = fopen($info, 'w');
-		fwrite($fh, json_encode($spr));
-		fclose($fh);
+		$spr_json = json_encode($spr);
+		$rsp = storage_put_file($info, $spr_json);
 
 		# TO DO: all the stuff that's commented out in the actual
 		# upload to flickr code... (20130520/straup)
@@ -252,6 +264,18 @@
 		$preview = $rsp['path'];
 
 		return flickr_photos_upload($user, $preview, $args);
+	}
+
+	#################################################################
+
+	function photos_upload_path_to_bytes($path){
+
+		$size = filesize($path);
+		$fh = fopen($path, "rb");
+		$bytes = fread($fh, $size);
+		fclose($fh);
+
+		return $bytes;
 	}
 
 	#################################################################
