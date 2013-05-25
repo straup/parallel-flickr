@@ -4,6 +4,8 @@ import SocketServer
 import subprocess
 import sys
 import logging
+import json
+import os.path
 
 from threading import Thread
 
@@ -13,29 +15,66 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
 
         buffer = []
 
+	method = None
+        path = None
+
         while True:
+
             data = self.request.recv(1024)
 
             if not data:
                 break
             else:
-                buffer.append(data)
 
-            buffer = "".join(buffer)
-            buffer = buffer.split(" ")
+                if not method or not path:
+                    parts = data.split("\C")
+                    method = parts[0]
+                    path = parts[1]
 
-            msg = buffer[0]
+                    # check method and path here...
 
-            self.request.send(msg)
+                    data = "".join(parts[2:])
+
+                if not data.endswith("\0"):
+                    buffer.append(data)
+                else:
+
+                    buffer.append(data[:-1])
+
+                    # This part doesn't work yet...
+                    root = self.server["storage_root"]
+                    abs_path = os.path.join(root, path)
+
+                    logging.debug("store %s" % abs_path)
+
+                    try:
+
+                        # mkdirs if necessary...
+
+                        fh = open(abs_path, 'wb')
+                        fh.write("".join(buffer))
+                        fh.close()
+
+                        rsp = {'ok': 1, 'path': abs_path}
+
+                    except Exception, e:
+                        logging.error(e)
+                        rsp = {'ok': 0, 'error': e}
+                        
+                    msg = json.dumps(rsp)
+                    self.request.send(msg)
+
+                    break
 
         self.request.close()
 
-class SimpleServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+class Storagemaster(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
     daemon_threads = True
     allow_reuse_address = True
 
-    def __init__(self, server_address, RequestHandlerClass):
+    def __init__(self, server_address, storage_root, RequestHandlerClass):
+        self.storage_root = storage_root
         SocketServer.TCPServer.__init__(self, server_address, RequestHandlerClass)
 
 if __name__ == "__main__":
@@ -47,6 +86,7 @@ if __name__ == "__main__":
 
     parser.add_option('--host', dest='host', action='store', default='127.0.0.1', help='...')
     parser.add_option('--port', dest='port', action='store', default=9999, help='...')
+    parser.add_option('-r', '--root', dest='root', action='store', default=None, help='...')
     parser.add_option('-v', '--verbose', dest='verbose', action='store_true', default=False, help='be chatty (default is false)')
 
     options, args = parser.parse_args()
@@ -56,11 +96,23 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
+    if not options.root:
+        logging.error("Invalid storage root")
+        sys.exit()
+
+    if not os.path.exists(options.root):
+        logging.error("Storage root does not exist")
+        sys.exit()
+
     logging.info("starting server at %s on port %s" % (options.host, options.port))
 
-    server = SimpleServer((options.host, options.port), SingleTCPHandler)
+    server = Storagemaster((options.host, options.port), options.root, SingleTCPHandler)
 
     try:
         server.serve_forever()
     except KeyboardInterrupt:
+        logging.info("Shutting down")
         sys.exit(0)
+    except Exception, e:
+        logging.error(e)
+        sys.exit()
