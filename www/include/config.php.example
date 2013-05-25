@@ -118,6 +118,13 @@
 		'rockstr'
 	);
 
+	# Storagemaster. See also:
+	# parallel-flickr/storagemaster/bin/storagemaster.py
+	# parallel-flickr/storagemaster/init.d/storagemaster.sh
+
+	$GLOBALS['cfg']['storage_storagemaster_host'] = '127.0.0.1';
+	$GLOBALS['cfg']['storage_storagemaster_port'] = '9999';
+
 	# Invite codes – these are used to limit who can register
 	# to have their photos backed up. You'll need to do a
 	# few things to enable this:

@@ -86,7 +86,7 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
 
                     except Exception, e:
                         logging.error(e)
-                        rsp = {'ok': 0, 'error': e}
+                        rsp = {'ok': 0, 'error': str(e)}
                         
                     msg = json.dumps(rsp)
                     self.request.send(msg)

@@ -58,8 +58,8 @@
 
 	function storage_storagemaster_connect(){
 
-		$host = '127.0.0.1';
-		$port = 9999;
+		$host = $GLOBALS['cfg']['storage_storagemaster_host'];
+		$port = $GLOBALS['cfg']['storage_storagemaster_port'];
 
 	        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 	        $ok = socket_connect($socket, $host, $port);
