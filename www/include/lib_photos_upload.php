@@ -33,6 +33,8 @@
 			$args['title'] = "Untitled Upload #" . time();
 		}
 
+		# TO DO: auto-rotate
+
 		# TO DO: metadata extract
 
 		$do_filtr = 0;
@@ -50,11 +52,6 @@
 			}
 
 			rename($rsp['path'], $file);
-
-			if (features_is_enabled("uploads_shoutout")){
-				$args['tags'] .= " filtr:process={$args['filtr']}";
-			}
-
 		}
 
 		$server = 0;
@@ -63,7 +60,10 @@
 		$secret = random_string(10);
 		$secret_orig = random_string(10);
 
-		$format_orig = 'jpg';	# FIX ME...
+		$info = pathinfo($file);
+		$format_orig = $info['extension'];
+
+		# $format_orig = 'jpg';	# FIX ME...
 		$media = 'photo';
 
 		$now = time();
@@ -175,8 +175,16 @@
 		# likely a whole other image daemon service...
 
 		$resize = array(
+			# 75 => 'sq',
+			# 150 => 'q',
 			100 => 't',
+			# 240 => 's',
+			# 320 => 'n',
+			# 500 => '',
 			640 => 'z',
+			800 => 'c',
+			# 1024 => 'l',
+			# 1600 => 'h',
 		);
 
 		foreach ($resize as $sz => $ext){
