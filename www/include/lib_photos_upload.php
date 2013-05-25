@@ -149,7 +149,9 @@
 
 		# TO DO: clean up if other stuff fails (?)
 
-		copy($file, $orig);
+		if (! copy($file, $orig)){
+			return array('ok' => 0, 'error' => "Failed to copy {$file} to {$orig}");
+		}
 
 		# Resize – put me in a function or something...
 
