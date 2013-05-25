@@ -12,6 +12,8 @@
 	loadlib("storage");
 	loadlib("storage_storagemaster");
 
+	loadlib("exif");
+
 	#################################################################
 
 	function photos_upload(&$user, $file, $args=array()){
@@ -32,6 +34,8 @@
 		if (! isset($args['title'])){
 			$args['title'] = "Untitled Upload #" . time();
 		}
+
+		$rsp = exif_read($file);
 
 		# TO DO: auto-rotate
 

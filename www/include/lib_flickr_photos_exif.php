@@ -46,6 +46,8 @@
 
 		# TO DO: cache me?
 
+		# TO DO: use lib_exif (_read)
+
 		$exif = exif_read_data($path);
 
 		if (! $exif){
@@ -77,4 +79,5 @@
 	}
 
 	#################################################################
-?>
+
+	# the end
