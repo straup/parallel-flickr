@@ -1,0 +1,85 @@
+#!/bin/sh -e
+
+# Starts, stops, and restarts the event server
+# http://werxltd.com/wp/2012/01/05/simple-init-d-script-template/
+
+# To make sure this runs at startup, do:
+# update-rc.d storagemaster.sh defaults
+
+PYTHON='/usr/bin/python'
+
+SM_SERVER='/PATH/TO/parallel-flickr/storagemaster/bin/storagemaster.py'
+SM_ROOT='/PATH/TO/parallel-flickr-static/'
+
+SM_USER='www-data'
+SM_HOST='127.0.0.1'
+SM_PORT=9999
+
+PIDFILE=/var/run/storagemaster.pid
+
+case $1 in
+    debug)
+        echo "[debug] exec sudo -u $SM_USER $PYTHON $SM_SERVER -v --root $SM_ROOT --host $SM_HOST --port $SM_PORT"
+
+	PID=`exec sudo -u $SM_USER $PYTHON $SM_SERVER -v --root $SM_ROOT --host $SM_HOST --port $SM_PORT`
+
+        if [ -z $PID ]; then
+            printf "%s\n" "Fail"
+        else
+            echo $PID > $PIDFILE
+            printf "%s\n" "Ok"
+	    echo $PID
+        fi
+
+        ;;
+    start)
+        echo "Starting storagemaster"
+
+	PID=`exec sudo -u $SM_USER $PYTHON $SM_SERVER --root $SM_ROOT --host $SM_HOST --port $SM_PORT > /dev/null 2>&1 & echo $!`
+
+        if [ -z $PID ]; then
+            printf "%s\n" "Fail"
+        else
+            echo $PID > $PIDFILE
+            printf "%s\n" "Ok"
+	    echo $PID
+        fi
+
+        ;;
+    stop)
+        echo "Stopping storagemaster"
+
+	printf "%-50s" "Stopping $NAME"
+            PID=`cat $PIDFILE`
+            cd $DAEMON_PATH
+        if [ -f $PIDFILE ]; then
+            kill -HUP $PID
+            printf "%s\n" "Ok"
+            rm -f $PIDFILE
+        else
+            printf "%s\n" "pidfile not found"
+        fi
+
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        ;;
+    status)
+        printf "%-50s" "Checking storagemaster..."
+        if [ -f $PIDFILE ]; then
+            PID=`cat $PIDFILE`
+            if [ -z "`ps axf | grep ${PID} | grep -v grep`" ]; then
+                printf "%s\n" "Process dead but pidfile exists"
+            else
+                echo "Running"
+            fi
+        else
+            printf "%s\n" "Service not running"
+        fi
+	;;
+    *)
+        echo "Usage: $0 {debug|start|stop|restart|status}" >&2
+        exit 1
+        ;;
+esac

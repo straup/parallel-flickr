@@ -133,7 +133,7 @@ if __name__ == "__main__":
 
     logging.info("starting server at %s on port %s" % (options.host, options.port))
 
-    server = Storagemaster((options.host, options.port), options.root, SingleTCPHandler)
+    server = Storagemaster((options.host, int(options.port)), options.root, SingleTCPHandler)
 
     try:
         server.serve_forever()
