@@ -31,7 +31,17 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
                     method = parts[0]
                     path = parts[1]
 
-                    # check method and path here...
+                    if not method in ('PUT'):
+                        logging.error("invalid method: %s" % method)
+                        msg = json.dumps({'ok': 0, 'error': 'Invalid method'})
+                        self.request.send(msg)
+                        break
+
+                    if ".." in path:
+                        logging.error("invalid path: %s" % path)
+                        msg = json.dumps({'ok': 0, 'error': 'Invalid path'})
+                        self.request.send(msg)
+                        break
 
                     data = "".join(parts[2:])
 
@@ -41,15 +51,18 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
 
                     buffer.append(data[:-1])
 
-                    # This part doesn't work yet...
-                    root = self.server["storage_root"]
+                    root = self.server.storage_root
                     abs_path = os.path.join(root, path)
-
-                    logging.debug("store %s" % abs_path)
 
                     try:
 
-                        # mkdirs if necessary...
+                        tree = os.path.dirname(abs_path)
+
+                        if not os.path.exists(tree):
+                            logging.debug("create %s" % tree)
+                            os.makedirs(tree)
+
+                        logging.debug("store %s" % abs_path)
 
                         fh = open(abs_path, 'wb')
                         fh.write("".join(buffer))
