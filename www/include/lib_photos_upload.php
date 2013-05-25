@@ -33,9 +33,29 @@
 			$args['title'] = "Untitled Upload #" . time();
 		}
 
-		# TO DO: filtr stuff...
-
 		# TO DO: metadata extract
+
+		$do_filtr = 0;
+
+		if ((features_is_enabled("uploads_filtr")) && (isset($args['filtr']))){
+			$do_filtr = filtr_is_valid_filtr($args['filtr']);
+		}
+
+		if ($do_filtr){
+
+			$rsp = filtr($args['filtr'], array($file));
+
+			if (! $rsp['ok']){
+				return $rsp;
+			}
+
+			rename($rsp['path'], $file);
+
+			if (features_is_enabled("uploads_shoutout")){
+				$args['tags'] .= " filtr:process={$args['filtr']}";
+			}
+
+		}
 
 		$server = 0;
 		$farm = 0;
@@ -97,7 +117,7 @@
 				$spr['isfamily'] = 1;
 			}
 
-			else if ($p == 'fa'){
+			else if ($p == 'ff'){
 				$spr['ispublic'] = 0;
 				$spr['isfriend'] = 1;
 				$spr['isfamily'] = 1;
@@ -155,6 +175,7 @@
 		# likely a whole other image daemon service...
 
 		$resize = array(
+			100 => 't',
 			640 => 'z',
 		);
 

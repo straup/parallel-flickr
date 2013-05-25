@@ -301,7 +301,7 @@
 				# log_info("skip photo for '{$user['id']}' : '{$topic}'");
 			}
 
-			# log_info("[PUSH] {$topic} ({$user['id']}) : " . var_export($import_rsp, 1));
+			# log_info("[DUMP] {$topic} ({$user['id']}) : " . var_export($import_rsp, 1));
 		}
 		
 	}

@@ -146,12 +146,6 @@
 			$args['filtr'] = $filtr;
 		}
 
-		$whoami = posix_getuid();
-
-		$fh = fopen("/tmp/upload-by-email.wtf", "a");
-		fwrite($fh, "upload {$path} as '{$whoami}'\n");
-		fclose($fh);
-
 		# TO DO: a conditional/preference...
 		# $rsp = flickr_photos_upload($user, $path, $args);
 
@@ -163,9 +157,9 @@
 
 			echo "failed to upload '{$path}' : {$rsp['error']}";
 
-			$fh = fopen("/tmp/upload-by-email.wtf", "a");
-			fwrite($fh, var_export($rsp, 1));
-			fclose($fh);
+			# $fh = fopen("/tmp/upload-by-email.wtf", "a");
+			# fwrite($fh, var_export($rsp, 1));
+			# fclose($fh);
 
 			continue;
 		}
