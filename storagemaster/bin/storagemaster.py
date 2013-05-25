@@ -9,21 +9,21 @@ import os.path
 
 from threading import Thread
 
-class SingleTCPHandler(SocketServer.BaseRequestHandler):
+class StoragemasterHandler(SocketServer.BaseRequestHandler):
 
     def handle(self):
 
         buffer = []
-
+        
 	method = None
         path = None
+        length = None
 
         bytes_rcvd = 0
 
         while True:
 
             data = self.request.recv(2048)
-            bytes_rcvd += len(data)
 
             # TO DO: check max_bytes here...
             # logging.debug("read %s bytes" % bytes_rcvd)
@@ -56,14 +56,27 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
                         self.request.send(msg)
                         break
 
-                    data = "".join(parts[2:])
+                    # TO DO: check to see if we're GET-ing something...
 
+                    length = int(parts[2])
+
+                    if not length:
+                        msg = json.dumps({'ok': 0, 'error': 'Missing file length'})
+                        self.request.send(msg)
+                        break
+
+                    data = "".join(parts[3:])
+
+                bytes_rcvd += len(data)
                 buffer.append(data)
 
-                if buffer[-1].endswith("\0"):
+                # logging.debug("%s ... %s" % (length, bytes_rcvd))
+
+                # TO DO: ensure correct length blah blah blah
+
+                if bytes_rcvd >= length:
 
                     buffer = "".join(buffer)
-                    buffer = buffer[:-1]
 
                     root = self.server.storage_root
                     abs_path = os.path.join(root, path)
@@ -133,7 +146,7 @@ if __name__ == "__main__":
 
     logging.info("starting server at %s on port %s" % (options.host, options.port))
 
-    server = Storagemaster((options.host, int(options.port)), options.root, SingleTCPHandler)
+    server = Storagemaster((options.host, int(options.port)), options.root, StoragemasterHandler)
 
     try:
         server.serve_forever()

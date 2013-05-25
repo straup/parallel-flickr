@@ -295,7 +295,6 @@
 		$fh = fopen($path, "rb");
 		$bytes = fread($fh, $size);
 		fclose($fh);
-
 		return $bytes;
 	}
 

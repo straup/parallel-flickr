@@ -79,11 +79,11 @@
 		$parts = array($action, $path);
 
 		if ($body){
+			$parts[] = strlen($body);
 			$parts[] = $body;
 		}
 
 		$msg = implode("\C", $parts);
-		$msg .= "\0";
 
 		$len = strlen($msg);
 
