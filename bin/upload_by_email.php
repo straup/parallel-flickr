@@ -67,8 +67,10 @@
 	}
 
 	$subject = $parser->getHeader('subject');  
+
 	$filtr = null;
 	$perms = null;
+	$geoperms = null;
 
 	if (preg_match("/(\s?f:([a-z]+))/i", $subject, $m)){
 		$filtr = $m[2];
@@ -77,6 +79,11 @@
 
 	if (preg_match("/(\s?p:([a-z]+))/i", $subject, $m)){
 		$perms = $m[2];
+		$subject = str_replace($m[1], "", $subject);
+	}
+
+	if (preg_match("/(\s?g:([a-z]+))/i", $subject, $m)){
+		$geoperms = $m[2];
 		$subject = str_replace($m[1], "", $subject);
 	}
 
@@ -140,6 +147,7 @@
 		$args = array(
 			'http_timeout' => 60,
 			'perms' => $perms,
+			'geoperms' => $geoperms,
 		);
 
 		if (($filtr) && features_is_enabled("uploads_filtr")){

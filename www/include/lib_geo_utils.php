@@ -124,4 +124,37 @@
 
 	#################################################################
 
-?>
+	function geo_utils_exif_gps_to_decimal($dms, $ref){
+
+		$parts = explode(",", $dms);
+		$count = count($parts);
+
+		$degrees = ($count > 0) ? geo_utils_exif_gps_coord_to_num($parts[0]) : 0;
+		$minutes = ($count > 1) ? geo_utils_exif_gps_coord_to_num($parts[1]) : 0;
+		$seconds = ($count > 2) ? geo_utils_exif_gps_coord_to_num($parts[2]) : 0;
+
+		$flip = (in_array($ref, array('W', 'S'))) ? -1 : 1;
+
+		return $flip * ($degrees + $minutes / 60 + $seconds / 3600);	
+	}
+
+	#################################################################
+
+	function geo_utils_exif_gps_coord_to_num($coord){
+
+		$parts = explode('/', $coord);
+
+		if (count($parts) <= 0){
+			return 0;
+		}
+
+		if (count($parts) == 1){
+			return $parts[0];
+		}
+
+		return floatval($parts[0]) / floatval($parts[1]);
+	}
+
+	#################################################################
+
+	# the end

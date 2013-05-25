@@ -16,6 +16,7 @@
 	loadlib("storage_storagemaster");
 
 	loadlib("exif");
+	loadlib("geo_utils");
 
 	#################################################################
 
@@ -40,11 +41,18 @@
 		$rsp = exif_read($file);
 		$exif = ($rsp['ok']) ? $rsp['data'] : null;
 
+		$geo = null;
+
 		if ($exif){
+
 			$rsp = photos_upload_auto_rotate($file, $exif);
 			$file = $rsp['file'];
 
-			# TO DO: pull out the geodata...
+			$rsp = photos_upload_geo($exif);
+
+			if ($rsp['ok']){
+				$geo = $rsp;
+			}
 		}
 
 		# Filtr ?
@@ -75,7 +83,7 @@
 		$secret_orig = random_string(10);
 
 		$info = pathinfo($file);
-		$format_orig = $info['extension'];
+		$format_orig = strtolower($info['extension']);
 
 		$media = 'photo';
 
@@ -142,23 +150,22 @@
 
 		# See above inre: EXIF data...
 
-		/*
-		$hasgeo = (isset($photo['location'])) ? 1 : 0;
-
-		if ($hasgeo){
-			$spr['latitude'] = $photo['location']['latitude'];
-			$spr['longitude'] = $photo['location']['longitude'];
-			$spr['accuracy'] = $photo['location']['accuracy'];
-			$spr['context'] = $photo['location']['context'];
-			$spr['woeid'] = $photo['location']['woeid'];
-			$spr['geo_is_public'] = $photo['geoperms']['ispublic'];
-			$spr['geo_is_contact'] = $photo['geoperms']['iscontact'];
-			$spr['geo_is_friend'] = $photo['geoperms']['isfriend'];
-			$spr['geo_is_family'] = $photo['geoperms']['isfamily'];
+		if ($geo){
+			$spr['latitude'] = $geo['latitude'];
+			$spr['longitude'] = $geo['longitude'];
+			$spr['accuracy'] = $geo['accuracy'];
+			$spr['context'] = $geo['context'];
+			$spr['woeid'] = $geo['woeid'];
+			$spr['geo_is_public'] = 0;
+			$spr['geo_is_contact'] = 0;
+			$spr['geo_is_friend'] = 0;
+			$spr['geo_is_family'] = 0;
 		}
-		*/
+
+		# TO DO: geoperms (see above)
 
 		# dumper($spr);
+		# return array('ok' => 0);
 
 		# TO DO: make functions for all this stuff
 		# note: not checking for video-ness
@@ -170,8 +177,6 @@
 
 		$orig = $root . $orig;
 		$info = $root . $info;
-
-		# dumper(array($orig, $info));
 
 		$bytes = photos_upload_path_to_bytes($file);
 
@@ -335,18 +340,33 @@
 
 	# please rename me...
 
-	function photos_upload_geo($file, $exif){
+	function photos_upload_geo($exif){
 
-		# 'GPSAltitude' =&gt; '38/1',
-		# 'GPSAltitudeRef' =&gt; '' . &quot;\0&quot; . '',
-		# 'GPSImgDirection' =&gt; '26882/135',
-		# 'GPSImgDirectionRef' =&gt; 'T',
-		# 'GPSLatitude' =&gt; '40/1,4728/100,0/1',
-		# 'GPSLatitudeRef' =&gt; 'N',
-		# 'GPSLongitude' =&gt; '73/1,5849/100,0/1',
-		# 'GPSLongitudeRef' =&gt; 'W',
-		# 'GPSTimeStamp' =&gt; '16/1,45/1,81/100',
+		$lat_dms = $exif['GPSLatitude'];
+		$lon_dms = $exif['GPSLongitude'];
 
+		if ((! $lat_dms) || (! $lon_dms)){
+			return array('ok' => 0);
+		}
+
+		$lat_ref = $exif['GPSLatitudeRef'];
+		$lon_ref = $exif['GPSLongitudeRef'];
+
+		$lat = geo_utils_exif_gps_to_decimal($lat_dms, $lat_ref);
+		$lon = geo_utils_exif_gps_to_decimal($lon_dms, $lon_ref);
+
+		# TO DO: image direction
+
+		# TO DO: reverse geocoding...
+
+		return array(
+			'ok' => 1,
+			'latitude' => $lat,
+			'longitude' => $lon,
+			'accuracy' => 18,
+			'context' => 0,
+			'woeid' => 0,
+		);
 	}
 
 	#################################################################
