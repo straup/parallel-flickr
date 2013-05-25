@@ -33,7 +33,7 @@
 
 		return array(
 			"ok" => 1,
-			"rows" => $exif,
+			"data" => $exif,
 		);
 
 	}

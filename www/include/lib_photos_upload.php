@@ -1,5 +1,8 @@
 <?php
 
+	loadlib("dbtickets_flickr");
+	loadlib("random");
+
 	loadlib("flickr_users");
 	loadlib("flickr_api");
 
@@ -18,9 +21,6 @@
 
 	function photos_upload(&$user, $file, $args=array()){
 
-		loadlib("dbtickets_flickr");
-		loadlib("random");
-
  		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
 		$rsp = dbtickets_flickr_create();
@@ -35,11 +35,19 @@
 			$args['title'] = "Untitled Upload #" . time();
 		}
 
+		# metadata
+
 		$rsp = exif_read($file);
+		$exif = ($rsp['ok']) ? $rsp['data'] : null;
 
-		# TO DO: auto-rotate
+		if ($exif){
+			$rsp = photos_upload_auto_rotate($file, $exif);
+			$file = $rsp['file'];
 
-		# TO DO: metadata extract
+			# TO DO: pull out the geodata...
+		}
+
+		# Filtr ?
 
 		$do_filtr = 0;
 
@@ -58,6 +66,8 @@
 			rename($rsp['path'], $file);
 		}
 
+		# Start storing files and shit
+
 		$server = 0;
 		$farm = 0;
 
@@ -67,14 +77,13 @@
 		$info = pathinfo($file);
 		$format_orig = $info['extension'];
 
-		# $format_orig = 'jpg';	# FIX ME...
 		$media = 'photo';
 
 		$now = time();
 		$fmt = "Y-m-d H:i:s";
 
 		$upload = $now;
-		$taken = gmdate($fmt, $now);	# read from exif or something
+		$taken = ($exif) ? $exif['DateTimeOriginal'] : gmdate($fmt, $now);
 
 		$spr = array(
 			'id' => $photo_id,
@@ -84,9 +93,7 @@
 			'farm' => $farm,
 			'title' => $args['title'],
 
-			# TO DO: fix these and the others... oh god...
-			# do I have to build a permissions system?
-			# (20130520/straup)
+			# See below
 
 			'ispublic' => 0,	
 			'isfriend' => 0,
@@ -228,14 +235,10 @@
 		$spr_json = json_encode($spr);
 		$rsp = storage_put_file($info, $spr_json);
 
-		# TO DO: all the stuff that's commented out in the actual
-		# upload to flickr code... (20130520/straup)
-
 		$more = array(
 			'donot_import_files' => 1
 		);
 
-		# see this: we're passing $spr not $photo
 		$ph_rsp = flickr_photos_import_photo($spr, $more);
 
 		# dumper($ph_rsp);
@@ -300,6 +303,50 @@
 		$preview = $rsp['path'];
 
 		return flickr_photos_upload($user, $preview, $args);
+	}
+
+	#################################################################
+
+	function photos_upload_auto_rotate($file, $exif){
+
+		$orientation = $exif['Orientation'];
+
+		$map = array(
+			3 => 180,
+			6 => -90,
+			8 => 90
+		);
+
+		if (! isset($map[$orientation])){
+			return array('ok' => 0, 'error' => 'Unsupported orientation', 'file' => $file);
+		}
+
+		$angle = $map[$orientation];
+
+		$im = imagecreatefromjpeg($file);
+		$im = imagerotate($im, $angle, 0);
+
+		imagejpeg($im, $file);
+
+		return array('ok' => 1, 'file' => $file);
+	}
+
+	#################################################################
+
+	# please rename me...
+
+	function photos_upload_geo($file, $exif){
+
+		# 'GPSAltitude' =&gt; '38/1',
+		# 'GPSAltitudeRef' =&gt; '' . &quot;\0&quot; . '',
+		# 'GPSImgDirection' =&gt; '26882/135',
+		# 'GPSImgDirectionRef' =&gt; 'T',
+		# 'GPSLatitude' =&gt; '40/1,4728/100,0/1',
+		# 'GPSLatitudeRef' =&gt; 'N',
+		# 'GPSLongitude' =&gt; '73/1,5849/100,0/1',
+		# 'GPSLongitudeRef' =&gt; 'W',
+		# 'GPSTimeStamp' =&gt; '16/1,45/1,81/100',
+
 	}
 
 	#################################################################
