@@ -13,32 +13,41 @@
 
 	function storage_webdav_get_file($path, $more=array()){
 
-		$uri = storage_webdav_path_to_url($path);
-
-		return $http_get($uri);
+		$uri = storage_webdav_path_to_uri($path);
+		return http_get($uri);
 	}
 
 	#################################################################
 
 	function storage_webdav_put_file($path, $bytes, $more=array()){
 
-		$root = dirname($path);
-		$tree = explode(FIXME_SEPARATOR, $root);
+		$info = pathinfo($path);
+		$root = $info['dirname'];
 
-		$foo = array();
+		# sudo make me less shit (20130525/straup)
+		$tree = ($root == ".") ? array() : explode("/", $root);
+
+		$leaves = array();
 
 		foreach ($tree as $leaf){
-			$foo[] = $leaf;
-			
-			$bar = implode(FIXME_SEPARATOR, $foo);
-			$uri = storage_webdav_path_to_url($bar);
 
-			$rsp = http_head($rsp);
+			$leaves[] = $leaf;
+			$leaf = implode("/", $leaves);
 
-			# TO DO: check HTTP status
+			$uri = storage_webdav_path_to_uri($leaf);
 
-			if ($rsp['ok']){
+			$rsp = http_head($uri);
+
+			if (! $rsp['ok']){
+				return $rsp;
+			}
+
+			if (($rsp['ok']) && ($rsp['info']['http_code'] == 200)){
 				continue;
+			}
+
+			if ($rsp['info']['http_code'] == 403){
+				return array('ok' => 0, 'error' => 'Forbidden');
 			}
 
 			$rsp = http_mkcol($uri);
@@ -48,9 +57,9 @@
 			}
 		}
 
-		$uri = storage_webdav_path_to_url($path);
-		
+		$uri = storage_webdav_path_to_uri($path);
 		$rsp = http_put($uri, $bytes);
+
 		return $rsp;
 	}
 
@@ -58,9 +67,7 @@
 
 	function storage_webdav_path_to_uri($path){
 
-		$path = ltrim($path, "/");
-
-		return $GLOBALS['cfg']['storage_webdav_abs_root_uri'] . $path;
+		return $GLOBALS['cfg']['storage_webdav_abs_root_uri'] . ltrim($path, "/");
 	}
 
 	#################################################################
