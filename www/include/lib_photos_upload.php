@@ -268,9 +268,12 @@
 		}
 
 		# < 300px seems to cause pxl to give and return the
-		# original photo (20130523/straup)
+		# original photo but that's the spice of life right
+		# (20130525/straup)
 
-		$rsp = photos_resize($tiny, $small, 300);
+		$sz = ($args['size']) ? $args['size'] : rand(240, 320);
+
+		$rsp = photos_resize($tiny, $small, $sz);
 
 		if (! $rsp['ok']){
 			return $rsp;
