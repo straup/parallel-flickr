@@ -22,6 +22,8 @@
 
 	function photos_upload(&$user, $file, $args=array()){
 
+		# TO DO: am I a file that I can deal with? (20130526/straup)
+
  		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
 		$rsp = dbtickets_flickr_create();
@@ -91,6 +93,10 @@
 		$fmt = "Y-m-d H:i:s";
 
 		$upload = $now;
+
+		# TO DO: this is serioulsy weird in iphone photos and has not
+		# been addressed yet (20130526/straup)
+
 		$taken = ($exif) ? $exif['DateTimeOriginal'] : gmdate($fmt, $now);
 
 		$spr = array(

@@ -197,8 +197,12 @@ $(document).ready(function(){
 			return false;
 		}
 
+		var dt = new Date();
+		var ts = dt.getTime();
+
 		$.ajax({
-			url: "/api",
+			// go home mobile safari... you are drunk
+			url: "/api?cb=" + ts,
 			type: "POST",
 			data: data,
 			cache: false,
@@ -211,6 +215,7 @@ $(document).ready(function(){
 			},
 			success: function(rsp){
 
+				console.log(rsp);
 				var msg = '';
 
 				if (rsp['stat'] == 'ok'){
@@ -224,8 +229,6 @@ $(document).ready(function(){
 
 				var status = '<p>' + msg + '</p>';
 				status += '<button onclick="$(\'#upload-status\').hide();$(\'#upload-form\').show();">Upload another photo.</button>';
-
-				console.log(rsp);
 
 				$("#upload-status").html(status);
 				$("#upload-status").show();

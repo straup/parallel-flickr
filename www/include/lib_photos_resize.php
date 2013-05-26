@@ -4,6 +4,8 @@
 
 	# Where $sz is the maximum dimension on either side
 
+	# TO DO: account for things that are not JPGs (20130526/straup)
+
 	function photos_resize($src, $dest, $sz, $more=array()){
 
 		$im = imagecreatefromjpeg($src);
