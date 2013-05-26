@@ -29,7 +29,10 @@
 		$args['geoperms'] = post_str("geoperms");
 		$args['filtr'] = post_str("filtr");
 
-		$dest = post_str("destionation");
+		$dest = post_str("destination");
+
+		# TO DO: privacy settings for this function need to be updated
+		# to reflect the stuff in photos_upload – (20130526/straup)
 
 		if ($dest == 'fl'){
 			$rsp = flickr_photos_upload($GLOBALS['cfg']['user'], $file, $args);

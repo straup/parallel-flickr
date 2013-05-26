@@ -202,6 +202,12 @@
 		# 5) it's time to create lib_storage, lib_storage_fs and
 		#    reconcile it all with lib_storage_s3
 
+		$photo = flickr_photos_get_by_id($photo_id);
+		$url = flickr_urls_photo_page_flickr($photo);
+
+		$rsp['id'] = $photo_id;
+		$rsp['url'] = $url;
+
 		return $rsp;
 	}
 

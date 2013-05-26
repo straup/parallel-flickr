@@ -294,9 +294,9 @@
 		$photo = flickr_photos_get_by_id($photo_id);
 		$url = flickr_urls_photo_page($photo);
 
-		# $rsp['photo'] = $photo;
 		$rsp['id'] = $photo_id;
 		$rsp['url'] = $url;
+
 		return $rsp;
 	}
 
