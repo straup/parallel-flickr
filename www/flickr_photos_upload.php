@@ -19,9 +19,11 @@
 	}
 
 	if ($can_upload){
-		$crumb = crumb_generate("api", "flickr.photos.upload");
+		$crumb = crumb_generate("api", "parallel.flickr.photos.upload");
 		$GLOBALS['smarty']->assign("crumb", $crumb);
 	}
+
+	$GLOBALS['smarty']->assign_by_ref("filtrs", $GLOBALS['cfg']['filtr_valid_filtrs']);
 
 	$GLOBALS['smarty']->assign("is_registered", $is_registered);
 	$GLOBALS['smarty']->assign("can_upload", $can_upload);

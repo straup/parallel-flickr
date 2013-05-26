@@ -21,9 +21,144 @@ Flickr website site so you can confirm that you're okay with
 
 {else}
 
-<form id="upload" method="POST" enctype="multipart/form-data">
+<style type="text/css">
+{literal}
+
+#upload-status {
+	       font-size: 2.3em;
+	       display:none;
+}
+
+#upload-form {
+	     margin-left:auto;
+	     margin-right:auto;
+	     display:block;
+}
+
+.upload-sect {
+	     line-height: 1.2em;
+	     font-size: 1.4em;
+	     margin-bottom:1.5em;
+	     padding: 1em;
+	     padding-top: 1.5em;
+	     border: solid thin;
+}
+
+.upload-opt {
+	    display:block;
+	    margin-bottom:.6em;
+}
+
+.upload-what {
+	     font-weight: 700;
+	     color:blue;
+}
+
+.upload-opt input[type=file] {
+	    border: 2px solid #adadad;
+	    font-size:1em;
+	    padding: .25em;
+	    /*
+	    background-color:#000;
+	    color: #fff;	
+	    */
+	    font-weight:700;
+	    color:blue;
+}
+
+.upload-opt input[type=submit] {
+	    border: 2px solid #adadad;
+	    font-size:1.3em;
+	    padding: .25em;
+	    font-weight:700;
+	    color:blue;
+	    text-align:center;
+}
+
+.upload-opt select {
+	    border: 2px solid #adadad;
+	    font-size:1.1em;
+	    padding: .25em;
+	    /*
+	    background-color:#000;
+	    color: #fff;
+	    */
+	    font-weight:700;
+	    color:blue;
+}
+
+{/literal}
+</style>
+
+<div id="upload-status"></div>
+
+<form method="POST" enctype="multipart/form-data" id="upload-form">
+
+      <div class="upload-sect">
+        <span class="upload-opt">
+	<label for="photo">The <span class="upload-what">photo</span></label>
 	<input type="file" name="photo" id="photo" data-crumb="{$crumb|escape}" />
-	<input type="submit" value="UPLOAD" />
+	</span>
+
+        <span class="upload-opt">
+	<label for="perms">will be able to be <span class="upload-what">seen</span> by</label>
+	<select name="perms" id="perms">
+		<option value="">just you</option>
+		<option value="p">anyone</option>
+		<option value="ff">friends + family</option>
+		<option value="fr">friends</option>
+		<option value="fa">family</option>
+	</select>
+	</span>
+
+        <span class="upload-opt">
+	<label for="perms">and its <span class="upload-what">location</span> data will be available to</label>
+	<select name="geoperms" id="geoperms">
+		<option value="">only you</option>
+		<option value="p">anyone</option>
+		<option value="c">contacts</option>
+		<option value="ff">friends + family</option>
+		<option value="fr">friends</option>
+		<option value="fa">family</option>
+	</select>
+	</span>
+	</div>
+
+	<div class="upload-sect">
+
+	{if "uploads_filtr"|@features_is_enabled}
+        <span class="upload-opt">
+	<label for="filtr">It will be <span class="upload-what">filtr</span>-ed using</label>
+	<select name="filtr" id="filtr">
+		<option value="">nothing but its inate beauty</option>
+	{foreach from=$filtrs item="filtr"}
+		<option value="{$filtr|escape}">{$filtr|escape}</option>
+	{/foreach}
+	</select>
+	</span>
+	{/if}
+
+	<span class="upload-opt">
+	{if "uploads_filtr"|@features_is_enabled}
+	<label for="destination">and will be <span class="upload-what">sent</span> to</label>
+	{else}
+	<label for="destination">It will be <span class="upload-what">sent</span> to</label>
+	{/if}
+	<select name="destination" id="destination">
+		<option value="">parallel-flickr + flickr</option>
+		<option value="pf">parallel-flickr</option>
+		<option value="fl">flickr</option>
+	</select>
+	</span>
+
+	</div>
+
+	<div class="upload-sect">
+	<span class="upload-opt">
+	<input type="submit" value="MAKE IT SO!" />
+	</span>
+	</div>
+
 </form>
 
 {/if}
@@ -33,13 +168,17 @@ Flickr website site so you can confirm that you're okay with
 
 $(document).ready(function(){
 
-	$("#upload").submit(function(){
+	$("#upload-form").submit(function(){
 
 		var data = new FormData();
-		data.append("method", "flickr.photos.upload");
+		data.append("method", "parallel.flickr.photos.upload");
 
-		var crumb = $("#photo").attr("data-crumb");
-		data.append("crumb", crumb);
+		data.append("crumb", $("#photo").attr("data-crumb"));
+
+		data.append("perms", $("#perms").val());
+		data.append("geoperms", $("#geoperms").val());
+		data.append("filtr", $("#filtr").val());
+		data.append("destination", $("#destination").val());
 
 		/* sudo account for multiple photos... */
 
@@ -50,7 +189,11 @@ $(document).ready(function(){
 		}
 
 		catch(e){
-			console.log(e);
+
+			$("#upload-status").html("Hrm, there was a problem uploading your photo: " + e);
+			$("#upload-status").show();
+
+			// console.log(e);
 			return false;
 		}
 
@@ -62,16 +205,38 @@ $(document).ready(function(){
 			contentType: false,
 			processData: false,
 			dataType: "json",
-			error: function(rsp){
-				console.log(rsp);
+			error: function(e){
+				$("#upload-status").html(e);
+				$("#upload-status").show();
 			},
 			success: function(rsp){
+
+				var msg = '';
+
+				if (rsp['stat'] == 'ok'){
+					msg = "Yay! Your photo has been successfull uploaded."	
+				}
+
+				else {
+					msg = "Ack! There was a problem uploading your photo: " + rsp['error']['error'];	
+				}
+
+				var status = '<p>' + msg + '</p>';
+				status += '<button onclick="$(\'#upload-status\').hide();$(\'#upload-form\').show();">Upload another photo.</button>';
+
 				console.log(rsp);
-				$('input[type=submit]').removeAttr('disabled');
+
+				$("#upload-status").html(status);
+				$("#upload-status").show();
 			}
 		});
 
-		$('input[type=submit]').attr('disabled', 'disabled');
+		$("#upload-form").hide();
+
+		$("#upload-status").html("Okee dokee...uploading your photo. Tasteful muzak plays.");
+		$("#upload-status").show();
+
+		//  $('input[type=submit]').attr('disabled', 'disabled');
 		return false;
 	});
 });

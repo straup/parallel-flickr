@@ -5,7 +5,7 @@
 
 	#################################################################
 
-	function api_flickr_photos_upload(){
+	function api_parallel_flickr_photos_upload(){
 
 		if (! $GLOBALS['cfg']['enable_feature_uploads']){
 			api_output_error(999, "uploads are disabled");
@@ -21,15 +21,22 @@
 
 		$file = $_FILES['photo']['tmp_name'];
 
-		# FIX ME: pull in title, etc.
-
 		$args = array();
 
-		if ($delivery == 'flickr'){
+		# FIX ME: pull in title, etc.
+
+		$args['perms'] = post_str("perms");
+		$args['geoperms'] = post_str("geoperms");
+		$args['filtr'] = post_str("filtr");
+
+		$dest = post_str("destionation");
+
+		if ($dest == 'fl'){
 			$rsp = flickr_photos_upload($GLOBALS['cfg']['user'], $file, $args);
 		}
 
 		else {
+			$args['preview'] = ($dest=='pf') ? 0 : 1;
 			$rsp = photos_upload($GLOBALS['cfg']['user'], $file, $args);
 		}
 
