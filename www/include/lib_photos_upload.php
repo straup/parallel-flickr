@@ -345,6 +345,7 @@
 			return $rsp;
 		}
 
+		$args['tags'] = '"zoom and enhance"';
 		$preview = $rsp['path'];
 
 		return flickr_photos_upload($user, $preview, $args);

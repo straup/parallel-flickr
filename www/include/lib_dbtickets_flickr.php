@@ -28,9 +28,11 @@
 		$tmp_dir = sys_get_temp_dir();
 		$tmp_file = tempnam($tmp_dir, "dbtickets_flickr") . ".gif";
 
-		$fh = fopen($tmp_file, 'wb');
-		fwrite($fh, base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw=='));
-		fclose($fh);
+		if (! file_exists($tmp_file)){
+			$fh = fopen($tmp_file, 'wb');
+			fwrite($fh, base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw=='));
+			fclose($fh);
+		}
 
 		$auth_token = $GLOBALS['cfg']['dbtickets_flickr_auth_token'];
 
@@ -46,7 +48,7 @@
 
 		$rsp = flickr_api_upload($tmp_file, $args, $more);
 
-		unlink($tmp_file);
+		# unlink($tmp_file);
 
 		if (! $rsp['ok']){
 			return $rsp;
