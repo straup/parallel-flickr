@@ -197,11 +197,36 @@ $(document).ready(function(){
 			return false;
 		}
 
+		var onsuccess = function(rsp){
+			console.log(rsp);
+			var msg = '';
+
+			if (rsp['stat'] == 'ok'){
+				if (rsp['photo']){
+					var link = '<a href="' + rsp['photo']['url'] + '">' + rsp['photo']['id'] + '</a>';
+					msg = 'Yay! Your photo has been successfull uploaded with ID '	+ link + '.';
+				}
+
+				else {
+					msg = "Hrm... your upload succeeded by the server returned a message we don't understand";
+				}
+			}
+
+			else {
+				msg = "Ack! There was a problem uploading your photo: " + rsp['error']['error'];	
+			}
+
+			var status = '<p>' + msg + '</p>';
+			status += '<button onclick="$(\'#upload-status\').hide();$(\'#upload-form\').show();">Upload another photo.</button>';
+
+			$("#upload-status").html(status);
+			$("#upload-status").show();
+		};
+
 		var dt = new Date();
 		var ts = dt.getTime();
 
 		$.ajax({
-			// go home mobile safari... you are drunk
 			url: "/api?cb=" + ts,
 			type: "POST",
 			data: data,
@@ -210,28 +235,20 @@ $(document).ready(function(){
 			processData: false,
 			dataType: "json",
 			error: function(e){
+				console.log(e);
 				$("#upload-status").html(e);
 				$("#upload-status").show();
 			},
 			success: function(rsp){
 
-				console.log(rsp);
-				var msg = '';
-
-				if (rsp['stat'] == 'ok'){
-					var link = '<a href="' + rsp['photo']['url'] + '">' + rsp['photo']['id'] + '</a>';
-					msg = 'Yay! Your photo has been successfull uploaded with ID '	+ link + '.';
+				try {
+					onsuccess(rsp);
 				}
 
-				else {
-					msg = "Ack! There was a problem uploading your photo: " + rsp['error']['error'];	
+				catch(e){
+					console.log(rsp);
+					console.log(e);
 				}
-
-				var status = '<p>' + msg + '</p>';
-				status += '<button onclick="$(\'#upload-status\').hide();$(\'#upload-form\').show();">Upload another photo.</button>';
-
-				$("#upload-status").html(status);
-				$("#upload-status").show();
 			}
 		});
 

@@ -87,6 +87,10 @@
 		$info = pathinfo($file);
 		$format_orig = strtolower($info['extension']);
 
+		if ((! $format_orig) && ($exif)){
+			$format_orig = "jpg";
+		}
+
 		$media = 'photo';
 
 		$now = time();
@@ -97,7 +101,7 @@
 		# TO DO: this is serioulsy weird in iphone photos and has not
 		# been addressed yet (20130526/straup)
 
-		$taken = ($exif) ? $exif['DateTimeOriginal'] : gmdate($fmt, $now);
+		$taken = (($exif) && (isset($exif['DateTimeOriginal']))) ? $exif['DateTimeOriginal'] : gmdate($fmt, $now);
 
 		$spr = array(
 			'id' => $photo_id,
