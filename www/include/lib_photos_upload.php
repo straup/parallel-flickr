@@ -120,24 +120,17 @@
 		
 			if ($p == 'p'){
 				$spr['ispublic'] = 1;
-				$spr['isfriend'] = 0;
-				$spr['isfamily'] = 0;
 			}
 
 			else if ($p == 'fr'){
-				$spr['ispublic'] = 0;
 				$spr['isfriend'] = 1;
-				$spr['isfamily'] = 0;
 			}
 
 			else if ($p == 'fa'){
-				$spr['ispublic'] = 0;
-				$spr['isfriend'] = 0;
 				$spr['isfamily'] = 1;
 			}
 
 			else if ($p == 'ff'){
-				$spr['ispublic'] = 0;
 				$spr['isfriend'] = 1;
 				$spr['isfamily'] = 1;
 			}
@@ -160,6 +153,34 @@
 			$spr['geo_is_contact'] = 0;
 			$spr['geo_is_friend'] = 0;
 			$spr['geo_is_family'] = 0;
+
+			if ($g = $args['geoperms']){
+
+				if ($g == 'p'){
+					$spr['geo_is_public'] = 1;
+				}
+
+				else if ($g == 'c'){
+					$spr['geo_is_contact'] = 1;
+					$spr['geo_is_friend'] = 1;
+					$spr['geo_is_family'] = 1;
+				}
+
+				else if ($g == 'fr'){
+					$spr['geo_is_friend'] = 1;
+				}
+
+				else if ($g == 'fa'){
+					$spr['geo_is_family'] = 1;
+				}
+
+				else if ($g == 'ff'){
+					$spr['geo_is_friend'] = 1;
+					$spr['geo_is_family'] = 1;
+				}
+
+				else {}
+			}
 		}
 
 		# TO DO: geoperms (see above)
@@ -240,32 +261,35 @@
 		$spr_json = json_encode($spr);
 		$rsp = storage_put_file($info, $spr_json);
 
+		# Add to the database
+
 		$more = array(
 			'donot_import_files' => 1
 		);
 
 		$ph_rsp = flickr_photos_import_photo($spr, $more);
-
-		# dumper($ph_rsp);
-
 		$rsp['archived_ok'] = $ph_rsp['ok'];
 
-		$fl_args = array(
-			'title' => "Untitled Pointer #{$photo_id}",
-		);
+		# Preview
 
-		foreach (array('ispublic', 'isfriend', 'isfamily') as $key){
+		if ($args['preview']){
 
-			if (array_key_exists($key, $spr)){
-				# sigh... yes (see above)
-				$fl_key = str_replace("is", "is_", $key);
-				$fl_args[$fl_key] = $spr[$key];
+			$fl_args = array(
+				'title' => "Untitled Pointer #{$photo_id}",
+			);
+
+			foreach (array('ispublic', 'isfriend', 'isfamily') as $key){
+
+				if (array_key_exists($key, $spr)){
+					# sigh... yes (see above)
+					$fl_key = str_replace("is", "is_", $key);
+					$fl_args[$fl_key] = $spr[$key];
+				}
 			}
+
+			$fl_rsp = photos_upload_flickr_preview($user, $file, $fl_args);
+			$rsp['flickr'] = $fl_rsp;
 		}
-
-		$fl_rsp = photos_upload_flickr_preview($user, $file, $fl_args);
-
-		$rsp['flickr'] = $fl_rsp;
 
 		return $rsp;
 	}

@@ -68,9 +68,15 @@
 
 	$subject = $parser->getHeader('subject');  
 
+	# 'f' is for filter, as in 'f:pxl'
+	# 'p' is for 'permissions', as in 'p:ff'
+	# 'g' is for 'geo permissions', as in 'g:c'
+	# 'd' is for 'delivery', as in 'd:fl'
+
 	$filtr = null;
 	$perms = null;
 	$geoperms = null;
+	$delivery = null;
 
 	if (preg_match("/(\s?f:([a-z]+))/i", $subject, $m)){
 		$filtr = $m[2];
@@ -84,6 +90,11 @@
 
 	if (preg_match("/(\s?g:([a-z]+))/i", $subject, $m)){
 		$geoperms = $m[2];
+		$subject = str_replace($m[1], "", $subject);
+	}
+
+	if (preg_match("/(\s?d:([a-z]+))/i", $subject, $m)){
+		$delivery = $m[2];
 		$subject = str_replace($m[1], "", $subject);
 	}
 
@@ -154,10 +165,14 @@
 			$args['filtr'] = $filtr;
 		}
 
-		# TO DO: a conditional/preference...
-		# $rsp = flickr_photos_upload($user, $path, $args);
+		if ($delivery == 'fl'){
+			$rsp = flickr_photos_upload($user, $path, $args);
+		}
 
-		$rsp = photos_upload($user, $path, $args);
+		else {
+			$args['preview'] = ($delivery == 'pf') ? 0 : 1;
+			$rsp = photos_upload($user, $path, $args);
+		}
 
 		# THROW AN ERROR ?
 
