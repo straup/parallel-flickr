@@ -46,7 +46,16 @@
 			api_output_error(999, $rsp['error']);
 		}
 
-		api_output_ok($rsp);
+		$photo = array(
+			'id' => $rsp['id'],
+			'url' => $rsp['url'],
+		);
+
+		$out = array(
+			'photo' => $photo
+		);
+
+		api_output_ok($out);
 		exit();
 	}
 

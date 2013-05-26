@@ -214,7 +214,8 @@ $(document).ready(function(){
 				var msg = '';
 
 				if (rsp['stat'] == 'ok'){
-					msg = "Yay! Your photo has been successfull uploaded."	
+					var link = '<a href="' + rsp['photo']['url'] + '">' + rsp['photo']['id'] + '</a>';
+					msg = 'Yay! Your photo has been successfull uploaded with ID '	+ link + '.';
 				}
 
 				else {
