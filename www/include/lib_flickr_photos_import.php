@@ -212,9 +212,11 @@
 
 		$path = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
 
-		if (! file_exists($path)){
-			mkdir($path, 0755, true);
-		}
+		# Depacated – see below inre storagemaster (20130527/straup)
+
+		# if (! file_exists($path)){
+		# 	mkdir($path, 0755, true);
+		# }
 
 		#
 
@@ -233,9 +235,15 @@
 
 		# TO DO: this needs to use storagemaster_file_exists()
 
+		# TO DO: strip static-path from path..
+		# if (($more['force']) || (! storage_file_exists($local_small))){
+
 		if (($more['force']) || (! file_exists($local_small))){
 			$req[] = array($small, $local_small);
 		}
+
+		# TO DO: strip static-path from path..
+		# if (($more['force']) || (! storage_file_exists($local_orig))){
 
 		if (($more['force']) || (! file_exists($local_orig))){
 
@@ -484,10 +492,7 @@
 			# (20130527/straup)
 
 			$strg_local = str_replace($GLOBALS['cfg']['flickr_static_path'], "", $local);
-			# error_log("[STORAGE] write {$strg_local}");
-
 			$strg_rsp = storage_put_file($strg_local, $data);
-			# error_log("[STORAGE] " . var_export($strg_rsp, 1));
 
 			log_info("wrote {$local} : {$strg_rsp['ok']}");
 		}
