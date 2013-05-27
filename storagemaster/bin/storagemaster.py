@@ -71,7 +71,7 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
                         error = "Missing file length"
                         break
                             
-                    logging.debug("%s %s @ %s bytes" % (method, path, length))                        
+                    # logging.debug("%s %s @ %s bytes" % (method, path, length))                        
                     data = "".join(parts[3:])
 
                 buffer.append(data)
