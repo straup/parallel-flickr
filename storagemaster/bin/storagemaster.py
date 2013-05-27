@@ -6,6 +6,7 @@ import sys
 import logging
 import json
 import os.path
+import select
 
 from threading import Thread
 
@@ -19,113 +20,126 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
         path = None
         length = None
 
+        bytes_in = 2048
         bytes_rcvd = 0
+
+        error = None
+
+	# http://stackoverflow.com/questions/2719017/how-to-set-timeout-on-pythons-socket-recv-method
+        self.request.setblocking(0)
+        timeout = 10
 
         while True:
 
-            data = self.request.recv(2048)
+            ready = select.select([self.request], [], [], timeout)
+
+            if ready[0]:
+                data = self.request.recv(bytes_in)
 
             if not data:
+                logging.debug("no more data")
                 break
+
             else:
+
+                # logging.debug("processing %s bytes" % len(data))
 
                 if not method or not path:
                     parts = data.split("\C")
-
+                    
                     method = parts[0]
                     path = parts[1]
 
                     if not method in ('PUT', 'EXISTS'):
-                        logging.error("invalid method: %s" % method)
-                        msg = json.dumps({'ok': 0, 'error': 'Invalid method'})
-                        self.request.send(msg)
+                        error = "Invalid method"
                         break
 
                     if not path:
-                        logging.error("missing path")
-                        msg = json.dumps({'ok': 0, 'error': 'Missing path'})
-                        self.request.send(msg)
+                        error = "Missing path"
                         break
 
                     if ".." in path:
-                        logging.error("invalid path: %s" % path)
-                        msg = json.dumps({'ok': 0, 'error': 'Invalid path'})
-                        self.request.send(msg)
+                        error = "Invalid path"
                         break
 
-                    if method == 'PUT':
+                    if method != 'PUT':
+                        break
 
-                        length = int(parts[2])
+                    length = int(parts[2])
 
-                        if not length:
-                            msg = json.dumps({'ok': 0, 'error': 'Missing file length'})
-                            self.request.send(msg)
-                            break
+                    if not length:
+                        error = "Missing file length"
+                        break
+                            
+                    logging.debug("%s %s @ %s bytes" % (method, path, length))                        
+                    data = "".join(parts[3:])
 
-                        data = "".join(parts[3:])
-
-                bytes_rcvd += len(data)
                 buffer.append(data)
 
-                # TO DO: ensure correct length blah blah blah
-                # logging.debug("%s ... %s" % (length, bytes_rcvd))
+                bytes_rcvd += len(data)
+                # logging.debug("%s %s bytes of %s" % (path, bytes_rcvd, length))
 
-                if bytes_rcvd >= length:
-
-                    buffer = "".join(buffer)
-
-                    root = self.server.storage_root
-                    abs_path = os.path.join(root, path)
-
-                    logging.debug("%s %s" % (method, abs_path))
-
-                    # See the way we're returning JSON? That may change yet.
-                    # (20130527/straup)
-
-                    try:
-
-                        if method == 'EXISTS':
-
-                            if os.path.exists(abs_path):
-                                rsp = {'ok': 1, 'path': abs_path}
-                            else:
-                                rsp = {'ok': 0, 'path': abs_path}
-
-                        elif method == 'GET':
-
-                            if not os.path.exists(abs_path):
-                                rsp = {'ok': 0, 'path': abs_path}
-                                break
-
-                            fh = open(abs_path, 'rb')
-                            # send data...
-
-                        elif method == 'PUT':
-
-                            tree = os.path.dirname(abs_path)
-
-                            if not os.path.exists(tree):
-                                logging.debug("create %s" % tree)
-                                os.makedirs(tree)
-
-                            logging.debug("store %s" % abs_path)
-
-                            fh = open(abs_path, 'wb')
-                            fh.write(buffer)
-                            fh.close()
-
-                            rsp = {'ok': 1, 'path': abs_path}
-                        else:
-                            pass
-
-                    except Exception, e:
-                        logging.error(e)
-                        rsp = {'ok': 0, 'error': str(e)}
-                        
-                    msg = json.dumps(rsp)
-                    self.request.send(msg)
-
+                if bytes_rcvd == length:
                     break
+
+                if bytes_rcvd > length:
+                    error = "Too much data"
+                    break
+
+        if method == 'PUT' and bytes_rcvd != length:
+            error = "Data length mis-match"
+
+        if error:
+            logging.error(error)
+            msg = json.dumps({'ok': 0, 'error': error})
+            self.request.send(msg)
+            self.request.close()
+            return
+
+        #
+
+        root = self.server.storage_root
+        abs_path = os.path.join(root, path)
+
+        logging.debug("%s %s" % (method, abs_path))
+
+        # See the way we're returning JSON? That may change yet specifically
+        # to handle GET requests (20130527/straup)
+        
+        msg = {}
+
+        try:
+
+            if method == 'EXISTS':
+
+                if os.path.exists(abs_path):
+                    rsp = {'ok': 1, 'path': abs_path}
+                else:
+                    rsp = {'ok': 0, 'path': abs_path}
+
+            elif method == 'PUT':
+
+                tree = os.path.dirname(abs_path)
+
+                if not os.path.exists(tree):
+                    os.makedirs(tree)
+
+                buffer = "".join(buffer)
+
+                fh = open(abs_path, 'wb')
+                fh.write(buffer)
+                fh.close()
+
+                rsp = {'ok': 1, 'path': abs_path}
+            else:
+                raise Exception, "Why are you here"
+
+        except Exception, e:
+            logging.error(e)
+            rsp = {'ok': 0, 'error': str(e)}
+
+        msg = json.dumps(rsp)
+        self.request.send(msg)
 
         self.request.close()
 

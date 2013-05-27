@@ -441,7 +441,7 @@
 
 			list($remote, $local) = $_req;
 
-			log_info("{$local} : {$_rsp['ok']}");
+			log_info("{$local} ({$remote}): {$_rsp['ok']}");
 
 			if (! $_rsp['ok']){
 
@@ -492,6 +492,8 @@
 			# (20130527/straup)
 
 			$strg_local = str_replace($GLOBALS['cfg']['flickr_static_path'], "", $local);
+			log_info("store as {$strg_local}");
+
 			$strg_rsp = storage_put_file($strg_local, $data);
 
 			log_info("wrote {$local} : {$strg_rsp['ok']}");

@@ -121,7 +121,6 @@
 		$msg = implode("\C", $parts);
 
 		$len = strlen($msg);
-
 		return array($msg, $len);
 	}
 
