@@ -231,6 +231,8 @@
 
 		$req = array();
 
+		# TO DO: this needs to use storagemaster_file_exists()
+
 		if (($more['force']) || (! file_exists($local_small))){
 			$req[] = array($small, $local_small);
 		}
@@ -317,6 +319,9 @@
 	
 	#################################################################
 	
+	# TO DO: render this redundant by making the S3 bindings work with
+	# lib_storage (20130527/straup)
+
 	function flickr_photos_import_photo_files_s3(&$photo, $more=array()){
 
 		loadlib('storage_s3');
@@ -474,8 +479,17 @@
 				$data = $_rsp['body'];
 			}
 
-			_flickr_photos_import_store($local, $data);
-			log_info("wrote {$local}");
+			# This is necessary (at least) until we are using the
+			# storagemaster_file_exists functions, above.
+			# (20130527/straup)
+
+			$strg_local = str_replace($GLOBALS['cfg']['flickr_static_path'], "", $local);
+			# error_log("[STORAGE] write {$strg_local}");
+
+			$strg_rsp = storage_put_file($strg_local, $data);
+			# error_log("[STORAGE] " . var_export($strg_rsp, 1));
+
+			log_info("wrote {$local} : {$strg_rsp['ok']}");
 		}
 
 		if ((count($failed)) && ($retries)){
@@ -575,43 +589,6 @@
 		return okay(array(
 			'count_imported' => $imported,
 		));
-	}
-
-	#################################################################
-
-	function _flickr_photos_import_store($path, &$bits){
-
-		$fh = fopen($path, "w");
-
-		if (! $fh){
-			log_info("failed to create filehandle for '{$path}'");
-			return 0;
-		}
-
-		fwrite($fh, $bits);
-		fclose($fh);
-
-		# The perms dance (ensuring that all files are group writable
-		# is necessary if we're doing push-based backups since when a
-		# push update comes through the web server needs to be able to
-		# write (or update) the file. But we also need to be able to
-		# write (or update) files using the backup scripts in the bin
-		# directory. Good times. (20120607/straup)
-
-		$do_perms_dance = features_is_enabled(array('flickr_push', 'flickr_push_backups'));
-
-		if ($do_perms_dance){
-
-			$stat = stat($path);
-			$owner = $stat['uid'];
-			$whoami = getmyuid();
-
-			if ($whoami == $owner){
-				chmod($path, 0664);
-			}
-		}
-
-		return 1;
 	}
 
 	#################################################################

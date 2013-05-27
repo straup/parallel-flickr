@@ -171,13 +171,6 @@
 				# mkdir($root, 0755, true);
 			}
 
-			# copy the original into place; note the lack of a thumbnail
-			# copy(file, $orig);
-
-			# copy the basic metadata into place
-			# $json = json_encode($info_rsp);
-			# _flickr_photos_import_store($info, $json);
-
 			# see above; this part is still not done...
 
 			$more = array(

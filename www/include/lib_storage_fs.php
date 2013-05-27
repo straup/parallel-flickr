@@ -6,6 +6,13 @@
 
 	#################################################################
 
+	function storage_fs_file_exists($path, $more=array()){
+		$ok = (file_exists($path)) ? 1 : 0;
+		return array('ok' => $ok);
+	}
+
+	#################################################################
+
 	function storage_fs_get_file($path, $more=array()){
 
 		$uri = storage_fs_path_to_uri($path);

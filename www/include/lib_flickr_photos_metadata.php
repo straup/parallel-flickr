@@ -27,10 +27,6 @@
 
 			$meta = flickr_photos_metadata_path($photo);
 
-			# don't look now but we're calling private functions
-	 		# loadlib("flickr_photos_import");
-			# _flickr_photos_import_store($meta, $rsp['data']);
-
 			$cache_key = "photos_meta_{$photo['id']}";
 			cache_unset($cache_key);
 		}

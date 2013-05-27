@@ -1,8 +1,43 @@
 <?php
 
+	$GLOBALS['_storage_hooks']['file_exists'] = 'storage_storagemaster_file_exists';
 	$GLOBALS['_storage_hooks']['get_file'] = '';
 	$GLOBALS['_storage_hooks']['put_file'] = 'storage_storagemaster_put_file';
 	$GLOBALS['_storage_hooks']['delete_file'] = '';
+
+	# Note: It's still not clear that this should expect to get responses
+	# as JSON blobs (20130527/straup)
+
+	#################################################################
+
+	function storage_storagemaster_file_exists($path, $more=array()){
+
+		$rsp = storage_storagemaster_connect();
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$socket = $rsp['socket'];
+
+		# EXISTS? maybe just map to HTTP and use HEAD?
+		# (20130527/straup)
+
+		list($msg, $len) = storage_storagemaster_message("EXISTS", $path);
+
+		socket_write($socket, $msg, $len);
+
+		$out = socket_read($socket, 1024);
+		socket_close($socket);
+
+		$rsp = json_decode($out, "as hash");
+
+		if (! $rsp){
+			return array('ok' => 0, 'error' => "Failed to parse response: '{$out}'");
+		}
+
+		return $rsp;
+	}
 
 	#################################################################
 

@@ -25,9 +25,6 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
 
             data = self.request.recv(2048)
 
-            # TO DO: check max_bytes here...
-            # logging.debug("read %s bytes" % bytes_rcvd)
-
             if not data:
                 break
             else:
@@ -38,7 +35,7 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
                     method = parts[0]
                     path = parts[1]
 
-                    if not method in ('PUT'):
+                    if not method in ('PUT', 'EXISTS'):
                         logging.error("invalid method: %s" % method)
                         msg = json.dumps({'ok': 0, 'error': 'Invalid method'})
                         self.request.send(msg)
@@ -56,23 +53,22 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
                         self.request.send(msg)
                         break
 
-                    # TO DO: check to see if we're GET-ing something...
+                    if method == 'PUT':
 
-                    length = int(parts[2])
+                        length = int(parts[2])
 
-                    if not length:
-                        msg = json.dumps({'ok': 0, 'error': 'Missing file length'})
-                        self.request.send(msg)
-                        break
+                        if not length:
+                            msg = json.dumps({'ok': 0, 'error': 'Missing file length'})
+                            self.request.send(msg)
+                            break
 
-                    data = "".join(parts[3:])
+                        data = "".join(parts[3:])
 
                 bytes_rcvd += len(data)
                 buffer.append(data)
 
-                # logging.debug("%s ... %s" % (length, bytes_rcvd))
-
                 # TO DO: ensure correct length blah blah blah
+                # logging.debug("%s ... %s" % (length, bytes_rcvd))
 
                 if bytes_rcvd >= length:
 
@@ -81,21 +77,46 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
                     root = self.server.storage_root
                     abs_path = os.path.join(root, path)
 
+                    logging.debug("%s %s" % (method, abs_path))
+
+                    # See the way we're returning JSON? That may change yet.
+                    # (20130527/straup)
+
                     try:
 
-                        tree = os.path.dirname(abs_path)
+                        if method == 'EXISTS':
 
-                        if not os.path.exists(tree):
-                            logging.debug("create %s" % tree)
-                            os.makedirs(tree)
+                            if os.path.exists(abs_path):
+                                rsp = {'ok': 1, 'path': abs_path}
+                            else:
+                                rsp = {'ok': 0, 'path': abs_path}
 
-                        logging.debug("store %s" % abs_path)
+                        elif method == 'GET':
 
-                        fh = open(abs_path, 'wb')
-                        fh.write(buffer)
-                        fh.close()
+                            if not os.path.exists(abs_path):
+                                rsp = {'ok': 0, 'path': abs_path}
+                                break
 
-                        rsp = {'ok': 1, 'path': abs_path}
+                            fh = open(abs_path, 'rb')
+                            # send data...
+
+                        elif method == 'PUT':
+
+                            tree = os.path.dirname(abs_path)
+
+                            if not os.path.exists(tree):
+                                logging.debug("create %s" % tree)
+                                os.makedirs(tree)
+
+                            logging.debug("store %s" % abs_path)
+
+                            fh = open(abs_path, 'wb')
+                            fh.write(buffer)
+                            fh.close()
+
+                            rsp = {'ok': 1, 'path': abs_path}
+                        else:
+                            pass
 
                     except Exception, e:
                         logging.error(e)

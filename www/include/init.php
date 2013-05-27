@@ -228,6 +228,11 @@
 	loadlib('sanitize');
 	loadlib('filter');
 
+	# TO DO: read from config (20130527/straup)
+
+	loadlib('storage');
+	loadlib('storage_storagemaster');
+
 	if ($this_is_webpage){
 		login_check_login();
 	}
