@@ -417,6 +417,9 @@
 		$start_time = time();
 		$more = array();
 
+		# for debugging (20130528/straup)
+		# $backup['date_lastupdate'] -= 100000;
+
 		if ($backup['date_firstupdate']){
 			$more['min_fave_date'] = $backup['date_lastupdate'];
 		}

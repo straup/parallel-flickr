@@ -208,17 +208,10 @@
 			$orig = "http://www.flickr.com/photos/{$nsid}/{$photo['id']}/play/{$video}";
 		}
 
-		#
+		# Note the relative paths – the parent tree is meant to be handled by
+		# lib_storagemaster (20130528/straup)
 
-		$path = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
-
-		# Depacated – see below inre storagemaster (20130527/straup)
-
-		# if (! file_exists($path)){
-		# 	mkdir($path, 0755, true);
-		# }
-
-		#
+		$path = flickr_photos_id_to_path($photo['id']);
 
 		$local_small = "{$path}/" . basename($small);
 		$local_orig = "{$path}/" . basename($orig);
@@ -233,19 +226,14 @@
 
 		$req = array();
 
-		# TO DO: this needs to use storagemaster_file_exists()
+		$small_exists = storage_file_exists($local_small);
+		$orig_exists = storage_file_exists($local_orig);
 
-		# TO DO: strip static-path from path..
-		# if (($more['force']) || (! storage_file_exists($local_small))){
-
-		if (($more['force']) || (! file_exists($local_small))){
+		if (($more['force']) || (! $small_exists['ok'])){
 			$req[] = array($small, $local_small);
 		}
 
-		# TO DO: strip static-path from path..
-		# if (($more['force']) || (! storage_file_exists($local_orig))){
-
-		if (($more['force']) || (! file_exists($local_orig))){
+		if (($more['force']) || (! $orig_exists['ok'])){
 
 			# see above
 
