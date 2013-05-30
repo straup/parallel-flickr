@@ -5,7 +5,13 @@ Set up an A record for the domain you're running parallel-flickr. You may want
 to set up something like `photos.YOUR-DOMAIN` to account for the fact that the
 default set up creates a catch-all address for upload-by-email handlers.
 
-In your `/etc/postfix/virtual` file add the following:
+First ensure that your domain is listed in `/etc/postfix/main.cf`. Like this:
+
+	virtual_alias_domains = photos.YOU-DOMAIN
+	virtual_alias_maps = hash:/etc/postfix/virtual
+	
+See that second line? It's important. In your `/etc/postfix/virtual` file add
+the following:
 
 	# replace example.com with your domain
 	example.com anything
@@ -40,3 +46,8 @@ the required user, NOPASSWD
 .forward file in that user's home directory that actually executes the pipe
 
 3) [Use storagemaster](https://github.com/straup/parallel-flickr/tree/one-by-one/storagemaster)
+
+See also
+--
+
+* http://www.debian-administration.org/articles/243

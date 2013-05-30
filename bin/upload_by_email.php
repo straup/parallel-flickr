@@ -35,6 +35,14 @@
 
 	$addr = $m[1];
 
+	# TO DO: formalize this in to some kind of upload-by-email
+	# logging/debugging system that can be toggled as needed.
+	# (20130530/straup)
+
+	# $fh = fopen("/tmp/upload-by-email.wtf", "a");
+	# fwrite($fh, "TO: {$to} ({$addr})");
+	# fclose($fh);
+
 	$user = users_get_by_uploadbyemail_address($addr);
 
 	if (! $user){
