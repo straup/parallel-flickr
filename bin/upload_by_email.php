@@ -180,9 +180,9 @@
 
 			echo "failed to upload '{$path}' : {$rsp['error']}";
 
-			# $fh = fopen("/tmp/upload-by-email.wtf", "a");
-			# fwrite($fh, var_export($rsp, 1));
-			# fclose($fh);
+			$fh = fopen("/tmp/upload-by-email.wtf", "a");
+			fwrite($fh, var_export($rsp, 1));
+			fclose($fh);
 
 			continue;
 		}

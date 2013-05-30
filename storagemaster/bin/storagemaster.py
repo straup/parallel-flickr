@@ -20,7 +20,7 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
         path = None
         length = None
 
-        bytes_in = 2048
+        bytes_in = 1024		# weird stuff happens if you make this 2048... (20130529/straup)
         bytes_rcvd = 0
 
         error = None
@@ -86,8 +86,8 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
                     error = "Too much data"
                     break
 
-        if method == 'PUT' and bytes_rcvd != length:
-            error = "Data length mis-match"
+        if not error and method == 'PUT' and bytes_rcvd != length:
+            error = "Data length mis-match - got %s expected %s" % (bytes_rcvd, length)
 
         if error:
             logging.error(error)

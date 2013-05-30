@@ -26,7 +26,7 @@
 		#
 
 		$tmp_dir = sys_get_temp_dir();
-		$tmp_file = tempnam($tmp_dir, "dbtickets_flickr") . ".gif";
+		$tmp_file = "{$tmp_dir}/dbtickets_flickr.gif";
 
 		if (! file_exists($tmp_file)){
 			$fh = fopen($tmp_file, 'wb');
