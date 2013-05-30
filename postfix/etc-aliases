@@ -1,2 +1,2 @@
 # See man 5 aliases for format
-uploadbyemail: www-data, "| /usr/bin/php -q /path/to/parallel-flickr/bin/upload_by_email.php"
+upload: "| /usr/bin/php -q /path/to/parallel-flickr/bin/upload_by_email.php"
