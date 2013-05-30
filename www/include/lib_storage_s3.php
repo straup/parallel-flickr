@@ -27,8 +27,8 @@
 		$prefix = $photo['user_id'];
 		
 		$dir = join('/', str_split(substr(md5($photo['id']), 0, 8), 2));
-        $path = "{$prefix}/photos/$dir/";
-        return $path;
+		$path = "{$prefix}/photos/$dir/";
+		return $path;
 	}
 	
 	

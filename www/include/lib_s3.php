@@ -51,7 +51,7 @@
 		$parts[] = "x-amz-acl:{$args['acl']}";
 		
 		if ($args['meta']) {
-            ksort($args['meta']);
+			ksort($args['meta']);
 			foreach ($args['meta'] as $k => $v) {
 				$parts[] = "x-amz-meta-$k:$v";
 			}
@@ -210,6 +210,23 @@
 
 		$rsp = http_head($url);
 
+		return $rsp;
+	}
+
+	########################################################################
+
+	function s3_get($bucket, $object_id, $args=array()) {
+		
+		$defaults = array(
+			'expires' => time() + 300,
+			'method' => 'GET',
+		);
+		
+		$args = array_merge($defaults, $args);
+	
+		$url = s3_signed_object_url($bucket, $object_id, $args);
+
+		$rsp = http_get($url);
 		return $rsp;
 	}
 	
