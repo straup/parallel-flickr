@@ -7,6 +7,9 @@
 	
 	loadlib('s3');
 
+	# TO DO: decide whether bucket should be passed around in $more
+	# (20130529/straup)
+
 	########################################################################
 	
 	function storage_s3_file_exists($path, $more=array()) {
@@ -33,13 +36,19 @@
 		
 	function storage_s3_put_file($path, $bytes, $more=array()) {
 
-		if ($more['type']) {
+		$defaults = array(
+			'acl' => 'public-read',
+		);
+
+		$more = array_merge($defaults, $more);
+
+		if (isset($more['type'])){
 			$type = $more['type'];
 		}
 
 		else {
 			loadlib('mime_type');
-			$type = mime_type_identify($object_id);
+			$type = mime_type_identify($path);
 		}
 		
 		$meta = array(
@@ -48,15 +57,14 @@
 
 		$args = array(
 			'id' => $path,
-			'acl' => 'public-read',
+			'acl' => $more['acl'],
 			'content_type' => $type,
 			'data' => $bytes,
 			'meta' => $meta,
 		);
 
-		$put = s3_put(storage_s3_bucket(), $put_args);
-	
-		return $put;
+		$rsp = s3_put(storage_s3_bucket(), $put_args);
+		return $rsp;
 	}
 
 	########################################################################
@@ -78,4 +86,4 @@
 	
 	########################################################################
 
-	# the end	
+	# the end
