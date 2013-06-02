@@ -509,6 +509,16 @@ button a {
     text-decoration: none;
 }
 
+.feature-disabled {
+    color:#666;
+    
+    text-decoration: line-through;
+}
+
+.feature-disabled:after {
+    content:"..is currently disabled.";
+}
+
 /* API */
 
 @import url('/css/api.css');
