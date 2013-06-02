@@ -10,6 +10,16 @@
 
 	login_ensure_loggedin();
 
+	# this is a parallel-flickr-ism
+
+	loadlib("flickr_backups");
+
+	if (! flickr_backups_is_registered_user($GLOBALS['cfg']['user'], "ensure enabled")){
+		error_disabled();
+	}
+
+	# end of this is a parallel-flickr-ism
+
 	loadlib("api_keys");
 	loadlib("api_keys_utils");
 	loadlib("api_oauth2_access_tokens");

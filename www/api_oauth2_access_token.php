@@ -8,6 +8,16 @@
 	features_ensure_enabled("api");
 	features_ensure_enabled("api_delegated_auth");
 
+	# this is a parallel-flickr-ism
+
+	loadlib("flickr_backups");
+
+	if (! flickr_backups_is_registered_user($GLOBALS['cfg']['user'], "ensure enabled")){
+		error_disabled();
+	}
+
+	# end of this is a parallel-flickr-ism
+
 	loadlib("api_keys");
 	loadlib("api_keys_utils");
 
