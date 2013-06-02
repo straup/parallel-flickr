@@ -9,9 +9,7 @@
 
 	# These are not the invites you are looking for
 
-	if (! $GLOBALS['cfg']['enable_feature_invite_codes']){
-		error_404();
-	}
+	features_ensure_enabled("invite_codes");
 
 	# User is already logged in
 
