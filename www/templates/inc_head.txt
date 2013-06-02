@@ -18,7 +18,7 @@
 	</script>
 	{$extra_head}
 </head>
-<body>
+<body {if "api"|features_is_enabled}data-api-endpoint="{$cfg.api_abs_root_url}{$cfg.api_endpoint}"{/if}>
 
 <div id="main">
 

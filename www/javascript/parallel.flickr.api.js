@@ -26,5 +26,5 @@ function parallel_flickr_api_call(method, args, onsuccess, onerroe){
 }
 
 function parallel_flickr_api_endpoint(){
-	return '/api/rest/';
+	return document.body.getAttribute("data-api-endpoint");
 }
