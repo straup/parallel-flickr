@@ -142,10 +142,10 @@
 
 	function api_flickr_photos_geo_possibleCorrections(){
 
-		$photo_id = get_int64("photo_id");
+		$photo_id = request_int64("photo_id");
 		$photo = _api_flickr_photos_geo_get_photo($photo_id);
 
-		$type = get_str("place_type");
+		$type = request_str("place_type");
 
 		if (! $type){
 			api_output_error(999, "Missing place type");

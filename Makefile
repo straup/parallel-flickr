@@ -18,6 +18,7 @@ js:
 	# java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/htmapl.js > www/javascript/htmapl.min.js
 	# java -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/modestmaps.markers.js > www/javascript/modestmaps.markers.min.js
 
+	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/parallel.flickr.api.js > www/javascript/parallel.flickr.api.min.js
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/cwf.js > www/javascript/cwf.min.js
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/ffbp.js > www/javascript/ffbp.min.js
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/photo.geo.js > www/javascript/photo.geo.min.js

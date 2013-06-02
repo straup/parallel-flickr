@@ -119,7 +119,7 @@ function cwf_init_subscription(){
 	setTimeout(function(){
 
 		$.ajax({
-			url: '/api',
+			url: '/api/rest/',
 			data: {	'method': 'flickr.photos.friends.faves'	},
 			success: callback
 		});

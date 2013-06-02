@@ -97,18 +97,14 @@ function _photo_geo_context_update_onsubmit(){
 		return;
 	}
 
+	var method = 'flickr.photos.geo.setContext';
+
 	var args = {
-		'method': 'flickr.photos.geo.setContext',
 		'photo_id': photo_id,
 		'context': new_ctx
 	};
 
-	$.ajax({
-		'url': '/api/rest/',
-		'type': 'POST',
-		'data': args,
-		'success': _photo_geo_set_context_onsuccess
-	});
+	parallel_flickr_api_call(method, args, _photo_geo_set_context_onsuccess);
 
 	$("#photo_geo_context").hide();
 
@@ -164,18 +160,14 @@ function _photo_geo_corrections_fetch_onclick(){
 
 function _photo_geo_corrections_for_placetype(placetype){
 
+	var method = 'flickr.photos.geo.possibleCorrections';
+
 	var args = {
-		'method': 'flickr.photos.geo.possibleCorrections', 
 		'photo_id': photo_id,
 		'place_type': placetype
 	};
 
-	$.ajax({
-		'url': '/api/rest/',
-		'type': 'GET',
-		'data': args,
-		'success': _photo_geo_possible_corrections_onsuccess
-	});
+	parallel_flickr_api_call(method, args, _photo_geo_possible_corrections_onsuccess);
 
 	_photo_geo_status_show("Fetching alternate place names...");
 }
@@ -281,18 +273,14 @@ function _photo_geo_corrections_update_onsubmit(){
 		return false;
 	}
 
+	var method = 'flickr.photos.geo.correctLocation';
+
 	var args = {
-		'method': 'flickr.photos.geo.correctLocation',
 		'photo_id': photo_id,
 		'woeid': new_woeid
 	};
 
-	$.ajax({
-		'url' : '/api/rest/',
-		'type': 'POST',
-		'data': args,
-		'success': _photo_geo_correct_location_onsuccess
-	});
+	parallel_flickr_api_call(method, args, _photo_geo_correct_location_onsuccess);
 
 	$("#photo_geo_corrections").hide();
 
