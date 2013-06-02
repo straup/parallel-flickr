@@ -1,5 +1,9 @@
 <?php
 
+	# Basically this just stopped working one day. Which sucks because it
+	# was the best thing ever and now I am going to have to fuck around and
+	# recreate it as on TV. (20130602/straup)
+
 	include("include/init.php");
 
 	loadlib("flickr_users");

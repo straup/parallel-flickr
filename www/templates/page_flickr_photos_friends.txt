@@ -111,8 +111,9 @@ recent updates.</p>
 {/foreach}
 
 <div id="ffbp_other">
-you can also see all the photos from your with <a href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a> or 
-photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">faved recently</a>
+you can also see all the photos from your with <a
+href="{$cfg.abs_root_url}photos/friends/activity/">recent activity</a>{if $cfg.flickr_push_enable_photos_friends_faves} or 
+photos your contacts have <a href="{$cfg.abs_root_url}photos/friends/faves">faved recently</a>{/if}
 </div>
 
 </div>
