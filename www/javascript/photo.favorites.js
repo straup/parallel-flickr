@@ -20,8 +20,9 @@ function photo_favorites_add(photo_id){
 		return;
 	}
 
-    	var data = {
-		'method': 'flickr.favorites.add',
+	var method = 'flickr.favorites.add';
+
+    	var args = {
 		'photo_id': photo_id
 	};
 
@@ -30,20 +31,16 @@ function photo_favorites_add(photo_id){
 		photo_favorites_toggle_html(photo_id, 1);
 	};
 
-	$.ajax({
-		'url': '/api',
-		'type': 'POST',
-		'data': data,
-		'success': onsuccess
-	});
+	parallel_flickr_api_call(methods, args, onsuccess);
 
 	photo_favorites_toggle_html_api(photo_id);
 }
 
 function photo_favorites_remove(photo_id){
 
-	var data = {
-		'method': 'flickr.favorites.remove',
+	var method = 'flickr.favorites.remove';
+
+	var args = {
 		'photo_id': photo_id
 	};
 
@@ -52,12 +49,7 @@ function photo_favorites_remove(photo_id){
 		photo_favorites_toggle_html(photo_id, 0);
 	};
 
-	$.ajax({
-		'url': '/api',
-		'type': 'POST',
-		'data': data,
-		'success': onsuccess
-	});
+	parallel_flickr_api_call(methods, args, onsuccess);
 
 	photo_favorites_toggle_html_api(photo_id);
 }
