@@ -254,4 +254,113 @@
 
 	#################################################################
 
+	function api_oauth2_access_tokens_fetch_site_token($user=null){
+
+		$now = time();
+
+		$site_token = api_oauth2_access_tokens_get_site_token($user);
+
+		if ($site_token['expires'] <= $now){
+
+			$rsp = api_oauth2_access_tokens_delete($site_token);
+
+			if ($rsp['ok']){
+
+				$user_id = ($user) ? $user['id'] : 0;
+				$cache_key = "oauth2_access_token_site_{$user_id}";
+				cache_unset($cache_key);
+			}
+
+			$site_token = null;
+		}
+
+		# TO DO: error handling / reporting
+
+		if (! $site_token){
+
+			$rsp = api_oauth2_access_tokens_create_site_token($user);
+			$site_token = $rsp['token'];
+		}
+
+		return $site_token;
+	}
+
+	#################################################################
+
+	function api_oauth2_access_tokens_get_site_token($user=null){
+
+		$user_id = ($user) ? $user['id'] : 0;
+		
+		$cache_key = "oauth2_access_token_site_{$user_id}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
+		$site_key = api_keys_fetch_site_key();
+
+		$enc_user = AddSlashes($user_id);
+		$enc_key = AddSlashes($site_key['id']);
+
+		$sql = "SELECT * FROM OAuth2AccessTokens WHERE user_id='{$enc_user}' AND api_key_id='{$enc_key}'  AND (expires=0 OR expires > UNIX_TIMESTAMP(NOW()))";
+
+		$rsp = db_fetch($sql);
+		$row = db_single($rsp);
+
+		if ($rsp['ok']){
+			cache_set($cache_key, $row);
+		}
+
+		return $row;
+	}
+
+	#################################################################
+
+	function api_oauth2_access_tokens_create_site_token($user=null){
+
+		$site_key = api_keys_fetch_site_key();
+
+		$id = dbtickets_create(64);
+
+		$user_id = ($user) ? $user['id'] : 0;
+
+		$token = api_oauth2_access_tokens_generate_token();
+
+		$ttl = ($user) ? $GLOBALS['cfg']['api_site_tokens_user_ttl'] : $GLOBALS['cfg']['api_site_tokens_ttl'];
+		$now = time();
+
+		$expires = $now + $ttl;
+
+		$perms_map = api_oauth2_access_tokens_permissions_map('string keys');
+		$perms = ($user_id) ? $perms_map['write'] : $perms_map['login'];
+
+		$row = array(
+			'id' => $id,
+			'perms' => $perms,
+			'api_key_id' => $site_key['id'],
+			'user_id' => $user_id,
+			'access_token' => $token,
+			'created' => $now,
+			'last_modified' => $now,
+			'expires' => $expires,
+		);
+
+		$insert = array();
+
+		foreach ($row as $k => $v){
+			$insert[$k] = AddSlashes($v);
+		}
+
+		$rsp = db_insert('OAuth2AccessTokens', $insert);
+
+		if ($rsp['ok']){
+			$rsp['token'] = $row;
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	# the end

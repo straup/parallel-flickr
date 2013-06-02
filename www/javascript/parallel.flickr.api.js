@@ -4,10 +4,18 @@ function parallel_flickr_api_call(method, args, onsuccess, onerroe){
 
 	args['method'] = method;
 
+	if (! args['access_token']){
+
+	   var site_token = parallel_flickr_api_site_token();
+
+	    if (site_token){
+		args['access_token'] = site_token;
+	    }
+	}
+
 	if (! onerror){
 
-		onerror = function(rsp){
-		    
+		onerror = function(rsp){		    
                 	console.log("there was a problem calling '" + method + "':");
                 	console.log(rsp);
                 };
@@ -27,4 +35,8 @@ function parallel_flickr_api_call(method, args, onsuccess, onerroe){
 
 function parallel_flickr_api_endpoint(){
 	return document.body.getAttribute("data-api-endpoint");
+}
+
+function parallel_flickr_api_site_token(){
+	return document.body.getAttribute("data-api-site-token");
 }

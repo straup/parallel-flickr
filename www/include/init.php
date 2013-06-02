@@ -248,10 +248,8 @@
 				loadlib("api_keys");
 				loadlib("api_oauth2_access_tokens");
 
-                	        $token = api_oauth2_access_tokens_fetch_site_token($GLOBALS['cfg']['user']);
-
-                        	$GLOBALS['smarty']->assign_by_ref("site_token",
-	                        $token['access_token']);
+				$token = api_oauth2_access_tokens_fetch_site_token($GLOBALS['cfg']['user']);
+				$GLOBALS['smarty']->assign_by_ref("site_token", $token['access_token']);
 			}
 		}
 	}
