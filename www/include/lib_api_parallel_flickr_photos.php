@@ -5,6 +5,26 @@
 
 	#################################################################
 
+	function api_parallel_flickr_photos_getList(){
+
+		$owner = $GLOBALS['cfg']['user'];
+
+		$args = array();
+		api_utils_ensure_pagination_args($args);
+
+		$rsp = flickr_photos_for_user($owner, $args);
+		$photos = $rsp['rows'];
+
+		$out = array(
+			'photos' => $photos,
+		);
+
+		api_utils_ensure_pagination_results($out, $rsp['pagination']);
+		api_output_ok($out);
+	}
+
+	#################################################################
+
 	function api_parallel_flickr_photos_upload(){
 
 		if (! $GLOBALS['cfg']['enable_feature_uploads']){

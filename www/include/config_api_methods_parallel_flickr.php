@@ -4,6 +4,13 @@
 
 	$GLOBALS['cfg']['api']['methods'] = array_merge(array(
 
+		"parallel.flickr.photos.getList" => array(
+			"documented" => 0,
+			"enabled" => 1,
+			"library" => "api_parallel_flickr_photos",
+			"requires_auth" => 1,
+		),
+
 		"parallel.flickr.photos.upload" => array(
 			"documented" => 0,
 			"enabled" => 1,
