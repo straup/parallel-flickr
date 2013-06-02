@@ -67,7 +67,8 @@
 	# flags below.
 
 	$GLOBALS['cfg']['enable_feature_backups'] = 1;
-	$GLOBALS['cfg']['backups_enable_registrations'] = 1;
+	$GLOBALS['cfg']['enable_feature_backups_registration'] = 1;
+	$GLOBALS['cfg']['enable_feature_backups_registration_uninvited'] = 0;
 
 	# API
 

@@ -7,28 +7,38 @@
 	loadlib("flickr_backups");
 	loadlib("invite_codes");
 
-	$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
-	$registered = (count($backups)) ? 1 : 0;
+	features_ensure_enabled("backups");
 
-	if ((! $registered) && (! $GLOBALS['cfg']['backups_enable_registrations'])){
-		error_disabled();
-	}
-	
-	if ($GLOBALS['cfg']['enable_feature_invite_codes']){
+	$registered = flickr_backups_is_registered_user($GLOBALS['cfg']['user']);
 
-		if ((! $registered) && (! invite_codes_get_by_cookie())){
+	if (! $registered){
 
-			$cookie = login_get_cookie('invite');
+		# Can register?
 
-			if (! $cookie){
+		features_ensure_enabled("backups_registration");
 
-				header("location: /invite/?redir=" . urlencode("account/flickr/backups"));
-				exit();
+		# Can register with invite code?
+
+		if (! features_is_enabled("backups_registration_uninvited")){
+
+			features_ensure_enabled("invite_codes");
+
+			if (! invite_codes_get_by_cookie()){
+
+				$cookie = login_get_cookie('invite');
+
+				if (! $cookie){
+
+					header("location: /invite/?redir=" . urlencode("account/flickr/backups"));
+					exit();
+				}
 			}
 		}
 	}
 
-	features_ensure_enabled("backups");
+	#
+
+	$backups = flickr_backups_for_user($GLOBALS['cfg']['user']);
 
 	$map = flickr_backups_type_map('string keys');
 	$GLOBALS['smarty']->assign_by_ref("map", $map);
