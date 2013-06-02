@@ -14,7 +14,12 @@
 <div class="photo">
 <h2 class="photo_title">{$photo_title|escape}</h2>
 
+{* sudo put me in a function (20130602/straup) *}
+{if $photo.farm==0}
+<img src="{$photo|@flickr_urls_photo_static}" />
+{else}
 <a href="{$photo|@flickr_urls_photo_page_flickr}"><img src="{$photo|@flickr_urls_photo_static}" /></a>
+{/if}
 
 <div class="photo_cite">
 by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.username|escape}{/if}</a> {if $photo.str_perms != 'public'}<span style="font-style:italic;"> &#8212; this photo can only be seen by {if $photo.str_perms=='private'}you{else}{$photo.str_perms|escape}{/if}</span>{/if}
@@ -58,6 +63,7 @@ by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.user
 
 <ul>
 {if $is_own}<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a>.</li>{/if}
+{if $photo.farm!=0}<li>View <a href="{$photo|@flickr_urls_photo_page_flickr}" target="_flickr">photo on Flickr</a>.</li>{/if}
 {if $is_own and $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
 {if $is_own and $photo.hasgeo}<li>Edit <a href="#" title="edit the geo data for this photo (keyboard shortcut: g)" id="edit_geo" geo:woeid="{$photo.woeid|escape}" geo:context="{$photo.geocontext|escape}">geo data</a>.</li>{/if}
 </ul>

@@ -1,5 +1,5 @@
 {include file='inc_head.txt'}
 
-<p>You are here.</p>
+<h2>{$cfg.site_name|escape}</h2>
 
 {include file='inc_foot.txt'}

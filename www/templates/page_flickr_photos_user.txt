@@ -1,3 +1,4 @@
+{capture assign="page_title"}{$owner.username} | photos{/capture}
 {include file="inc_head.txt"}
 
 <h2>{if $is_own}your photos{else}photos from {$owner.username|escape}{/if}</h2>
