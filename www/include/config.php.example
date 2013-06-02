@@ -143,6 +143,8 @@
 
 	$GLOBALS['cfg']['api_method_definitions'] = array(
 		'methods',
+		'methods_flickr',
+		'methods_parallel_flickr',
 	);
 
 	# Uploads
