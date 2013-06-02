@@ -4,6 +4,22 @@
 
 	#################################################################
 
+	function api_keys_roles_map($string_keys=0){
+
+		$map = array(
+			0 => 'general',
+			1 => 'site',
+		);
+
+		if ($string_keys){
+			$map = array_flip($map);
+		}
+
+		return $map;
+	}
+
+	#################################################################
+
 	function api_keys_get_by_id($id){
 
 		$cache_key = "api_key_id_{$id}";
@@ -54,6 +70,122 @@
 
 	#################################################################
 
+	# See this. It's called '_fetch_site_key' while the function below
+	# it is called '_get_site_key'. It's a (possibly annoying but) important
+	# distinction. The former is the one that retrieves a row from the
+	# database and performs checks and deletes/creates/rotates keys as
+	# needed. (20130508/straup)
+
+	function api_keys_fetch_site_key(){
+
+		$ttl = $GLOBALS['cfg']['api_site_keys_ttl'];
+
+		$key = api_keys_get_site_key();
+		$now = time();
+
+		# TO DO: error handling/reporting...
+
+		if (! $key){
+			$rsp = api_keys_create_site_key();
+			$key = ($rsp['ok']) ? $rsp['key'] : null;
+		}
+
+		else if ($key['created'] < ($now - $ttl)){
+			$delete_rsp = api_keys_delete_site_key($key);
+			$create_rsp = api_keys_create_site_key();
+
+			$key = ($create_rsp['ok']) ? $create_rsp['key'] : null;
+		}
+
+		else {}
+
+		return $key;
+	}
+
+	#################################################################
+
+	function api_keys_get_site_key(){
+
+		$cache_key = "api_key_site_key";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
+		$map = api_keys_roles_map('string keys');
+		$role = $map['site'];
+
+		$enc_role = AddSlashes($role);
+
+		$sql = "SELECT * FROM ApiKeys WHERE role_id='{$enc_role}' AND deleted=0";
+		$rsp = db_fetch($sql);
+
+		$row = db_single($rsp);
+
+		if ($rsp['ok']){
+			cache_set($cache_key, $row);
+		}
+
+		return $row;
+	}
+
+	#################################################################
+
+	function api_keys_create_site_key(){
+
+		$user_id = 0;
+		$id = dbtickets_create(64);
+
+		$role_map = api_keys_roles_map('string keys');
+		$role_id = $role_map['site'];
+
+		$key = api_keys_generate_key();
+		$secret = random_string(64);
+
+		$now = time();
+
+		$key_row = array(
+			'id' => $id,
+			'user_id' => $user_id,
+			'role_id' => $role_id,
+			'api_key' => $key,
+			'app_secret' => $secret,
+			'created' => $now,
+			'last_modified' => $now,
+			'app_title' => "{$GLOBALS['cfg']['site_name']} site key",
+		);
+
+		$insert = array();
+
+		foreach ($key_row as $k => $v){
+			$insert[$k] = AddSlashes($v);
+		}
+
+		$rsp = db_insert('ApiKeys', $insert);
+
+		if ($rsp['ok']){
+			$rsp['key'] = $key_row;
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function api_keys_delete_site_key(&$key, $reason='expired'){
+
+		$rsp = api_keys_delete($key, $reason);
+
+		if ($rsp['ok']){
+			cache_unset('api_key_site_key');
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	function api_keys_for_user(&$user, $more=array()){
 
 		$enc_user = AddSlashes($user['id']);
@@ -72,6 +204,9 @@
 
 		$id = dbtickets_create(64);
 
+		$role_map = api_keys_roles_map('string keys');
+		$role_id = $role_map['general'];
+
 		$key = api_keys_generate_key();
 		$secret = random_string(64);
 
@@ -80,6 +215,7 @@
 		$key_row = array(
 			'id' => $id,
 			'user_id' => $user['id'],
+			# 'role_id' => $role_id,
 			'api_key' => $key,
 			'app_secret' => $secret,
 			'created' => $now,

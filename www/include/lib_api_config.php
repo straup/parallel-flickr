@@ -150,6 +150,27 @@
 
 	#################################################################
 
+	function api_config_ensure_role(&$method, &$key, &$token){
+
+		$roles_map = api_keys_roles_map('string keys');
+		$roles = array_keys($roles_map);
+
+		if (! is_array($method['requires_role'])){
+			return 1;
+		}
+
+		foreach ($method['requires_role'] as $r){
+
+			if (in_array($r, $roles)){
+				return 1;
+			}
+		}
+
+		api_output_error(403, "Insufficient permissions for API key");
+	}
+
+	#################################################################
+
 	function _api_config_freakout_and_die($reason=null){
 
 		$msg = "The API is currently throwing a temper tantrum. That's not good.";

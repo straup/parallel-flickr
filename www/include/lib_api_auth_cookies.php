@@ -4,7 +4,7 @@
 
 	function api_auth_cookies_has_auth(&$method, $key_row=null){
 
-		$ok = ($GLOBALS['cfg']['user']['id']) ? 1 : 0;
+		$ok = (login_check_login()) ? 1 : 0;
 
 		if (! $ok){
 			return array('ok' => 0, 'error' => 'Invalid user', 'error_code' => 400);
