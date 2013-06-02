@@ -5,13 +5,9 @@
 	loadlib("api");
 	loadlib("api_spec");
 
-	if (! $GLOBALS['cfg']['enable_feature_api']){
-		error_disabled();
-	}
+	features_ensure_enabled(array("api", "api_documentation"));
 
-	if (! $GLOBALS['cfg']['enable_feature_api_documentation']){
-		error_disabled();
-	}
+	flickr_backups_ensure_registered_user($GLOBALS['cfg']['user']);
 
 	$method = get_str("method");
 

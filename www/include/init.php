@@ -230,6 +230,8 @@
 
 	# TO DO: read from config (20130527/straup)
 
+	loadlib("flickr_backups");
+
 	loadlib('storage');
 	loadlib('storage_storagemaster');
 

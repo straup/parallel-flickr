@@ -26,7 +26,11 @@
 
 		if ($flickr_user['auth_token']){
 
-			$backups = flickr_backups_for_user($user);
+			$backups_more = array(
+				'ensure_enabled' => 1
+			);
+
+			$backups = flickr_backups_for_user($user, $backups_more);
 			$user['backups'] = $backups;
 
 			$count_faves = flickr_faves_count_for_user($user, array('viewer_id' => $user['id']));

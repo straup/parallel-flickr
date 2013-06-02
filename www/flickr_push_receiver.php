@@ -76,7 +76,7 @@
 
 	$do_push_backups = features_is_enabled("flickr_push_backups");
 	$is_push_backup = flickr_push_subscriptions_is_push_backup($subscription);
-	$is_backup_user = flickr_backups_is_registered_user($user, "ensure enabled");
+	$is_backup_user = flickr_backups_is_registered_user($user);
 
 	$to_backup = array();
 	$wtf = array();

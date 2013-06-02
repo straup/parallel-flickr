@@ -8,6 +8,8 @@
 
 	login_ensure_loggedin();
 
+	flickr_backups_ensure_registered_user($GLOBALS['cfg']['user']);
+
 	$api_key = get_str("api_key");
 
 	if (! $api_key){

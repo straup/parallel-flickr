@@ -266,7 +266,13 @@
 
 	#################################################################
 
-	function flickr_backups_is_registered_user(&$user, $ensure_enabled=0){
+	function flickr_backups_is_registered_user(&$user, $more=array()){
+
+		$defaults = array(
+			'ensure_enabled' => 1,
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$enc_user = AddSlashes($user['id']);
 		$sql = "SELECT * FROM FlickrBackups WHERE user_id='{$enc_user}'";
@@ -278,12 +284,23 @@
 			return 0;
 		}
 
-		if (($ensure_enabled) && ($row['disabled'])){
+		if (($more['ensure_enabled']) && ($row['disabled'])){
 			return 0;
 		}
 
 		return 1;
 	}
+
+	#################################################################
+
+	function flickr_backups_ensure_registered_user($user=null){
+
+		if ((! $user) && (! flickr_backups_is_registered_user($user))){
+			error_disabled();
+		}
+	}
+
+	# end of this is a parallel-flickr-ism
 
 	#################################################################
 

@@ -9,15 +9,7 @@
 
 	login_ensure_loggedin();
 
-	# this is a parallel-flickr-ism
-
-	loadlib("flickr_backups");
-
-	if (! flickr_backups_is_registered_user($GLOBALS['cfg']['user'], "ensure enabled")){
-		error_disabled();
-	}
-
-	# end of this is a parallel-flickr-ism
+	flickr_backups_ensure_registered_user($GLOBALS['cfg']['user']);
 
 	$crumb_key = 'api_key';
 	$GLOBALS['smarty']->assign("crumb_key", $crumb_key);

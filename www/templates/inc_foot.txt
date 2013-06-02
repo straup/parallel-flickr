@@ -9,20 +9,26 @@
 			|
 			<a href="{$cfg.abs_root_url}photos/me/faves/">faves</a>
 			|
-{if $cfg.enable_feature_solr and $cfg.enable_feature_places}
+{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
 			<a href="{$cfg.user|@flickr_urls_photos_user}places/">places</a>
 			|
 {/if}
-{if $cfg.enable_feature_solr and $cfg.enable_feature_cameras}
+{if "solr"|@features_is_enabled and "cameras"|@features_is_enabled}
 			<a href="{$cfg.user|@flickr_urls_photos_user_cameras}">cameras</a>
 			|
 {/if}
 			<a href="{$cfg.user|@flickr_urls_photos_user_archives}">archives</a>
 			|
-{if $cfg.enable_feature_flickr_push and $cfg.flickr_push_enable_photos_friends}
+{if "flickr_push"|@features_is_enabled and $cfg.flickr_push_enable_photos_friends}
 			<a
 			href="{$cfg.abs_root_url}photos/friends/">contacts</a>
 {/if}
+{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
+			|
+    			<a href="{$cfg.abs_root_url}api/">api</a>
+{/if}
+			|
+			<a href="{$cfg.abs_root_url}account/">settings</a>
 			|
 			<a href="{$cfg.abs_root_url}signout/">signout</a>
 {if 'sharkify'|@features_is_enabled}
@@ -30,7 +36,7 @@
 			<a href="#" onclick="sharkify_add();return false;">sharkify</a>
 {/if}
 {else}
-	{if $cfg.enable_feature_signin}
+	{if signin|@features_is_enabled}
 			<a href="{$cfg.abs_root_url}signin/?redir={$smarty.server.REQUEST_URI|escape:'url'}">sign in with your flickr account</a>
 	{/if}
 	{if 'sharkify'|@features_is_enabled}
