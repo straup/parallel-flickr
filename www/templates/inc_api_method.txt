@@ -1,0 +1,114 @@
+{capture assign="api_request_method"}{if $cfg.api_auth_type=='oauth2' and !$cfg.api_oauth2_allow_get_parameters}POST{elseif $details.request_method}{$details.request_method|escape}{else}GET{/if}{/capture}
+
+<a name="{$method|escape}"></a>
+
+<div class="api-method">
+
+<div class="api-sect">
+<h2 class="api-method-name{if $details.requires_blessing} api-method-blessed{/if}{if !$details.documented} api-method-undocumented{/if}">{$method|escape}</h2>
+
+<p>{$details.description|escape}</p>
+</div>
+
+<div class="api-sect">
+<ul class="api-method-details">
+{if $details.requires_auth}<li>This method requires <strong>authentication</strong>.</li>{/if}
+{if $details.requires_blessing}<li>This method requires additional <strong>authorization</strong>.</li>{/if}
+{if !$details.documented}<li>This method is <strong>undocumented</strong>.</li>{/if}
+{if !$details.enabled}<li>This method is <strong>disabled</strong>.</li>{/if}
+</ul>
+</div>
+
+<div class="api-sect">
+<h3>Method</h3>
+
+<p>{$api_request_method|escape}</p>
+</div>
+
+<div class="api-sect">
+<h3>Arguments</h3>
+
+{if $details.parameters|@count or $cfg.api_auth_type=='oauth2'}
+<ul class="api-list-o-things">
+<li><strong>access_token</strong> &#8212; A valid <a href="{$cfg.abs_root_url}api/oauth2/">OAuth2 access token</a> <span class="api-required">required</span></li>
+
+{if $details.parameters|@count}
+{foreach from=$details.parameters item="param"}
+<li><strong>{$param.name|escape}</strong> &#8212; {$param.description|escape}{if $param.required} <span class="api-required">required</span>{/if}</li>
+{/foreach}
+{/if}
+
+</ul>
+{else}
+<p>None</p>
+{/if}
+
+</div>
+
+{if 0}
+<h3>Errors</h3>
+
+<p>TO DO</p>
+{/if}
+
+{if $details.notes|@count}
+<div class="api-sect">
+<h3>Notes</h3>
+
+<ul class="api-list-o-things">
+{foreach from=$details.notes item="note"}
+<li>{$note|escape}</li>
+{/foreach}
+</ul>
+</div>
+{/if}
+
+<div class="api-sect">
+
+<h3>Example request</h3>
+
+{if $api_request_method=='GET' and ($cfg.api_auth_type!='oauth2' or $cfg.api_oauth2_allow_get_parameters)}
+<pre class="api-example-request">curl -X {$api_request_method|escape} {$cfg.api_abs_root_url}<strong>{$cfg.api_endpoint}</strong> \
+            ?method=<strong class="api-param-required">{$method|escape}</strong>{if $cfg.api_auth_type=='oauth2'} \
+            &access_token=<strong class="api-param-required">&lt;TOKEN&gt;</strong> {/if}{if $details.parameters|@count} \{foreach from=$details.parameters item="param" name="params"}
+
+	    &{$param.name|escape}=<strong{if $param.required} class="api-param-required"{/if}>&lt;{$param.name|strtoupper|escape}&gt;</strong>{if !$smarty.foreach.params.last} \{/if}{/foreach}{/if}</pre>
+{else}
+<pre class="api-example-request">curl -X {$api_request_method|escape} {$cfg.api_abs_root_url}<strong>{$cfg.api_endpoint}</strong> \
+            -F "method=<strong class="api-param-required">{$method|escape}</strong>"{if $cfg.api_auth_type=='oauth2'} \
+            -F "access_token=<strong class="api-param-required">&lt;TOKEN&gt;</strong>" {/if}{if $details.parameters|@count} \{foreach from=$details.parameters item="param" name="params"}
+
+	    -F "{$param.name|escape}=<strong{if $param.required} class="api-param-required"{/if}>&lt;{$param.name|strtoupper|escape}&gt;</strong> {if !$smarty.foreach.params.last} \{/if}{/foreach}{/if}</pre>
+{/if}
+
+{if $details.example_response}
+<h3>Example response</h3>
+<pre class="api-example-response">{$details.example_response|escape}</pre>
+{/if}
+
+</div>
+
+{if $api_request_method=='GET' and ($cfg.api_auth_type!='oauth2' or $cfg.api_oauth2_allow_get_parameters)}
+
+<div class="api-caveat">
+<div class="api-sect">
+
+<h3>Important</h3>
+
+<p>This API method uses <a href="{$cfg.abs_root_url}api/oauth2/">OAuth2</a> and allows you to pass parameters as part of the URL (or as <code>GET</code> requests). One of those parameters is your <a href="{$cfg.abs_root_url}api/oauth2/tokens/">access token</a> which is extra special and has super-powers.</p>
+
+<p>Requests to and from the API are done over an encrypted channel so no one can see what's going on <strong>BUT</strong> that also means there are a couple things you need to be conscious of:</p>
+
+<ol class="api-list-o-things">
+<li>That the request URL always starts with <code>https://</code> and not just <code>http://</code> &#8212; that little <strong>s</strong> is what tells your browser to use an encrypted connection.</li>
+
+<li>If you are copy-paste-ing those URLs in to an email or some other place where someone else might be able to read them you should make sure to remove the access token &#8212; remember the access token is what links your account to <a href="{$cfg.abs_root_url}">{$cfg.site_name|escape}</a> on behalf of an application and has super-powers.</li>
+</ol>
+
+</div>
+</div>
+
+{/if}
+
+</div>
+

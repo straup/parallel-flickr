@@ -1,7 +1,9 @@
 <?php
 
 	include("include/init.php");
+
 	loadlib("api");
+	loadlib("api_spec");
 
 	if (! $GLOBALS['cfg']['enable_feature_api']){
 		error_disabled();
@@ -29,6 +31,12 @@
 
 	if (! $details['enabled']){
 		error_404();
+	}
+
+	$rsp = api_spec_utils_example_for_method($method);
+
+	if ($rsp['ok']){
+		$details['example_response'] = $rsp['example'];
 	}
 
 	# TO DO: convert markdown in $details

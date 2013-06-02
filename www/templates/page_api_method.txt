@@ -1,46 +1,10 @@
-{capture assign="page_title}API methods | {$method}{/capture}
+{capture assign="page_title}{$method} | API methods | API{/capture}
 {include file="inc_head.txt"}
 
-<h2>{$method|escape}</h2>
+{include file="inc_api_header.txt" title=$method}
 
-{if $details.requires_auth}
-<p><strong>This method requires authentication.</strong></p>
-{/if}
+{include file="inc_api_notice.txt"}
 
-<p>{$details.description|escape}</p>
+{include file="inc_api_method.txt details=$details}
 
-<h3>Arguments</h3>
-
-{if $details.parameters|@count}
-<ul>
-{foreach from=$details.parameters item="param"}
-<li><strong>{$param.name|escape}</strong> &#8212; {$param.description|escape}{if $param.required} <em>REQUIRED</em>{/if}</li>
-{/foreach}
-</ul>
-{else}
-<p>None</p>
-{/if}
-
-<h3>Errors</h3>
-
-<p>TO DO</p>
-
-<h3>Example</h3>
-
-<p>TO DO</p>
-
-<h3>Notes</h3>
-
-{if $details.notes|@count}
-<ul>
-{foreach from=$details.notes item="note"}
-<li>{$note|escape}</li>
-{/foreach}
-</ul>
-{else}
-<p>None</p>
-{/if}
-
-<p><a href="{$cfg.abs_root_url}api/methods">API documentation</a></p>
-
-{include file="inc_details.txt"}
+{include file="inc_foot.txt"}

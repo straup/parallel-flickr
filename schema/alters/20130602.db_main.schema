@@ -1,0 +1,52 @@
+DROP TABLE IF EXISTS `ApiKeys`;
+
+CREATE TABLE `ApiKeys` (
+  `id` bigint(20) unsigned NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `role_id` tinyint(3) unsigned NOT NULL,
+  `api_key` varchar(40) NOT NULL,
+  `app_secret` varchar(64) NOT NULL,
+  `app_callback` varchar(255) NOT NULL,
+  `created` int(11) unsigned NOT NULL,
+  `app_title` varchar(255) NOT NULL,
+  `app_description` text NOT NULL,
+  `deleted` int(11) unsigned NOT NULL,
+  `disabled` int(11) unsigned NOT NULL,
+  `last_modified` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `by_key` (`api_key`),
+  KEY `by_user` (`user_id`,`deleted`,`created`),
+  KEY `by_role` (`role_id`,`deleted`,`created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `OAuth2AccessTokens`;
+
+CREATE TABLE `OAuth2AccessTokens` (
+  `id` bigint(20) unsigned NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `api_key_id` bigint(20) unsigned NOT NULL,
+  `access_token` varchar(64) NOT NULL,
+  `created` int(11) unsigned NOT NULL,
+  `perms` tinyint(3) unsigned NOT NULL,
+  `last_modified` int(11) unsigned NOT NULL,
+  `expires` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `by_api_key` (`api_key_id`,`expires`,`created`),
+  KEY `by_user_key` (`user_id`,`api_key_id`,`expires`),
+  KEY `by_user` (`user_id`,`expires`),
+  KEY `by_token` (`access_token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `OAuth2GrantTokens`;
+
+CREATE TABLE `OAuth2GrantTokens` (
+  `code` varchar(40) NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `api_key_id` varchar(40) NOT NULL,
+  `created` int(11) unsigned NOT NULL,
+  `perms` tinyint(3) unsigned NOT NULL,
+  `ttl` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`code`),
+  KEY `by_user_key` (`user_id`,`api_key_id`),
+  KEY `by_created` (`created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

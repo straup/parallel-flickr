@@ -1,0 +1,34 @@
+{capture assign="page_title"}Revoke access for the {$token.app.app_title} application | Applications | API{/capture}
+{include file="inc_head.txt"}
+
+{include file="inc_api_header.txt" title="Revoke access for this token"}
+
+{if $delete_rsp}
+
+{if $delete_rsp.ok}
+<p class="confirm">Okay! That authentication token has been deleted. {$token.app.app_title|escape} will no longer be able to act on your behalf.</p>
+{else}
+<p class="error">Hrmph! There was a problem deleting that auth token. This is what the robots know so far: {$delete_rsp.error|escape}</p>
+{/if}
+
+{else}
+<form method="POST" action="{$cfg.abs_root_url}api/oauth2/tokens/{$token.app.api_key|escape}/">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="delete" value="1" />
+
+	<p class="confirm">Are you sure you want to delete this authentication token?</p>
+
+<table class="api-key-or-token">
+       <tr><td>Application</td><td>{$token.app.app_title|escape} <span class="thisisyou"> ⇽ this will <em>not</em> be deleted</span></td></tr>
+       <tr><td>Access token</td><td class="api-credential">{$token.access_token|escape} <span class="thisisyou"> ⇽ this <em>will</em> be deleted</span></td></tr>
+       <tr class="api-admin"><td>&nbsp;</td><td><input type="checkbox" name="confirm" value="1" /> <label for="confirm">Yes, I would like to make this token go away.</label></td></tr>
+       <tr class="api-admin"><td>&nbsp;</td><td><input type="submit" value="MAKE IT SO" /></td></tr>
+
+</table>
+</form>
+
+<p>Actually, no <a href="{$cfg.abs_root_url}api/oauth2/tokens/{$token.app.api_key|escape}/">I don't want to do that</a>.</p>
+
+{/if}
+
+{include file="inc_foot.txt"}

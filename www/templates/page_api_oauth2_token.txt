@@ -1,0 +1,109 @@
+{capture assign="page_title"}{$token.app.app_title} | Applications | API{/capture}
+{include file="inc_head.txt"}
+
+{capture assign="title"}Your auth token for the {$token.app.app_title} application{/capture}
+{capture assign="subtitle"}It was created {$token.created|date_format}{if $token.created != $token.last_modified} / It was last updated {$token.last_modified|date_format}{/if}{/capture}
+
+{include file="inc_api_header.txt" title=$title}
+
+{if $update_rsp}
+
+{if $update_rsp.ok}
+<p class="confirm">Okay! Your authentication token has been updated.</p>
+{else}
+<p class="error">Blurgle! There was a problem updating your authentication token. This is what we know so far: {$update_rsp.error|escape}</p>
+{/if}
+{elseif $error}
+<p class="error">
+{if $error=='bad_perm'}
+That's not a valid permission for authentication tokens!
+{else}
+OH NO! INVISIBLE ERROR CAT HISSES AT YOU...
+{/if}
+<p>
+{else}
+{/if}
+
+<div class="api-sect">
+
+<form method="POST" action="{$cfg.abs_root_url}api/oauth2/tokens/{$token.app.api_key|escape}/">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="done" value="1" />
+
+<table class="api-key-or-token">
+
+	{* application stuff (for the token) *}
+
+	{if $token.app.user_id==$cfg.user.id}
+	<tr>
+		<td>Application</td><td><a href="{$cfg.abs_root_url}api/keys/{$token.app.api_key|escape}/">{$token.app.app_title|escape}</a> <span class="api-thisisyou"> ⇽ you made this</span></td>
+	</tr>
+
+	{else}
+	<tr>
+		<td>Application</td><td><strong>{$token.app.app_title|escape}</strong></td>
+	</tr>
+	{/if}
+
+	{* actual token stuff *}
+
+	<tr>
+		
+	<tr>
+		<td>Access Token</td><td class="api-credential">{$token.access_token|escape}</td>
+	</tr>
+
+	<tr>
+		<td>Created</td><td>{$token.created|date_format|escape} at {$token.created|date_format:"%H:%M"|escape}</td>
+	</tr>
+
+	<tr>
+		<td>Permissions</td>
+		<td>
+		<select name="perms">
+{foreach from=$permissions item="label" key="id"}
+	 	<option value="{$id|escape}"{if $id==$token.perms} selected="true"{/if}>{$label|escape}</option>
+{/foreach}
+		</select>
+		</td>
+	</tr>
+
+	{if $token.expires}
+	<tr>
+		<td>Expires</td>
+		<td>This token will self-destruct <strong>{$token.expires|date_format}</strong> at {$token.expires|date_format:"%r"} – <a href="#" onclick="javascript:$('#update_ttl').show(); return false;">change</a></td>
+	</tr>
+	{/if}
+
+	<tr id="update_ttl"{if $token.expires} style="display:none;"{/if}>
+
+	<td>
+	<label for="perms">Make this token valid</a>
+	</td>
+
+	<td>
+	<select name="update_ttl">
+	<option />
+	{foreach from=$ttl_map item="label" key="ttl"}
+		<option value="{$ttl|escape}"{if $ttl==0} selected="true"{/if}>{$label|escape}</option>
+	{/foreach}
+	</select>
+	</td>
+
+	</tr>
+
+	<tr class="api-admin">
+		<td>&nbsp;</td>
+		<td class="api-delete"><input type="checkbox" name="delete" /> <label for="delete">Actually, I'd like to delete this auth token entirely</label></td>
+	</tr>
+
+	<tr class="api-admin">
+		<td>&nbsp;</td>
+		<td><input type="submit" value="UPDATE" />
+	</tr>
+
+</table>
+
+</div>
+
+{include file="inc_foot.txt"}

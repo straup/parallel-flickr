@@ -2,22 +2,32 @@
 
 	#################################################################
 
-	function api_auth_ensure_auth(&$method){
+	function api_auth_ensure_auth(&$method, $key_row=null){
 
-		if (! api_auth_has_auth($method)){
-			api_output_error(403, 'Forbidden');
+		$type = $GLOBALS['cfg']['api_auth_type'];
+
+		$auth_lib = "api_auth_{$type}";
+		$auth_func = "api_auth_{$type}_has_auth";
+
+		try {
+			loadlib($auth_lib);
 		}
-	}
 
-	#################################################################
+		catch (Exception $e){
+			return 0;
+		}
 
-	function api_auth_has_auth(&$method){
+		if (! function_exists($auth_func)){
+			return 0;
+		}
 
-		return ($GLOBALS['cfg']['user']['id']) ? 1 : 0;
+		$rsp = call_user_func_array($auth_func, array($method, $key_row));
 
-		# please write me...
+		if (! $rsp['ok']){
+			api_output_error($rsp['error_code'], $rsp['error']);
+		}
 
-		return 0;
+		return $rsp;
 	}
 
 	#################################################################
@@ -25,7 +35,7 @@
 	function api_auth_ensure_crumb(&$method, $ttl=0){
 
 		if (! api_auth_has_valid_crumb($method, $ttl)){
-			api_output_error(410, "Missing or invalid crumb");
+			api_output_error(999, "Missing or invalid crumb");
 		}
 	}
 
@@ -51,4 +61,4 @@
 
 	#################################################################
 
-?>
+	# the end

@@ -1,0 +1,49 @@
+{capture assign="page_title"}Authed users | {$key.app_title} | {$key.api_key} | API{/capture}
+{include file="inc_head.txt"}
+
+{capture assign="token_count"}{$pagination.total_count}{/capture}
+
+{capture assign="subtitle"}
+{if $token_count}
+{if $token_count > 1}{$token_count} people have authed this applications{else}One person has authed this application{/if}
+{/if}
+{/capture}
+
+{include file="inc_api_header.txt" title="Authenticated users"}
+
+<div class="api-sect">
+<h2>Authenticated users</h2>
+
+{if $tokens|@count}
+
+<ul class="api-list-o-things">
+{foreach from=$tokens item="row"}
+	{assign var="perms" value=$row.perms}
+
+<li>
+	{$row.user.username|escape}{if $row.user.id == $cfg.user.id}<span class="api-thisisyou"> ⇽ this is you</span>{/if}
+	<div class="api-details">
+
+	{if $row.user.id == $cfg.user.id}
+	<a href="{$cfg.abs_root_url}api/oauth2/tokens/{$key.api_key|escape}/">This access token</a> was created on {$row.created|date_format} and was granted <strong>{$permissions.$perms|escape}</strong> permissions.
+	{else}
+	This token was created on {$row.created|date_format} and was granted <strong>{$permissions.$perms|escape}</strong> permissions.
+	{/if}
+
+	</div>
+
+</li>
+{/foreach}
+</ul>
+
+{else}
+
+<p>No one has authorized this application yet.</p>
+
+{/if}
+
+{include file="inc_pagination.txt"}
+
+</div>
+
+{include file="inc_foot.txt"}

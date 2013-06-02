@@ -50,6 +50,58 @@ ErrorDocument 500 /500.php
 # Get mod_rewrite fired up
 RewriteEngine on
 
+# The API (as in both api.example.com and example.com/api)
+# Ensure that all traffic to the API proper is over HTTPS
+# Note that this is a api.example.com host not example.com
+# (20121025/straup)
+
+# RewriteCond %{HTTP_HOST} 	^api.(.*)$
+# RewriteCond %{HTTPS} off
+# RewriteRule (.*) https://%{HTTP_HOST}/$1?%{QUERY_STRING}	[R,L]
+
+# The most basic rewrite, as this is the actual API
+
+# RewriteCond %{HTTP_HOST} 	^api.(.*)$
+# RewriteRule  ^rest/?$		api_rest.php?%{QUERY_STRING}  [L]
+
+# This one says: If we're the API and we're not hanging off /rest
+# redirect to the site itself – note the %1% for capturing the domain
+# sans 'api.' (20121025/straup)
+
+# RewriteCond %{REQUEST_URI}	!rest(.*)
+# RewriteCond %{HTTP_HOST} 	^api.(.*)$	[NC]
+# RewriteRule  .?		http://%1%{REQUEST_URI}  [R,L]
+
+# RewriteCond %{HTTP_HOST} 	!^api.(.*)$
+# RewriteRule  ^api/rest/(.*)/?$	https://api.%{HTTP_HOST}/rest/?method=$1&%{QUERY_STRING}  [R,L]
+
+# RewriteCond %{HTTP_HOST} 	!^api.(.*)$
+# RewriteRule  ^rest/(.*)/?$	https://api.%{HTTP_HOST}/rest/?method=$1&%{QUERY_STRING}  [R,L]
+
+# The rest of the user/admin interfaces for doing API stuff
+# This all (especially the oauth2 auth/token stuff) relies on the
+# HTTPS rules for logged in users (20121024/straup)
+
+RewriteRule  ^api/?$			api.php		[L]
+RewriteRule  ^api/methods/?$		api_methods.php	[L]
+RewriteRule  ^api/methods/(.*)/?$	api_method.php?method=$1&%{QUERY_STRING}		[L]
+
+RewriteRule  ^api/keys/?$						api_keys.php?%{QUERY_STRING} [L]
+RewriteRule  ^api/keys/register/?$					api_keys_register.php?%{QUERY_STRING} [L]
+RewriteRule  ^api/keys/([a-zA-Z0-9]+)/?$				api_key.php?api_key=$1&%{QUERY_STRING} [L]
+RewriteRule  ^api/keys/([a-zA-Z0-9]+)/tokens(/page([0-9]+))?/?$		api_key_tokens.php?api_key=$1&page=$3&%{QUERY_STRING} [L]
+
+RewriteRule  ^api/oauth2/?$						api_oauth2.php?%{QUERY_STRING} [L]
+RewriteRule  ^api/oauth2/howto/?$						api_oauth2_howto.php?%{QUERY_STRING} [L]
+RewriteRule  ^api/oauth2/authenticate/?$				api_oauth2_authenticate.php?%{QUERY_STRING} [L]
+RewriteRule  ^api/oauth2/authenticate/like-magic/?$			api_oauth2_authenticate_like_magic.php?%{QUERY_STRING} [L]
+RewriteRule  ^api/oauth2/access_token/?$				api_oauth2_access_token.php?%{QUERY_STRING} [L]
+
+RewriteRule  ^api/oauth2/tokens(/page([0-9]+))?/?$			api_oauth2_tokens.php?page=$2&%{QUERY_STRING} [L]
+RewriteRule  ^api/oauth2/tokens/([a-zA-Z0-9]+)/?$			api_oauth2_token.php?api_key=$1&%{QUERY_STRING} [L]
+
+RewriteRule  ^rest/?$		api_rest.php?%{QUERY_STRING}  [L]
+
 # Login stuff
 
 RewriteRule ^invite/?$						invite.php?%{QUERY_STRING} [L]
@@ -84,12 +136,12 @@ RewriteRule  ^account/flickr/backups/?$	account_flickr_backups.php		[L]
 
 RewriteRule  ^account/flickr/auth/?$		account_flickr_auth.php?%{QUERY_STRING}	[L]
 
-# API
+# API (old)
 
-RewriteRule  ^api/?$			api_rest.php		[L]
-RewriteRule  ^api/methods/?$		api_methods.php	[L]
-RewriteRule  ^api/methods/(.*)/?$	api_method.php?method=$1&%{QUERY_STRING}		[L]
-RewriteRule  ^api/rest/(.*)/?$		api_rest.php?method=$1&%{QUERY_STRING}		[L]
+# RewriteRule  ^api/?$			api_rest.php		[L]
+# RewriteRule  ^api/methods/?$		api_methods.php	[L]
+# RewriteRule  ^api/methods/(.*)/?$	api_method.php?method=$1&%{QUERY_STRING}		[L]
+# RewriteRule  ^api/rest/(.*)/?$		api_rest.php?method=$1&%{QUERY_STRING}		[L]
 
 # Misc
 

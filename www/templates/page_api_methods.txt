@@ -1,16 +1,24 @@
-{assign var="page_title" value="API methods"}
+{capture assign="page_title}API methods | API{/capture}
 {include file="inc_head.txt"}
 
+{include file="inc_api_header.txt" title="API methods"}
+
+<div id="api_methods">
+
 {foreach from=$method_classes item="methods" key="class"}
+<div class="api-sect">
 
 <h2>{$class|escape}</h2>
 
-<ul>
+<ul class="api-list-o-things">
 {foreach from=$methods item="method_name}
 	<li><a href="{$cfg.abs_root_url}api/methods/{$method_name|escape:'uri'}">{$method_name|escape}</a></li>
 {/foreach}
 </ul>
 
+</div>
 {/foreach}
+
+</div>
 
 {include file="inc_foot.txt"}

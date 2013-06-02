@@ -13,7 +13,8 @@
 
 		if ($func = $GLOBALS['_storage_hooks']['file_exists']){
 
-			return call_user_func_array($func, array($path, $more));
+			$rsp = call_user_func_array($func, array($path, $more));
+			return (isset($more['boolean'])) ? $rsp['ok'] : $rsp;
 		}
 
 		return array('ok' => 0);

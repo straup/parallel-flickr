@@ -65,11 +65,13 @@
 				$method[$k] = $v;
 			}
 
+			/*
 			$rsp = api_spec_utils_example_for_method($name);
 
 			if ($rsp['ok']){
 				$method['example'] = $rsp['example'];
 			}
+			*/
 
 			$methods[] = $method;
 		}
@@ -82,4 +84,4 @@
 
  	#################################################################
 
-?>
+	# the end

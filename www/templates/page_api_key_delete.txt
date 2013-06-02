@@ -1,0 +1,42 @@
+{capture assign="page_title"}{$key.app_title} | {$key.api_key} | API{/capture}
+{include file="inc_head.txt"}
+
+{include file="inc_api_header.txt" title=$key.app_title}
+
+{if $delete_rsp}
+
+{if $delete_rsp.ok}
+<p class="confirm">Okay! Your API key has been deleted.</p>
+{else}
+<p class="error">Hrmph! There was a problem deleting your API key. This is what the robots know so far: {$delete_rsp.error|escape}</p>
+{/if}
+
+{else}
+<form method="POST" action="{$cfg.abs_root_url}api/keys/{$key.api_key|escape}/">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="delete" value="1" />
+	<p class="confirm">
+	{if $token_count>1}
+	Are you sure you want to delete this API key? There are <a href="{$cfg.abs_root_url}api/keys/{$key.api_key|escape}/tokens/">{$token_count|escape} users</a> who have created authentication tokens for it.
+	{elseif $token_count}
+	Are you sure you want to delete this API key? There is <a href="{$cfg.abs_root_url}api/keys/{$key.api_key|escape}/tokens/">one user</a> who has created an authentication token for it.
+	{else}
+	Are you sure you want to delete this API key?
+	{/if}
+	</p>
+
+<table class="api-key-or-token">
+
+       <tr><td>Name</td><td>{$key.app_title|escape}</td></tr>
+	<tr class="api-admin"><td>&nbsp;</td><td><input type="checkbox" name="confirm" value="1" /> <label for="confirm">Yes, I would like to make this API key go away.</label></td></tr>
+	<tr class="api-admin"><td>&nbsp;</td><td><input type="submit" value="MAKE IT SO" /></td></tr>
+
+</table>
+
+</form>
+
+<p>Actually, no <a href="{$cfg.abs_root_url}api/keys/{$key.api_key|escape}/">I don't want to do that</a>.</p>
+
+{/if}
+
+{include file="inc_foot.txt"}

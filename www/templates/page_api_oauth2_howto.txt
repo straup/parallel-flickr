@@ -1,0 +1,155 @@
+{capture assign="page_title"}How to | OAuth2 | API{/capture}
+{include file="inc_head.txt"}
+
+{include file="inc_api_header.txt" title="OAuth2 How to"}
+
+<div class="api-sect">
+
+<h2>The basics</h2>
+
+<p><a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> implements the basics of <a href="http://tools.ietf.org/html/rfc6749#section-4.2">section 4.2 of the OAuth2 specification</a> and assumes the following roles and relationships:</p>
+
+<div class="api-sect">
+
+<ol class="api-list-o-things" style="margin-top:1.5em;">
+	<li><strong>There are services.</strong> Like this one. <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> is a service.</p>
+
+	<li><strong>There are users.</strong> Users have accounts on services.{if $cfg.user.id} For example, you are currently logged in to <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> with your <a href="{$cfg.abs_root_url}account/}">{$cfg.user.username|escape}</a> account.{/if}</li>
+
+	<li><strong>Services have application programming interfaces (APIs).</strong> APIs allow computer programs and robots to talk to the service <a href="{$cfg.abs_root_url}api/methods/">in computer-speak</a>.</li>
+
+	<li><strong>There are applications.</strong> Applications are <em>other</em> programs that use a service's APIs to do stuff.{if 0}Sometimes an application is another service with its own API.{/if}</li> 
+
+	<li><strong>Applications have API keys.</strong> An API key is like a username for applications. It is used to identify the program trying to use a service's API and, if necessary, to control access.</li>
+
+	<li><strong>Applications sometimes have special access tokens</strong> that allow them to perform actions on a service on behalf of a user without having to know their username and password.</li> 
+
+	<li><strong>Access tokens are only granted with a user's approval</strong> and can be revoked by a user at any time.</li>
+
+	<li><strong>Access tokens have restricted permissions sets.</strong> For example some tokens might grant an application permission to read a user's private data while others might be allowed to read <em>and</em> write data on behalf of a user.</li>
+
+</ol>
+
+</div>
+
+</div>
+
+<div class="api-sect">
+
+<h2>Access tokens (and applications)</h2>
+
+<div class="api-sect">
+<h3>Generating an access token for yourself</h3>
+
+<p>If you're just interested in creating an access token for yourself and don't want to muck about creating applications and approval pages you can use the handy <a href="{$cfg.abs_root_url}api/oauth2/authenticate/like-magic/">authenticate-like-magic</a> web page.</p>
+
+<p>Everything described above still happens behind the scenes but the details are hidden from you. Technically you will have created an &#8220;application&#8221; that you then approved to perform actions on behalf of yourself. Both the application and the token can be deleted at any time.</p>
+
+<p>You'll need to give your access token a name and tell us what kind of permissions it has and then, like magic, you'll have a new access token that <a href="{$cfg.abs_root_url}api/methods/">you can start using the API with</a>.</p>
+
+</div>
+
+<div class="api-sect">
+<h3>Generating access tokens on behalf of another user</h3>
+
+<p>For application developers wanting to request access tokens on behalf of other users there are a few more steps to complete. Specifically:</p>
+
+<ol class="api-list-o-things" style="margin-top:1.5em;">
+
+    <li><strong>There is a webpage maintained by a service where applications can be registered.</strong> The application registration page for <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> is <code><a href="{$cfg.abs_root_url}api/keys/register/">{$cfg.abs_root_url}api/keys/register/</a></code>. You must have a valid user account to register an application.</li>
+
+    <li><strong>There is a webpage maintained by a service where users can be prompted to approve an application.</strong> The application approval page for <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> is <code>{$cfg.abs_root_url}api/oauth2/authenticate/</code>.</li>
+
+    <li><strong>There is a callback URL maintained by an application where a service can send users after they've approved an application.</strong> Once a user has approved an application the service will send the user to this URL by issuing a <code>302 Redirect</code> HTTP header to the user's browser. The URL will be appended with a <code>code</code> parameter which is a time-sensitive special token that the application uses to request an access token.</li>
+
+    <li><strong>There is a URL maintained by a service where an application can request an access token for a user.</strong> This is the URL that an application sends to the time-sensitive <code>code</code> token to in exchange for an access token. The access token exchange page for <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> is <code>{$cfg.abs_root_url}api/oauth2/access_token/</code>.</li>
+
+</ol>
+
+<p>The &#8220;URL&#8221; defined by an application does not necessarily need to represent a &#8220;web page&#8221; but does need to conform to a known scheme for a <a href="http://www.w3.org/TR/html5/webappapis.html#custom-handlers">protocol handlers</a>. Protocol handlers are used to launch applications instead of just web pages using URLs and vary from one operating system to another so that's really a discussion outside the scope of this document.</p>
+</div>
+
+<div class="api-sect">
+
+<h3>Putting it all together</h3>
+
+<p>In less abstract terms here's how the OAuth2 authorization flow works:</p>
+
+<ol class="api-list-o-things">
+
+	<li><strong>You create an application</strong> and <a href="{$cfg.abs_root_url}api/keys/register/">register it</a> with <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a>. As part of the registration process you will include a URL where users will be sent to complete the authorization process.</li>
+
+	<li><strong>When you want a user to agree to let your application act on their behalf</strong> you send them to the application authentication page on <a href="{$cfg.abs_root_ur}" class="api-site-name">{$cfg.site_name|escape}</a>.</li>
+
+	<li><strong>Once the user approves the authorization request</strong> they are returned to the URL you defined when you registered your application. The URL will contain a unique code that can be exchanged for an access token. The code is time-sensitive and is your application's proof to <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> that a user has approved the authorization request.</li>
+
+	<li><strong>Your application exchanges the code for an access token</strong> and stores the token in a safe and secure place. Your application is now ready to issue <a href="{$cfg.abs_root_url}api/methods/">API calls</a> on behalf of the user associated with the access token.</li>
+</ol>
+
+</div>
+
+</div>
+
+<div class="api-sect">
+
+<h2>Examples</h2>
+
+<h3>Pseudo-code: Getting a grant token</h3>
+
+<p>This is the part where an application builds a URL that you will send a user to in order to approve your application. <a href="{$cfg.abs_root_url}" class="api-site-name">{$cfg.site_name|escape}</a> <em>does not</em> allow applications to specify a callback URL (sometimes called a redirect_uri) as part of the user approval process. Applications <em>must</em> define a redirect URL when they <a href="{$cfg.abs_root_url}api/keys/register/">create a API key</a>.</p>
+
+<pre style="margin-top:2.5em;margin-bottom:2em;">
+
+	$args = array(
+		'client_id' => '<strong>APPLICATION API KEY</strong>',
+		'scope' => '<strong>THE PERMISSIONS YOU'D LIKE YOUR APPLICATION TO HAVE</strong>',
+		'response_type' => 'code',
+	);
+
+	$query = http_build_query($args);
+
+	$url = "{$cfg.abs_root_url}api/oauth2/<strong>authenticate/</strong>?" . $query;
+
+	<strong>header("location: $url");</strong>
+	exit();
+
+</pre>
+
+<h3>Pseudo-code: Exchanging a grant token for an access token</h3>
+
+<p>This is the code that an application executes <em>after</em> a user has approved the application and service has sent them back to the application's callback URL. The application looks for a request parameter called <code>code</code> and the turns around and send the code back to the service asking to exchange it for an access token. What an application does after the access token is returned is outside the scope of this document.</p>
+
+<pre style="margin-top:2.5em;margin-bottom:2em;">
+
+	<strong>$code = get_str("code");</strong>
+
+	$args = array(
+		'client_id' => '<strong>APPLICATION API KEY</strong>',
+		'grant_type' => 'authorization_code',
+		'response_type' => 'code',
+		'code' => <strong>$code</strong>,
+	);
+
+	$query = http_build_query($args);
+
+	$url = "{$cfg.abs_root_url}api/oauth2/<strong>access_token/</strong>?" . $query;
+	<strong>$rsp = http_get($url);</strong>
+
+	$data = json_decode($rsp['body'], 'as hash');
+	<strong>$access_token = $data['access_token'];</strong>
+
+	$scope = $data['scope'];
+	$expires = $data['expires'];
+
+</pre>
+
+<h3>Caveats</h3>
+
+<ol class="api-list-o-things" style="margin-top:1.5em;">
+    <!-- <li>A user may choose to define different permissions for an access token than those requested by an application. Permissions information is returned with an access token so applications should react accordingly.</li> -->
+    <li>A user may choose to define an expiry date for an access token. This information is returned with an access token as a Unix timestamp. A value of <code>0</code> means that the token has no defined expiry date. <em>Returning expiry dates for access tokens is not part of the offical OAuth2 specification.</em></li>
+</ol>
+
+</div>
+
+{include file="inc_foot.txt"}

@@ -4,17 +4,19 @@
 
 	function api_spec_utils_example_for_method($method){
 
-		$path = FLAMEWORK_INCLUDE_DIR . "config.api.examples/{$method}.json";
+		$fname = str_replace(".", "_", $method);
+		$template = "page_api_example_{$fname}.json";
 
-		if (! file_exists($path)){
-			return not_okay("no example defined for {$method} method");
+		if (! $GLOBALS['smarty']->template_exists($template)){
+			return array('ok'=> 0, 'error' => 'no example defined for {$method} method');
 		}
 
-		return okay(array(
-			'example' => file_get_contents($path)
-		));
+		return array(
+			'ok' => 1,
+			'example' => $GLOBALS['smarty']->fetch($template),
+		);
 	}
 
  	#################################################################
 
-?>
+	# the end

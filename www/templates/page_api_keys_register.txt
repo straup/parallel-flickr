@@ -1,0 +1,75 @@
+{capture assign="page_title"}Create a new API key | API{/capture}
+{include file="inc_head.txt"}
+
+{include file="inc_api_header.txt" title="Create a new API key"}
+
+{if $error}
+<p class="error">{$error|escape}</p>
+{/if}
+
+{if $step==3}
+
+<p class="confirm">Hooray! We've created your new API key. <a href="{$cfg.abs_root_url}api/keys/{$key_rsp.key.api_key|escape}/i">Details are over here.</a></p>
+{if $key_rsp=='ok'}
+<p class="error">Argh! There was a problem creating your API key. This is what we know so far: {$key_rsp.error|escape}</p>
+{else}
+
+{/if}
+
+{elseif $step==2}
+
+<div class="api-sect">
+<form method="POST" action="{$cfg.abs_root_url}api/keys/register/" accept-encoding="UTF-8">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="done" value="1" />
+	<input type="hidden" name="title" value="{$title|escape}" />
+	<input type="hidden" name="description" value="{$description|escape}" />
+	<input type="hidden" name="callback" value="{$callback|escape}" />
+
+<table class="api-key-or-token">
+       <tr><td>Name</td><td>{$title|escape}</td></tr>
+       <tr><td>Description</td><td>{$description|escape}</td></tr>
+       <tr><td>Callback URL</td><td>{if $callback}{$callback|escape}{else}&#8212;{/if}</td></tr>
+       <tr class="api-admin"><td>Terms of Service</td><td><div class="api-tos">{include file="inc_api_tos.txt"}</td></tr>
+       <tr class="api-admin"><td>&nbsp;</td><td><input type="checkbox" name="confirm" /> <label for="confirm">I agree!</label></td></tr>
+       <tr class="api-admin"><td>&nbsp;</td><td><input type="submit" value="MAKE IT SO (PLEASE)" /></td></tr>
+</table>
+
+</form>
+</div>
+
+{else}
+
+<div class="api-sect">
+<form method="POST" action="{$cfg.abs_root_url}api/keys/register/" accept-encoding="UTF-8">
+	{$crumb_key|crumb_input}
+	<input type="hidden" name="done" value="1" />
+
+<table class="api-key-or-token">
+       <tr>
+	       <td>Name</td>
+	       <td><input type="text" value="{$title|escape}" name="title" placeholder="Your application's name" /></td>
+       </tr>
+       <tr>
+       		<td>Description</td>
+		<td><textarea rows="10" cols="40" name="description" placeholder="What does your application do?">{$desc|escape}</textarea></td>
+	</tr>
+
+       <tr>
+	       <td>Callback URL</td>
+	       <td><input type="text" value="{$callback|escape}" name="callback" placeholder="Where to send users who want to auth your application" /></td>
+       </tr>
+
+	<tr class="api-admin">
+		<td>&nbsp;</td>
+		<td><input type="submit" value="REGISTER" /></td>
+	</tr>
+
+</table>
+</form>
+
+</div>
+
+{/if}
+
+{include file="inc_foot.txt"}

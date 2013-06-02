@@ -4,11 +4,11 @@
 
 	function api_utils_ensure_pagination_args(&$args){
 
-		if ($page = get_int32("page")){
+		if ($page = request_int32("page")){
 			$args['page'] = $page;
 		}
 
-		if ($per_page = get_int32("per_page")){
+		if ($per_page = request_int32("per_page")){
 			$args['per_page'] = $per_page;
 		}
 
@@ -40,4 +40,5 @@
 	}
 	
 	##############################################################################
-?>
+
+	# the end
