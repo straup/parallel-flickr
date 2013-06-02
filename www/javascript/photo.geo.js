@@ -104,7 +104,7 @@ function _photo_geo_context_update_onsubmit(){
 	};
 
 	$.ajax({
-		'url': '/api/',
+		'url': '/api/rest/',
 		'type': 'POST',
 		'data': args,
 		'success': _photo_geo_set_context_onsuccess
@@ -171,7 +171,7 @@ function _photo_geo_corrections_for_placetype(placetype){
 	};
 
 	$.ajax({
-		'url': '/api/',
+		'url': '/api/rest/',
 		'type': 'GET',
 		'data': args,
 		'success': _photo_geo_possible_corrections_onsuccess
@@ -288,7 +288,7 @@ function _photo_geo_corrections_update_onsubmit(){
 	};
 
 	$.ajax({
-		'url' : '/api/',
+		'url' : '/api/rest/',
 		'type': 'POST',
 		'data': args,
 		'success': _photo_geo_correct_location_onsuccess
