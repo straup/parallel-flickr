@@ -284,8 +284,13 @@
 
 		if ($args['preview']){
 
+			# $photo = photos_get_by_id($photo_id);
+			# $photo_url = flickr_urls_photo_page($photo);
+			# $desc = "<a href=\"{$photo_url}\">See also:</a>";
+
 			$fl_args = array(
 				'title' => "Untitled Pointer #{$photo_id}",
+				# 'description' => $desc,
 			);
 
 			foreach (array('ispublic', 'isfriend', 'isfamily') as $key){
