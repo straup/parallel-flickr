@@ -81,10 +81,28 @@
 
 	function flickr_urls_photo_page_flickr(&$photo){
 
+		if (! flickr_photos_is_on_flickr($photo)){
+			return;
+		}
+
 		$user = users_get_by_id($photo['user_id']);
 		$root = flickr_urls_photos_user_flickr($user);
 
 		return $root . "{$photo['id']}/";
+	}
+
+	#################################################################
+
+	function flickr_urls_photo_page_flickr_short(&$photo){
+
+		if (! flickr_photos_is_on_flickr($photo)){
+			return;
+		}
+
+		loadlib("base58");
+
+		$code = base58_encode($photo['id']);
+		return "http://flic.kr/p/{$code}/";
 	}
 
 	#################################################################

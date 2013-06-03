@@ -2,6 +2,7 @@
 
 	loadlib("photos_upload");
 	loadlib("flickr_photos_upload");
+	loadlib("api_parallel_flickr_utils");
 
 	#################################################################
 
@@ -13,7 +14,11 @@
 		api_utils_ensure_pagination_args($args);
 
 		$rsp = flickr_photos_for_user($owner, $args);
-		$photos = $rsp['rows'];
+		$photos = array();
+
+		foreach ($rsp['rows'] as $row){
+			$photos[] = api_parallel_flickr_utils_photo2spr($row);
+		}
 
 		$out = array(
 			'photos' => $photos,
