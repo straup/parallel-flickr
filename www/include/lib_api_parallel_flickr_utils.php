@@ -23,7 +23,7 @@
 			'photo_url' => flickr_urls_photo_static($photo),
 			'photo_page' => flickr_urls_photo_page($photo),
 			'photo_page_flickr' => flickr_urls_photo_page_flickr($photo),
-			'photo_page_flickr_short' => flickr_urls_photo_page_flickr_short($photo),
+			# 'photo_page_flickr_short' => flickr_urls_photo_page_flickr_short($photo),
 		);
 
 		return $spr;

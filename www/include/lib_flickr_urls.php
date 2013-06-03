@@ -93,6 +93,8 @@
 
 	#################################################################
 
+	# this appears to not be working... (20130603/straup)
+
 	function flickr_urls_photo_page_flickr_short(&$photo){
 
 		if (! flickr_photos_is_on_flickr($photo)){
