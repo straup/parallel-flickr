@@ -11,19 +11,21 @@
 	# based on something like a tag (for example 'flickr:push=ignore). Dunno.
 	# (20130520/straup)
 	
-	function dbtickets_flickr_create(){
+	function dbtickets_flickr_create(&$user){
+
+ 		$flickr_user = flickr_users_get_by_user_id($user['id']);
+		$auth_token = $flickr_user['auth_token'];
 
 		# This is a terrible fucking hack to account for the fact that p-flickr
 		# is a 'web app' and tries to redirect. This is not the way it should be
 		# it's just a way to make shit work at 8 in the morning (20130521/straup)
 
-		$api_key = $GLOBALS['cfg']['flickr_api_key'];
-		$api_secret = $GLOBALS['cfg']['flickr_api_secret'];
+		# $api_key = $GLOBALS['cfg']['flickr_api_key'];
+		# $api_secret = $GLOBALS['cfg']['flickr_api_secret'];
 
-		$GLOBALS['cfg']['flickr_api_key'] = $GLOBALS['cfg']['dbtickets_flickr_api_key'];
-		$GLOBALS['cfg']['flickr_api_secret'] = $GLOBALS['cfg']['dbtickets_flickr_api_secret'];
-
-		#
+		# $GLOBALS['cfg']['flickr_api_key'] = $GLOBALS['cfg']['dbtickets_flickr_api_key'];
+		# $GLOBALS['cfg']['flickr_api_secret'] = $GLOBALS['cfg']['dbtickets_flickr_api_secret'];
+		# $auth_token = $GLOBALS['cfg']['dbtickets_flickr_auth_token'];
 
 		$tmp_dir = sys_get_temp_dir();
 		$tmp_file = "{$tmp_dir}/dbtickets_flickr.gif";
@@ -33,8 +35,6 @@
 			fwrite($fh, base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw=='));
 			fclose($fh);
 		}
-
-		$auth_token = $GLOBALS['cfg']['dbtickets_flickr_auth_token'];
 
 		$args = array(
 			'auth_token' => $auth_token,
@@ -65,8 +65,8 @@
 
 		# See above
 
-		$GLOBALS['cfg']['flickr_api_key'] = $api_key;
-		$GLOBALS['cfg']['flickr_api_secret'] = $api_secret;
+		# $GLOBALS['cfg']['flickr_api_key'] = $api_key;
+		# $GLOBALS['cfg']['flickr_api_secret'] = $api_secret;
 
 		return array(
 			'ok' => 1,
