@@ -100,25 +100,23 @@
 		# for debugging...
 		# $fh = fopen("/tmp/wtf.json", "a");
 		# fwrite($fh, "photo: {$photo_id} update: {$update_type}\n");
-		# fwrite($fh, $e['media']['category'] . "\n");
+		# fwrite($fh, "user: {$flickr_user['nsid']} author: {$e['flickr']['author_nsid']} bacup: {$is_backup_user}\n");
+		# fwrite($fh, "title {$e['media']['category']}\n");
 		# fwrite($fh, "\n---\n");
 		# fclose($fh);
 
-		# This should be working but isn't yet... uncertain why
+		# See this: It's not ideal but there you go. The push stuff includes neither
+		# the author of a tag nor the description of the photo (I think) so we're going
+		# to filter photos that belong to backup users whose title is 'flickr:push=ignore'
 		# (20130605/straup)
 
-		if ($key = $GLOBALS['cfg']['flickr_push_ignore_key']){
+		# TO DO: check update type
 
-			$tags = explode(" ", $e['media']['category']);
-			$ignore_tag = "pshb:ignore={$key}";
+		if (($is_backup_user) && ($flickr_user['nsid'] == $e['flickr']['author_nsid'])){
 
-			if (in_array($ignore_tag, $tags)){
+			# TO DO: preg_match ?
 
-				$fh = fopen("/tmp/wtf.json", "a");
-				fwrite($fh, json_encode($e));
-				fwrite($fh, "\n---\n");
-				fclose($fh);
-
+			if ($e['title'] == "flickr:push=ignore"){
 				continue;
 			}
 		}

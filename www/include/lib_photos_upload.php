@@ -26,7 +26,7 @@
 
  		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
-		$rsp = dbtickets_flickr_create();
+		$rsp = dbtickets_flickr_create($user);
 
 		if (! $rsp['ok']){
 			return $rsp;

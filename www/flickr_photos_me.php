@@ -14,7 +14,7 @@
 	);
 
 	if (isset($map[$ctx]) && function_exists($map[$ctx])){
-		$url = call_user_func($map[$ctx], &$GLOBALS['cfg']['user']);
+		$url = call_user_func($map[$ctx], $GLOBALS['cfg']['user']);
 	}
 
 	else {
