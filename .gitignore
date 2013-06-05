@@ -2,3 +2,4 @@
 static
 config.php
 config.local.php
+www/test.php
