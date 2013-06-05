@@ -11,6 +11,8 @@
 	# based on something like a tag (for example 'flickr:push=ignore). Dunno.
 	# (20130520/straup)
 	
+	# TO DO: pass in a user (20130605/straup)
+
 	function dbtickets_flickr_create(){
 
 		# This is a terrible fucking hack to account for the fact that p-flickr
@@ -39,7 +41,7 @@
 		$args = array(
 			'auth_token' => $auth_token,
 			'is_public' => 0,
-			# 'tags' => 'flickr:push=ignore',
+			'title' => 'flickr:push=ignore',
 		);
 
 		$more = array(
