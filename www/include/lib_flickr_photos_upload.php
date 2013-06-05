@@ -15,7 +15,10 @@
 
 		$perms_map = flickr_api_authtoken_perms_map();
 
-		if ($perms_map[$flickr_perms] != 'write'){
+		# '2' is delete and '1' is write
+		# if ($perms_map[$flickr_perms] != 'write'){
+
+		if ($flickr_perms < 1){
 			return not_okay("insufficient perms");
 		}
 
