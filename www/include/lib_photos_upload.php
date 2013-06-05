@@ -284,12 +284,10 @@
 
 		if ($args['preview']){
 
-			# $photo = flickr_photos_get_by_id($photo_id);
-
 			# FIX ME: when run from the CLI/upload-by-email
 			# then cfg.abs_root_url is not set correctly
+			# $photo = flickr_photos_get_by_id($photo_id);
 			# $photo_url = flickr_urls_photo_page($photo);
-			# $desc = "<a href=\"{$photo_url}\">See also:</a>";
 
 			$fl_args = array(
 				'title' => "Untitled Pointer #{$photo_id}",

@@ -85,11 +85,6 @@
 
 	foreach ($atom->items as $e){
 
-		# for debugging...
-		# $fh = fopen("/tmp/wtf.json", "w");
-		# fwrite($fh, json_encode($e));
-		# fclose($fh);
-
 		# TO DO: check $subscription['topic_id'] here because
 		# at some point if we start to use the push stuff to
 		# track things we're backing we'll need to store the
@@ -101,6 +96,32 @@
 
 		$photo_id = $m[1];
 		$update_type = (isset($e['flickr']['update@type'])) ? $e['flickr']['update@type'] : '';
+
+		# for debugging...
+		# $fh = fopen("/tmp/wtf.json", "a");
+		# fwrite($fh, "photo: {$photo_id} update: {$update_type}\n");
+		# fwrite($fh, $e['media']['category'] . "\n");
+		# fwrite($fh, "\n---\n");
+		# fclose($fh);
+
+		# This should be working but isn't yet... uncertain why
+		# (20130605/straup)
+
+		if ($key = $GLOBALS['cfg']['flickr_push_ignore_key']){
+
+			$tags = explode(" ", $e['media']['category']);
+			$ignore_tag = "pshb:ignore={$key}";
+
+			if (in_array($ignore_tag, $tags)){
+
+				$fh = fopen("/tmp/wtf.json", "a");
+				fwrite($fh, json_encode($e));
+				fwrite($fh, "\n---\n");
+				fclose($fh);
+
+				continue;
+			}
+		}
 
 		$photo = array(
 			'photo_id' => $photo_id,
@@ -309,8 +330,8 @@
 	# log_info("[PUSH] wtf: " . count($wtf));
 
 	if (count($wtf)){
-		$msg = implode("\n", $wtf);
-		log_info("[PUSH] wtf: " . $msg);
+		# $msg = implode("\n", $wtf);
+		# log_info("[PUSH] wtf: " . $msg);
 		# mail('aaron@aaronland.net', 'parallel-flickr push debug', $msg);
 	}
 

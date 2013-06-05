@@ -291,6 +291,7 @@
 	$GLOBALS['cfg']['flickr_push_enable_photos_friends_faves'] = 1;
 	$GLOBALS['cfg']['flickr_push_enable_photos_recent_activity'] = 0;
 	$GLOBALS['cfg']['flickr_push_notification_email'] = '';	
+	$GLOBALS['cfg']['flickr_push_ignore_key'] = '';
 
 	# This is off by default because it requires that you ensure that
 	# the directory specified in $GLOBALS['cfg']['flickr_static_path']
