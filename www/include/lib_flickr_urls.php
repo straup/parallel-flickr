@@ -191,7 +191,7 @@
 
 	#################################################################
 
-	function flickr_urls_faves_user(&$user, $by_user=null){
+	function flickr_urls_faves_user($user, $by_user=null){
 
 		$url = flickr_urls_photos_user($user) . "faves/";
 
