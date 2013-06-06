@@ -519,6 +519,11 @@ button a {
     content:"..is currently disabled.";
 }
 
+[contenteditable=true]:focus {
+    background-color: #f6f0b9;
+    padding:.25em;
+}
+
 /* API */
 
 @import url('/css/api.css');
