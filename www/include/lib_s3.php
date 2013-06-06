@@ -20,11 +20,104 @@
 		return $rsp;
 		
 	}
+
+
+	# list contents of a bucket
+	#   params support added for marker and prefix
+	#
+	
+	function s3_get_bucket($bucket, $more) {
+		$url = s3_signed_object_url($bucket, '', array('params' => $more));
+		$rsp = http_get($url);
+		return $rsp;
+	}
+
+	########################################################################
+
+	# FIX ME: allow for optionally signed requests, etc.
+
+	function s3_get($bucket, $object_id, $args=array()){
+
+		$query = array();
+
+		# Note: it is your responsibility to urlencode parameters
+		# because AWS is too fussy to accept things like acl=1 so
+		# we can't use http_build_query (20120716/straup)
+
+		if (isset($args['acl'])){
+			$query[] = urlencode('acl');
+		}
+
+		if (count($query)){
+			$query = implode("&", $query);
+		}
+
+		$date = date('D, d M Y H:i:s T');
+		$path = "/{$bucket['id']}/{$object_id}";
+
+		if ($query){
+			$path .= "?{$query}";
+		}
+
+		$parts = array(
+			'GET',
+			'',
+			'',
+			$date,
+			$path
+		);
+
+		$raw = implode("\n", $parts);
+
+		$sig = s3_sign_auth_string($bucket, $raw);
+		$sig = base64_encode($sig);
+
+		$auth = "AWS {$bucket['key']}:{$sig}";
+
+		$headers = array(
+			'Date' => $date,
+			'Authorization' => $auth,
+		);
+
+		$bucket_url = s3_get_bucket_url($bucket);
+		$object_url = $bucket_url . $object_id;
+
+		if ($query){
+			$object_url .= "?{$query}";
+		}
+
+		return http_get($object_url, $headers);
+	}
 	
 	########################################################################
-	
-	
-	
+
+	function s3_get_acl($bucket, $object_id){
+
+		$args = array(
+			'acl' => 1
+		);
+
+		$rsp = s3_get($bucket, $object_id, $args);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		# I mean this works but still it makes me want to
+		# be sad... (20120716/straup)
+
+		$xml = new SimpleXMLElement($rsp['body']);
+		$json = json_encode($xml);
+		$json = json_decode($json, 'as hash');
+
+		return okay(array(
+			'acl' => $json
+		));
+
+	}
+
+	########################################################################
+
 	function s3_put($bucket, $args){
 
 		$defaults = array(
@@ -50,9 +143,11 @@
 		$parts[] = $date;
 		$parts[] = "x-amz-acl:{$args['acl']}";
 		
-		if ($args['meta']) {
+		if ($args['meta']){
+
 			ksort($args['meta']);
-			foreach ($args['meta'] as $k => $v) {
+
+			foreach ($args['meta'] as $k => $v){
 				$parts[] = "x-amz-meta-$k:$v";
 			}
 		}
@@ -75,8 +170,8 @@
 			'Authorization' => $auth,
 		);
 
-		if ($args['meta']) {
-			foreach ($args['meta'] as $k => $v) {
+		if ($args['meta']){
+			foreach ($args['meta'] as $k => $v){
 				$headers["X-Amz-Meta-$k"] = $v;
 			}
 		}
@@ -94,6 +189,98 @@
 		$object_url = $bucket_url . $args['id'];
 
 		$rsp = http_put($object_url, $args['data'], $headers, $more);
+		return $rsp;
+	}
+
+	########################################################################
+
+	function s3_delete($bucket, $object_id){
+
+		$date = date('D, d M Y H:i:s T');
+		$path = "/{$bucket['id']}/{$object_id}";
+
+		$parts = array(
+			"DELETE",
+			'',
+			'text/plain',
+			$date,
+			$path
+		);
+
+		$raw = implode("\n", $parts);
+
+		$sig = s3_sign_auth_string($bucket, $raw);
+		$sig = base64_encode($sig);
+
+		$auth = "AWS {$bucket['key']}:{$sig}";
+
+		$headers = array(
+			'Date' => $date,
+			'Authorization' => $auth,
+			'Content-Type' => 'text/plain',
+			'Content-Length' => 0
+		);
+
+		# See this? It's important. AWS freaks out at the mere presence
+		# of the 'Transfer-Encoding' header. Thanks, Roy...
+
+		$more = array(
+			'donotsend_transfer_encoding' => 1,
+		);
+
+		$bucket_url = s3_get_bucket_url($bucket);
+		$object_url = $bucket_url . $object_id;
+
+		$rsp = http_delete($object_url, '', $headers, $more);
+		return $rsp;
+	}
+
+	########################################################################
+
+	function s3_rename($bucket, $old_object_id, $new_object_id, $args=array()){
+
+		$rsp = array(
+			'ok' => 0,
+			'get' => null,
+			'put' => null,
+			'delete' => null,
+			'old_object_id' => $old_object_id,
+			'new_object_id' => $new_object_id,
+		);
+
+		$get_rsp = s3_get($bucket, $old_object_id);
+		$rsp['get'] = $get_rsp;
+
+		if (! $get_rsp['ok']){
+			return $rsp;
+		}
+
+		# FIX ME: get ACL (if not specified in $args)
+
+		$put_args = array(
+			'id' => $new_object_id,
+			'content_type' => $get_rsp['headers']['content_type'],
+			'data' => $get_rsp['body'],
+		);
+
+		# note the order of precedence
+		$put_args = array_merge($args, $put_args);
+
+		$put_rsp = s3_put($bucket, $put_args);
+		$rsp['put'] = $put_rsp;
+
+		if (! $put_rsp['ok']){
+			return $rsp;
+		}
+
+		$del_rsp = s3_delete($bucket, $old_object_id);
+		$rsp['delete'] = $del_rsp;
+
+		if (! $del_rsp['ok']){
+			return $rsp;
+		}
+
+		$rsp['ok'] = 1;
 		return $rsp;
 	}
 
@@ -139,9 +326,9 @@
 		$ymd = gmdate('Y-m-d', $args['expires']);
 		$hmd = gmdate('H:i:s', $args['expires']);
 
-        $policy = array(
+		$policy = array(
 			'expiration' => "{$ymd}T{$hmd}Z",
-						'conditions' => $conditions,
+			'conditions' => $conditions,
 		);
 
 		$policy = json_encode($policy);
@@ -212,23 +399,6 @@
 
 		return $rsp;
 	}
-
-	########################################################################
-
-	function s3_get($bucket, $object_id, $args=array()) {
-		
-		$defaults = array(
-			'expires' => time() + 300,
-			'method' => 'GET',
-		);
-		
-		$args = array_merge($defaults, $args);
-	
-		$url = s3_signed_object_url($bucket, $object_id, $args);
-
-		$rsp = http_get($url);
-		return $rsp;
-	}
 	
 	########################################################################
 		
@@ -274,6 +444,10 @@
 			'Expires' => $args['expires'],
 		);
 
+		if ($args['params']) {
+		    $query = array_merge($query, $args['params']);
+		}
+
 		$query = http_build_query($query);
 
 		$url = s3_unsigned_object_url($bucket, $id);
@@ -299,4 +473,5 @@
 	}
 
 	########################################################################
-?>
+
+	# the end
