@@ -17,6 +17,12 @@
 	# Things you need to tweak before you get started
 	#
 
+	$GLOBALS['cfg']['server_scheme'] = ($_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+	$GLOBALS['cfg']['server_name'] = ($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'fake.com';
+
+	$GLOBALS['cfg']['abs_root_url'] = "{$GLOBALS['cfg']['server_scheme']}://{$GLOBALS['cfg']['server_name']}/";
+	$GLOBALS['cfg']['safe_abs_root_url']	= $GLOBALS['cfg']['abs_root_url'];
+
 	# Database configs
 	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/generate_secret.php
 

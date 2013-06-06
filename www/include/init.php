@@ -103,6 +103,12 @@
 
         if ($parent_dirname = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/')){
 
+		# For when we are run from the command-line
+		# (20130605/straup)
+
+		$pf_root = dirname(dirname(dirname(__FILE__)));
+		$parent_dirname = str_replace($parent_dirname, $pf_root, "");
+
 		$parts = explode("/", $parent_dirname);
 		$cwd = implode("/", array_slice($parts, 1));
 

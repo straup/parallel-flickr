@@ -290,12 +290,13 @@
 
 		if ($args['preview']){
 
-			# FIX ME: when run from the CLI/upload-by-email
-			# then cfg.abs_root_url is not set correctly
-			# $photo = flickr_photos_get_by_id($photo_id);
-			# $photo_url = flickr_urls_photo_page($photo);
+			# Make sure to set $GLOBALS['cfg']['abs_root_url']
+			# because $_SERVER may not be passing server name
+			# data, like when we're processing uploads by email
+			# (20130605/straup)
 
-			$photo_url = "https://littlebluewords.spum.org/photos/straup/{$photo_id}/";
+			$photo = flickr_photos_get_by_id($photo_id);
+			$photo_url = flickr_urls_photo_page($photo);
 			$desc = "<a href=\"{$photo_url}\">See also:</a>";
 
 			$fl_args = array(
