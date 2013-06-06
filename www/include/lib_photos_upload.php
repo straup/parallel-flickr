@@ -24,13 +24,19 @@
 
 		# TO DO: am I a file that I can deal with? (20130526/straup)
 
- 		$flickr_user = flickr_users_get_by_user_id($user['id']);
+		$ticket_user = $user;
 
-		$rsp = dbtickets_flickr_create($user);
+		if ($id = $GLOBALS['cfg']['dbtickets_flickr_user_id']){
+			$ticket_user = users_get_by_id($id);
+		}
+
+		$rsp = dbtickets_flickr_create($ticket_user);
 
 		if (! $rsp['ok']){
 			return $rsp;
 		}
+
+ 		$flickr_user = flickr_users_get_by_user_id($user['id']);
 
 		$photo_id = $rsp['id'];
 

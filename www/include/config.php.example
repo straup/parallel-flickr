@@ -39,7 +39,7 @@
 	# See also: parallel-flickr:bin/dbtickets_flickr_token_dance.php
 
 	$GLOBALS['cfg']['enable_feature_dbtickets_flickr'] = 0;
-	$GLOBALS['cfg']['dbtickets_flickr_auth_token'] = '';
+        $GLOBALS['cfg']['dbtickets_flickr_user_id'] = 0;
 
 	# Basic cookie/crypto configs
 	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/generate_secret.php
