@@ -170,10 +170,13 @@ $(document).ready(function(){
 
 	$("#upload-form").submit(function(){
 
+	/* TO DO: use parallel.flickr.api.js */
+
 		var data = new FormData();
 		data.append("method", "parallel.flickr.photos.upload");
 
 		data.append("crumb", $("#photo").attr("data-crumb"));
+		data.append("access_token", parallel_flickr_api_site_token());
 
 		data.append("perms", $("#perms").val());
 		data.append("geoperms", $("#geoperms").val());
@@ -226,8 +229,9 @@ $(document).ready(function(){
 		var dt = new Date();
 		var ts = dt.getTime();
 
+		
 		$.ajax({
-			url: "/api?cb=" + ts,
+			url: "/api/rest?cb=" + ts,
 			type: "POST",
 			data: data,
 			cache: false,
