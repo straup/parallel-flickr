@@ -267,10 +267,24 @@
 
 	function flickr_photos_delete_photo(&$photo, $more=array()){
 
+		$lookup = flickr_photos_lookup_photo($id);
+
+		if (! $lookup){
+			return array('ok' => 0, 'error' => 'invalid photo ID');
+		}
+
+		$rsp = flickr_photos_lookup_delete($lookup);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$lookup = $rsp['lookup'];
+
 		# TO DO: burn all the metadata?
 
 		$update = array(
-			'deleted' => time(),
+			'deleted' => $lookup['deleted'],
 		);
 
 		$rsp = flickr_photos_update_photo($photo, $update);
@@ -291,7 +305,13 @@
 
 	function flickr_photos_update_photo_wtf(&$photo, $update){
 
-		$user = users_get_by_id($photo['user_id']);
+		$lookup = flickr_photos_lookup_photo($id);
+
+		if (! $lookup){
+			return;
+		}
+
+		$user = users_get_by_id($lookup['user_id']);
 		$cluster_id = $user['cluster_id'];
 
 		$update['last_modified'] = time();

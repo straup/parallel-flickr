@@ -1,0 +1,1 @@
+ALTER TABLE FlickrPhotosLookup ADD `deleted` INT(11) UNSIGNED NOT NULL;

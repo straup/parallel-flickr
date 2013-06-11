@@ -23,6 +23,7 @@ CREATE TABLE `FlickrPhotos` (
   `woeid` INT(11) UNSIGNED NOT NULL,
   `geoperms` TINYINT(3) UNSIGNED NOT NULL,
   `geocontext` TINYINT(3) UNSIGNED NOT NULL,
+  `deleted` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

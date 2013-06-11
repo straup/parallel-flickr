@@ -61,6 +61,7 @@ DROP TABLE IF EXISTS `FlickrPhotosLookup`;
 CREATE TABLE `FlickrPhotosLookup` (
   `photo_id` BIGINT(20) UNSIGNED NOT NULL,
   `user_id` INT(11) UNSIGNED NOT NULL,
+  `deleted` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`photo_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
