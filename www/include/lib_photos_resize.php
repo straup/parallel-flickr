@@ -8,7 +8,14 @@
 
 	function photos_resize($src, $dest, $sz, $more=array()){
 
-		$im = imagecreatefromjpeg($src);
+		$rsp = photos_resize_load($src);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$im = $rsp['image'];
+
 		list($w, $h, $type, $attr) = getimagesize($src);
 
 		if ($w > $h){
@@ -34,6 +41,32 @@
 		return array(
 			'ok' => 1,
 		);
+	}
+
+	#################################################################
+
+	function photos_resize_load($src){
+
+		$type = mime_content_type($src);
+
+		if (! $type){
+			return array('ok' => 0, 'error' => 'unable to determine mime-type');
+		}
+
+		if (! preg_match("/^image\/(gif|jpeg|png)$/", $type, $m)){
+			return array('ok' => 0, 'error' => 'invalid or unsupported image');
+		}
+
+		$ext = $m[1];
+		$func = "imagecreatefrom{$ext}";
+
+		$im = call_user_func($func, $src);
+
+		if (! $im){
+			return array('ok' => 0, 'error' => 'unable to determine mime-type');
+		}
+
+		return array('ok' => 1, 'image' => $im);
 	}
 
 	#################################################################
