@@ -263,6 +263,60 @@
 
 	#################################################################
 
+	# THIS SHOULD NOT BE CONSIDERED STABLE OR COMPLETE (20130611/straup)
+
+	function flickr_photos_delete_photo(&$photo, $more=array()){
+
+		# TO DO: burn all the metadata?
+
+		$update = array(
+			'deleted' => time(),
+		);
+
+		$rsp = flickr_photos_update_photo($photo, $update);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		# TO DO: burn all the files
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	# THIS SHOULD NOT BE CONSIDERED STABLE OR COMPLETE (20130611/straup)
+	# TO DO: OMGWTF with all that solr stuff above... (20130611/straup)
+
+	function flickr_photos_update_photo_wtf(&$photo, $update){
+
+		$user = users_get_by_id($photo['user_id']);
+		$cluster_id = $user['cluster_id'];
+
+		$update['last_modified'] = time();
+
+		$hash = array();
+
+		foreach ($update as $k => $v){
+			$hash[$k] = AddSlashes($v);
+		}
+
+		$enc_id = AddSlashes($photo['id']);
+		$where = "id='{$enc_id}'";
+
+		$rsp = db_update_users($cluster_id, 'FlickrPhotos', $hash, $where);
+
+		if ($rsp['ok']){
+			# TO DO: purge caches
+			$photo = array_merge($photo, $update);
+		}
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	function flickr_photos_get_bookends_for_user(&$user, $more=array()){
 
 		$defaults = array(
