@@ -3,7 +3,7 @@
 	$GLOBALS['_storage_hooks']['file_exists'] = 'storage_s3_file_exists';
 	$GLOBALS['_storage_hooks']['get_file'] = 'storage_s3_get_file';
 	$GLOBALS['_storage_hooks']['put_file'] = 'storage_s3_put_file';
-	$GLOBALS['_storage_hooks']['delete_file'] = '';
+	$GLOBALS['_storage_hooks']['delete_file'] = 'storage_s3_delete_file';
 	
 	loadlib('s3');
 
@@ -70,7 +70,11 @@
 	########################################################################
 	
 	function storage_s3_delete_file($path, $more=array()){
-		# TO DO: grab code from mirror project (20130529/straup)
+
+		$bucket = storage_s3_bucket();
+
+		$rsp = s3_delete($bucket, $path);
+		return $rsp;
 	}
 
 	########################################################################
