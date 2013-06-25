@@ -3791,8 +3791,8 @@ if (typeof HTMAPL === "undefined") var HTMAPL = {};
      */
     var NULL_PROVIDER = new MM.MapProvider(function(c) { return null; });
     PROVIDERS.register("none",  NULL_PROVIDER);
-    PROVIDERS.register("toner", new MM.TemplatedMapProvider("http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png"));
-    PROVIDERS.register("stamen:toner", new MM.TemplatedMapProvider("http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png"));
+    PROVIDERS.register("toner", new MM.TemplatedMapProvider("http://tile.stamen.com/toner/{Z}/{X}/{Y}.png"));
+    PROVIDERS.register("stamen:toner", new MM.TemplatedMapProvider("http://tile.stamen.com/toner/{Z}/{X}/{Y}.png"));
 
     /**
      * Cloudmade style map provider generator.

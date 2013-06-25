@@ -420,6 +420,28 @@
 
 	#################################################################
 
+	function flickr_photos_path(&$photo){
+		$path = flickr_photos_id_to_path($photo['id']);
+		$path = rtrim($path, "/");
+
+		$fname = flickr_photos_filename($photo);
+
+		return $path . "/" . $fname;
+	}
+
+	#################################################################
+
+	function flickr_photos_filename(&$photo, $sz='z'){
+
+		$secret = ($sz=='o') ? $photo['originalsecret'] : $photo['secret'];
+		$ext = ($sz=='o') ? $photo['originalformat'] : 'jpg';
+
+		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
+		return $fname;
+	}
+
+	#################################################################
+
 	function flickr_photos_id_to_path($id){
 
 		if ($GLOBALS['cfg']['enable_feature_storage_s3']){

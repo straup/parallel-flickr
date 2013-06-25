@@ -16,43 +16,34 @@
 
 	#################################################################
 
-	function flickr_urls_photo_static(&$photo, $sz="z"){
+	function flickr_urls_photo_static_root(){
 
-		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
-			loadlib('storage_s3');
-			return storage_s3_url_photo($photo);
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']){
+			$bucket = storage_s3_get_bucket();
+			return s3_get_bucket_url($bucket);
 		}
-		
-		# else 
-		
-		$secret = $photo['secret'];
-		$ext = "jpg";
 
 		$root = $GLOBALS['cfg']['abs_root_url'] . $GLOBALS['cfg']['flickr_static_url'];
-		$path = flickr_photos_id_to_path($photo['id']);
-		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
-
-		return $root . $path . "/" . $fname;		
+		return $root;
 	}
 
 	#################################################################
 
+	function flickr_urls_photo_static(&$photo, $sz="z"){
+
+		$root = flickr_urls_photo_static_root();
+		$path = flickr_photos_path($photo, $sz);
+
+		return $root . $path;
+	}
+
+	#################################################################
+
+	# deprecated (20130625/straup)
+
 	function flickr_urls_photo_original(&$photo){
-		
-		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
-			loadlib('storage_s3');
-			return storage_s3_url_photo($photo, 'o');
-		}
-		
-		$secret = $photo['originalsecret'];
-		$sz = "o";
-		$ext = $photo['originalformat'];
 
-		$root = $GLOBALS['cfg']['abs_root_url'] . $GLOBALS['cfg']['flickr_static_url'];
-		$path = flickr_photos_id_to_path($photo['id']);
-		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
-
-		return $root . $path . "/" . $fname;
+		return flickr_urls_photo_static($photo, 'o');		
 	}
 
 	#################################################################
