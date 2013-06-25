@@ -1,72 +1,84 @@
 <?php
+
+	$GLOBALS['_storage_hooks']['file_exists'] = 'storage_s3_file_exists';
+	$GLOBALS['_storage_hooks']['get_file'] = 'storage_s3_get_file';
+	$GLOBALS['_storage_hooks']['put_file'] = 'storage_s3_put_file';
+	$GLOBALS['_storage_hooks']['delete_file'] = 'storage_s3_delete_file';
 	
 	loadlib('s3');
+
+	# TO DO: decide whether bucket should be passed around in $more
+	# (20130529/straup)
+
+	########################################################################
 	
-	function storage_s3_url_photo($photo, $size='z', $more=array()) {
-		$path = storage_s3_path_photo($photo, $size, $more);
-		return s3_unsigned_object_url(storage_s3_bucket(), $path);
+	function storage_s3_file_exists($path, $more=array()) {
+
+		$bucket = storage_s3_bucket();
+
+		$rsp = s3_head($bucket, $path);
+		return $rsp;
 	}
-	
-	function storage_s3_path_photo($photo, $size='z', $more=array()) {
-		$photo_prefix = storage_s3_prefix_photo($photo, $more);
-		
-		if ($size == 'o') {			
-			if ($photo['originalsecret']) {
-				return "{$photo_prefix}{$photo['id']}_{$photo['originalsecret']}_o.{$photo['originalformat']}";
-			} else {
-				return "{$photo_prefix}{$photo['id']}_{$photo['secret']}_b.jpg";
-			}
-		}
-		
-		# else "small"
-		
-		return "{$photo_prefix}{$photo['id']}_{$photo['secret']}_z.jpg";
+
+	########################################################################
+
+	function storage_s3_get_file($path, $more=array()){
+
+		$bucket = storage_s3_bucket();
+
+		$rsp = s3_get($bucket, $path);
+		return $rsp;
 	}
-	
-	function storage_s3_prefix_photo($photo, $more=array()) {
-		$prefix = $photo['user_id'];
+
+	########################################################################
 		
-		$dir = join('/', str_split(substr(md5($photo['id']), 0, 8), 2));
-		$path = "{$prefix}/photos/$dir/";
-		return $path;
-	}
-	
-	
-	function storage_s3_file_store($object_id, $data, $more=array()) {
-		if ($more['type']) {
+	function storage_s3_put_file($path, $bytes, $more=array()) {
+
+		$defaults = array(
+			'acl' => 'public-read',
+		);
+
+		$more = array_merge($defaults, $more);
+
+		if (isset($more['type'])){
 			$type = $more['type'];
-		} else {
+		}
+
+		else {
 			loadlib('mime_type');
-			$type = mime_type_identify($object_id);
+			$type = mime_type_identify($path);
 		}
 		
-	
-		$put = s3_put(storage_s3_bucket(),
-            array(
-				'id' => $object_id,
-				'acl' => 'public-read',
-				'content_type' => $type,
-				'data' => $data,
-				'meta' => array(
-					'date-synced' => time(),
-                )
-		));
-	
-		return $put;
+		$meta = array(
+			'date-synced' => time(),
+                );
+
+		$put_args = array(
+			'id' => $path,
+			'acl' => $more['acl'],
+			'content_type' => $type,
+			'data' => $bytes,
+			'meta' => $meta,
+		);
+
+		$rsp = s3_put(storage_s3_bucket(), $put_args, $more);
+		return $rsp;
 	}
+
+	########################################################################
 	
-	function storage_s3_file_exists($object_id, $more=array()) {
-		$rsp = s3_head(storage_s3_bucket(), $object_id);
-	
-		if ($rsp['ok']) {
-			log_debug('s3', "exists: $object_id");
-			return 1;
-		} else {
-			return 0;
-		}
+	function storage_s3_delete_file($path, $more=array()){
+
+		$bucket = storage_s3_bucket();
+
+		$rsp = s3_delete($bucket, $path);
+		return $rsp;
 	}
-	
-	function storage_s3_bucket() {
+
+	########################################################################
+
+	function storage_s3_bucket(){
+
 		return array(
 			'id' => $GLOBALS['cfg']['amazon_s3_bucket_name'],
 			'key' => $GLOBALS['cfg']['amazon_s3_access_key'],
@@ -74,4 +86,6 @@
 		);
 	}
 	
-	
+	########################################################################
+
+	# the end
