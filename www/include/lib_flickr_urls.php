@@ -19,7 +19,7 @@
 	function flickr_urls_photo_static_root(){
 
 		if ($GLOBALS['cfg']['enable_feature_storage_s3']){
-			$bucket = storage_s3_get_bucket();
+			$bucket = storage_s3_bucket();
 			return s3_get_bucket_url($bucket);
 		}
 
@@ -32,9 +32,10 @@
 	function flickr_urls_photo_static(&$photo, $sz="z"){
 
 		$root = flickr_urls_photo_static_root();
-		$path = flickr_photos_path($photo, $sz);
+		$root = rtrim($root, "/");	# temp...
 
-		return $root . $path;
+		$path = flickr_photos_path($photo, $sz);
+		return $root . "/" . $path;
 	}
 
 	#################################################################

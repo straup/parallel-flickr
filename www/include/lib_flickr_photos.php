@@ -426,7 +426,7 @@
 
 		$fname = flickr_photos_filename($photo);
 
-		return $path . "/" . $fname;
+		return ($path) ? $path . "/" . $fname : $fname;
 	}
 
 	#################################################################
