@@ -177,10 +177,10 @@
 
 	function flickr_photos_import_photo_files(&$photo, $more=array()){
 		
-		if ($GLOBALS['cfg']['enable_feature_storage_s3']) {
-			return flickr_photos_import_photo_files_s3($photo, $more);
-		}
-
+		# TO DO: make things work with storage_s3 – specifically
+		# no prefix (nested directories) for S3 thingies
+		# (20130624/straup)
+	
 		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
 
 		$small = "{$root}_{$photo['secret']}_z.jpg";
@@ -211,10 +211,10 @@
 		# Note the relative paths – the parent tree is meant to be handled by
 		# lib_storagemaster (20130528/straup)
 
-		$path = flickr_photos_id_to_path($photo['id']);
+		$local_path = flickr_photos_id_to_path($photo['id']) . "/";
 
-		$local_small = "{$path}/" . basename($small);
-		$local_orig = "{$path}/" . basename($orig);
+		$local_small = $local_path . basename($small);
+		$local_orig = $local_path . basename($orig);
 
 		$local_info = str_replace("_o.{$photo['originalformat']}", "_i.json", $local_orig);
 		$local_comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $local_orig);
@@ -311,99 +311,7 @@
 			_flickr_photos_import_fetch_multi($req);
 		}
 
-	}
-	
-	#################################################################
-	
-	# TO DO: render this redundant by making the S3 bindings work with
-	# lib_storage (20130527/straup)
-
-	function flickr_photos_import_photo_files_s3(&$photo, $more=array()){
-
-		loadlib('storage_s3');
-		
-		$flickr_urls = _flickr_photos_import_flickr_urls($photo, $more);
-		
-		$orig  = storage_s3_path_photo($photo, 'o', $more);
-		$small = storage_s3_path_photo($photo, 'z', $more);
-
-		$req = array();
-		$meta = array();
-		
-		if (($more['force']) || ( ! storage_s3_file_exists($small))) {
-			$req[] = $flickr_urls['small'];
-		}
-
-		if (($more['force']) || ( ! storage_s3_file_exists($orig))) {
-			log_debug('flickr', "flickr orig: " . $flickr_urls['orig']);
-			$req[] = $flickr_urls['orig'];
-		} 
-
-		$info = str_replace("_o.{$photo['originalformat']}", "_i.json", $orig);
-		$comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $orig);
-
-		if (! isset($more['skip_meta'])) {
-			$meta = _flickr_photos_import_flickr_meta_urls($photo, $more); 
-			
-			foreach($meta as $k => $v) {
-				$req[] = $v;
-			}
-		}
-		
-		# now go!
-
-		# fetch all the bits using http_multi()
-		
-		log_debug('import', "multi-fetch count: " . count($req));
-		
-		if ($count = count($req)){
-			
-			list($multi, $failed) = _flickr_photos_import_do_fetch_multi($req);
-		}
-		
-		log_debug('import', "fetch success count: " . count($multi));
-		
-		foreach ($multi as $rsp) {
-			log_debug('import', "ok: " . $rsp['url']);
-		}
-		foreach ($failed as $rsp) {
-			log_debug('import', "failed: " . $rsp['url']);
-		}
-		
-
-		loadlib('mime_type');
-
-		$sent = array();
-
-		foreach ($multi as $rsp) {
-			$id = '';
-			
-			if ($rsp['url'] == $flickr_urls['orig']) {
-				$id = $orig;
-			} elseif ($rsp['url'] == $flickr_urls['small']) {
-				$id = $small;
-	        } elseif ($rsp['url'] == $meta['info']) {
-				$id = $info;
-				$more['type'] = 'application/json';
-			} elseif ($rsp['url'] == $meta['comments']) {
-				$id = $comments;
-				$more['type'] = 'application/json';
-			}
-			
-			if ($id) {
-				$sent[] = storage_s3_file_store($id, $rsp['body'], $more);
-			}
-		}
-		
-		foreach ($sent as $rsp) {
-			if ($rsp['ok']) {
-				log_debug('s3', 'ok put ' . $rsp['url']);
-			} else {
-				log_debug('s3', 'failed put ' . $rsp['url']);
-			}
-		}
-
-	}
+	}	
 
 	#################################################################
 
@@ -479,10 +387,11 @@
 			# storagemaster_file_exists functions, above.
 			# (20130527/straup)
 
-			$strg_local = str_replace($GLOBALS['cfg']['flickr_static_path'], "", $local);
-			log_info("store as {$strg_local}");
+			# $strg_local = str_replace($GLOBALS['cfg']['flickr_static_path'], "", $local);
+			# log_info("store as {$strg_local}");
+			# $strg_rsp = storage_put_file($strg_local, $data);
 
-			$strg_rsp = storage_put_file($strg_local, $data);
+			$strg_rsp = storage_put_file($local, $data);
 
 			log_info("wrote {$local} : {$strg_rsp['ok']}");
 		}

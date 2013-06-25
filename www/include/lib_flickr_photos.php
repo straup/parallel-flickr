@@ -422,6 +422,10 @@
 
 	function flickr_photos_id_to_path($id){
 
+		if ($GLOBALS['cfg']['enable_feature_storage_s3']){
+			return "";
+		}
+
 		$parts = array();
 
 		while (strlen($id)){

@@ -32,9 +32,7 @@
 		$path = flickr_photos_id_to_path($photo['id']);
 		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
 
-		return $root . $path . "/" . $fname;
-		
-		
+		return $root . $path . "/" . $fname;		
 	}
 
 	#################################################################
