@@ -22,8 +22,6 @@
 
 	########################################################################
 
-	# not tested (20130529/straup)
-
 	function storage_s3_get_file($path, $more=array()){
 
 		$bucket = storage_s3_bucket();
@@ -55,7 +53,7 @@
 			'date-synced' => time(),
                 );
 
-		$args = array(
+		$put_args = array(
 			'id' => $path,
 			'acl' => $more['acl'],
 			'content_type' => $type,
@@ -63,7 +61,7 @@
 			'meta' => $meta,
 		);
 
-		$rsp = s3_put(storage_s3_bucket(), $put_args);
+		$rsp = s3_put(storage_s3_bucket(), $put_args, $more);
 		return $rsp;
 	}
 

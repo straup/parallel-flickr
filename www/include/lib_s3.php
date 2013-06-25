@@ -183,6 +183,10 @@
 			'donotsend_transfer_encoding' => 1,
 		);
 
+		if ($args['http_timeout']){
+			$more['http_timeout'] = $args['http_timeout'];
+		}
+
 		$bucket_url = s3_get_bucket_url($bucket);
 
 		# enurl-ify ?

@@ -1,4 +1,7 @@
 <?
+	#
+	# $Id$
+	#
 
 	########################################################################
 
@@ -46,6 +49,29 @@
 
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+
+		if ($more['return_curl_handle']){
+			return $ch;
+		}
+
+		return _http_request($ch, $url, $more);
+	}
+
+	########################################################################
+
+	# uncertain what to think about $post_fields as different servers
+	# expect different things (aka params sent as GET/query args)...
+	# thanks, Roy (20120601/straup)
+
+	function http_delete($url, $post_fields, $headers=array(), $more=array()){
+
+		$ch = _http_curl_handle($url, $headers, $more);
+
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+
+		if ($post_fields){
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+		}
 
 		if ($more['return_curl_handle']){
 			return $ch;
@@ -112,6 +138,10 @@
 
 			else if ($method == 'POST'){
 				$ch = http_post($url, $body, $headers, $more);
+			}
+
+			else if ($method == 'DELETE'){
+				$ch = http_delete($url, $body, $headers, $more);
 			}
 
 			else if ($method == 'PUT'){
@@ -253,7 +283,7 @@
 
 			return array(
 				'ok'		=> 0,
-				'error'	=> 'http_failed',
+				'error'		=> 'http_failed',
 				'code'		=> $info['http_code'],
 				'method'	=> $method,
 				'url'		=> $info['url'],
@@ -266,9 +296,10 @@
 
 		return array(
 			'ok'		=> 1,
+			'code'		=> $info['http_code'],
+			'method'	=> $method,
 			'url'		=> $info['url'],
 			'info'		=> $info,
-			'method'	=> $method,
 			'req_headers'	=> $headers_out,
 			'headers'	=> $headers_in,
 			'body'		=> $body,
@@ -331,5 +362,3 @@
 	}
 
 	########################################################################
-
-	# the end
