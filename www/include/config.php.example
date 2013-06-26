@@ -14,12 +14,6 @@
 	# Things you need to tweak before you get started
 	#
 
-	$GLOBALS['cfg']['server_scheme'] = ($_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-	$GLOBALS['cfg']['server_name'] = ($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'fake.com';
-
-	$GLOBALS['cfg']['abs_root_url'] = "{$GLOBALS['cfg']['server_scheme']}://{$GLOBALS['cfg']['server_name']}/";
-	$GLOBALS['cfg']['safe_abs_root_url']	= $GLOBALS['cfg']['abs_root_url'];
-
 	# Database configs
 	# See also: https://github.com/straup/parallel-flickr/blob/master/bin/generate_secret.php
 
@@ -36,6 +30,9 @@
 
 	$GLOBALS['cfg']['flickr_api_key'] = 'TWEAK ME';
 	$GLOBALS['cfg']['flickr_api_secret'] = 'TWEAK ME';
+
+	# See also: YOUR-PARALLEL-FLICKR/account/flickr/auth
+
 	$GLOBALS['cfg']['flickr_api_perms'] = 'read';
 
 	# Use Flickr as a ticketing server!
@@ -72,8 +69,6 @@
 	$GLOBALS['cfg']['enable_feature_backups'] = 1;
 	$GLOBALS['cfg']['enable_feature_backups_registration'] = 1;
 	$GLOBALS['cfg']['enable_feature_backups_registration_uninvited'] = 0;
-
-	# API
 
 	# API URLs and endpoints
 
@@ -160,6 +155,7 @@
 	# Also, some day this should be a user settings page. Some day.
 
 	$GLOBALS['cfg']['enable_feature_oauth_upload'] = 0;
+
 	$GLOBALS['cfg']['oauth_upload_user_mapping'] = array(
 		// twitter user_id => p-flickr user_id
 	);
@@ -198,13 +194,6 @@
 		'pxl',
 		'rockstr'
 	);
-
-	# Storagemaster. See also:
-	# parallel-flickr/storagemaster/bin/storagemaster.py
-	# parallel-flickr/storagemaster/init.d/storagemaster.sh
-
-	$GLOBALS['cfg']['storage_storagemaster_host'] = '127.0.0.1';
-	$GLOBALS['cfg']['storage_storagemaster_port'] = '9999';
 
 	# Invite codes – these are used to limit who can register
 	# to have their photos backed up. You'll need to do a
@@ -258,6 +247,11 @@
 	# to store your photos (and metadata) using Amazon's S3 service but you'll need to
 	# enable/configure it below.
 
+	# Storage providers. Valid options are:
+	# 'fs' which will store stuff to the local filesystem
+	# 's3' which will store stuff to S3
+	# 'storagemaster' which will store stuff to the local filesystem - see details below
+
 	$GLOBALS['cfg']['storage_provider'] = 'fs';
 
 	# The 'flickr_static_url/path' flags needs to match the Alias directive
@@ -275,6 +269,14 @@
 	$GLOBALS['cfg']['amazon_s3_access_key'] = 'TWEAK ME';
 	$GLOBALS['cfg']['amazon_s3_secret_key'] = 'TWEAK ME';
 	$GLOBALS['cfg']['amazon_s3_bucket_name'] = 'TWEAK ME';
+
+	# Storagemaster. See also:
+	# parallel-flickr/storagemaster/bin/storagemaster.py
+	# parallel-flickr/storagemaster/init.d/storagemaster.sh
+
+	$GLOBALS['cfg']['storage_storagemaster_host'] = '127.0.0.1';
+	$GLOBALS['cfg']['storage_storagemaster_port'] = '9999';
+
 
 	#
 	# Things you may want to tweak (maps)
