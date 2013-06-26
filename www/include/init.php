@@ -239,7 +239,7 @@
 	loadlib("flickr_backups");
 
 	loadlib('storage');
-	loadlib('storage_storagemaster');
+	storagemaster_init();
 
 	if ($this_is_webpage){
 

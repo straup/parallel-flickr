@@ -4,10 +4,16 @@
 
 	function exif_read($path){
 
+		$type = mime_content_type($path);
+
+		if ($type != 'image/jpeg'){
+			return array('ok' => 0, "error" => "not a JPEG file");
+		}
+
 		$exif = exif_read_data($path);
 
 		if (! $exif){
-			return array(ok => 0, "error" => "failed to read EXIF data");
+			return array('ok' => 0, "error" => "failed to read EXIF data");
 		}
 
 		# TO DO: expand EXIF tag values

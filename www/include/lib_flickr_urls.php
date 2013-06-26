@@ -18,7 +18,7 @@
 
 	function flickr_urls_photo_static_root(){
 
-		if ($GLOBALS['cfg']['enable_feature_storage_s3']){
+		if ($GLOBALS['cfg']['storage_provider'] == 's3'){
 			$bucket = storage_s3_bucket();
 			return s3_get_bucket_url($bucket);
 		}

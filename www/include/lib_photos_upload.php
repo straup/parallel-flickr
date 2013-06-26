@@ -13,7 +13,6 @@
 	loadlib("photos_resize");
 
 	loadlib("storage");
-	loadlib("storage_storagemaster");
 
 	loadlib("exif");
 	loadlib("geo_utils");
@@ -95,6 +94,10 @@
 
 		if ((! $format_orig) && ($exif)){
 			$format_orig = "jpg";
+		}
+
+		if ((! $format_org) && (preg_match("/\.(\w+)$/", $file, $m))){
+			$format_orig = $m[1];
 		}
 
 		$media = 'photo';
@@ -207,7 +210,11 @@
 		# TO DO: make functions for all this stuff
 		# note: not checking for video-ness
 
-		$root = flickr_photos_id_to_path($photo_id) . "/";
+		$root = flickr_photos_id_to_path($photo_id);
+
+		if ($root){
+			$root .= "/";
+		}
 
 		$orig = "{$photo_id}_{$secret_orig}_o.{$format_orig}";
 		$info = "{$photo_id}_{$secret_orig}_i.json";
@@ -218,7 +225,6 @@
 		$bytes = photos_upload_path_to_bytes($file);
 
 		$rsp = storage_put_file($orig, $bytes);
-		# dumper($rsp);
 
 		if (! $rsp['ok']){
 			return $rsp;

@@ -444,7 +444,7 @@
 
 	function flickr_photos_id_to_path($id){
 
-		if ($GLOBALS['cfg']['enable_feature_storage_s3']){
+		if ($GLOBALS['cfg']['storage_provider'] == 's3'){
 			return "";
 		}
 

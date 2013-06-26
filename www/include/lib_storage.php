@@ -1,11 +1,34 @@
 <?php
 
+	loadlib("storage_fs");
+	loadlib("storage_s3");
+	loadlib("storage_storagemaster");
+
+	#################################################################
+
 	$GLOBALS['_storage_hooks'] = array(
 		'file_exists'	=> null,
 		'get_file'	=> null,
 		'put_file'	=> null,
 		'delete_file'	=> null,
 	);
+
+	#################################################################
+
+	# pass in provider here ?
+
+	function storagemaster_init(){
+
+		$storage_provider_lib = "storage_{$GLOBALS['cfg']['storage_provider']}";
+		$storage_provider_init = "{$storage_provider_lib}_init";
+
+		if (! function_exists($storage_provider_init)){
+			$storage_provider_lib = "storage_fs";
+			$storage_provider_init = "{$storage_provider_lib}_init";
+		}
+
+		call_user_func($storage_provider_init);
+	}
 
 	#################################################################
 

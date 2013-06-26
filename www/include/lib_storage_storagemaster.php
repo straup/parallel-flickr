@@ -1,9 +1,15 @@
 <?php
 
-	$GLOBALS['_storage_hooks']['file_exists'] = 'storage_storagemaster_file_exists';
-	$GLOBALS['_storage_hooks']['get_file'] = '';
-	$GLOBALS['_storage_hooks']['put_file'] = 'storage_storagemaster_put_file';
-	$GLOBALS['_storage_hooks']['delete_file'] = '';
+	#################################################################
+
+	function storage_storagemaster_init(){
+		$GLOBALS['_storage_hooks']['file_exists'] = 'storage_storagemaster_file_exists';
+		$GLOBALS['_storage_hooks']['get_file'] = '';
+		$GLOBALS['_storage_hooks']['put_file'] = 'storage_storagemaster_put_file';
+		$GLOBALS['_storage_hooks']['delete_file'] = '';
+	}
+
+	#################################################################
 
 	# Note: It's still not clear that this should expect to get responses
 	# as JSON blobs (20130527/straup)

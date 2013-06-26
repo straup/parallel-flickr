@@ -1,7 +1,4 @@
 <?
-	#
-	# $Id$
-	#
 
 	$GLOBALS['cfg'] = array();
 
@@ -261,6 +258,8 @@
 	# to store your photos (and metadata) using Amazon's S3 service but you'll need to
 	# enable/configure it below.
 
+	$GLOBALS['cfg']['storage_provider'] = 'fs';
+
 	# The 'flickr_static_url/path' flags needs to match the Alias directive
 	# in your Apache config. Not that the 'flickr_static_url' config is a
 	# relative path; relative to the root URL which is assigned separately.
@@ -272,8 +271,6 @@
 	# If you want to store your photos (and metadata) using Amazon's S3
 	# service you'll need to enable this feature flag and fill in the
 	# 'amazon_s3_*' flags below.
-		
-	$GLOBALS['cfg']['enable_feature_storage_s3'] = 0;
 
 	$GLOBALS['cfg']['amazon_s3_access_key'] = 'TWEAK ME';
 	$GLOBALS['cfg']['amazon_s3_secret_key'] = 'TWEAK ME';
@@ -294,7 +291,10 @@
 	$GLOBALS['cfg']['enable_feature_flickr_push'] = 1;
 	$GLOBALS['cfg']['flickr_push_enable_registrations'] = 1;
 	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 1;
-	$GLOBALS['cfg']['flickr_push_enable_photos_friends_faves'] = 1;
+
+	# this one doesn't seem to work anymore - sad face (20130625/straup)
+	# $GLOBALS['cfg']['flickr_push_enable_photos_friends_faves'] = 0;
+
 	$GLOBALS['cfg']['flickr_push_enable_photos_recent_activity'] = 0;
 	$GLOBALS['cfg']['flickr_push_notification_email'] = '';	
 	$GLOBALS['cfg']['flickr_push_ignore_key'] = '';
