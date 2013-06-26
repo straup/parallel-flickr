@@ -420,11 +420,11 @@
 
 	#################################################################
 
-	function flickr_photos_path(&$photo){
+	function flickr_photos_path(&$photo, $sz='z'){
 		$path = flickr_photos_id_to_path($photo['id']);
 		$path = rtrim($path, "/");
 
-		$fname = flickr_photos_filename($photo);
+		$fname = flickr_photos_filename($photo, $sz);
 
 		return ($path) ? $path . "/" . $fname : $fname;
 	}
