@@ -28,6 +28,13 @@
 	# Flickr configs
 	# http://www.flickr.com/services/apps/create/apply/
 
+	# Seriously Flickr, fuck you...
+	# http://code.flickr.net/2012/01/13/farewell-flickrauth/
+
+	$GLOBALS['cfg']['flickr_api_use_oauth_bridge'] = 0;
+	$GLOBALS['cfg']['flickr_oauth_key'] = '';
+	$GLOBALS['cfg']['flickr_oauth_secret'] = '';	
+
 	$GLOBALS['cfg']['flickr_api_key'] = 'TWEAK ME';
 	$GLOBALS['cfg']['flickr_api_secret'] = 'TWEAK ME';
 
