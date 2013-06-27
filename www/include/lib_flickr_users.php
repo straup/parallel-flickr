@@ -105,6 +105,9 @@
 
 			$cache_key = "flickr_user_{$flickr_user['user_id']}";
 			cache_unset($cache_key);
+
+			$cache_key = "flickr_user_{$flickr_user['auth_token']}";
+			cache_unset($cache_key);
 		}
 
 		return $rsp;
@@ -236,6 +239,27 @@
 
 		$sql = "SELECT * FROM FlickrUsers WHERE user_id='{$enc_id}'";
 
+		$rsp = db_fetch($sql);
+		$user = db_single($rsp);
+
+		cache_set($cache_key, $user, "cache locally");
+		return $user;
+	}
+
+	#################################################################
+
+	function flickr_users_get_by_auth_token($auth_token){
+
+		$cache_key = "flickr_user_{$auth_token}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
+		$enc_token = AddSlashes($auth_token);
+
+		$sql = "SELECT * FROM FlickrUsers WHERE auth_token='{$enc_token}'";
 		$rsp = db_fetch($sql);
 		$user = db_single($rsp);
 

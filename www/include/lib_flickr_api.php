@@ -70,7 +70,6 @@
 
 			if (isset($args['auth_token'])){
 
-				# this method has not been written...
 				$flickr_user = flickr_users_get_by_auth_token($args['auth_token']);
 				$more['user_key'] = $flickr_user['oauth_token'];
 				$more['user_secret'] = $flickr_user['oauth_secret'];
