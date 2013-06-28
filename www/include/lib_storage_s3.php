@@ -38,6 +38,9 @@
 
 	########################################################################
 		
+	# TO DO: Check to see if this will create nested directories like mkdir -p
+	# and if not then write that code. Boring... (20130627/straup)
+	
 	function storage_s3_put_file($path, $bytes, $more=array()) {
 
 		$defaults = array(

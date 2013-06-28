@@ -420,6 +420,10 @@
 
 	#################################################################
 
+	# TO DO: Account for Kellan's S3 trick of prefixing things with
+	# a user ID rather than exploding the photo ID in to nested folders
+	# (20130627/straup)
+
 	function flickr_photos_path(&$photo, $sz='z'){
 		$path = flickr_photos_id_to_path($photo['id']);
 		$path = rtrim($path, "/");
@@ -441,6 +445,9 @@
 	}
 
 	#################################################################
+
+	# TO DO: Stop calling this all over the place and use the _fname
+	# and _path functions above (20130627/straup)
 
 	function flickr_photos_id_to_path($id){
 
