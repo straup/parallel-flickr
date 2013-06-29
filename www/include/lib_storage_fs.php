@@ -24,6 +24,7 @@
 			return array('ok' => 0, 'error' => 'File not found');
 		}
 
+		$size = filesize($path);
 		$fh = fopen($path, 'r');
 
 		if (! $fh){
@@ -35,6 +36,7 @@
 			'path' => $path,
 			'uri' => $uri,
 			'fh' => $fh,
+			'content-length' => $size,
 		);
 	}
 

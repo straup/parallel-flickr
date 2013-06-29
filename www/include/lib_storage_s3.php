@@ -33,6 +33,21 @@
 		$bucket = storage_s3_bucket();
 
 		$rsp = s3_get($bucket, $path);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		dumper(strlen($rsp['body']));
+		$path = "php://memory";
+
+		$fh = fopen($path, 'wb');
+		fwrite($fh, $rsp['body']);
+		fseek($fh, 0);
+
+		$rsp['fh'] = $fh;
+		$rsp['content-length'] = $rsp['headers']['content-length'];
+
 		return $rsp;
 	}
 

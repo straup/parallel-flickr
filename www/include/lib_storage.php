@@ -45,6 +45,10 @@
 
 	#################################################################
 
+	# $fh = fopen("...", "w");
+	# fwrite($fh, stream_get_contents($rsp['fh']));
+	# fclose($fh);
+
 	function storage_get_file($path, $more=array()){
 
 		if ($func = $GLOBALS['_storage_hooks']['get_file']){

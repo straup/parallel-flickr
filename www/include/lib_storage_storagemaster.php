@@ -65,6 +65,25 @@
 		# $out = socket_read($socket, 2048);
 		# socket_close($socket);
 
+		# PLEASE WRITE ME...
+
+		/*
+		$path = "php://memory";
+		$fh = fopen($path, 'w');
+
+		while(){
+			fwrite($fh, $bytes);
+		}
+
+		fseek($fh, 0);
+
+		$rsp = array(
+			'ok' => 1,
+			'fh' => $fh,
+		);
+
+		return $rsp;
+		*/
 	}
 
 	#################################################################
