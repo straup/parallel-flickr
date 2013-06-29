@@ -97,7 +97,7 @@
 		}
 
 		if ((! $format_org) && (preg_match("/\.(\w+)$/", $file, $m))){
-			$format_orig = $m[1];
+			$format_orig = strtolower($m[1]);
 		}
 
 		$media = 'photo';
@@ -250,23 +250,17 @@
 			1600 => 'h',
 		);
 
-		foreach ($resize as $sz => $ext){
+		foreach ($resize as $dim => $sz){
 
 			# TO DO: make sure the photo isn't smaller that the
 			# stuff listed in $resize
 
-			$small_fname = "{$photo_id}_{$secret}";
+			$small_basename = flickr_photos_basename($mock_photo, array('size' => $sz));
+			$small_path = $dirname . $small_basename;
 
-			if ($ext){
-				$small_fname .= "_{$ext}";
-			}
+			$resized = sys_get_temp_dir() . "/" . $small_basename;
 
-			$small_fname .= ".jpg";
-			$small_path = $root . $small_fname;
-
-			$resized = sys_get_temp_dir() . "/" . $small_fname;
-
-			$rsp = photos_resize($file, $resized, $sz);
+			$rsp = photos_resize($file, $resized, $dim);
 
 			if (! $rsp['ok']){
 				continue;

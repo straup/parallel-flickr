@@ -507,7 +507,14 @@
 			$ext = 'jpg';
 		}
 
-		$fname = "{$photo['id']}_{$secret}_{$size}.{$ext}";
+		$fname = "{$photo['id']}_{$secret}";
+
+		if ($size){
+			$fname .= "_{$size}";
+		}
+
+		$fname .= ".{$ext}";
+
 		return $fname;
 	}
 
