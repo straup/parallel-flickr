@@ -19,6 +19,8 @@
 
 	#################################################################
 
+	# TO DO: account for things stored on S3 (20130629/straup)
+
 	function flickr_photos_exif_read(&$photo){
 
 		$map = flickr_photos_media_map();
@@ -27,14 +29,14 @@
 			return not_okay("video does not contain EXIF data");
 		}
 
-		$fname = "{$photo['id']}_{$photo['originalsecret']}_o.{$photo['originalformat']}";
-		$froot = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
-
-		$path = "{$froot}/{$fname}";
+		# abs_path is temporary (see below inre: lib_storage)
+		$path = flickr_photos_path($photo, array('size' => 'o', 'abs_path' => 1));
 
 		if (! preg_match("/\.jpe?g$/i", $path)){
 			return not_okay("not a JPEG photo");
 		}
+
+		# TO DO: use lib_storage
 
 		if (! file_exists($path)){
 			return not_okay("original photo not found");

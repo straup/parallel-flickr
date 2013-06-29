@@ -89,8 +89,8 @@
 		#
 		# 1) because the only thing the Flickr API returns is a photo ID
 		#    we have to first call photos.getInfo and to get the photo
-		#    secret and then call flickr_photos_id_to_path and store the
-		#    original photo.
+		#    secret and then call [UPDATE ME TO REFLECT REALITY] and store
+		#    the original photo.
 		#
 		# 2) since we'll have photos getInfo we could both write that to
 		#    disk and rebuild the SRP (with the relevant extras) and
@@ -158,23 +158,16 @@
 			# TO DO: make functions for all this stuff
 			# note: not checking for video-ness
 
-			$orig = "{$photo['originalsecret']}_{$photo['id']}_o.{$photo['originalformat']}";
-			$info = "{$photo['originalsecret']}_{$photo['id']}_i.json";
+			$root = $GLOBALS['cfg']['flickr_static_path'];
+			$dirname = flickr_photos_dirname($photo);
 
-			$root = $GLOBALS['cfg']['flickr_static_path'] . flickr_photos_id_to_path($photo['id']);
+			$orig = flickr_photos_basename($photos, array('size' => 'o'));
+			$info = flickr_photos_basename($photos, array('size' => 'i'));
 
-			$orig = $root . $orig;
-			$info = $root . $info;
+			$orig = $root . $dirname . $orig;
+			$info = $root . $dirname . $info;
 
 			# TO DO: merge this in to flickr_photos_import_photo
-
-			if (! file_exists($root)){
-				# oh yeah, right... the www server will need to be able
-				# to write to the static files directory....grrrnnnn
-				# mkdir($root, 0755, true);
-			}
-
-			# see above; this part is still not done...
 
 			$more = array(
 				'donot_import_files' => 1

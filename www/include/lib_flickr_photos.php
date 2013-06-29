@@ -420,27 +420,94 @@
 
 	#################################################################
 
-	# TO DO: Account for Kellan's S3 trick of prefixing things with
-	# a user ID rather than exploding the photo ID in to nested folders
-	# (20130627/straup)
+	# TO DO: update to accept an abs_path argument and see if it
+	# will work with 'file://' URIs in order to accomodate the S3
+	# stuff
 
-	function flickr_photos_path(&$photo, $sz='z'){
-		$path = flickr_photos_id_to_path($photo['id']);
-		$path = rtrim($path, "/");
+	function flickr_photos_path(&$photo, $more=array()){
 
-		$fname = flickr_photos_filename($photo, $sz);
+		$defaults = array(
+			'abs_path' => 0,
+		);
 
-		return ($path) ? $path . "/" . $fname : $fname;
+		$more = array_merge($defaults, $more);
+
+		$parts = array();
+
+		if ($more['abs_path']){
+			$parts[] = $GLOBALS['cfg']['flickr_static_path'];
+		}
+
+		$parts[] = flickr_photos_dirname($photo, $more);
+		$parts[] = flickr_photos_basename($photo, $more);
+
+		$path = implode("", $parts);
+		return $path;
 	}
 
 	#################################################################
 
-	function flickr_photos_filename(&$photo, $sz='z'){
+	function flickr_photos_dirname(&$photo, $more=array()){
 
-		$secret = ($sz=='o') ? $photo['originalsecret'] : $photo['secret'];
-		$ext = ($sz=='o') ? $photo['originalformat'] : 'jpg';
+		if ($GLOBALS['cfg']['storage_provider'] == 's3'){
 
-		$fname = "{$photo['id']}_{$secret}_{$sz}.{$ext}";
+			$parts = array(
+				$photo['user_id'],
+				"photos",
+			);
+
+			# Dunno. Ask Kellan... (20130629/straup)
+		
+			$prefix = md5($photo['id']);
+			$prefix = substr($prefix, 0, 8);
+			$prefix = str_split($prefix, 2);
+			
+			$parts = array_merge($parts, $prefix);
+			$dirname = implode(DIRECTORY_SEPARATOR, $parts);
+		}
+
+		else {
+			$dirname = flickr_photos_id_to_path($photo['id']);
+		}
+
+		return $dirname . "/";
+	}
+
+	#################################################################
+
+	function flickr_photos_basename(&$photo, $more=array()){
+
+		$defaults = array(
+			'size' => 'z',
+		);
+
+		$more = array_merge($defaults, $more);
+
+		$size = $more['size'];
+		$secret = '';
+		$ext = '';
+
+		if ($size == 'o'){
+			$secret = $photo['originalsecret'];
+			$ext = $photo['originalformat'];
+		}
+
+		else if ($size == 'i'){
+			$secret = $photo['originalsecret'];
+			$ext = 'json';
+		}
+
+		else if ($size == 'c'){
+			$secret = $photo['originalsecret'];
+			$ext = 'json';
+		}
+
+		else {
+			$secret = $photo['secret'];
+			$ext = 'jpg';
+		}
+
+		$fname = "{$photo['id']}_{$secret}_{$size}.{$ext}";
 		return $fname;
 	}
 
@@ -450,10 +517,6 @@
 	# and _path functions above (20130627/straup)
 
 	function flickr_photos_id_to_path($id){
-
-		if ($GLOBALS['cfg']['storage_provider'] == 's3'){
-			return "";
-		}
 
 		$parts = array();
 

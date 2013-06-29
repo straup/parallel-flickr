@@ -211,10 +211,12 @@
 		# Note the relative paths – the parent tree is meant to be handled by
 		# lib_storagemaster (20130528/straup)
 
-		$local_path = flickr_photos_id_to_path($photo['id']) . "/";
+		$dirname = flickr_photos_dirname($photo);
 
-		$local_small = $local_path . basename($small);
-		$local_orig = $local_path . basename($orig);
+		$local_small = $dirname . basename($small);
+		$local_orig = $dirname . basename($orig);
+
+		# TO DO: use flickr_photos_basename(...)
 
 		$local_info = str_replace("_o.{$photo['originalformat']}", "_i.json", $local_orig);
 		$local_comments = str_replace("_o.{$photo['originalformat']}", "_c.json", $local_orig);

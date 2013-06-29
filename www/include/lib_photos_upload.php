@@ -210,17 +210,21 @@
 		# TO DO: make functions for all this stuff
 		# note: not checking for video-ness
 
-		$root = flickr_photos_id_to_path($photo_id);
+		$mock_photo = array(
+			'id' => $photo_id,
+			'user_id' => $user['id'],
+			'secret' => $secret,
+			'originalsecret' => $secret_orig,
+			'originalformat' => $format_orig,
+		);
 
-		if ($root){
-			$root .= "/";
-		}
+		$dirname = flickr_photos_dirname($mock_photo);
 
-		$orig = "{$photo_id}_{$secret_orig}_o.{$format_orig}";
-		$info = "{$photo_id}_{$secret_orig}_i.json";
+		$orig = flickr_photos_basename($mock_photo, array('size' => 'o'));
+		$info = flickr_photos_basename($mock_photo, array('size' => 'i'));
 
-		$orig = $root . $orig;
-		$info = $root . $info;
+		$orig = $dirname . $orig;
+		$info = $dirname . $info;
 
 		$bytes = photos_upload_path_to_bytes($file);
 

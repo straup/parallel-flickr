@@ -4,14 +4,12 @@
 
 	#################################################################
 
-	function flickr_photos_metadata_path(&$photo){
+	function flickr_photos_metadata_path(&$photo, $more=array()){
 
-		$root = $GLOBALS['cfg']['flickr_static_path'];
-		$path = flickr_photos_id_to_path($photo['id']) . "/";
-		$fname = "{$photo['id']}_{$photo['originalsecret']}_i.json";
+		$more['abs_path'] = 1;
+		$more['size'] = 'i';
 
-		$meta = $root . $path . $fname;
-		return $meta;
+		return flickr_photos_path($photo, $more);
 	}
 
 	#################################################################

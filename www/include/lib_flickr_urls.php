@@ -5,10 +5,26 @@
 
 	#################################################################
 
+	function flickr_urls_photo_static_root(){
+
+		if ($GLOBALS['cfg']['storage_provider'] == 's3'){
+			$bucket = storage_s3_bucket();
+			$root = s3_get_bucket_url($bucket);
+		}
+
+		else {
+			$root = $GLOBALS['cfg']['abs_root_url'] . $GLOBALS['cfg']['flickr_static_url'];
+		}
+
+		return $root;
+	}
+
+	#################################################################
+
 	function flickr_urls_photo_thumb_flickr(&$photo){
 
 		if (! $photo['farm']){
-			return flickr_urls_photo_static($photo, "t");
+			return flickr_urls_photo_static($photo, array('size' => 't'));
 		}
 
 		return "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}_{$photo['secret']}_t.jpg";
@@ -16,35 +32,24 @@
 
 	#################################################################
 
-	function flickr_urls_photo_static_root(){
-
-		if ($GLOBALS['cfg']['storage_provider'] == 's3'){
-			$bucket = storage_s3_bucket();
-			return s3_get_bucket_url($bucket);
-		}
-
-		$root = $GLOBALS['cfg']['abs_root_url'] . $GLOBALS['cfg']['flickr_static_url'];
-		return $root;
+	function flickr_urls_photo_original(&$photo){
+		return flickr_urls_photo_static($photo, array('size' => 'o'));
 	}
 
 	#################################################################
 
-	function flickr_urls_photo_static(&$photo, $sz="z"){
+	function flickr_urls_photo_static(&$photo, $more=array()){
+
+		$defaults = array(
+			'size' => 'z',
+		);
+
+		$more = array_merge($defaults, $more);
 
 		$root = flickr_urls_photo_static_root();
-		$root = rtrim($root, "/");	# temp...
+		$path = flickr_photos_path($photo, $more);
 
-		$path = flickr_photos_path($photo, $sz);
-		return $root . "/" . $path;
-	}
-
-	#################################################################
-
-	# deprecated (20130625/straup)
-
-	function flickr_urls_photo_original(&$photo){
-
-		return flickr_urls_photo_static($photo, 'o');		
+		return $root . $path;
 	}
 
 	#################################################################
