@@ -463,7 +463,7 @@
 			$prefix = str_split($prefix, 2);
 			
 			$parts = array_merge($parts, $prefix);
-			$dirname = implode(DIRECTORY_SEPARATOR, $parts);
+			$dirname = implode("/", $parts);
 		}
 
 		else {
