@@ -36,6 +36,8 @@ welcome and encouraged.
 
 * [Storage options](#storage-options)
 
+  * [Using the local file system](#using-the-local-file-system-for-storing-photos-and-metadata-files)
+	
 * [Permissions (on Flickr)](#permissions-on-flickr)
 
 * [Fancy stuff](#fancy-stuff)
