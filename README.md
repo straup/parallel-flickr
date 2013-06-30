@@ -10,9 +10,9 @@
 
 * [Permissions](#permissions)
 
-  * [Poor Man's God Auth]()
-
-  * [Flickr Auth Tokens](#flickr-auth-tokens)
+  * [Flickr Auth tokens](#flickr-auth-tokens)
+  
+  * [Poor man's god auth](#poor-mans-god-auth)
 
 * [Backing up photos](#backing-up-photos)
 
@@ -63,7 +63,9 @@ project. It is working code that I use every day. On the other hand it is also
 not a full-time gig so I work on it during the mornings and the margins of the
 day so it is not pretty or particularly classy, yet.
 
-_It almost certainly still contains bugs, some of them might be a bit stupid._
+_It almost certainly still contains bugs, some of them might be a bit
+stupid. That includes this documentation which aims to be basically completely
+but is not yet completely complete._
 
 There is still not a one-button installation process and configuring parallel-flickr
 might seem a bit daunting for that reason. This is far from ideal and there is
@@ -247,32 +249,6 @@ Now browse back to `http://parallel-flickr:8888`. You should be asked to *sign i
 
 ## Permissions
 
-### Poor Man's God Auth
-
-Poor man's god auth is nothing more than a series of checks to restrict access
-to certain parts of the website to a list of logged in users and the "roles"
-they have assigned. It works but it would be a mistake to consider it "secure". 
-
-To enable poor man's god auth you will need to add the following settings to
-your config file.
-
-	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 1;
-
-	/*
-	poormans god auth is keyed off a user's (parallel-flickr)
-	user ID, that is the primary key in the `db_main:Users`
-	table
-	*/
-
-	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
-	
-		100 => array(
-			'roles' => array( 'admin' ),
-		),
-	);
-
-Currently the only role that parallel-flickr uses is "admin".
-
 ### Flickr Auth tokens
 
 Aside from annoying-ness of Unix user permissions required to manage your
@@ -298,6 +274,35 @@ In order to use this functionality you must also ensure that the
 `enable_feature_flickr_api_change_perms` feature flag is enabled.
 
 	$GLOBALS['cfg']['enable_feature_flickr_api_change_perms'] = 0;
+
+### Poor Man's God Auth
+
+_Note: The specifics of this implementation may change over the course of the
+next few months but the basic approach will remain the same (20130630/straup)_
+
+Poor man's god auth is nothing more than a series of checks to restrict access
+to certain parts of the website to a list of logged in users and the "roles"
+they have assigned. It works but it would be a mistake to consider it "secure". 
+
+To enable poor man's god auth you will need to add the following settings to
+your config file.
+
+	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 1;
+
+	/*
+	poormans god auth is keyed off a user's (parallel-flickr)
+	user ID, that is the primary key in the `db_main:Users`
+	table
+	*/
+
+	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
+	
+		100 => array(
+			'roles' => array( 'admin' ),
+		),
+	);
+
+Currently the only role that parallel-flickr uses is "admin".
 
 ## Backing up photos
 
@@ -363,10 +368,9 @@ backups (for your photos, your faves, etc.) are registered.
 Not all backup types are valid PuSH backup types (like your contact list, for
 example).
 
-If you have enabled "poor man's god auth"
-[in the config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example)
-then there is also a "god" page that will list all the PuSH subscription
-registered for user backups and other features at this URL: 
+If you have enabled [poor man's god auth](#poor-mans-god-auth) then there is
+also a "god" page that will list all the PuSH subscription registered for user
+backups and other features at this URL:  
 
 	http://parallel-flickr.example.com/god/push/subscriptions/
 
@@ -422,6 +426,11 @@ encryption secret for the invite cookie. This is done by running `php
 	$GLOBALS['cfg']['enable_feature_invite_codes'] = 1;
 	$GLOBALS['cfg']['crypto_invite_secret'] = 'invite-secret-here';
 
+If you have enabled [poor man's god auth](#poor-mans-god-auth) then there is
+also a "god" page that will list all the past and pending invites this URL:  
+
+	http://parallel-flickr.example.com/god/invites/
+	
 ## Storage options
 
 Internally parallel-flickr uses an abstraction layer for storing (and
