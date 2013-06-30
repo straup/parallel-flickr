@@ -5,6 +5,7 @@ import subprocess
 import sys
 import logging
 import json
+import os
 import os.path
 import select
 
@@ -50,7 +51,7 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
                     method = parts[0]
                     path = parts[1]
 
-                    if not method in ('PUT', 'EXISTS'):
+                    if not method in ('PUT', 'GET', 'EXISTS', 'DELETE'):
                         error = "Invalid method"
                         break
 
@@ -91,31 +92,38 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
 
         if error:
             logging.error(error)
-            msg = json.dumps({'ok': 0, 'error': error})
-            self.request.send(msg)
+            self.request.send(str(0))
+            self.request.send(error)
             self.request.close()
             return
-
-        #
 
         root = self.server.storage_root
         abs_path = os.path.join(root, path)
 
         logging.debug("%s %s" % (method, abs_path))
 
-        # See the way we're returning JSON? That may change yet specifically
-        # to handle GET requests (20130527/straup)
-        
-        msg = {}
+        # I don't really have much of an opinion about the
+        # JSON stuff. It's just easy right now (20130629/straup)
 
         try:
 
             if method == 'EXISTS':
 
-                if os.path.exists(abs_path):
-                    rsp = {'ok': 1, 'path': abs_path}
+                if not os.path.exists(abs_path):
+                    rsp = {'ok': 0, 'error': 'file not found'}
                 else:
-                    rsp = {'ok': 0, 'path': abs_path}
+                    rsp = {'ok': 1, 'body': abs_path}
+
+            elif method == 'GET':
+
+                if not os.path.exists(abs_path):
+                    rsp = {'ok': 0, 'error': 'file not found'}
+                else:
+                    fh = open(abs_path, 'rb')
+                    body = fh.read()
+                    fh.close()
+
+                    rsp = {'ok': 1, 'body': body}
 
             elif method == 'PUT':
 
@@ -130,7 +138,16 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
                 fh.write(buffer)
                 fh.close()
 
-                rsp = {'ok': 1, 'path': abs_path}
+                rsp = {'ok': 1, 'body': abs_path}
+
+            elif method == 'DELETE':
+
+                if not os.path.exists(abs_path):
+                    rsp = {'ok': 0, 'error': 'file not found'}
+                else:
+                    os.unlink(abs_path)
+                    rsp = {'ok': 1, 'body': abs_path}
+
             else:
                 raise Exception, "Why are you here"
 
@@ -138,8 +155,13 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
             logging.error(e)
             rsp = {'ok': 0, 'error': str(e)}
 
-        msg = json.dumps(rsp)
-        self.request.send(msg)
+        self.request.setblocking(1)
+        self.request.send(str(rsp['ok']))
+
+        if rsp['ok']:
+            self.request.send(rsp.get('body', ''))
+        else:
+            self.request.send(rsp.get('error', 'STFU'))
 
         self.request.close()
 

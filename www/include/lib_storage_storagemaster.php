@@ -4,15 +4,10 @@
 
 	function storage_storagemaster_init(){
 		$GLOBALS['_storage_hooks']['file_exists'] = 'storage_storagemaster_file_exists';
-		$GLOBALS['_storage_hooks']['get_file'] = '';
+		$GLOBALS['_storage_hooks']['get_file'] = 'storage_storagemaster_get_file';
 		$GLOBALS['_storage_hooks']['put_file'] = 'storage_storagemaster_put_file';
-		$GLOBALS['_storage_hooks']['delete_file'] = '';
+		$GLOBALS['_storage_hooks']['delete_file'] = 'storage_storagemaster_delete_file';
 	}
-
-	#################################################################
-
-	# Note: It's still not clear that this should expect to get responses
-	# as JSON blobs (20130527/straup)
 
 	#################################################################
 
@@ -26,22 +21,20 @@
 
 		$socket = $rsp['socket'];
 
-		# EXISTS? maybe just map to HTTP and use HEAD?
-		# (20130527/straup)
-
 		list($msg, $len) = storage_storagemaster_message("EXISTS", $path);
 
 		socket_write($socket, $msg, $len);
 
+		$rsp = storage_storagemaster_status($socket);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
 		$out = socket_read($socket, 1024);
 		socket_close($socket);
 
-		$rsp = json_decode($out, "as hash");
-
-		if (! $rsp){
-			return array('ok' => 0, 'error' => "Failed to parse response: '{$out}'");
-		}
-
+		$rsp['body'] = $out;
 		return $rsp;
 	}
 
@@ -61,20 +54,24 @@
 
 		socket_write($socket, $msg, $len);
 
-		# while...
-		# $out = socket_read($socket, 2048);
-		# socket_close($socket);
+		$rsp = storage_storagemaster_status($socket);
 
-		# PLEASE WRITE ME...
+		if (! $rsp['ok']){
+			return $rsp;
+		}
 
-		/*
+		$data = '';
+
+		while ($bytes = socket_read($socket, 1024)){
+			$data .= $bytes;
+		}
+
+		socket_close($socket);
+
 		$path = "php://memory";
 		$fh = fopen($path, 'w');
 
-		while(){
-			fwrite($fh, $bytes);
-		}
-
+		fwrite($fh, $data);
 		fseek($fh, 0);
 
 		$rsp = array(
@@ -83,7 +80,6 @@
 		);
 
 		return $rsp;
-		*/
 	}
 
 	#################################################################
@@ -102,15 +98,45 @@
 
 		socket_write($socket, $msg, $len);
 
-		$out = socket_read($socket, 2048);
-		socket_close($socket);
+		$rsp = storage_storagemaster_status($socket);
 
-		$rsp = json_decode($out, "as hash");
-
-		if (! $rsp){
-			return array('ok' => 0, 'error' => "Failed to parse response: '{$out}'");
+		if (! $rsp['ok']){
+			return $rsp;
 		}
 
+		$out = socket_read($socket, 1024);
+		socket_close($socket);
+
+		$rsp['body'] = $out;
+		return $rsp;
+	}
+
+	#################################################################
+
+	function storage_storagemaster_delete_file($path, $more=array()){
+
+		$rsp = storage_storagemaster_connect();
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$socket = $rsp['socket'];
+
+		list($msg, $len) = storage_storagemaster_message("DELETE", $path);
+
+		socket_write($socket, $msg, $len);
+
+		$rsp = storage_storagemaster_status($socket);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$out = socket_read($socket, 1024);
+		socket_close($socket);
+
+		$rsp['body'] = $out;
 		return $rsp;
 	}
 
@@ -147,6 +173,20 @@
 
 		$len = strlen($msg);
 		return array($msg, $len);
+	}
+
+	#################################################################
+
+	function storage_storagemaster_status($socket){
+
+		if ($ok = socket_read($socket, 1)){
+			return array('ok' => 1);
+		}
+
+		$error = socket_read($socket, 1024);
+		socket_close($socket);
+
+		return array('ok' => 0, 'error' => $error);
 	}
 
 	#################################################################
