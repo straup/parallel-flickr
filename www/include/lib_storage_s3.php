@@ -38,7 +38,6 @@
 			return $rsp;
 		}
 
-		dumper(strlen($rsp['body']));
 		$path = "php://memory";
 
 		$fh = fopen($path, 'wb');
