@@ -231,9 +231,10 @@ from Flickr.
 
 By default this functionality is disabled  default because in order to use it
 you need to ensure that the directory specified in the
-$GLOBALS['cfg']['flickrstatic_path'] config variable is writeable by the web
-server. _Another way to deal with the probem of permissions is just to use Amazon's S3
-service to store your photos, described above._
+`$GLOBALS['cfg']['flickrstatic_path']` config variable is writeable by the web
+server _or_ you need to run "storagemaster" storage provider, described below.
+
+_Another way to deal with the probem of permissions is just to use Amazon's S3 service to store your photos, described below._
 
 To enable the PuSH features you'll need to update the following settings in your
 config file: 
@@ -270,13 +271,13 @@ Internally parallel-flickr uses an abstraction layer for storing (and
 retrieving) files. This allows for a variety of storage "providers" to be used
 with parallel-flickr. As of this writing they are:
 
-* **fs** Files are read from and written to the local file system. This is the default provider.
+* **fs** - files are read from and written to the local file system. This is the default provider.
 
-* **s3** Files are read from and written to the Amazon Web Service (AWS) S3 service. You will need
+* **s3** - files are read from and written to the Amazon Web Service (AWS) S3 service. You will need
 	to include your AWS credentials in the `config.php` file in order for this
 	provider to work.
 	
-* **storagemaster** Files are read from and written to a "storagemaster" daemon
+* **storagemaster** - files are read from and written to a "storagemaster" daemon
     which is configured to run on a high-numbered port on the same machine as
     parallel-flickr itself. By default files are read from and written to the
     local file system with the important distinction that the storagemaster
@@ -302,12 +303,79 @@ following settings to `config.php` file:
 
 ### Using the "storagemaster" service for storing photos (and metadata files)
 
+Storagemaster is a very simple socket-based daemon meant to run on a
+high-numbered port on the same machine as parallel-flickr itself. That's not a
+requirement but the important thing to remember is that it is **not** meant to
+generally accessible on the public internet because it has no security controls
+of its own.
+
+Storagemaster exposes a deliberately simple interface for manipulating files:
+EXISTS, GET, PUT and DELETE.
+
+By default files are read from and written to the local file system with the
+important distinction that the storagemaster daemon itself is running as the
+`www-data` user (or whatever user account the Apache web server is using).
+
 	# Storagemaster. See also:
 	# parallel-flickr/storagemaster/bin/storagemaster.py
 	# parallel-flickr/storagemaster/init.d/storagemaster.sh
 
+The default `config.php.example` file which you've copied in to your instance of
+parallel-flickr should already contain the following details, which you may want
+to adjust to taste:
+
 	$GLOBALS['cfg']['storage_storagemaster_host'] = '127.0.0.1';
 	$GLOBALS['cfg']['storage_storagemaster_port'] = '9999';
+
+If you do remember to update the `init.d/storagemaster.sh` file accordingly.
+
+## Feature flags
+
+Please write me
+
+## The fancy stuff
+
+### Uploads
+
+	$GLOBALS['cfg']['enable_feature_uploads'] = 1;
+	$GLOBALS['cfg']['enable_feature_uploads_archive'] = 1;
+	$GLOBALS['cfg']['enable_feature_uploads_shoutout'] = 1;
+
+### Upload by email 
+
+	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 1;
+	$GLOBALS['cfg']['uploads_by_email_hostname'] = 'upload.parallel-flickr.example.com';
+
+	# 1048576 is 1MB; web based upload sizes are controled by the
+	# 'upload_max_filesize' directive in www/.htaccess
+
+	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;	
+
+### Filt(e)ring uploads
+
+	$GLOBALS['cfg']['enable_feature_uploads_filtr'] = 1;
+
+	$GLOBALS['cfg']['filtr_valid_filtrs'] = array(
+		'dazd',
+		'dthr',
+		'postr',
+		'pxl',
+		'pxldthr',
+		'rockstr',
+	);
+
+### Solr
+
+	$GLOBALS['cfg']['enable_feature_solr'] = 1;
+	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:8985/solr/parallel-flickr/';
+
+	$GLOBALS['cfg']['enable_feature_places'] = 1;
+	$GLOBALS['cfg']['places_prefetch_data'] = 1;
+
+	$GLOBALS['cfg']['enable_feature_cameras'] = 1;
+	$GLOBALS['cfg']['enable_feature_archives'] = 1;
+
+### API
 
 ## TO DO:
 
