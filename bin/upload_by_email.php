@@ -79,7 +79,7 @@
 	# 'f' is for filter, as in 'f:pxl'
 	# 'p' is for 'permissions', as in 'p:ff'
 	# 'g' is for 'geo permissions', as in 'g:c'
-	# 'd' is for 'delivery', as in 'd:fl'
+	# 'u' is for 'upload', as in 'u:fl' (currently being assigned to $delivery because...)
 
 	$filtr = null;
 	$perms = null;
