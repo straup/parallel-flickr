@@ -489,13 +489,31 @@ once Solr is available. They are:
 	$GLOBALS['cfg']['enable_feature_archives'] = 1;
 
 ### Uploads
+	
+If enabled parallel-flickr can be made to upload photos directly to Flickr
+either from the website itself or using an upload by email handler, discussed
+below, by enabling the following configuration variable:
 
-	$GLOBALS['cfg']['enable_feature_uploads'] = 1;
+	$GLOBALS['cfg']['enable_feature_uploads'] = 1;	
 	
+Photos can be uploaded from website on both the desktop and mobile phones that
+have camera support in HTML forms (mobile Safari, for example) from the
+following URL:
+
 	http://parallel-flickr.example.com/photos/upload/
-	
+
+If you want to save a copy of the photo locally _before_ sending it to Flickr
+enable the following configuration variable:
+
 	$GLOBALS['cfg']['enable_feature_uploads_archive'] = 1;
+	
+If you want to add a `uploaded:by=parallel-flickr` machine tag to all your
+uploads enable the following configuration variable:
+	
 	$GLOBALS['cfg']['enable_feature_uploads_shoutout'] = 1;
+
+Note that per the discussion of Flickr API auth token permissions, above, you
+will need to ensure that you have an auth token with `write` permissions.
 
 ### Upload by email 
 
@@ -515,19 +533,19 @@ matching a registered user and one or more images.
 Permissions and other photo properties are assigned by using a short-hand
 notation in the email message's Subject: header. The short-hand is:
 
-* **p:**(p|pr|fr|fa|ff) – assign the viewing permissions for this photo. Valid
+* **p:**p|pr|fr|fa|ff – assign the viewing permissions for this photo. Valid
     options are: **p**-ublic; **pr**-ivate; **fr**-iend; **fa**-mily; **ff** for
     friends and family. Defaults to private.
 
-* **g:**(p|pr|c|fr|fa|ff) – assign the viewing permissions for this photo. Valid
+* **g:**p|pr|c|fr|fa|ff – assign the viewing permissions for this photo. Valid
     options are: **p**-ublic-; **pr**-ivate; **c**-ontact; **fr**-iend; **fa**-mily;
     **ff** for friends and family. Defaults to private.
 
-* **f:**(postr|dazd|...) – apply a `filtr` filter to the upload. Filters are
+* **f:**postr|dazd|... – apply a `filtr` filter to the upload. Filters are
     discussed below. The list of valid filters is determined using the
     `filtr_valid_filtrs` configuration value. Defaults to none.  
 
-* **u:**(fl|pf) – upload the photo to **fl**-ickr only, assuming that some other
+* **u:**fl|pf – upload the photo to **fl**-ickr only, assuming that some other
     part of your parallel-flickr installation will achive the photo; or **pf** to upload the
     photo _only_ to parallel-flickr. Default is to upload the photo to
     parallel-flickr and send a very-stylized preview to Flickr. _This part of
@@ -537,7 +555,7 @@ notation in the email message's Subject: header. The short-hand is:
 
 For example:
 
-	Subject: **p:ff g:ff** This is the rest of the subject
+	Subject: p:ff g:ff This is the rest of the subject
 	From: Aaron Straup Cope <aaron@example.com>
 	Date: Sat, 25 May 2013 16:07:06 -0400
 	To: Aaron Straup Cope <Wl6m3DSdtj3VougEtoDm.woTaY1y44Bp0@upload.example.com>
