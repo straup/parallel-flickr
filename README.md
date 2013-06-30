@@ -206,8 +206,25 @@ WORDS ABOUT BACKUPS
 
 ## Backing up photos
 
-After setting up everything above, and setting your API key callback to "http://YOURDOMAINNAME.com/auth/", visit /account/backups/. This will
-create your backup user account and then from here you can run the various backup scripts inside of the bin/ directory. 
+By default backing up your photos is done using a number of
+`backup_SOMETHING.php` scripts located in the [bin](./bin) directory and run
+manually from the command line.
+
+The scripts are:
+
+* **backup_contacts.php** – fetch and store the list of people (and relationship
+    type) that you've made a contact on Flickr. This list is used to determine
+    whether another logged-in user (visiting your instance parallel-flickr) can
+    view photos that aren't already public.
+
+* **backup_photos.php** – fetch and store your photos. In addition to
+    downloading the original photo, this will cache some of the smaller versions
+    created by Flickr as well as the contents of the corresponding
+    `flickr.photos.getInfo` API method.
+
+* **backup_faves.php** – fetch and store photos you've faved. Like the
+    `backup_photos.php` script this will grab smaller versions (as well as the
+    original, Flickr permissions permitting) and metadata.
 
 ### Backing up photos manually
 
