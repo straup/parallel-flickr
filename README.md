@@ -1,7 +1,5 @@
 # parallel-flickr
 
-## Table of Contents
-
 * [Gentle Introduction](#gentle-introduction)
 
 * [Installation - The Short Version](#installation---the-short-version)
@@ -28,6 +26,8 @@
 
 * [Fancy stuff](#fancy-stuff)
 
+  * [API](#api)
+  
   * [Solr](#solr)
   
   * [Uploads](#uploads)
@@ -37,6 +37,8 @@
   * [Filt(e)ring uploads](#filtering-uploads)
   
 * [Experimental stuff](#experimental-stuff)
+
+* [TO DO](#to-do)
 
 ## Gentle Introduction
 
@@ -479,6 +481,17 @@ In order to use this functionality you must also ensure that the
 
 ## Fancy stuff
 
+### API
+
+parallel-flickr has always had an API that was only intended for "internal" use
+since it relies on a user's cookies for doing authentication.
+
+More recently the work done on the [flamework-api](https://github.com/cooperhewitt/flamework-api/) libraries to support a
+public OAuth2 API has been added to the codebase.
+
+It still needs to be properly documented here but all the code is part of
+parallel-flickr and available for playing with if you're so inclined.
+
 ### Solr
 
 parallel-flickr is designed to run using nothing more complicated than a
@@ -680,8 +693,6 @@ need to ensure that the following configuration variables are set:
 
 Also, you'll need to make sure that you have a Flickr API auth token with
 `delete` permissions. All of this needs to be automated or equivalent.
-
-### API
 
 ## TO DO:
 
