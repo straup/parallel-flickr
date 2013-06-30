@@ -431,19 +431,19 @@ Permissions and other photo properties are assigned by using a short-hand
 notation in the email message's Subject: header. The short-hand is:
 
 * **p:**(p|pr|fr|fa|ff) – assign the viewing permissions for this photo. Valid
-    options are: **p**ublic; **pr**rivate; **fr**iend; **fa**mily; **ff** for
-    friends and family. Defaults to private.
+    options are: **p**_ublic_; **pr**_ivate_; **fr**_iend_; **fa**_mily_; **ff** for
+    _friends and family_. Defaults to private.
 
 * **g:**(p|pr|c|fr|fa|ff) – assign the viewing permissions for this photo. Valid
-    options are: **p**ublic; **pr**rivate; **c**contact; **fr**iend; **fa**mily;
-    **ff** for friends and family. Defaults to private.
+    options are: **p**_ublic_; **pr**_ivate_; **c**_ontact_; **fr**_iend_; **fa**_mily_;
+    **ff** for _friends and family_. Defaults to private.
 
 * **f:**(postr|dazd|...) – apply a `filtr` filter to the upload. Filters are
     discussed below. The list of valid filters is determined using the
     `filtr_valid_filtrs` configuration value. Defaults to none.  
 
-* **u:**(fl|pf) – upload the photo to **fl**ickr only; or **pf** to upload the
-    photo only to parallel-flickr. Default is to upload the photo to
+* **u:**(fl|pf) – upload the photo to **fl**_ickr_ only; or **pf** to upload the
+    photo only to _parallel-flickr_. Default is to upload the photo to
     parallel-flickr and send a very-stylized preview to Flickr. _This part of
     parallel-flickr is very much still in flux so consult the
     [Uploading to parallel-flickr (but not necessarily Flickr)]() documentation
