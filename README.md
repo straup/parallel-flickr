@@ -430,19 +430,19 @@ matching a registered user and one or more images.
 Permissions and other photo properties are assigned by using a short-hand
 notation in the email message's Subject: header. The short-hand is:
 
-* **p:(p|pr|fr|fa|ff)** – assign the viewing permissions for this photo. Valid
+* **p:**(p|pr|fr|fa|ff) – assign the viewing permissions for this photo. Valid
     options are: **p**ublic; **pr**rivate; **fr**iend; **fa**mily; **ff** for
     friends and family. Defaults to private.
 
-* **g:(p|pr|c|fr|fa|ff)** – assign the viewing permissions for this photo. Valid
+* **g:**(p|pr|c|fr|fa|ff) – assign the viewing permissions for this photo. Valid
     options are: **p**ublic; **pr**rivate; **c**contact; **fr**iend; **fa**mily;
     **ff** for friends and family. Defaults to private.
 
-* **f:(postr|dazd|...)** – apply a `filtr` filter to the upload. Filters are
+* **f:**(postr|dazd|...) – apply a `filtr` filter to the upload. Filters are
     discussed below. The list of valid filters is determined using the
     `filtr_valid_filtrs` configuration value. Defaults to none.  
 
-* **u:(fl|pf)** – upload the photo to **fl**ickr only; or **pf** to upload the
+* **u:**(fl|pf) – upload the photo to **fl**ickr only; or **pf** to upload the
     photo only to parallel-flickr. Default is to upload the photo to
     parallel-flickr and send a very-stylized preview to Flickr. _This part of
     parallel-flickr is very much still in flux so consult the
@@ -451,7 +451,7 @@ notation in the email message's Subject: header. The short-hand is:
 
 For example:
 
-	Subject: p:ff g:ff This is the rest of the subject
+	Subject: **p:ff g:ff** This is the rest of the subject
 	From: Aaron Straup Cope <aaron@example.com>
 	Date: Sat, 25 May 2013 16:07:06 -0400
 	To: Aaron Straup Cope <Wl6m3DSdtj3VougEtoDm.woTaY1y44Bp0@upload.example.com>
