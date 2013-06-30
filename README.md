@@ -441,7 +441,7 @@ Tokens are upgraded (or downgraded) by sending users to a special account page
 which will take care of sending them to Flickr and updating their account. That
 page is:
 
-	https://littlebluewords.spum.org/account/flickr/auth?perms=PERMISSIONS
+	http://parallel-flickr.example.com/account/flickr/auth?perms=PERMISSIONS
 
 In order to use this functionality you must also ensure that the
 `enable_feature_flickr_api_change_perms` feature flag is enabled.
