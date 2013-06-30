@@ -8,6 +8,12 @@
 
 * [Installation - The Here-Be-Dragons Locally Hosted Version](#installation---the-here-be-dragons-locally-hosted-version)
 
+* [Permissions](#permissions)
+
+  * [Poor Man's God Auth]()
+
+  * [Flickr Auth Tokens](#flickr-auth-tokens)
+
 * [Backing up photos](#backing-up-photos)
 
   * [Backing up photos manually](#backing-up-photos)
@@ -23,10 +29,6 @@
   * [Using Amazon's S3 service](#using-amazons-s3-service-for-storing-photos-and-metadata-files)
   
   * [Using the "storagemaster" service](#using-the-storagemaster-service-for-storing-photos-and-metadata-files)
-
-* [Permissions](#permissions)
-
-  * [Permissions on Flickr](#permissions-on-flickr)
 
 * [Fancy stuff](#fancy-stuff)
   
@@ -242,6 +244,60 @@ Still in the local parallel-flickr configuration file, set the `environment` con
 	$GLOBALS['cfg']['environment'] = 'localhost';
 
 Now browse back to `http://parallel-flickr:8888`. You should be asked to *sign in w/ flickr*. Don't. You'll be redirected to the Flickr site to authenticate and this will fail as your local install isn't publicly accessible.
+
+## Permissions
+
+### Poor Man's God Auth
+
+Poor man's god auth is nothing more than a series of checks to restrict access
+to certain parts of the website to a list of logged in users and the "roles"
+they have assigned. It works but it would be a mistake to consider it "secure". 
+
+To enable poor man's god auth you will need to add the following settings to
+your config file.
+
+	$GLOBALS['cfg']['auth_enable_poormans_god_auth'] = 1;
+
+	/*
+	poormans god auth is keyed off a user's (parallel-flickr)
+	user ID, that is the primary key in the `db_main:Users`
+	table
+	*/
+
+	$GLOBALS['cfg']['auth_poormans_god_auth'] = array(
+	
+		100 => array(
+			'roles' => array( 'admin' ),
+		),
+	);
+
+Currently the only role that parallel-flickr uses is "admin".
+
+### Flickr Auth tokens
+
+Aside from annoying-ness of Unix user permissions required to manage your
+storage options depending on how you've set up parallel-flickr you may need
+ensure that you have a Flickr API auth token with suitable permissions.
+
+By default, parallel-flickr requests a Flickr API auth token with nothing more
+than `read` permissions. If all you're doing is archiving your Flickr account
+then you shouldn't need permission to any of the "write" methods in the Flickr
+API.
+
+That said there are parts of the site that allow you to update your photos on
+Flickr . That might means favouriting a photo, updating geo data and so on. At
+the moment most of these features are disabled but they do exist.
+
+Tokens are upgraded (or downgraded) by sending users to a special account page
+which will take care of sending them to Flickr and updating their account. That
+page is:
+
+	http://parallel-flickr.example.com/account/flickr/auth?perms=PERMISSIONS
+
+In order to use this functionality you must also ensure that the
+`enable_feature_flickr_api_change_perms` feature flag is enabled.
+
+	$GLOBALS['cfg']['enable_feature_flickr_api_change_perms'] = 0;
 
 ## Backing up photos
 
@@ -477,34 +533,6 @@ If you want or need to run the storagemaster in debug mode you can do this
 instead:
 
 	$> sudo /etc/init.d/storagemaster.sh debug	
-
-## Permissions
-
-### Permissions (on Flickr)
-
-Aside from annoying-ness of Unix user permissions required to manage your
-storage options depending on how you've set up parallel-flickr you may need
-ensure that you have a Flickr API auth token with suitable permissions.
-
-By default, parallel-flickr requests a Flickr API auth token with nothing more
-than `read` permissions. If all you're doing is archiving your Flickr account
-then you shouldn't need permission to any of the "write" methods in the Flickr
-API.
-
-That said there are parts of the site that allow you to update your photos on
-Flickr . That might means favouriting a photo, updating geo data and so on. At
-the moment most of these features are disabled but they do exist.
-
-Tokens are upgraded (or downgraded) by sending users to a special account page
-which will take care of sending them to Flickr and updating their account. That
-page is:
-
-	http://parallel-flickr.example.com/account/flickr/auth?perms=PERMISSIONS
-
-In order to use this functionality you must also ensure that the
-`enable_feature_flickr_api_change_perms` feature flag is enabled.
-
-	$GLOBALS['cfg']['enable_feature_flickr_api_change_perms'] = 0;
 
 ## Fancy stuff
 
