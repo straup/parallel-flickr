@@ -28,7 +28,19 @@ welcome and encouraged.
 
 * [Installation - The Short Version](#installation---the-short-version)
 
-* [Experimental](#experimental)
+* [Installation - The Long, Slightly Hand Holding, Version](#installation---the-long-slightly-hand-holding-version)
+
+* [Installation - The Here-Be-Dragons Locally Hosted Version](#installation---the-here-be-dragons-locally-hosted-version)
+
+* [Backing up photos](#backing-up-photos)
+
+* [Storage options](#storage-options)
+
+* [Permissions (on Flickr)](#permissions-on-flickr)
+
+* [Fancy stuff](#fancy-stuff)
+
+* [Experimental stuff](#experimental-stuff)
 
 ## Installation - The Short Version
 
@@ -445,7 +457,7 @@ In order to use this functionality you must also ensure that the
 
 	$GLOBALS['cfg']['enable_feature_flickr_api_change_perms'] = 0;
 
-## The fancy stuff
+## Fancy stuff
 
 ### Solr
 
