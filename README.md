@@ -524,19 +524,19 @@ matching a registered user and one or more images.
 Permissions and other photo properties are assigned by using a short-hand
 notation in the email message's Subject: header. The short-hand is:
 
-* **p:**... – assign the viewing permissions for this photo. Valid
+* **p:**PERMISSIONS – assign the viewing permissions for this photo. Valid
     options are: **p**-ublic; **pr**-ivate; **fr**-iend; **fa**-mily; **ff** for
     friends and family. Defaults to private.
 
-* **g:**... – assign the viewing permissions for this photo. Valid
+* **g:**GEO-PERMISSIONS – assign the viewing permissions for this photo. Valid
     options are: **p**-ublic-; **pr**-ivate; **c**-ontact; **fr**-iend; **fa**-mily;
     **ff** for friends and family. Defaults to private.
 
-* **f:**... – apply a `filtr` filter to the upload. Filters are
+* **f:**FILTR – apply a `filtr` filter to the upload. Filters are
     discussed below. The list of valid filters is determined using the
     `filtr_valid_filtrs` configuration value. Defaults to none.  
 
-* **u:**... – where to upload your photo to first. Valid options are **fl**-ickr only, assuming that some other
+* **u:**UPLOAD-TO – where to upload your photo to first. Valid options are **fl**-ickr only, assuming that some other
     part of your parallel-flickr installation will achive the photo; or **pf** to upload the
     photo _only_ to parallel-flickr. Default is to upload the photo to
     parallel-flickr and send a very-stylized preview to Flickr. _This part of
@@ -601,7 +601,36 @@ variable:
 
 ### Uploading to parallel-flickr (but not necessarily Flickr)
 
-What?
+What? Yes. You can now upload photos directly in to parallel-flickr but not
+(necessarily) Flickr which is kinds of turns everything on its head. As such
+this should still be considered an experimental. It works but all the
+implications are still being teased out so buyer beware and all that.
+
+This is how it works:
+
+* You upload a photo to parallel-flickr
+
+* parallel-flickr receives the photo and then stores it in a safe place _before_
+  importing it in to its database
+
+* parallel-flickr uploads a small place-holder image to your Flickr account that
+  is not visible to anyone and makes a note of the photo ID
+  
+* parallel-flickr then turns around and deletes the photo on Flickr and assigns
+  the photo ID (of the deleted photo) to the photo you first uploaded
+
+* parallel-flickr will, unless told otherwise, generate a small preview image of
+  the photo and upload it to Flickr with a link back to the actual photo on
+  parallel-flickr
+
+So, yes, we've entered a bit a of a parallel mirror-world. At this stage
+parallel-flickr is no longer a perfect of replica of Flickr itself. If you try
+to view the photo ID of photo you've uploaded on Flickr it won't be there
+because that photo has already been deleted. 
+
+But it also means that photo IDs in Flickr and one or more instances of
+parallel-flickr remain unique and two or more instances of parallel-flickr could
+be merged without having to worry about ID conflicts.
 
         $GLOBALS['cfg']['enable_feature_dbtickets_flickr'] = 1;
 
