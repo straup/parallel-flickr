@@ -1,30 +1,8 @@
 # parallel-flickr
 
-## Gentle Introduction
-
-parallel-flickr is a tool for backing up your Flickr photos and generating a
-database backed website that honours the viewing permissions you've chosen on
-Flickr. It uses the [Flickr API](http://www.flickr.com/services/api) as a
-single-sign-on provider, for user accounts, and to archive the photos,
-favourites and contact list from your Flickr account.
-
-parallel-flickr is **not** a replacement for Flickr. It is an effort to
-investigate – in working code – what it means to create an archive of a service
-as a living, breathing "shadow" copy rather than a snapshot frozen in time.
- 
-parallel-flickr is still a work in progress. It is more than an idle research
-project. It is working code that I use every day. On the other hand it is also
-not a full-time gig so I work on it during the mornings and the margins of the
-day so it is not pretty or particularly classy, yet.
-
-_It almost certainly still contains bugs, some of them might be a bit stupid._
-
-There is still not a one-button installation process and configuring parallel-flickr
-might seem a bit daunting for that reason. This is far from ideal and there is
-lots of room for improvement in the future. Suggestions and gentle cluebats are
-welcome and encouraged.
-
 ## Table of Contents
+
+* [Gentle Introduction](#gentle-introduction)
 
 * [Installation - The Short Version](#installation---the-short-version)
 
@@ -59,6 +37,30 @@ welcome and encouraged.
   * [Filt(e)ring uploads](#filtering-uploads)
   
 * [Experimental stuff](#experimental-stuff)
+
+## Gentle Introduction
+
+parallel-flickr is a tool for backing up your Flickr photos and generating a
+database backed website that honours the viewing permissions you've chosen on
+Flickr. It uses the [Flickr API](http://www.flickr.com/services/api) as a
+single-sign-on provider, for user accounts, and to archive the photos,
+favourites and contact list from your Flickr account.
+
+parallel-flickr is **not** a replacement for Flickr. It is an effort to
+investigate – in working code – what it means to create an archive of a service
+as a living, breathing "shadow" copy rather than a snapshot frozen in time.
+ 
+parallel-flickr is still a work in progress. It is more than an idle research
+project. It is working code that I use every day. On the other hand it is also
+not a full-time gig so I work on it during the mornings and the margins of the
+day so it is not pretty or particularly classy, yet.
+
+_It almost certainly still contains bugs, some of them might be a bit stupid._
+
+There is still not a one-button installation process and configuring parallel-flickr
+might seem a bit daunting for that reason. This is far from ideal and there is
+lots of room for improvement in the future. Suggestions and gentle cluebats are
+welcome and encouraged.
 
 ## Installation - The Short Version
 
