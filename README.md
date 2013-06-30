@@ -74,6 +74,15 @@ might seem a bit daunting for that reason. This is far from ideal and there is
 lots of room for improvement in the future. Suggestions and gentle cluebats are
 welcome and encouraged.
 
+The longer versions are contained in a variety of blog posts and talks that I've
+done about parallel-flickr:
+
+* [Parallel Flickr](http://www.aaronland.info/weblog/2011/10/14/pixelspace/#parallel-flickr),
+  October 2011
+  
+* [A talk about Parallel Flickr at the Personal Digital Archiving conference](http://www.aaronland.info/weblog/2012/02/14/incentivize/#pda2012),
+  February 2012 
+
 ## Installation
 
 ### The Short Version
