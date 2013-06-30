@@ -24,6 +24,12 @@ might seem a bit daunting for that reason. This is far from ideal and there is
 lots of room for improvement in the future. Suggestions and gentle cluebats are
 welcome and encouraged.
 
+## Table of Contents
+
+* [Installation - The Short Version](#installation---the-short-version)
+
+* [Experimental](#experimental)
+
 ## Installation - The Short Version
 
 parallel-flickr is built on top of [Flamework](https://github.com/exflickr/flamework) which means it's nothing more than a vanilla Apache + PHP + MySQL application. You can run it as a dedicated virtual host or as a subdirectory of an existing host.
@@ -599,6 +605,8 @@ variable:
 		'rockstr',
 	);
 
+## Experimental stuff
+
 ### Uploading to parallel-flickr (but not necessarily Flickr)
 
 What? Yes. You can now upload photos directly in to parallel-flickr but not
@@ -632,8 +640,14 @@ But it also means that photo IDs in Flickr and one or more instances of
 parallel-flickr remain unique and two or more instances of parallel-flickr could
 be merged without having to worry about ID conflicts.
 
+The full set of feature flags and configuration variables is still being worked
+out. Aside from the usual config flags associated with photo uploaded you'll
+need to ensure that the following configuration variables are set:
+
         $GLOBALS['cfg']['enable_feature_dbtickets_flickr'] = 1;
 
+Also, you'll need to make sure that you have a Flickr API auth token with
+`delete` permissions. All of this needs to be automated or equivalent.
 
 ### API
 
