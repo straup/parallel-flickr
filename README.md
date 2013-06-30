@@ -34,14 +34,30 @@ welcome and encouraged.
 
 * [Backing up photos](#backing-up-photos)
 
+  * [Backing up photos manually](#backing-up-photos)
+  
+  * [Automagic backing up of your photos](#automagic-backing-up-of-your-photos-using-the-flickr-push-feeds)
+  
 * [Storage options](#storage-options)
 
   * [Using the local file system](#using-the-local-file-system-for-storing-photos-and-metadata-files)
-	
+
+  * [Using Amazon's S3 service](#using-amazons-s3-service-for-storing-photos-and-metadata-files)
+  
+  * [Using the "storagemaster" service](#using-the-storagemaster-service-for-storing-photos-and-metadata-files)
+
 * [Permissions (on Flickr)](#permissions-on-flickr)
 
 * [Fancy stuff](#fancy-stuff)
 
+  * [Solr](#solr)
+  
+  * [Uploads](#uploads)
+  
+  * [Upload by email](#upload-by-email)
+  
+  * [Filt(e)ring uploads](#filtering-uploads)
+  
 * [Experimental stuff](#experimental-stuff)
 
 ## Installation - The Short Version
@@ -221,6 +237,8 @@ Now browse back to `http://parallel-flickr:8888`. You should be asked to *sign i
 
 ## Backing up photos
 
+### Backing up photos manually
+
 By default backing up your photos is done using a number of
 `backup_SOMETHING.php` scripts located in the [bin](./bin) directory and run
 manually from the command line.
@@ -240,8 +258,6 @@ The scripts are:
 * **backup_faves.php** – fetch and store photos you've faved. Like the
     `backup_photos.php` script this will grab smaller versions (as well as the
     original, Flickr permissions permitting) and metadata.
-
-### Backing up photos manually
 
 It is helpful to set these various bin/backup_* scripts to run via cron. According to your level of faving, uploading, and contacts fiddling, you may have your own requirements for often you want to run the various backup scripts.
 
