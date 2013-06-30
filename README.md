@@ -15,10 +15,14 @@ as a living, breathing "shadow" copy rather than a snapshot frozen in time.
 parallel-flickr is still a work in progress. It is more than an idle research
 project. It is working code that I use every day. On the other hand it is also
 not a full-time gig so I work on it during the mornings and the margins of the
-day so it is not pretty or classy yet and does not have a one-button
-installation process but it _does_ work.
+day so it is not pretty or particularly classy, yet.
 
 _It almost certainly still contains bugs, some of them might be a bit stupid._
+
+There is still not a one-button installation process and configuring parallel-flickr
+might seem a bit daunting for that reason. This is far from ideal and there is
+lots of room for improvement in the future. Suggestions and gentle cluebats are
+welcome and encouraged.
 
 ## Installation - The Short Version
 
@@ -288,7 +292,7 @@ the following flags:
     [flickr for busy people](http://flickrforbusypeople.appspot.com) -like
     interface. It's not very good but it works. For example:
 
-	# http://parallel-flickr.example.com/photos/friends/
+	http://parallel-flickr.example.com/photos/friends/
 	
 	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 1;
 
@@ -297,7 +301,7 @@ the following flags:
     This is a purely experimental interface so all the usual caveats apply. For
     example:
 
-	# http://parallel-flickr.example.com/photos/friends/activity/
+	http://parallel-flickr.example.com/photos/friends/activity/
 	
 	$GLOBALS['cfg']['flickr_push_enable_recent_activity'] = 1;
 	
@@ -420,7 +424,12 @@ instead:
 
 ## Permissions
 
-Aside from annoyingness of Unix user permissions required to manage your storage options
+Aside from annoying-ness of Unix user permissions required to manage your
+storage options depending on how you've set up parallel-flickr you may need
+ensure that you have a Flickr API auth token with suitable permissions.
+
+By default, parallel-flickr requests a Flickr API auth token with nothing more
+than `read` permissions.
 
 ## The fancy stuff
 
@@ -432,15 +441,15 @@ standard LAMP stack.
 	$GLOBALS['cfg']['enable_feature_solr'] = 1;
 	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:7777/solr/parallel-flickr/';
 
-	# http://parallel-flickr.example.com/photos/me/places/
+	http://parallel-flickr.example.com/photos/me/places/
 	
 	$GLOBALS['cfg']['enable_feature_places'] = 1;
 	
-	# http://parallel-flickr.example.com/photos/me/cameras/
+	http://parallel-flickr.example.com/photos/me/cameras/
 		
 	$GLOBALS['cfg']['enable_feature_cameras'] = 1;
 	
-	# http://parallel-flickr.example.com/photos/me/archives/
+	http://parallel-flickr.example.com/photos/me/archives/
 	
 	$GLOBALS['cfg']['enable_feature_archives'] = 1;
 
@@ -536,6 +545,8 @@ So, storagemaster.
 	);
 
 ### Uploading to parallel-flickr (but not necessarily Flickr)
+
+What?
 
         $GLOBALS['cfg']['enable_feature_dbtickets_flickr'] = 1;
 
