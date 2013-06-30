@@ -22,7 +22,9 @@
   
   * [Using the "storagemaster" service](#using-the-storagemaster-service-for-storing-photos-and-metadata-files)
 
-* [Permissions (on Flickr)](#permissions-on-flickr)
+* [Permissions](#permissions)
+
+  * [Permissions on Flickr](#permissions-on-flickr)
 
 * [Fancy stuff](#fancy-stuff)
   
@@ -304,9 +306,9 @@ Not all backup types are valid PuSH backup types (like your contact list, for
 example).
 
 If you have enabled "poor man's god auth"
-[in the config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example) 
- (described above) then there is also a "god" page that will list all the PuSH subscription
-registered for user backups and other features at this URL:
+[in the config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example)
+then there is also a "god" page that will list all the PuSH subscription
+registered for user backups and other features at this URL: 
 
 	http://parallel-flickr.example.com/god/push/subscriptions/
 
@@ -340,6 +342,27 @@ If you want to be notified by Flickr when a PuSH notification fails or is
 deleted make sure you assign the following configuration varable:
 
 	$GLOBALS['cfg']['flickr_push_notification_email'] = 'you@example.com';
+
+### Controlling who can backup their photos
+
+Controlling who can backup their photos using your copy of parallel-flickr is
+controlled by three configuration variables. The first is self-explanatory in
+that it dictates whether backups are enabled at all:
+
+	$GLOBALS['cfg']['enable_feature_backups'] = 1;
+
+The next two variable decided whether people can register to have their photos
+backed up and whether they can do so without an invitation code:
+
+	$GLOBALS['cfg']['enable_feature_backups_registration'] = 1;
+	$GLOBALS['cfg']['enable_feature_backups_registration_uninvited'] = 0;
+
+If you want to require invitation codes you'll need to make sure you generate an
+encryption secret for the invite cookie. This is done by running `php
+<root>/bin/generate_secret.php` like you did during the initial setup process.
+
+	$GLOBALS['cfg']['enable_feature_invite_codes'] = 1;
+	$GLOBALS['cfg']['crypto_invite_secret'] = 'invite-secret-here';
 
 ## Storage options
 
@@ -453,7 +476,9 @@ instead:
 
 	$> sudo /etc/init.d/storagemaster.sh debug	
 
-## Permissions (on Flickr)
+## Permissions
+
+### Permissions (on Flickr)
 
 Aside from annoying-ness of Unix user permissions required to manage your
 storage options depending on how you've set up parallel-flickr you may need
