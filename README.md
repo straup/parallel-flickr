@@ -635,8 +635,12 @@ will need to ensure that you have an auth token with `write` permissions.
 
 Upload by email is handled by the
 [bin/upload_by_email.php](bin/upload_by_email.php) script which accepts a single
-email message as its input. The email message is parsed for an email address
+email message as its input. The email message is parsed for a magic email address
 matching a registered user and one or more images.
+
+Magic email addresses are generated automatically and viewable here:
+
+	http://parallel-flickr.example.com/account/uploadbyemail
 
 Permissions and other photo properties are assigned by using a short-hand
 notation in the email message's Subject: header. The short-hand is:
