@@ -101,7 +101,7 @@
 		$subject = str_replace($m[1], "", $subject);
 	}
 
-	if (preg_match("/(\s?d:([a-z]+))/i", $subject, $m)){
+	if (preg_match("/(\s?u:([a-z]+))/i", $subject, $m)){
 		$delivery = $m[2];
 		$subject = str_replace($m[1], "", $subject);
 	}

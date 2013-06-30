@@ -394,6 +394,9 @@ instead:
 
 ### Solr
 
+parallel-flickr is designed to run using nothing more complicated than a
+standard LAMP stack.
+
 	$GLOBALS['cfg']['enable_feature_solr'] = 1;
 	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:7777/solr/parallel-flickr/';
 
@@ -418,6 +421,49 @@ instead:
 	# 'upload_max_filesize' directive in www/.htaccess
 
 	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;	
+
+Upload by email is handled by the
+[bin/upload_by_email.php](bin/upload_by_email.php) script which accepts a single
+email message as its input. The email message is parsed for an email address
+matching a registered user and one or more images.
+
+Permissions and other photo properties are assigned by using a short-hand
+notation in the email message's Subject: header. The short-hand is:
+
+* **p:(p|pr|fr|fa|ff)** – assign the viewing permissions for this photo. Valid
+    options are: **p**ublic; **pr**rivate; **fr**iend; **fa**mily; **ff** for
+    friends and family. Defaults to private.
+
+* **g:(p|pr|c|fr|fa|ff)** – assign the viewing permissions for this photo. Valid
+    options are: **p**ublic; **pr**rivate; **c**contact; **fr**iend; **fa**mily;
+    **ff** for friends and family. Defaults to private.
+
+* **f:(postr|dazd|...)** – apply a `filtr` filter to the upload. Filters are
+    discussed below. The list of valid filters is determined using the
+    `filtr_valid_filtrs` configuration value. Defaults to none.  
+
+* **u:(fl|pf)** – upload the photo to **fl**ickr only; or **pf** to upload the
+    photo only to parallel-flickr. Default is to upload the photo to
+    parallel-flickr and send a very-stylized preview to Flickr. _This part of
+    parallel-flickr is very much still in flux so consult the
+    [Uploading to parallel-flickr (but not necessarily Flickr)]() documentation
+    below, for details._
+
+For example:
+
+	Subject: p:ff g:ff This is the rest of the subject
+	From: Aaron Straup Cope <aaron@example.com>
+	Date: Sat, 25 May 2013 16:07:06 -0400
+	To: Aaron Straup Cope <Wl6m3DSdtj3VougEtoDm.woTaY1y44Bp0@upload.example.com>
+
+As of this writing it is not possible to assign tags or a photo title when
+uploading by email. This is not a feature. It just hasn't happened yet.
+
+The upload by email script is invoked using a Postfix alias that routes all
+email send to a defined host (for example:
+_anything_@upload.example.com). Setting up and configuring Postfix is outside
+the scope of this document but there are notes and sample configuration files in
+the [postfix](./postfix] directory included with parallel-flickr.
 
 If you enable uploads by email and are using Postfix to deliver mail you _must_
 also use the "storagemaster" storage provider (discussed above). Specifically,
@@ -446,6 +492,9 @@ So, storagemaster.
 		'pxldthr',
 		'rockstr',
 	);
+
+### Uploading to parallel-flickr (but not necessarily Flickr)
+
 
 ### API
 
