@@ -107,8 +107,6 @@ Copy-and-paste your Flickr Key into the section of the config file that looks li
 	$GLOBALS['cfg']['flickr_api_key'] = 'my-flickr-key-copied-in-here';
 	$GLOBALS['cfg']['flickr_api_secret'] = 'my-flickr-secret-copied-in-here';	
 
-By default WORDS ABOUT PERMISSIONS
-
 	$GLOBALS['cfg']['flickr_api_perms'] = 'read';
 	
 Set up your database name, database user and database password. Copy and paste these into ...
@@ -140,8 +138,6 @@ If you get errors in your Apache error log such as ...
 ... then your host is probably running PHP as a CGI and not as a module so you'll want to comment out any line in `<root>/www/.htaccess` that starts with `php_value` or `php_flag` and put these values into a new file, `<root>/www/php.ini`, without the leading `php_value` or `php_flag`.
 
 Click on *sign in w/ flickr* and authenticate with Flickr.
-
-WORDS ABOUT BACKUPS
 
 You might want to put this command in a cron job, if your web host allows this.
 
@@ -202,11 +198,6 @@ Still in the local parallel-flickr configuration file, set the `environment` con
 	$GLOBALS['cfg']['environment'] = 'localhost';
 
 Now browse back to `http://parallel-flickr:8888`. You should be asked to *sign in w/ flickr*. Don't. You'll be redirected to the Flickr site to authenticate and this will fail as your local install isn't publicly accessible.
-
-WORDS ABOUT BACKUPS
-
-	PATH=/Applications/MAMP/Library/bin:/Applications/MAMP/bin/php/php5.3.6/bin:$PATH
-	export $PATH
 
 ## Backing up photos
 
@@ -422,7 +413,7 @@ instead:
 
 	$> sudo /etc/init.d/storagemaster.sh debug	
 
-## Permissions
+## Permissions (on Flickr)
 
 Aside from annoying-ness of Unix user permissions required to manage your
 storage options depending on how you've set up parallel-flickr you may need
@@ -533,19 +524,19 @@ matching a registered user and one or more images.
 Permissions and other photo properties are assigned by using a short-hand
 notation in the email message's Subject: header. The short-hand is:
 
-* **p:**p|pr|fr|fa|ff – assign the viewing permissions for this photo. Valid
+* **p:**... – assign the viewing permissions for this photo. Valid
     options are: **p**-ublic; **pr**-ivate; **fr**-iend; **fa**-mily; **ff** for
     friends and family. Defaults to private.
 
-* **g:**p|pr|c|fr|fa|ff – assign the viewing permissions for this photo. Valid
+* **g:**... – assign the viewing permissions for this photo. Valid
     options are: **p**-ublic-; **pr**-ivate; **c**-ontact; **fr**-iend; **fa**-mily;
     **ff** for friends and family. Defaults to private.
 
-* **f:**postr|dazd|... – apply a `filtr` filter to the upload. Filters are
+* **f:**... – apply a `filtr` filter to the upload. Filters are
     discussed below. The list of valid filters is determined using the
     `filtr_valid_filtrs` configuration value. Defaults to none.  
 
-* **u:**fl|pf – upload the photo to **fl**-ickr only, assuming that some other
+* **u:**... – where to upload your photo to first. Valid options are **fl**-ickr only, assuming that some other
     part of your parallel-flickr installation will achive the photo; or **pf** to upload the
     photo _only_ to parallel-flickr. Default is to upload the photo to
     parallel-flickr and send a very-stylized preview to Flickr. _This part of
@@ -586,7 +577,18 @@ So, storagemaster.
 
 ### Filt(e)ring uploads
 
+Photos can be filtered before being uploaded using the [filtr](https://github.com/straup/filtr) program which
+is included with the standard parallel-flickr distribution. Set up and
+configuration of filtr itself is outside the scope of this document at the
+moment but the list of stuff required is
+[over here](https://github.com/straup/filtr#dependencies). 
+
+Filtering can be enabled by setting the following configuration variable:
+
 	$GLOBALS['cfg']['enable_feature_uploads_filtr'] = 1;
+
+You can control the list of available filters with the following configuration
+variable:
 
 	$GLOBALS['cfg']['filtr_valid_filtrs'] = array(
 		'dazd',
