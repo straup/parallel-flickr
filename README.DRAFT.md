@@ -206,7 +206,128 @@ WORDS ABOUT BACKUPS
 	PATH=/Applications/MAMP/Library/bin:/Applications/MAMP/bin/php/php5.3.6/bin:$PATH
 	export $PATH
 
+Backing up photos
+--
+After setting up everything above, and setting your API key callback to "http://YOURDOMAINNAME.com/auth/", visit /account/backups/. This will
+create your backup user account and then from here you can run the various backup scripts inside of the bin/ directory. 
 
-## See also
+Keeping up to date
+--
+It is helpful to set these various bin/backup_* scripts to run via cron. According to your level of faving, uploading, and contacts fiddling, you may have your own requirements for often you want to run the various backup scripts.
 
-* [flamework](https://github.com/exflickr/flamework)
+Here's my a once-a-day example, which works for a moderate level of activity:
+
+    0 3 * * * php /full/path/to/parallel-flickr/bin/backup_contacts.php
+    15 3 * * * php /full/path/to/parallel-flickr/bin/backup_faves.php
+    30 3 * * * php /full/path/to/parallel-flickr/bin/backup_photos.php
+
+# Automagic backing up of your photos (using the Flickr PuSH feeds)
+
+parallel-flickr can also be configured to archive the photos for registered users
+using the [real-time photo update PuSH feeds](http://code.flickr.com/blog/2011/06/30/dont-be-so-pushy/)
+from Flickr.
+
+By default this functionality is disabled  default because in order to use it
+you need to ensure that the directory specified in the
+$GLOBALS['cfg']['flickrstatic_path'] config variable is writeable by the web
+server. _Another way to deal with the probem of permissions is just to use Amazon's S3
+service to store your photos, described above._
+
+To enable the PuSH features you'll need to update the following settings in your
+config file: 
+
+	$GLOBALS['cfg']['enable_feature_flickr_push'] = 1;
+	$GLOBALS['cfg']['enable_feature_flickr_push_backups'] = 1;	
+
+The easiest way to enable PuSH backups is to go to the Flickr backups account
+page (on your version of parallel-flickr). That is:
+
+	http://your-website.com/account/flickr/backups/
+
+If you've never setup backups before and the `flickr_push` configs described
+above have been enabled then PuSH backups will be enabled at the same time that
+backups (for your photos, your faves, etc.) are registered.
+
+Not all backup types are valid PuSH backup types (like your contact list, for
+example).
+
+If you have enabled "poor man's god auth"
+[in the config file](https://github.com/straup/parallel-flickr/blob/master/www/include/config.php.example) 
+ (described above) then there is also a "god" page that will list all the PuSH subscription
+registered for user backups and other features at this URL:
+
+	http://your-website.com/god/push/subscriptions/
+
+From here you can create or delete individual PuSH feeds, although the tools are
+still feature incomplete. Specifically, it is not yet possible to register new
+feeds with arguments (like a tag or a user ID).
+
+# Storage options
+
+	$GLOBALS['cfg']['storage_provider'] = 1;
+	
+## Using Amazon's S3 service for storing photos (and metadata files)
+
+parallel-flickr is able to store your photos and metadata files using Amazon's
+S3 storage service.
+
+Setting up an Amazon account and getting an Amazon Web Services (AWS) API key
+and secret are out of scope for this document (there are lots of good howtos on
+Amazon's own site and the Internet at large) but once you do it's easily to
+configure parallel-flickr to use S3. Specifically, you just need to add the
+following settings to `config.php` file:
+
+	$GLOBALS['cfg']['amazon_s3_access_key'] = 'YER_AWS_ACCESS_KEY';
+	$GLOBALS['cfg']['amazon_s3_secret_key'] = 'YER_AWS_SECRET_KEY';
+	$GLOBALS['cfg']['amazon_s3_bucket_name'] = 'A_NAME_LIKE_MY_FLICKR_PHOTOS';
+
+# TO DO:
+
+In no particular order (patches are welcome):
+
+* Make sure video files are actually being fetched properly
+
+* Dets, galleries, groups
+
+* People tagging (http://www.flickr.com/services/api/flickr.photos.people.getList.html)
+
+* Dates and timezones... sad face
+
+* Photo deletion
+
+* Account deletion
+
+* Context-specific URLs (e.g. in-faves or in-WOEID)
+
+* Display metadata
+
+* Search
+
+* Better layout, tested in more than just Firefox
+
+* Send to Internet Archive (http://www.archive.org/help/abouts3.txt)
+
+See also: [TODO.txt](https://github.com/straup/parallel-flickr/blob/master/TODO.txt)
+
+# A note about (Github) branches:
+
+If you look carefully you may see that there are a lot branches for
+parallel-flickr in my Github repository. These are there purely (and only) for
+my working purposes.
+
+You're welcome to poke at them obviously but the rule of thumb is: If it's in
+"master" then it should work, modulo any outstanding bugs. If it's in any other
+branch then all the usual caveats apply, your mileage may vary and we offer no
+guarantees or refunds.
+
+# See also:
+
+* [flamework](https://github.com/straup/flamework)
+
+* [flamework-flickrapp](https://github.com/straup/flamework-flickrapp)
+
+* [flamework-api](https://github.com/straup/flamework-api)
+
+* [flamework-invitecodes](https://github.com/straup/flamework-invitecodes)
+
+* [flamework-tools](https://github.com/straup/flamework-tools)
