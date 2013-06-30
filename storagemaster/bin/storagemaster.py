@@ -161,7 +161,7 @@ class StoragemasterHandler(SocketServer.BaseRequestHandler):
         if rsp['ok']:
             self.request.send(rsp.get('body', ''))
         else:
-            self.request.send(rsp.get('error', 'STFU'))
+            self.request.send(rsp.get('error', 'SNFU'))
 
         self.request.close()
 
