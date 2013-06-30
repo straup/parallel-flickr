@@ -25,8 +25,6 @@
 * [Permissions (on Flickr)](#permissions-on-flickr)
 
 * [Fancy stuff](#fancy-stuff)
-
-  * [API](#api)
   
   * [Solr](#solr)
   
@@ -35,6 +33,8 @@
   * [Upload by email](#upload-by-email)
   
   * [Filt(e)ring uploads](#filtering-uploads)
+  
+  * [API](#api)
   
 * [Experimental stuff](#experimental-stuff)
 
@@ -481,17 +481,6 @@ In order to use this functionality you must also ensure that the
 
 ## Fancy stuff
 
-### API
-
-parallel-flickr has always had an API that was only intended for "internal" use
-since it relies on a user's cookies for doing authentication.
-
-More recently the work done on the [flamework-api](https://github.com/cooperhewitt/flamework-api/) libraries to support a
-public OAuth2 API has been added to the codebase.
-
-It still needs to be properly documented here but all the code is part of
-parallel-flickr and available for playing with if you're so inclined.
-
 ### Solr
 
 parallel-flickr is designed to run using nothing more complicated than a
@@ -649,6 +638,17 @@ variable:
 		'pxldthr',
 		'rockstr',
 	);
+
+### API
+
+parallel-flickr has always had an API that was only intended for "internal" use
+since it relies on a user's cookies for doing authentication.
+
+More recently the work done on the [flamework-api](https://github.com/cooperhewitt/flamework-api/) libraries to support a
+public OAuth2 API has been added to the codebase.
+
+It still needs to be properly documented here but all the code is part of
+parallel-flickr and available for playing with if you're so inclined.
 
 ## Experimental stuff
 
