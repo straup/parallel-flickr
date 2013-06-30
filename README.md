@@ -13,6 +13,8 @@
   * [Backing up photos manually](#backing-up-photos)
   
   * [Automagic backing up of your photos](#automagic-backing-up-of-your-photos-using-the-flickr-push-feeds)
+
+  * [Controlling who can backup their photos](#controlling-who-can-backup-their-photos)
   
 * [Storage options](#storage-options)
 
