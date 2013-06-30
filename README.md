@@ -7,8 +7,6 @@ parallel-flickr is still a work in progress. It ain't pretty or classy yet but i
 
 It still needs to be documented properly.
 
-In the meantime, [here's a blog post](http://www.aaronland.info/weblog/2011/10/14/pixelspace/#parallel-flickr) and [some screenshots](http://www.flickr.com/photos/straup/tags/parallelflickr/).
-
 Installing parallel-flickr
 --
 
