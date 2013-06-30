@@ -429,7 +429,24 @@ storage options depending on how you've set up parallel-flickr you may need
 ensure that you have a Flickr API auth token with suitable permissions.
 
 By default, parallel-flickr requests a Flickr API auth token with nothing more
-than `read` permissions.
+than `read` permissions. If all you're doing is archiving your Flickr account
+then you shouldn't need permission to any of the "write" methods in the Flickr
+API.
+
+That said there are parts of the site that allow you to update your photos on
+Flickr . That might means favouriting a photo, updating geo data and so on. At
+the moment most of these features are disabled but they do exist.
+
+Tokens are upgraded (or downgraded) by sending users to a special account page
+which will take care of sending them to Flickr and updating their account. That
+page is:
+
+	https://littlebluewords.spum.org/account/flickr/auth?perms=PERMISSIONS
+
+In order to use this functionality you must also ensure that the
+`enable_feature_flickr_api_change_perms` feature flag is enabled.
+
+	$GLOBALS['cfg']['enable_feature_flickr_api_change_perms'] = 0;
 
 ## The fancy stuff
 

@@ -41,6 +41,7 @@
 	# See also: YOUR-PARALLEL-FLICKR/account/flickr/auth
 
 	$GLOBALS['cfg']['flickr_api_perms'] = 'read';
+	$GLOBALS['cfg']['enable_feature_flickr_api_change_perms'] = 0;
 
 	# Use Flickr as a ticketing server!
 	# See also: parallel-flickr:bin/dbtickets_flickr_token_dance.php

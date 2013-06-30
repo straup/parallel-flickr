@@ -6,6 +6,8 @@
 
 	login_ensure_loggedin($_SERVER['REQUEST_URI']);
 
+	features_ensure_enabled("flickr_api_change_perms");
+
 	$flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
 
 	$crumb_key = 'flickr_auth_token';
