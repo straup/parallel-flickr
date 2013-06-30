@@ -1,8 +1,10 @@
 # parallel-flickr
 
-_This is a straight-up clone of @vicchi 's documentation for parallel-flickr and
-which still need to be updated to reflect the parallel-flickr-iness of
-parallel-flickr (20130626/straup)_
+https://github.com/straup/parallel-flickr/blob/one-by-one/README.DRAFT.md#backing-up-photos
+
+https://github.com/straup/parallel-flickr/blob/one-by-one/README.DRAFT.md#storage-options
+
+_This is a straight-up clone of @vicchi 's [documentation for privatesquare](https://github.com/straup/privatesquare/blob/master/README.md).
 
 ## Gentle Introduction
 
@@ -206,22 +208,22 @@ WORDS ABOUT BACKUPS
 	PATH=/Applications/MAMP/Library/bin:/Applications/MAMP/bin/php/php5.3.6/bin:$PATH
 	export $PATH
 
-Backing up photos
---
+## Backing up photos
+
 After setting up everything above, and setting your API key callback to "http://YOURDOMAINNAME.com/auth/", visit /account/backups/. This will
 create your backup user account and then from here you can run the various backup scripts inside of the bin/ directory. 
 
-Keeping up to date
---
+### Backing up photos manually
+
 It is helpful to set these various bin/backup_* scripts to run via cron. According to your level of faving, uploading, and contacts fiddling, you may have your own requirements for often you want to run the various backup scripts.
 
-Here's my a once-a-day example, which works for a moderate level of activity:
+Here's a once-a-day example, which works for a moderate level of activity:
 
     0 3 * * * php /full/path/to/parallel-flickr/bin/backup_contacts.php
     15 3 * * * php /full/path/to/parallel-flickr/bin/backup_faves.php
     30 3 * * * php /full/path/to/parallel-flickr/bin/backup_photos.php
 
-# Automagic backing up of your photos (using the Flickr PuSH feeds)
+### Automagic backing up of your photos (using the Flickr PuSH feeds)
 
 parallel-flickr can also be configured to archive the photos for registered users
 using the [real-time photo update PuSH feeds](http://code.flickr.com/blog/2011/06/30/dont-be-so-pushy/)
@@ -262,11 +264,28 @@ From here you can create or delete individual PuSH feeds, although the tools are
 still feature incomplete. Specifically, it is not yet possible to register new
 feeds with arguments (like a tag or a user ID).
 
-# Storage options
+## Storage options
 
-	$GLOBALS['cfg']['storage_provider'] = 1;
+Internally parallel-flickr uses an abstraction layer for storing (and
+retrieving) files. This allows for a variety of storage "providers" to be used
+with parallel-flickr. As of this writing they are:
+
+* **fs** Files are read from and written to the local file system. This is the default provider.
+
+* **s3** Files are read from and written to the Amazon Web Service (AWS) S3 service. You will need
+	to include your AWS credentials in the `config.php` file in order for this
+	provider to work.
 	
-## Using Amazon's S3 service for storing photos (and metadata files)
+* **storagemaster** Files are read from and written to a "storagemaster" daemon
+    which is configured to run on a high-numbered port on the same machine as
+    parallel-flickr itself. By default files are read from and written to the
+    local file system with the important distinction that the storagemaster
+    daemon itself is running as the `www-data` user (or whatever user account
+    the Apache web server is using). Storagemaster details are discussed below.
+
+	$GLOBALS['cfg']['storage_provider'] = 'fs';
+	
+### Using Amazon's S3 service for storing photos (and metadata files)
 
 parallel-flickr is able to store your photos and metadata files using Amazon's
 S3 storage service.
@@ -281,7 +300,16 @@ following settings to `config.php` file:
 	$GLOBALS['cfg']['amazon_s3_secret_key'] = 'YER_AWS_SECRET_KEY';
 	$GLOBALS['cfg']['amazon_s3_bucket_name'] = 'A_NAME_LIKE_MY_FLICKR_PHOTOS';
 
-# TO DO:
+### Using the "storagemaster" service for storing photos (and metadata files)
+
+	# Storagemaster. See also:
+	# parallel-flickr/storagemaster/bin/storagemaster.py
+	# parallel-flickr/storagemaster/init.d/storagemaster.sh
+
+	$GLOBALS['cfg']['storage_storagemaster_host'] = '127.0.0.1';
+	$GLOBALS['cfg']['storage_storagemaster_port'] = '9999';
+
+## TO DO:
 
 In no particular order (patches are welcome):
 
@@ -309,7 +337,9 @@ In no particular order (patches are welcome):
 
 See also: [TODO.txt](https://github.com/straup/parallel-flickr/blob/master/TODO.txt)
 
-# A note about (Github) branches:
+## Notes
+
+### A note about (Github) branches:
 
 If you look carefully you may see that there are a lot branches for
 parallel-flickr in my Github repository. These are there purely (and only) for
@@ -320,7 +350,7 @@ You're welcome to poke at them obviously but the rule of thumb is: If it's in
 branch then all the usual caveats apply, your mileage may vary and we offer no
 guarantees or refunds.
 
-# See also:
+## See also:
 
 * [flamework](https://github.com/straup/flamework)
 
