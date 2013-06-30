@@ -453,19 +453,37 @@ In order to use this functionality you must also ensure that the
 ### Solr
 
 parallel-flickr is designed to run using nothing more complicated than a
-standard LAMP stack.
+standard LAMP stack. However if you are running parallel-flickr on a machine
+you control or one that allows you to install (long-running) Java applications
+there are a bunch of bonus features that you can take advantage of by enabling
+support for Solr.
 
+Setting up and configuring Solr is outside the scope of this document but
+everything you need is in the [solr](./solr) directory. In your config file you
+will need make sure the following configuration variables are set:
+	
 	$GLOBALS['cfg']['enable_feature_solr'] = 1;
-	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:7777/solr/parallel-flickr/';
+	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:YOUR-SOLR-PORT/solr/parallel-flickr/';
+
+By default, a number of features in parallel-flickr become available on the site
+once Solr is available. They are:
+
+* **places** – a gazetteer style interface for all the places you've geotagged photos.
 
 	http://parallel-flickr.example.com/photos/me/places/
 	
 	$GLOBALS['cfg']['enable_feature_places'] = 1;
-	
+
+* **cameras** – a gazetteer style interface for all the cameras you've taken
+    photos with.
+
 	http://parallel-flickr.example.com/photos/me/cameras/
 		
 	$GLOBALS['cfg']['enable_feature_cameras'] = 1;
-	
+
+* **archives** – a very (very) rudimentary interface for viewing your photos by
+    the dates (bucketed by day, month and year)  they were taken or uploaded.
+
 	http://parallel-flickr.example.com/photos/me/archives/
 	
 	$GLOBALS['cfg']['enable_feature_archives'] = 1;
