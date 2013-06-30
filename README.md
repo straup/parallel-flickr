@@ -1,28 +1,24 @@
 # parallel-flickr
 
-https://github.com/straup/parallel-flickr/blob/one-by-one/README.DRAFT.md#backing-up-photos
-
-https://github.com/straup/parallel-flickr/blob/one-by-one/README.DRAFT.md#storage-options
-
-_This is a straight-up clone of @vicchi 's [documentation for privatesquare](https://github.com/straup/privatesquare/blob/master/README.md).
-
 ## Gentle Introduction
 
-parallel-flickr is a tool for backing up your Flickr photos and generating a database backed website that honours the viewing permissions you've chosen on Flickr. parallel-flickr is **not** a replacement for Flickr.
+parallel-flickr is a tool for backing up your Flickr photos and generating a
+database backed website that honours the viewing permissions you've chosen on
+Flickr. It uses the [Flickr API](http://www.flickr.com/services/api) as a
+single-sign-on provider, for user accounts, and to archive the photos,
+favourites and contact list from your Flickr account.
 
-It uses the [Flickr API](http://www.flickr.com/services/api) as a single-sign-on
-provider, for user accounts, and to [WORDS]
-
-parallel-flickr is still a work in progress. It is more than an ideal research
+parallel-flickr is **not** a replacement for Flickr. It is an effort to
+investigate – in working code – what it means to create an archive of a service
+as a living, breathing "shadow" copy rather than a snapshot frozen in time.
+ 
+parallel-flickr is still a work in progress. It is more than an idle research
 project. It is working code that I use every day. On the other hand it is also
 not a full-time gig so I work on it during the mornings and the margins of the
 day so it is not pretty or classy yet and does not have a one-button
 installation process but it _does_ work.
 
-**It almost certainly still contains bugs, some of them really stupid.**
-
-In the meantime, [here's a blog post](http://www.aaronland.info/weblog/2011/10/14/pixelspace/#parallel-flickr) and [some screenshots](http://www.flickr.com/photos/straup/tags/parallelflickr/).
-
+_It almost certainly still contains bugs, some of them might be a bit stupid._
 
 ## Installation - The Short Version
 
@@ -284,9 +280,37 @@ with parallel-flickr. As of this writing they are:
     daemon itself is running as the `www-data` user (or whatever user account
     the Apache web server is using). Storagemaster details are discussed below.
 
+### Using the local file system for storing photos (and metadata files)
+
+For example:
+
 	$GLOBALS['cfg']['storage_provider'] = 'fs';
-	
+
+	$GLOBALS['cfg']['flickr_static_path'] = "/path/to/parallel-flickr-files/";
+	$GLOBALS['cfg']['flickr_static_url'] = "static/";
+
+Unless you are only ever going to backup your Flickr data manually using the
+command line tools you will probably need to ensure that the
+`/path/to/parallel-flickr-files/` directory can be written to by the same user
+account that runs Apache (typically `www-data`) web server.
+
+For example if you enable PuSH backups (discussed above) or uploads (discussed
+below) it won't be _you_ trying to save your photos to disk but rather the web
+server.
+
+For this reason, if you are running a system where both the command line tools
+are being run (say from a cron job) and other automated systems are backing up
+your data you want to consider using the `s3` or `storagemaster` providers.
+
 ### Using Amazon's S3 service for storing photos (and metadata files)
+
+For example:
+
+	$GLOBALS['cfg']['storage_provider'] = 's3';
+	
+	$GLOBALS['cfg']['amazon_s3_access_key'] = 'YER_AWS_ACCESS_KEY';
+	$GLOBALS['cfg']['amazon_s3_secret_key'] = 'YER_AWS_SECRET_KEY';
+	$GLOBALS['cfg']['amazon_s3_bucket_name'] = 'A_NAME_LIKE_MY_FLICKR_PHOTOS';
 
 parallel-flickr is able to store your photos and metadata files using Amazon's
 S3 storage service.
@@ -294,14 +318,19 @@ S3 storage service.
 Setting up an Amazon account and getting an Amazon Web Services (AWS) API key
 and secret are out of scope for this document (there are lots of good howtos on
 Amazon's own site and the Internet at large) but once you do it's easily to
-configure parallel-flickr to use S3. Specifically, you just need to add the
-following settings to `config.php` file:
-
-	$GLOBALS['cfg']['amazon_s3_access_key'] = 'YER_AWS_ACCESS_KEY';
-	$GLOBALS['cfg']['amazon_s3_secret_key'] = 'YER_AWS_SECRET_KEY';
-	$GLOBALS['cfg']['amazon_s3_bucket_name'] = 'A_NAME_LIKE_MY_FLICKR_PHOTOS';
+configure parallel-flickr to use S3.
 
 ### Using the "storagemaster" service for storing photos (and metadata files)
+
+For example:
+
+	$GLOBALS['cfg']['storage_provider'] = 'storagemaster';
+	
+	$GLOBALS['cfg']['storage_storagemaster_host'] = '127.0.0.1';
+	$GLOBALS['cfg']['storage_storagemaster_port'] = '9999';
+
+	$GLOBALS['cfg']['flickr_static_path'] = "/path/to/parallel-flickr-files/";
+	$GLOBALS['cfg']['flickr_static_url'] = "static/";
 
 Storagemaster is a very simple socket-based daemon meant to run on a
 high-numbered port on the same machine as parallel-flickr itself. That's not a
@@ -313,27 +342,49 @@ Storagemaster exposes a deliberately simple interface for manipulating files:
 EXISTS, GET, PUT and DELETE.
 
 By default files are read from and written to the local file system with the
-important distinction that the storagemaster daemon itself is running as the
-`www-data` user (or whatever user account the Apache web server is using).
+important distinction that the storagemaster daemon itself is running
+[setuid](https://en.wikipedia.org/wiki/Setuid) as the `www-data` user (or
+whatever user account the Apache web server is using). 
 
-	# Storagemaster. See also:
-	# parallel-flickr/storagemaster/bin/storagemaster.py
-	# parallel-flickr/storagemaster/init.d/storagemaster.sh
+The storagemaster daemon is written in Python and located in the
+[storagemaster](./storagemaster) directory which is included with
+parallel-flickr. It can be run from the command line as follows:
 
-The default `config.php.example` file which you've copied in to your instance of
-parallel-flickr should already contain the following details, which you may want
-to adjust to taste:
+	$> python storagemaster.py --root /path/to/parallel-flickr-static
 
-	$GLOBALS['cfg']['storage_storagemaster_host'] = '127.0.0.1';
-	$GLOBALS['cfg']['storage_storagemaster_port'] = '9999';
+It can also be configured to run automatically (and in background-mode) using
+the Unix `init.d` system. An example init.d file is included which you will need
+to configure yourself. As follows:
 
-If you do remember to update the `init.d/storagemaster.sh` file accordingly.
+	$> cd /path/to/parallel-flickr/storagemaster/init.d/storagemaster.sh.example	
+	$> cp storagemaster.sh.example storagemaster.sh
+	
+Now edit the `storagemaster.sh` file to point to the correct root directory and
+any other details specific to your setup. Once you're done you'll need to copy
+the file in to the `/etc/init.d` folder and register it with the operating
+system:
 
-## Feature flags
+	$> sudo ln -s /path/to/parallel-flickr/storagemaster/init.d/storagemaster.sh /etc/init.d/
+	$> sudo update-rc.d storagemaster.sh defaults
+	$> sudo /etc/init.d/storagemaster.sh start
 
-Please write me
+If you want or need to run the storagemaster in debug mode you can do this
+instead:
 
+	$> sudo /etc/init.d/storagemaster.sh debug	
+	
 ## The fancy stuff
+
+### Solr
+
+	$GLOBALS['cfg']['enable_feature_solr'] = 1;
+	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:7777/solr/parallel-flickr/';
+
+	$GLOBALS['cfg']['enable_feature_places'] = 1;
+	$GLOBALS['cfg']['places_prefetch_data'] = 1;
+
+	$GLOBALS['cfg']['enable_feature_cameras'] = 1;
+	$GLOBALS['cfg']['enable_feature_archives'] = 1;
 
 ### Uploads
 
@@ -351,6 +402,21 @@ Please write me
 
 	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;	
 
+If you enable uploads by email and are using Postfix to deliver mail you _must_
+also use the "storagemaster" storage provider (discussed above). Specifically,
+the documentation for Postfix says: 
+
+"For security reasons, deliveries to command and file destinations are performed
+with the rights of the alias database owner."
+
+Which means that the upload by email PHP handler will always be run as the
+`nobody` user account. Giving the `nobody` user account write permissions on
+your static photos directory is pretty much a terrible idea and granting the
+nobody user account extra powers (using something like the `/etc/sudoers` file
+is even worse.
+
+So, storagemaster.
+
 ### Filt(e)ring uploads
 
 	$GLOBALS['cfg']['enable_feature_uploads_filtr'] = 1;
@@ -363,17 +429,6 @@ Please write me
 		'pxldthr',
 		'rockstr',
 	);
-
-### Solr
-
-	$GLOBALS['cfg']['enable_feature_solr'] = 1;
-	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:8985/solr/parallel-flickr/';
-
-	$GLOBALS['cfg']['enable_feature_places'] = 1;
-	$GLOBALS['cfg']['places_prefetch_data'] = 1;
-
-	$GLOBALS['cfg']['enable_feature_cameras'] = 1;
-	$GLOBALS['cfg']['enable_feature_archives'] = 1;
 
 ### API
 
@@ -395,9 +450,7 @@ In no particular order (patches are welcome):
 
 * Context-specific URLs (e.g. in-faves or in-WOEID)
 
-* Display metadata
-
-* Search
+* Search – tags, titles, description, etc.
 
 * Better layout, tested in more than just Firefox
 
@@ -417,6 +470,12 @@ You're welcome to poke at them obviously but the rule of thumb is: If it's in
 "master" then it should work, modulo any outstanding bugs. If it's in any other
 branch then all the usual caveats apply, your mileage may vary and we offer no
 guarantees or refunds.
+
+### Shout-outs
+
+Most of the documentation for doing a basic installation of parallel-flickr is a
+straight-up clone of @vicchi 's
+[documentation for privatesquare](https://github.com/straup/privatesquare/blob/master/README.md).
 
 ## See also:
 
