@@ -254,11 +254,12 @@ config file:
 
 	$GLOBALS['cfg']['enable_feature_flickr_push'] = 1;
 	$GLOBALS['cfg']['enable_feature_flickr_push_backups'] = 1;	
-
+	$GLOBALS['cfg']['flickr_push_enable_registrations'] = 1;
+	
 The easiest way to enable PuSH backups is to go to the Flickr backups account
 page (on your version of parallel-flickr). That is:
 
-	http://your-website.com/account/flickr/backups/
+	http://parallel-flickr.example.com/account/flickr/backups/
 
 If you've never setup backups before and the `flickr_push` configs described
 above have been enabled then PuSH backups will be enabled at the same time that
@@ -272,11 +273,38 @@ If you have enabled "poor man's god auth"
  (described above) then there is also a "god" page that will list all the PuSH subscription
 registered for user backups and other features at this URL:
 
-	http://your-website.com/god/push/subscriptions/
+	http://parallel-flickr.example.com/god/push/subscriptions/
 
 From here you can create or delete individual PuSH feeds, although the tools are
 still feature incomplete. Specifically, it is not yet possible to register new
 feeds with arguments (like a tag or a user ID).
+
+Additionally, subscriptions to specific PuSH feeds enables additional
+functionality in parallel-flickr. These subscriptions can be configured using
+the following flags:
+
+* **flickr_push_enable_photos_friends** – display recent uploads by your
+    contacts in a
+    [flickr for busy people](http://flickrforbusypeople.appspot.com) -like
+    interface. It's not very good but it works. For example:
+
+	# http://parallel-flickr.example.com/photos/friends/
+	
+	$GLOBALS['cfg']['flickr_push_enable_photos_friends'] = 1;
+
+* **flickr_push_enable_recent_activity** – display photos from your contacts
+    with some kind of recent activity (tagged, geotagged, commented on, etc.)
+    This is a purely experimental interface so all the usual caveats apply. For
+    example:
+
+	# http://parallel-flickr.example.com/photos/friends/activity/
+	
+	$GLOBALS['cfg']['flickr_push_enable_recent_activity'] = 1;
+	
+If you want to be notified by Flickr when a PuSH notification fails or is
+deleted make sure you assign the following configuration varable:
+
+	$GLOBALS['cfg']['flickr_push_notification_email'] = 'you@example.com';
 
 ## Storage options
 
@@ -389,7 +417,11 @@ If you want or need to run the storagemaster in debug mode you can do this
 instead:
 
 	$> sudo /etc/init.d/storagemaster.sh debug	
-	
+
+## Permissions
+
+Aside from annoyingness of Unix user permissions required to manage your storage options
+
 ## The fancy stuff
 
 ### Solr
@@ -400,15 +432,24 @@ standard LAMP stack.
 	$GLOBALS['cfg']['enable_feature_solr'] = 1;
 	$GLOBALS['cfg']['solr_endpoint'] = 'http://localhost:7777/solr/parallel-flickr/';
 
+	# http://parallel-flickr.example.com/photos/me/places/
+	
 	$GLOBALS['cfg']['enable_feature_places'] = 1;
-	$GLOBALS['cfg']['places_prefetch_data'] = 1;
-
+	
+	# http://parallel-flickr.example.com/photos/me/cameras/
+		
 	$GLOBALS['cfg']['enable_feature_cameras'] = 1;
+	
+	# http://parallel-flickr.example.com/photos/me/archives/
+	
 	$GLOBALS['cfg']['enable_feature_archives'] = 1;
 
 ### Uploads
 
 	$GLOBALS['cfg']['enable_feature_uploads'] = 1;
+	
+	http://parallel-flickr.example.com/photos/upload/
+	
 	$GLOBALS['cfg']['enable_feature_uploads_archive'] = 1;
 	$GLOBALS['cfg']['enable_feature_uploads_shoutout'] = 1;
 
@@ -431,7 +472,7 @@ Permissions and other photo properties are assigned by using a short-hand
 notation in the email message's Subject: header. The short-hand is:
 
 * **p:**(p|pr|fr|fa|ff) – assign the viewing permissions for this photo. Valid
-    options are: **p**-ublic; **pr**-ivate_; **fr**-iend; **fa**-mily; **ff** for
+    options are: **p**-ublic; **pr**-ivate; **fr**-iend; **fa**-mily; **ff** for
     friends and family. Defaults to private.
 
 * **g:**(p|pr|c|fr|fa|ff) – assign the viewing permissions for this photo. Valid
@@ -495,6 +536,8 @@ So, storagemaster.
 	);
 
 ### Uploading to parallel-flickr (but not necessarily Flickr)
+
+        $GLOBALS['cfg']['enable_feature_dbtickets_flickr'] = 1;
 
 
 ### API
