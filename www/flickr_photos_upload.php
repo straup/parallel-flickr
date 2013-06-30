@@ -13,10 +13,18 @@
 	$is_registered = flickr_backups_is_registered_user($GLOBALS['cfg']['user']);
 	$can_upload = $is_registered;
 
+	# TO DO: check to see if we're trying to upload things locally and
+        # ensure that we have 'delete' permissions – assuming of course that
+	# we're doing the dbtickets_flickr trick. Which we are absent of any
+	# other ticketing / ID magic (20130630/straup)
+	
 	if ($can_upload){
 		$flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
 		$can_upload = flickr_users_has_token_perms($flickr_user, "write");
 	}
+
+	# See this? We don't actually handle uploads here – they are shuttled
+	# off to the API in page itself (20130630/straup)
 
 	if ($can_upload){
 		$crumb = crumb_generate("api", "parallel.flickr.photos.upload");

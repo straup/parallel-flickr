@@ -44,6 +44,11 @@
 			api_output_error(999, "server error: {$_FILES['photo']['error']}");
 		}
 
+		# TO DO: check Flickr auth token permissions here (again)
+
+		# TO DO: check $dest (below) and ensure that the relevant
+                # feature flags are enabled (20130630/straup)
+
 		$file = $_FILES['photo']['tmp_name'];
 
 		$args = array();
