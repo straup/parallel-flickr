@@ -2,11 +2,13 @@
 
 * [Gentle Introduction](#gentle-introduction)
 
-* [Installation - The Short Version](#installation---the-short-version)
+* [Installation](#installation)
 
-* [Installation - The Long, Slightly Hand Holding, Version](#installation---the-long-slightly-hand-holding-version)
+  * [The Short Version](#the-short-version)
 
-* [Installation - The Here-Be-Dragons Locally Hosted Version](#installation---the-here-be-dragons-locally-hosted-version)
+  * [The Long, Slightly Hand Holding, Version](#the-long-slightly-hand-holding-version)
+
+  * [The Here-Be-Dragons Locally Hosted Version](#the-here-be-dragons-locally-hosted-version)
 
 * [Permissions](#permissions)
 
@@ -72,7 +74,9 @@ might seem a bit daunting for that reason. This is far from ideal and there is
 lots of room for improvement in the future. Suggestions and gentle cluebats are
 welcome and encouraged.
 
-## Installation - The Short Version
+## Installation
+
+### The Short Version
 
 parallel-flickr is built on top of [Flamework](https://github.com/exflickr/flamework) which means it's nothing more than a vanilla Apache + PHP + MySQL application. You can run it as a dedicated virtual host or as a subdirectory of an existing host.
 
@@ -123,7 +127,7 @@ You will need to make a copy of the [config.php.example](https://github.com/stra
 
 	$GLOBALS['cfg']['smarty_compile'] = 1;
 
-## Installation - The Long, Slightly Hand Holding, Version
+### The Long, Slightly Hand Holding, Version
 
 Get the [code from GitHub](https://github.com/straup/parallel-flickr).
 
@@ -191,7 +195,7 @@ You might want to put this command in a cron job, if your web host allows this.
 
 That's it. Or should be. If I've forgotten something please let me know or submit a pull request.
 
-## Installation - The Here-Be-Dragons Locally Hosted Version
+### The Here-Be-Dragons Locally Hosted Version
 
 If you really want to hack and play around with parallel-flickr, it's best to do
 this on a private, locally hosted machine, like your laptop or your desktop
