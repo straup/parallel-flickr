@@ -44,27 +44,42 @@
 			api_output_error(999, "server error: {$_FILES['photo']['error']}");
 		}
 
-		# TO DO: check Flickr auth token permissions here (again)
+		$dest = post_str("destination");
 
-		# TO DO: check $dest (below) and ensure that the relevant
-                # feature flags are enabled (20130630/straup)
+		if (! photos_upload_can_upload($GLOBALS['cfg']['user'], $dest)){
+			# api_output_error(999, "Insufficient upload permissions");
+		}
 
 		$file = $_FILES['photo']['tmp_name'];
 
 		$args = array();
 
-		# FIX ME: pull in title, etc.
+		# title;description;tags aren't actually used or imported
+		# in photos_upload yet (20130701/straup)
+
+		$args['title'] = post_str("title");
+		$args['description'] = post_str("description");
+		$args['tags'] = post_str("tags");
+
+		# TO DECIDE: cast all perms in to is_FOO strings like we do for the
+		# call the flickr_photos_upload or just treat that as a flickr-only
+		# thing (20130701/straup)
 
 		$args['perms'] = post_str("perms");
 		$args['geoperms'] = post_str("geoperms");
+
 		$args['filtr'] = post_str("filtr");
 
-		$dest = post_str("destination");
-
-		# TO DO: privacy settings for this function need to be updated
-		# to reflect the stuff in photos_upload – (20130526/straup)
+		# TO DO: check $dest but also check $GLOBALS['cfg'] ...
 
 		if ($dest == 'fl'){
+
+			$perms = $args['perms'];
+			unset($args['perms']);
+
+			$perms_hash = photos_upload_strperms_to_hash($perms, "flickr api");
+			$args = array_merge($args, $perms_hash);
+
 			$rsp = flickr_photos_upload($GLOBALS['cfg']['user'], $file, $args);
 		}
 

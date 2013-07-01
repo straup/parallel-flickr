@@ -446,4 +446,78 @@
 
 	#################################################################
 
+	function photos_upload_strperms_to_hash($perms, $is_flickr_api=0){
+
+		$public = ($is_flickr_api) ? "is_public" : "ispublic";
+		$friend = ($is_flickr_api) ? "is_friend" : "isfriend";
+		$family = ($is_flickr_api) ? "is_family" : "isfamily";
+
+		$hash = array();
+		$hash[ $public ] = 0;
+		$hash[ $friend ] = 0;
+		$hash[ $family ] = 0;
+
+		if ($perms == 'p'){
+			$hash[ $public ] = 1;
+		}
+
+		else if ($perms == 'fr'){
+			$hash[ $friend ] = 1;
+		}
+
+		else if ($perms == 'fa'){
+			$hash[ $family ] = 1;
+		}
+
+		else if ($perms == 'ff'){
+			$hash[ $friend ] = 1;
+			$hash[ $family ] = 1;
+		}
+
+		else {}
+
+		return $hash;
+	}
+
+	#################################################################
+
+	# Maybe. Something like this anyway. Not sure it should live here.
+	# (20130701/straup)
+
+	function photos_upload_can_upload(&$user, $dest=''){
+
+		$is_registered = flickr_backups_is_registered_user($user);
+
+		if (! $is_registered){
+			return 0;
+		}
+
+		loadlib("flickr_api");
+		loadlib("flickr_users");
+
+		$perms_map = flickr_api_authtoken_perms_map();
+
+		$flickr_user = flickr_users_get_by_user_id($user);
+		$flickr_perms = $flickr_user['token_perms'];
+
+		$user_perms = $perms_map[$flickr_perms];
+
+		if ($user_perms == 'delete'){
+			return 1;
+		}
+
+		# Because (to check that) we are doing the dbtickets_flickr
+		# dance (20130701/straup)
+
+		else if ($user_perms == 'write'){
+			return ($dest == 'fl') ? 1 : 0;
+		}
+
+		else {}
+
+		return 0;
+	}
+
+	#################################################################
+
 	# the end
