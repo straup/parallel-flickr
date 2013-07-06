@@ -1,482 +1,146 @@
 <?php
 
-	loadlib("dbtickets_flickr");
-	loadlib("random");
-
-	loadlib("flickr_users");
-	loadlib("flickr_api");
-
 	loadlib("flickr_photos_upload");
-	loadlib("flickr_photos_import");
-	loadlib("filtr");
-
-	loadlib("photos_resize");
-
-	loadlib("storage");
-
-	loadlib("exif");
-	loadlib("geo_utils");
+	loadlib("parallel_flickr_photos_upload");
 
 	#################################################################
 
-	function photos_upload(&$user, $file, $args=array()){
+	function photos_upload_sendto_map($pretty_keys=0){
 
-		# TO DO: am I a file that I can deal with? (20130526/straup)
-
-		$ticket_user = $user;
-
-		if ($id = $GLOBALS['cfg']['dbtickets_flickr_user_id']){
-			$ticket_user = users_get_by_id($id);
-		}
-
-		$rsp = dbtickets_flickr_create($ticket_user);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
- 		$flickr_user = flickr_users_get_by_user_id($user['id']);
-
-		$photo_id = $rsp['id'];
-
-		if (! isset($args['title'])){
-			$args['title'] = "Untitled Upload #" . time();
-		}
-
-		# metadata
-
-		$rsp = exif_read($file);
-		$exif = ($rsp['ok']) ? $rsp['data'] : null;
-
-		$geo = null;
-
-		if ($exif){
-
-			$rsp = photos_upload_auto_rotate($file, $exif);
-			$file = $rsp['file'];
-
-			$rsp = photos_upload_geo($exif);
-
-			if ($rsp['ok']){
-				$geo = $rsp;
-			}
-		}
-
-		# Filtr ?
-
-		$do_filtr = 0;
-
-		if ((features_is_enabled("uploads_filtr")) && (isset($args['filtr']))){
-			$do_filtr = filtr_is_valid_filtr($args['filtr']);
-		}
-
-		if ($do_filtr){
-
-			$rsp = filtr($args['filtr'], array($file));
-
-			if (! $rsp['ok']){
-				return $rsp;
-			}
-
-			rename($rsp['path'], $file);
-		}
-
-		# Start storing files and shit
-
-		$server = 0;
-		$farm = 0;
-
-		$secret = random_string(10);
-		$secret_orig = random_string(10);
-
-		$info = pathinfo($file);
-		$format_orig = strtolower($info['extension']);
-
-		if ((! $format_orig) && ($exif)){
-			$format_orig = "jpg";
-		}
-
-		if ((! $format_org) && (preg_match("/\.(\w+)$/", $file, $m))){
-			$format_orig = strtolower($m[1]);
-		}
-
-		$media = 'photo';
-
-		$now = time();
-		$fmt = "Y-m-d H:i:s";
-
-		$upload = $now;
-
-		# TO DO: this is serioulsy weird in iphone photos and has not
-		# been addressed yet (20130526/straup)
-
-		$taken = (($exif) && (isset($exif['DateTimeOriginal']))) ? $exif['DateTimeOriginal'] : gmdate($fmt, $now);
-
-		$spr = array(
-			'id' => $photo_id,
-			'owner' =>  $flickr_user['nsid'],
-			'secret' =>  $secret,
-			'server' => $server,
-			'farm' => $farm,
-			'title' => $args['title'],
-
-			# See below
-
-			'ispublic' => 0,	
-			'isfriend' => 0,
-			'isfamily' => 0,
-
-			'originalsecret' =>  $secret_orig,
-			'originalformat' => $format_orig,
-			'media' => $media,
-			'dateupload' => $upload,
-			'datetaken' => $taken,
+		$map = array(
+			'fl' => 'flickr',
+			'pf' => 'parallel-flickr',
 		);
 
-		# This is not awesome but it will do for now...
+		if ($pretty_keys){
+			$map = array_flip($map);
+		}
 
-		if ($p = $args['perms']){
-		
-			if ($p == 'p'){
-				$spr['ispublic'] = 1;
+		return $map;
+	}
+
+	#################################################################
+
+	function photos_upload_resolve_sendto($send_to=null){
+
+		if ((! $send_to) && (isset($GLOBALS['cfg']['uploads_default_send_to']))){
+			$send_to = $GLOBALS['cfg']['uploads_default_send_to'];
+		}
+
+		$map = photos_upload_sendto_map();
+
+		if (isset($map[$send_to])){
+			return $map[$send_to];
+		}
+
+		$map = array_flip($map);
+
+		if (isset($map[$send_to])){
+			return $send_to;
+		}
+
+		return null;
+	}
+
+	#################################################################
+
+	function photos_upload_notifications_map($pretty_keys=0){
+
+		$map = array(
+			'fl' => 'flickr',
+			'tw' => 'twitter',
+		);
+
+		if ($pretty_keys){
+			$map = array_flip($map);
+		}
+
+		return $map;
+	}
+
+	#################################################################
+
+	function photos_upload_resolve_notifications($notify=null){
+
+		$notifications = array();
+
+		if ((! $notify) && (isset($GLOBALS['cfg']['uploads_default_send_to']))){
+			$notify = $GLOBALS['cfg']['uploads_default_send_to'];
+		}
+
+		$short_map = photos_upload_notifications_map();
+		$pretty_map = photos_upload_notifications_map("pretty keys");
+
+		foreach (explode(",", $notify) as $n){
+
+			if (isset($short_map[$n])){
+				$notifications[] = $short_map[$n];
 			}
 
-			else if ($p == 'fr'){
-				$spr['isfriend'] = 1;
-			}
-
-			else if ($p == 'fa'){
-				$spr['isfamily'] = 1;
-			}
-
-			else if ($p == 'ff'){
-				$spr['isfriend'] = 1;
-				$spr['isfamily'] = 1;
+			else if (isset($pretty_map[$n])){
+				$notifications[] = $n;
 			}
 
 			else {}
 		}
 
-		# $tags = array();
-		# $spr['tags'] = join(" ", $tags);
+		return $notifications;
+	}
 
-		# See above inre: EXIF data...
+	#################################################################
 
-		if ($geo){
-			$spr['latitude'] = $geo['latitude'];
-			$spr['longitude'] = $geo['longitude'];
-			$spr['accuracy'] = $geo['accuracy'];
-			$spr['context'] = $geo['context'];
-			$spr['woeid'] = $geo['woeid'];
-			$spr['geo_is_public'] = 0;
-			$spr['geo_is_contact'] = 0;
-			$spr['geo_is_friend'] = 0;
-			$spr['geo_is_family'] = 0;
+	function photos_upload(&$user, $file, $args){
 
-			if ($g = $args['geoperms']){
+		$defaults = array();
+		$args = array_merge($defaults, $args);
 
-				if ($g == 'p'){
-					$spr['geo_is_public'] = 1;
-				}
+		$send_to = $args['send_to'];
 
-				else if ($g == 'c'){
-					$spr['geo_is_contact'] = 1;
-					$spr['geo_is_friend'] = 1;
-					$spr['geo_is_family'] = 1;
-				}
-
-				else if ($g == 'fr'){
-					$spr['geo_is_friend'] = 1;
-				}
-
-				else if ($g == 'fa'){
-					$spr['geo_is_family'] = 1;
-				}
-
-				else if ($g == 'ff'){
-					$spr['geo_is_friend'] = 1;
-					$spr['geo_is_family'] = 1;
-				}
-
-				else {}
-			}
-		}
-
-		# TO DO: geoperms (see above)
-
-		# dumper($spr);
-		# return array('ok' => 0);
-
-		# TO DO: make functions for all this stuff
-		# note: not checking for video-ness
-
-		$mock_photo = array(
-			'id' => $photo_id,
-			'user_id' => $user['id'],
-			'secret' => $secret,
-			'originalsecret' => $secret_orig,
-			'originalformat' => $format_orig,
-		);
-
-		$dirname = flickr_photos_dirname($mock_photo);
-
-		$orig = flickr_photos_basename($mock_photo, array('size' => 'o'));
-		$info = flickr_photos_basename($mock_photo, array('size' => 'i'));
-
-		$orig = $dirname . $orig;
-		$info = $dirname . $info;
-
-		$bytes = photos_upload_path_to_bytes($file);
-
-		$rsp = storage_put_file($orig, $bytes);
+		$rsp = photos_upload_can_upload($user, $send_to);
 
 		if (! $rsp['ok']){
 			return $rsp;
 		}
 
-		# Resize – put me in a function or something or more
-		# likely a whole other image daemon service...
+		if (isset($GLOBALS['cfg']['uploads_default_tags'])){
+			$tags = ($args['tags']) ? $args['tags'] : '';
+			$tags .= " {$GLOBALS['cfg']['uploads_default_tags']}";
 
-		$resize = array(
-			# 75 => 'sq',
-			# 150 => 'q',
-			100 => 't',
-			# 240 => 's',
-			# 320 => 'n',
-			# 500 => '',
-			640 => 'z',
-			800 => 'c',
-			# 1024 => 'l',
-			1600 => 'h',
-		);
-
-		foreach ($resize as $dim => $sz){
-
-			# TO DO: make sure the photo isn't smaller that the
-			# stuff listed in $resize
-
-			$small_basename = flickr_photos_basename($mock_photo, array('size' => $sz));
-			$small_path = $dirname . $small_basename;
-
-			$resized = sys_get_temp_dir() . "/" . $small_basename;
-
-			$rsp = photos_resize($file, $resized, $dim);
-
-			if (! $rsp['ok']){
-				continue;
-			}
-
-			$bytes = photos_upload_path_to_bytes($resized);
-			unlink($resized);
-
-			$rsp = storage_put_file($small_path, $bytes);
-
-			if (! $rsp['ok']){
-				return $rsp;
-			}
+			$args['tags'] = trim($tags);
 		}
 
-		# write the JSON
+		if ($send_to == 'flickr'){
 
-		$spr_json = json_encode($spr);
-		$rsp = storage_put_file($info, $spr_json);
+			$perms = $args['perms'];
+			unset($args['perms']);
 
-		# Add to the database
+			$perms_hash = photos_utils_perms_strtohash($perms, "flickr api");
+			$args = array_merge($args, $perms_hash);
 
-		$more = array(
-			'donot_import_files' => 1
-		);
-
-		$ph_rsp = flickr_photos_import_photo($spr, $more);
-		$rsp['archived_ok'] = $ph_rsp['ok'];
-
-		# Preview
-
-		if ($args['preview']){
-
-			# Make sure to set $GLOBALS['cfg']['abs_root_url']
-			# because $_SERVER may not be passing server name
-			# data, like when we're processing uploads by email
-			# (20130605/straup)
-
-			$photo = flickr_photos_get_by_id($photo_id);
-			$photo_url = flickr_urls_photo_page($photo);
-			$desc = "<a href=\"{$photo_url}\">See also:</a>";
-
-			$fl_args = array(
-				'title' => "Untitled Pointer #{$photo_id}",
-			);
-
-			if ($desc){
-				$fl_args['description'] = $desc;
-			}
-
-			foreach (array('ispublic', 'isfriend', 'isfamily') as $key){
-
-				if (array_key_exists($key, $spr)){
-					# sigh... yes (see above)
-					$fl_key = str_replace("is", "is_", $key);
-					$fl_args[$fl_key] = $spr[$key];
-				}
-			}
-
-			$fl_rsp = photos_upload_flickr_preview($user, $file, $fl_args);
-			$rsp['flickr'] = $fl_rsp;
+			$rsp = flickr_photos_upload($user, $file, $args);
 		}
 
-		$photo = flickr_photos_get_by_id($photo_id);
-		$url = flickr_urls_photo_page($photo);
+		else {
+			$rsp = parallel_flickr_photos_upload($user, $file, $args);
+		}
 
-		$rsp['id'] = $photo_id;
-		$rsp['url'] = $url;
+		unlink($file);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
+		$photo = array(
+			'id' => $rsp['id'],
+			'url' => $rsp['url'],
+		);
+
+		$rsp = array(
+			'ok' => 1,
+			'photo' => $photo
+		);
 
 		return $rsp;
-	}
-
-	#################################################################
-
-	# TO DO: ensure filtr
-	# TO DO: error handling
-	# TO DO: a better name
-
-	function photos_upload_flickr_preview(&$user, $file, $args=array()){
-
-		$tiny = tempnam(sys_get_temp_dir(), 'preview-t');
-		$small = tempnam(sys_get_temp_dir(), 'preview-s');
-
-		$rsp = photos_resize($file, $tiny, 20);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		# < 300px seems to cause pxl to give and return the
-		# original photo but that's the spice of life right
-		# (20130525/straup)
-
-		$sz = ($args['size']) ? $args['size'] : rand(240, 320);
-
-		$rsp = photos_resize($tiny, $small, $sz);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		$rsp = filtr('pxl', array($small));
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		$args['tags'] = '"zoom and enhance"';
-		$preview = $rsp['path'];
-
-		return flickr_photos_upload($user, $preview, $args);
-	}
-
-	#################################################################
-
-	function photos_upload_auto_rotate($file, $exif){
-
-		$orientation = $exif['Orientation'];
-
-		$map = array(
-			3 => 180,
-			6 => -90,
-			8 => 90
-		);
-
-		if (! isset($map[$orientation])){
-			return array('ok' => 0, 'error' => 'Unsupported orientation', 'file' => $file);
-		}
-
-		$angle = $map[$orientation];
-
-		$im = imagecreatefromjpeg($file);
-		$im = imagerotate($im, $angle, 0);
-
-		imagejpeg($im, $file);
-
-		return array('ok' => 1, 'file' => $file);
-	}
-
-	#################################################################
-
-	# please rename me...
-
-	function photos_upload_geo($exif){
-
-		$lat_dms = $exif['GPSLatitude'];
-		$lon_dms = $exif['GPSLongitude'];
-
-		if ((! $lat_dms) || (! $lon_dms)){
-			return array('ok' => 0);
-		}
-
-		$lat_ref = $exif['GPSLatitudeRef'];
-		$lon_ref = $exif['GPSLongitudeRef'];
-
-		$lat = geo_utils_exif_gps_to_decimal($lat_dms, $lat_ref);
-		$lon = geo_utils_exif_gps_to_decimal($lon_dms, $lon_ref);
-
-		# TO DO: image direction
-
-		# TO DO: reverse geocoding...
-
-		return array(
-			'ok' => 1,
-			'latitude' => $lat,
-			'longitude' => $lon,
-			'accuracy' => 18,
-			'context' => 0,
-			'woeid' => 0,
-		);
-	}
-
-	#################################################################
-
-	function photos_upload_path_to_bytes($path){
-
-		$size = filesize($path);
-		$fh = fopen($path, "rb");
-		$bytes = fread($fh, $size);
-		fclose($fh);
-		return $bytes;
-	}
-
-	#################################################################
-
-	function photos_upload_strperms_to_hash($perms, $is_flickr_api=0){
-
-		$public = ($is_flickr_api) ? "is_public" : "ispublic";
-		$friend = ($is_flickr_api) ? "is_friend" : "isfriend";
-		$family = ($is_flickr_api) ? "is_family" : "isfamily";
-
-		$hash = array();
-		$hash[ $public ] = 0;
-		$hash[ $friend ] = 0;
-		$hash[ $family ] = 0;
-
-		if ($perms == 'p'){
-			$hash[ $public ] = 1;
-		}
-
-		else if ($perms == 'fr'){
-			$hash[ $friend ] = 1;
-		}
-
-		else if ($perms == 'fa'){
-			$hash[ $family ] = 1;
-		}
-
-		else if ($perms == 'ff'){
-			$hash[ $friend ] = 1;
-			$hash[ $family ] = 1;
-		}
-
-		else {}
-
-		return $hash;
 	}
 
 	#################################################################
@@ -484,12 +148,16 @@
 	# Maybe. Something like this anyway. Not sure it should live here.
 	# (20130701/straup)
 
-	function photos_upload_can_upload(&$user, $dest=''){
+	function photos_upload_can_upload(&$user, $send_to=''){
+
+		if (! features_is_enabled("uploads")){
+			return array('ok' => 0, 'error' => 'Uploads are disabled');
+		}
 
 		$is_registered = flickr_backups_is_registered_user($user);
 
 		if (! $is_registered){
-			return 0;
+			return array('ok' => 0, 'error' => 'Not a registered user');
 		}
 
 		loadlib("flickr_api");
@@ -497,25 +165,48 @@
 
 		$perms_map = flickr_api_authtoken_perms_map();
 
-		$flickr_user = flickr_users_get_by_user_id($user);
+		$flickr_user = flickr_users_get_by_user_id($user['id']);
 		$flickr_perms = $flickr_user['token_perms'];
 
 		$user_perms = $perms_map[$flickr_perms];
 
-		if ($user_perms == 'delete'){
-			return 1;
+		if ($send_to == 'parallel-flickr'){
+
+			if (! features_is_enabled("uploads_parallel_flickr")){
+				return array('ok' => 0, 'error' => 'Uploads are not enabled');
+			}
+
+			# delete permissions
+
+			if ($flickr_perms < 2){
+				return array('ok' => 0, 'error' => 'Insufficient permissions');
+			}
+
+			if (! features_is_enabled("dbtickets_flickr")){
+				return array('ok' => 0, 'error' => 'Invalid configuration');
+			}
+
+			return array('ok' => 1);
 		}
 
-		# Because (to check that) we are doing the dbtickets_flickr
-		# dance (20130701/straup)
+		else if ($send_to == 'flickr'){
 
-		else if ($user_perms == 'write'){
-			return ($dest == 'fl') ? 1 : 0;
+			if (! features_is_enabled("uploads_flickr")){
+				return array('ok' => 0, 'error' => 'Uploads are not enabled');
+			}
+
+			# write permissions
+
+			if ($flickr_perms < 1){
+				return array('ok' => 0, 'error' => 'Insufficient permissions');
+			}
+
+			return array('ok' => 1);
 		}
 
 		else {}
 
-		return 0;
+		return array('ok' => 0, 'error' => "Invalid context ({$send_to})");
 	}
 
 	#################################################################

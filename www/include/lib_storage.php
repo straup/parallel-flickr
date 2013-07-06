@@ -1,5 +1,6 @@
 <?php
 
+	loadlib("storage_utils");
 	loadlib("storage_fs");
 	loadlib("storage_s3");
 	loadlib("storage_storagemaster");

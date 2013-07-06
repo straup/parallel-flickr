@@ -62,12 +62,6 @@
 		log_rawr("not a registered backup user");
 	}
 
-	$flickr_user = flickr_users_get_by_user_id($user['id']);
-
-	if (! flickr_users_has_token_perms($flickr_user, "write")){
-		log_rawr("user has insufficient token perms");
-	}
-
 	$attachments = $parser->getAttachments();
 
 	if (! count($attachments)){
@@ -79,12 +73,14 @@
 	# 'f' is for filter, as in 'f:pxl'
 	# 'p' is for 'permissions', as in 'p:ff'
 	# 'g' is for 'geo permissions', as in 'g:c'
-	# 'u' is for 'upload', as in 'u:fl' (currently being assigned to $delivery because...)
+	# 'n' is for 'notify <service>', as in 'n:flickr;twitter'
+	# 's' is for 'send to', as in 's:fl'
 
 	$filtr = null;
 	$perms = null;
 	$geoperms = null;
-	$delivery = null;
+	$send_to = null;
+	$notify = null;
 
 	if (preg_match("/(\s?f:([a-z]+))/i", $subject, $m)){
 		$filtr = $m[2];
@@ -101,10 +97,24 @@
 		$subject = str_replace($m[1], "", $subject);
 	}
 
-	if (preg_match("/(\s?u:([a-z]+))/i", $subject, $m)){
-		$delivery = $m[2];
+	if (preg_match("/(\s?s:([a-z]+))/i", $subject, $m)){
+		$send_to = $m[2];
 		$subject = str_replace($m[1], "", $subject);
 	}
+
+	if (preg_match("/(\s?n:([a-z;]+))/i", $subject, $m)){
+		$notify = $m[2];
+		$subject = str_replace($m[1], "", $subject);
+	}
+
+	$send_to = photos_upload_resolve_sendto($send_to);
+	$notify = photos_upload_resolve_notifications($notify);
+
+	# $rsp = photos_upload_can_upload($user, $send_to);
+	# dumper($rsp);
+
+	$subject = trim($subject);
+	$title = sanitize($subject, 'str');
 
 	$uploads = array();
 
@@ -167,22 +177,16 @@
 			'http_timeout' => 60,
 			'perms' => $perms,
 			'geoperms' => $geoperms,
+			'title' => $title,
+			'send_to' => $send_to,
+			'notify' => $notify,
 		);
 
 		if (($filtr) && features_is_enabled("uploads_filtr")){
 			$args['filtr'] = $filtr;
 		}
 
-		if ($delivery == 'fl'){
-			$rsp = flickr_photos_upload($user, $path, $args);
-		}
-
-		else {
-			$args['preview'] = ($delivery == 'pf') ? 0 : 1;
-			$rsp = photos_upload($user, $path, $args);
-		}
-
-		# THROW AN ERROR ?
+		$rsp = photos_upload($user, $path, $args);
 
 		if (! $rsp['ok']){
 

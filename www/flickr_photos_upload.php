@@ -6,12 +6,16 @@
 
 	login_ensure_loggedin("photos/upload");
 
-	if (! $GLOBALS['cfg']['enable_feature_uploads']){
-		error_disabled();
-	}
+	features_ensure_enabled(array(
+		"uploads", "uploads_by_api"
+	));
 
 	$is_registered = flickr_backups_is_registered_user($GLOBALS['cfg']['user']);
 	$can_upload = $is_registered;
+
+	# TO DO: reconcile w/ photos_upload_can_upload - specifically he
+	# part where we don't know where we're trying to send the photo
+	# (20130706/straup)
 
 	# TO DO: check to see if we're trying to upload things locally and
         # ensure that we have 'delete' permissions – assuming of course that

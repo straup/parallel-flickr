@@ -38,7 +38,15 @@
   
   * [Uploads](#uploads)
   
-  * [Upload by email](#upload-by-email)
+    * [Upload - notifications](#upload---notifications)
+	
+    * [Upload - send to Flickr](#upload---send-to-flickr)
+	
+    * [Upload - send to Parallel-Flickr](#upload---send-to-parallel-flickr)
+	
+    * [Upload by the API](#upload-by-the-api)
+	  
+    * [Upload by email](#upload-by-email)
   
   * [Filt(e)ring uploads](#filtering-uploads)
   
@@ -603,34 +611,62 @@ either from the website itself or using an upload by email handler, discussed
 below, by enabling the following configuration variable:
 
 	$GLOBALS['cfg']['enable_feature_uploads'] = 1;	
-	
-Photos can be uploaded from website on both the desktop and mobile phones that
-have camera support in HTML forms (mobile Safari, for example) from the
-following URL:
+		
+	$GLOBALS['cfg']['uploads_default_send_to'] = '';
+	$GLOBALS['cfg']['uploads_default_notifications'] = '';
+	$GLOBALS['cfg']['uploads_default_tags'] = 'uploaded:by=parallel-flickr';
+
+#### Upload - notifications
+
+Feature flags to control global configurations for upload notifications (to
+third party services).
+
+	$GLOBALS['cfg']['enable_feature_uploads_flickr_notifications'] = 0;
+
+### Upload - send to Flickr
+
+Allow photos uploads to be sent diretly to Flickr and optionally pre-archive
+them in parallel-flickr as they are uploaded - you will need to configure your
+storage provider accordingly in order to be able to write photos to disk (see below) 
+
+	$GLOBALS['cfg']['enable_feature_uploads_flickr'] = 0;
+	$GLOBALS['cfg']['enable_feature_uploads_flickr_archive'] = 0;
+
+#### Upload - send to Parallel-Flickr
+
+Allow photos uploads to be imported directly in to parallel-flickr only
+optionally sending them on to Flickr.
+
+You will absolutely need to configure your storage provider (see below) to allow
+you to write files to disk. You will also need to ensure that you users have a
+Flickr auth token with 'delete' permissions in order to do the dbtickets_flickr
+trick – careful readers will also note that this means ensuring that the
+_dbtickets_flickr feature flag be enabled. 
+
+TO DO: user interface glue and prompts for ensuring that a user has a valid 'delete' auth token from Flickr
+
+	$GLOBALS['cfg']['enable_feature_uploads_parallel_flickr'] = 0;
+
+#### Upload by the API
+
+This is currently disabled until it is updated to reflect some recent backend
+changes. Otherwise it's kind of what it says on the tin(20130706/straup)
+
+	$GLOBALS['cfg']['enable_feature_uploads_by_api'] = 1;
+
+(Normally) photos can be uploaded from website on both the desktop and mobile
+phones that have camera support in HTML forms (mobile Safari, for example) from
+the following URL:
 
 	http://parallel-flickr.example.com/photos/upload/
 
-If you want to save a copy of the photo locally _before_ sending it to Flickr
-enable the following configuration variable:
-
-	$GLOBALS['cfg']['enable_feature_uploads_archive'] = 1;
-	
-If you want to add a `uploaded:by=parallel-flickr` machine tag to all your
-uploads enable the following configuration variable:
-	
-	$GLOBALS['cfg']['enable_feature_uploads_shoutout'] = 1;
-
-Note that per the discussion of Flickr API auth token permissions, above, you
-will need to ensure that you have an auth token with `write` permissions.
-
-### Upload by email 
-
-	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 1;
-	$GLOBALS['cfg']['uploads_by_email_hostname'] = 'upload.parallel-flickr.example.com';
+#### Upload by email 
 
 	# 1048576 is 1MB; web based upload sizes are controled by the
 	# 'upload_max_filesize' directive in www/.htaccess
 
+	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 1;
+	$GLOBALS['cfg']['uploads_by_email_hostname'] = 'upload.parallel-flickr.example.com';
 	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;	
 
 Upload by email is handled by the
@@ -657,23 +693,25 @@ notation in the email message's Subject: header. The short-hand is:
     discussed below. The list of valid filters is determined using the
     `filtr_valid_filtrs` configuration value. Defaults to none.  
 
-* **u:**UPLOAD-TO – where to upload your photo to first. Valid options are **fl**-ickr only, assuming that some other
+* **s:**SEND-TO – where to upload your photo to first. Valid options are **fl**-ickr only, assuming that some other
     part of your parallel-flickr installation will achive the photo; or **pf** to upload the
-    photo _only_ to parallel-flickr. Default is to upload the photo to
-    parallel-flickr and send a very-stylized preview to Flickr. _This part of
-    parallel-flickr is very much still in flux so consult the
-    [Uploading to parallel-flickr (but not necessarily Flickr)]() documentation
-    below, for details._
+    photo _only_ to parallel-flickr. A default value can be set using the
+    `$GLOBALS['cfg']['uploads_default_send_to'] variable.
+
+* **n:**NOTIFIY - A comma-separated list of services to notify when you've
+    uploaded. Valid options area **fl**-lick which will be sent a highly
+    stylized preview image with a link back to the original photo on
+    parallel-flickr. Support for Twitter is on the TO DO list.
 
 For example:
 
-	Subject: p:ff g:ff This is the rest of the subject
+	Subject: p:ff g:ff n:fl This is the rest of the subject (and will be used as the photo title)
 	From: Aaron Straup Cope <aaron@example.com>
 	Date: Sat, 25 May 2013 16:07:06 -0400
 	To: Aaron Straup Cope <Wl6m3DSdtj3VougEtoDm.woTaY1y44Bp0@upload.example.com>
 
-As of this writing it is not possible to assign tags or a photo title when
-uploading by email. This is not a feature. It just hasn't happened yet.
+As of this writing it is not possible to assign tags or when uploading by
+email. This is not a feature. It just hasn't happened yet.
 
 The upload by email script is invoked using a Postfix alias that routes all
 email send to a defined host (for example:

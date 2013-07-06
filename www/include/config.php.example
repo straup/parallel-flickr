@@ -155,10 +155,56 @@
 	);
 
 	# Uploads
+	# Allow parallel flickr to upload photos which may or may not be
+	# routed on to Flickr.
+
+	# Valid options for _default_send_to are: flickr; parallel-flickr
+	# Valid options for _default_notifications are: flickr
 
 	$GLOBALS['cfg']['enable_feature_uploads'] = 0;
 
-	# OAuth Echo Upload (think custom image backend for Twitter clients like tweetbot)
+	$GLOBALS['cfg']['uploads_default_send_to'] = '';
+	$GLOBALS['cfg']['uploads_default_notifications'] = '';
+	$GLOBALS['cfg']['uploads_default_tags'] = 'uploaded:by=parallel-flickr';
+
+	# Uploads - notifications
+
+	# Tell Flickr (with a tiny stylized preview image) when you've uploaded
+	# a photo to parallel-flickr. TO DO: twitter (20130706/straup)
+
+	$GLOBALS['cfg']['enable_feature_uploads_flickr_notifications'] = 0;
+
+	# Uploads - send to Flickr
+
+	# Allow photos to be sent to Flickr and optionally pre-archive them
+	# in parallel-flickr as they are uploaded - you will need to configure
+	# your storage provider accordingly (in order to be able to write photos
+	# to disk) 
+
+	$GLOBALS['cfg']['enable_feature_uploads_flickr'] = 0;
+	$GLOBALS['cfg']['enable_feature_uploads_flickr_archive'] = 0;
+
+	# Uploads - send to Parallel-Flickr
+
+	# You will absolutely need to configure your storage provider to allow you
+	# to write files to disk. You will also need to ensure that you users have
+	# a Flickr auth token with 'delete' permissions in order to do the
+	# dbtickets_flickr trick – careful readers will also note that this means
+	# ensuring that the _dbtickets_flickr feature flag be enabled.
+
+	# TO DO: user interface glue and prompts for ensuring that a user has a valid
+	# 'delete' auth token from Flickr
+
+	$GLOBALS['cfg']['enable_feature_uploads_parallel_flickr'] = 0;
+
+	# Uploads (by API (which also means the website))
+	# This just needs to be updated to reflect recent changes to the upload
+	# code (20130706/straup)
+
+	$GLOBALS['cfg']['enable_feature_uploads_by_api'] = 0;
+
+	# Uploads (OAuth Echo Upload)
+	# Think: custom image backend for Twitter clients like tweetbot.
 	# This URL is handy to get the twitter user_id: http://www.idfromuser.com/
 	# Also, some day this should be a user settings page. Some day.
 
@@ -168,30 +214,21 @@
 		// twitter user_id => p-flickr user_id
 	);
 
-	# store files locally (and in the database) as they are uploaded
-	# to flickr; note that you will need to ensure that Apache has
-	# write permissions on 	$GLOBALS['cfg']['flickr_static_path']
-	# (unless you're using S3 for storing photos)
-
-	$GLOBALS['cfg']['enable_feature_uploads_archive'] = 0;
-
-	# If true this will add a 'uploaded:by=parallel-flickr' machine
-	# tag to all photos uploaded to flickr
-
-	$GLOBALS['cfg']['enable_feature_uploads_shoutout'] = 0;
+	# Uploads (by email)
 
 	# Note: setting up and configuring a mail server is left to
 	# the individual. The bin/upload_by_email.php script expects
 	# to be handd a MIME compatible email message on STDIN; see
 	# also sample postfix config files in the postfix directory
 
-	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 0;
-	$GLOBALS['cfg']['uploads_by_email_hostname'] = '';
-
 	# 1048576 is 1MB; web based upload sizes are controled by the
 	# 'upload_max_filesize' directive in www/.htaccess
 
+	$GLOBALS['cfg']['enable_feature_uploads_by_email'] = 0;
+	$GLOBALS['cfg']['uploads_by_email_hostname'] = '';
 	$GLOBALS['cfg']['uploads_by_email_maxbytes'] = 1048576 * 5;
+
+	# Uploads filt(e)ring
 
 	$GLOBALS['cfg']['enable_feature_uploads_filtr'] = 0;
 

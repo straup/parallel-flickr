@@ -10,23 +10,11 @@
 
 	function flickr_photos_upload(&$user, $file, $args=array()){
 
+		# It is assumed that you've called photos_upload_can_upload
+		# by the time you get here (20130706/straup)
+
 		$flickr_user = flickr_users_get_by_user_id($user['id']);
-		$flickr_perms = $flickr_user['token_perms'];
-
-		$perms_map = flickr_api_authtoken_perms_map();
-
-		# '2' is delete and '1' is write
-		# if ($perms_map[$flickr_perms] != 'write'){
-
-		if ($flickr_perms < 1){
-			return not_okay("insufficient perms");
-		}
-
 		$args['auth_token'] = $flickr_user['auth_token'];
-
-		if (features_is_enabled("uploads_shoutout")){
-			$args['tags'] .= " uploaded:by=parallel-flickr";
-		}
 
 		if (! isset($args['title'])){
 			$args['title'] = "Untitled Upload #" . time();
@@ -46,14 +34,9 @@
 				return $rsp;
 			}
 
-			# copy($file, '/tmp/wtf-o.jpg');
-			# copy($rsp['path'], '/tmp/wtf.jpg');
 			rename($rsp['path'], $file);
 
-			if (features_is_enabled("uploads_shoutout")){
-				$args['tags'] .= " filtr:process={$args['filtr']}";
-			}
-
+			$args['tags'] .= " filtr:process={$args['filtr']}";
 		}
 
 		$more = array();
@@ -65,9 +48,6 @@
 		# default upload perms?
 		$rsp = flickr_api_upload($file, $args, $more);
 
-		$rsp['do_archive'] = $GLOBALS['cfg']['enable_feature_uploads_archive'];
-		$rsp['archived_ok'] = 0;
-
 		if (! $rsp['ok']){
 			return $rsp;
 		}
@@ -76,9 +56,11 @@
 			return $rsp;
 		}
 
-		if (! $GLOBALS['cfg']['enable_feature_uploads_archive']){
+		if (! features_is_enabled("uploads_flickr_archive")){
 			return $rsp;
 		}
+
+		$rsp['archived_ok'] = 0;
 
 		# Archive the photo locally now that we have a photo ID.
 		# There are a few things to note about doing this:

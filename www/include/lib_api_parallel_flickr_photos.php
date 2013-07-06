@@ -1,7 +1,6 @@
 <?php
 
 	loadlib("photos_upload");
-	loadlib("flickr_photos_upload");
 	loadlib("api_parallel_flickr_utils");
 
 	#################################################################
@@ -32,7 +31,11 @@
 
 	function api_parallel_flickr_photos_upload(){
 
-		if (! $GLOBALS['cfg']['enable_feature_uploads']){
+		if (! features_is_enabled("uploads")){
+			api_output_error(999, "uploads are disabled");
+		}
+
+		if (! features_is_enabled("uploads_by_api")){
 			api_output_error(999, "uploads are disabled");
 		}
 
@@ -44,17 +47,22 @@
 			api_output_error(999, "server error: {$_FILES['photo']['error']}");
 		}
 
-		$dest = post_str("destination");
+		$send_to = post_str("destination");
+		$send_to = photos_upload_resolve_sendto($send_to);
 
-		if (! photos_upload_can_upload($GLOBALS['cfg']['user'], $dest)){
-			# api_output_error(999, "Insufficient upload permissions");
+		$rsp = photos_upload_can_upload($GLOBALS['cfg']['user'], $send_to);
+
+		if (! $rsp['ok']){
+			api_output_error(999, $rsp['error']);
 		}
 
 		$file = $_FILES['photo']['tmp_name'];
 
-		$args = array();
+		$args = array(
+			'send_to' => $send_to,
+		);
 
-		# title;description;tags aren't actually used or imported
+		# description;tags aren't actually used or imported
 		# in photos_upload yet (20130701/straup)
 
 		$args['title'] = post_str("title");
@@ -70,23 +78,12 @@
 
 		$args['filtr'] = post_str("filtr");
 
+		# Uhhhh....
+		# $args['notify'] = post_str("notify");
+
 		# TO DO: check $dest but also check $GLOBALS['cfg'] ...
 
-		if ($dest == 'fl'){
-
-			$perms = $args['perms'];
-			unset($args['perms']);
-
-			$perms_hash = photos_upload_strperms_to_hash($perms, "flickr api");
-			$args = array_merge($args, $perms_hash);
-
-			$rsp = flickr_photos_upload($GLOBALS['cfg']['user'], $file, $args);
-		}
-
-		else {
-			$args['preview'] = ($dest=='pf') ? 0 : 1;
-			$rsp = photos_upload($GLOBALS['cfg']['user'], $file, $args);
-		}
+		$rsp = photos_upload($GLOBALS['cfg']['user'], $file, $args);
 
 		unlink($file);
 
