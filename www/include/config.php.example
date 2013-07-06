@@ -432,6 +432,14 @@
 
 	$GLOBALS['cfg']['smarty_compile'] = 1;
 
+	# Do not always compile all the things all the time. Unless you know you're in to
+	# that kind of thing. One important thing to note about this setting is that you
+	# will need to reenabled it at least once (and load the template in question) if
+	# you've got a template that calls a non-standard function. For example, something
+	# like: {$foo|@bar_all_the_things}
+
+	$GLOBALS['cfg']['smarty_force_compile'] = 0;
+
 	$GLOBALS['cfg']['http_timeout'] = 3;
 
 	$GLOBALS['cfg']['check_notices'] = 1;
