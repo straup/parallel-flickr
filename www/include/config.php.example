@@ -198,8 +198,7 @@
 	$GLOBALS['cfg']['enable_feature_uploads_parallel_flickr'] = 0;
 
 	# Uploads (by API (which also means the website))
-	# This just needs to be updated to reflect recent changes to the upload
-	# code (20130706/straup)
+	# See also: http://parallel-flickr/photos/upload/
 
 	$GLOBALS['cfg']['enable_feature_uploads_by_api'] = 0;
 

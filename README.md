@@ -649,9 +649,13 @@ TO DO: user interface glue and prompts for ensuring that a user has a valid 'del
 
 #### Upload by the API
 
-This is currently disabled until it is updated to reflect some recent backend
-changes. Otherwise it's kind of what it says on the tin(20130706/straup)
+This flag allows you to control whether or not uploads can be done using the web
+and/or the API. Because the website just uses the API for uploads you could, for
+example, disable uploads from the web but continue to allow other clients to
+upload stuff. Why? I don't know and don't need to. But you can. Note these flags
+do not affect upload by email settings (below).
 
+	$GLOBALS['cfg']['enable_feature_uploads_by_web'] = 1;	
 	$GLOBALS['cfg']['enable_feature_uploads_by_api'] = 1;
 
 (Normally) photos can be uploaded from website on both the desktop and mobile

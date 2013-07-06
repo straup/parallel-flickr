@@ -7,7 +7,7 @@
 	login_ensure_loggedin("photos/upload");
 
 	features_ensure_enabled(array(
-		"uploads", "uploads_by_api"
+		"uploads", "uploads_by_web", "uploads_by_api"
 	));
 
 	$is_registered = flickr_backups_is_registered_user($GLOBALS['cfg']['user']);

@@ -87,7 +87,9 @@
 
 		$rsp = photos_upload($GLOBALS['cfg']['user'], $file, $args);
 
-		unlink($file);
+		if (file_exists($file)){
+			unlink($file);
+		}
 
 		if (! $rsp['ok']){
 			api_output_error(999, $rsp['error']);
