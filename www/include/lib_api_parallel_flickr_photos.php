@@ -78,8 +78,10 @@
 
 		$args['filtr'] = post_str("filtr");
 
-		# Uhhhh....
-		# $args['notify'] = post_str("notify");
+		if ($notify = post_str("notify")){
+			$notify = photos_upload_resolve_notifications($notify);
+			$args['notify'] = $notify;
+		}
 
 		# TO DO: check $dest but also check $GLOBALS['cfg'] ...
 

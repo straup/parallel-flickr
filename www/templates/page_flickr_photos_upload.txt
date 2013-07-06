@@ -49,6 +49,13 @@ Flickr website site so you can confirm that you're okay with
 	    margin-bottom:.6em;
 }
 
+.upload-opt input[type=text] {
+	    font-size: 1.1em;
+	    size: 50;
+	    border: 2px solid #adadad;
+	    padding: .25em;
+}
+
 .upload-what {
 	     font-weight: 700;
 	     color:blue;
@@ -122,6 +129,12 @@ Flickr website site so you can confirm that you're okay with
 		<option value="fa">family</option>
 	</select>
 	</span>
+
+        <span class="upload-opt">
+	<label for="title">Its <span class="upload-what">title</span> will be</label>
+	<input type="text" name="title" id="title" />
+	</span>
+
 	</div>
 
 	<div class="upload-sect">
@@ -144,14 +157,33 @@ Flickr website site so you can confirm that you're okay with
 	{else}
 	<label for="destination">It will be <span class="upload-what">sent</span> to</label>
 	{/if}
-	<select name="destination" id="destination">
-		<option value="">parallel-flickr + flickr</option>
-		<option value="pf">parallel-flickr</option>
-		<option value="fl">flickr</option>
+	<select name="send_to" id="send_to">
+		<option value="">...please tell me?</option>
+		<option value="pf"{if $cfg.uploads_default_send_to=='parallel-flickr'} selected="true"{/if}>parallel-flickr</option>
+		<option value="fl"{if $cfg.uploads_default_send_to=='flickr'} selected="true"{/if}>flickr</option>
 	</select>
+	</span>
+	</div>
+
+	{* this will all need to be re-thought once there's more than *}
+	{* one service to notify... (20130706/straup) *}
+
+	{if "uploads_flickr_notifications"|@features_is_enabled}
+
+	<div class="upload-sect">
+
+	<span class="upload-opt">
+	<select name="notify" id="notify" multiple size="2">
+		<option value=""{if $cfg.uploads_default_notifications==''} selected="true"{/if}>No one</option>
+		<option value="fl"{if $cfg.uploads_default_notifications=='flickr'} selected="true"{/if}>Flickr</option>
+	</select>
+
+	<label for="destination">will be told about your new upload.</label>
 	</span>
 
 	</div>
+
+	{/if}
 
 	<div class="upload-sect">
 	<span class="upload-opt">
@@ -178,10 +210,12 @@ $(document).ready(function(){
 		data.append("crumb", $("#photo").attr("data-crumb"));
 		data.append("access_token", parallel_flickr_api_site_token());
 
+		data.append("title", $("#title").val());
 		data.append("perms", $("#perms").val());
 		data.append("geoperms", $("#geoperms").val());
 		data.append("filtr", $("#filtr").val());
-		data.append("destination", $("#destination").val());
+		data.append("send_to", $("#send_to").val());
+		data.append("notify", $("#notify").val().join(","));
 
 		/* sudo account for multiple photos... */
 

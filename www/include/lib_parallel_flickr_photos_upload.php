@@ -244,8 +244,10 @@
 
 		# Preview
 
-		$notify_flickr = ((in_array('flickr', $args['notify'])) && (features_is_enabled("uploads_flickr_notifications"))) ? 1 : 0;
-		$notify_twitter = ((in_array('twitter', $args['notify'])) && (features_is_enabled("uploads_twitter_notification"))) ? 1 : 0;
+		# Please put all this stuff in a function or something...
+		# (20130706/straup)
+
+		$notify_flickr = ((is_array($args['notify'])) && (in_array('flickr', $args['notify'])) && (features_is_enabled("uploads_flickr_notifications"))) ? 1 : 0;
 
 		if ($notify_flickr){
 
