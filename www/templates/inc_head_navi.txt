@@ -19,6 +19,10 @@
 		<li><a href="{$cfg.user|@flickr_urls_photos_user_cameras}">cameras</a></li>
 		{/if}
 		<li><a href="{$cfg.user|@flickr_urls_photos_user_archives}">archives</a></li>
+		{* TO DO: use photos_upload_can_upload... *}
+		{if "uploads"|@features_is_enabled and "uploads_by_web"|@features_is_enabled and "uploads_by_api"|@features_is_enabled}
+		<li><a href="{$cfg.abs_root_url}photos/upload/">upload</a></li>
+		{/if}
 	    {else}
 	    {/if}
 

@@ -38,3 +38,11 @@
     margin: 0;
     background:#fff;
 }
+
+@media (max-width: 480px) {
+
+    .pag_middle {
+	display:none;
+    }
+
+}

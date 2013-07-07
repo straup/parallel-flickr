@@ -9,7 +9,7 @@
 }
 
 .photo-static {
-    max-width: 670px;
+
 }
 
 .photo img {
@@ -22,7 +22,7 @@
 }
 
 .photo_sidebar {
-    width:210px;
+    min-width:210px;
 }
 
 .photo_before {
@@ -115,4 +115,19 @@
 }
 
 .photo_notfaved {
+}
+
+@media (max-width: 480px) {
+
+    h2 {
+	display:none;
+    }
+
+    .photo img {
+	border: none !important;
+    }
+
+    .photo-caption div {
+	display: inline;
+    }
 }

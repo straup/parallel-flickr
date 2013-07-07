@@ -10,7 +10,8 @@
 	{else}
 	     <span class="pag_inactive">Previous page</span>
 	{/if}
-	
+
+	<span class="pag_middle">	
 	{* middle *}
 
 	{if $pagination.page_count > 10}
@@ -57,7 +58,8 @@
     	    {/if}
     	    
     	{/section}
-	
+	</span>
+
 	{else}
 	
     	{section name=paglp start=1 loop=$pagination.page_count+1}

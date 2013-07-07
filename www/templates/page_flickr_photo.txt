@@ -22,7 +22,7 @@
 	</div>
 	</div>
 
-	<div class="span2 offset1">
+	<div class="span3 offset1">
 	{include file="inc_flickr_photo_sidebar.txt"}
 	</div>
 
