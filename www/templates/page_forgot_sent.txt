@@ -1,6 +1,0 @@
-{assign var="page_title" value="Forgot your password?"}
-{include file="inc_head.txt"}
-
-<p class="message">A password reminder has been sent to {$sent_to|escape}.</p>
-
-{include file="inc_foot.txt"}
