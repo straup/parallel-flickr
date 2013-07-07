@@ -69,6 +69,7 @@ td {
 .isnot_registered {
     font-size:small;
     font-style:italic;
+    margin-bottom:1.5em;
 }
 
 #modal_flickr_auth {
