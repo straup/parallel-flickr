@@ -1,7 +1,12 @@
 {capture assign="page_title"}upload{/capture}
+{capture assign="extra_head"}
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/photos-upload.source.css" />
+{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
 <h2>Upload a photo</h2>
+</div>
 
 {if !$is_registered}
 
@@ -21,94 +26,24 @@ Flickr website site so you can confirm that you're okay with
 
 {else}
 
-<style type="text/css">
-{literal}
-
-#upload-status {
-	       font-size: 2.3em;
-	       display:none;
-}
-
-#upload-form {
-	     margin-left:auto;
-	     margin-right:auto;
-	     display:block;
-}
-
-.upload-sect {
-	     line-height: 1.2em;
-	     font-size: 1.4em;
-	     margin-bottom:1.5em;
-	     padding: 1em;
-	     padding-top: 1.5em;
-	     border: solid thin;
-}
-
-.upload-opt {
-	    display:block;
-	    margin-bottom:.6em;
-}
-
-.upload-opt input[type=text] {
-	    font-size: 1.1em;
-	    size: 50;
-	    border: 2px solid #adadad;
-	    padding: .25em;
-}
-
-.upload-what {
-	     font-weight: 700;
-	     color:blue;
-}
-
-.upload-opt input[type=file] {
-	    border: 2px solid #adadad;
-	    font-size:1em;
-	    padding: .25em;
-	    /*
-	    background-color:#000;
-	    color: #fff;	
-	    */
-	    font-weight:700;
-	    color:blue;
-}
-
-.upload-opt input[type=submit] {
-	    border: 2px solid #adadad;
-	    font-size:1.3em;
-	    padding: .25em;
-	    font-weight:700;
-	    color:blue;
-	    text-align:center;
-}
-
-.upload-opt select {
-	    border: 2px solid #adadad;
-	    font-size:1.1em;
-	    padding: .25em;
-	    /*
-	    background-color:#000;
-	    color: #fff;
-	    */
-	    font-weight:700;
-	    color:blue;
-}
-
-{/literal}
-</style>
-
 <div id="upload-status"></div>
+
+<div class="container">
+<div class="span10 offset1">
 
 <form method="POST" enctype="multipart/form-data" id="upload-form">
 
       <div class="upload-sect">
         <span class="upload-opt">
-	<label for="photo">The <span class="upload-what">photo</span></label>
+	<label for="photo"><span class="upload-what">Upload</span></label>
 	<input type="file" name="photo" id="photo" data-crumb="{$crumb|escape}" />
 	</span>
 
+      </div>
+	
+      <div class="upload-sect">
         <span class="upload-opt">
-	<label for="perms">will be able to be <span class="upload-what">seen</span> by</label>
+	<label for="perms">This photo will be able to be <span class="upload-what">seen</span> by</label>
 	<select name="perms" id="perms">
 		<option value="">just you</option>
 		<option value="p">anyone</option>
@@ -130,8 +65,22 @@ Flickr website site so you can confirm that you're okay with
 	</select>
 	</span>
 
+	</div>
+
+	<div class="upload-sect">
         <span class="upload-opt">
-	<label for="title">Its <span class="upload-what">title</span> will be</label>
+	<span id="upload-details-prompt">
+	<label for="upload-details-button">Keep it simple for now or </label>
+	<button id="upload-details-button" class="upload-what">SWEAT THE DETAILS</button>
+	</span>
+
+	</div>
+
+        <div id="upload-details"">
+
+	<div class="upload-sect">
+        <span class="upload-opt">
+	<label for="title"><span class="upload-what">Name</span> this photo</label>
 	<input type="text" name="title" id="title" />
 	</span>
 
@@ -141,7 +90,7 @@ Flickr website site so you can confirm that you're okay with
 
 	{if "uploads_filtr"|@features_is_enabled}
         <span class="upload-opt">
-	<label for="filtr">It will be <span class="upload-what">filtr</span>-ed using</label>
+	<label for="filtr">This photo will be <span class="upload-what">filtr</span>-ed using</label>
 	<select name="filtr" id="filtr">
 		<option value="">nothing but its inate beauty</option>
 	{foreach from=$filtrs item="filtr"}
@@ -155,7 +104,7 @@ Flickr website site so you can confirm that you're okay with
 	{if "uploads_filtr"|@features_is_enabled}
 	<label for="destination">and will be <span class="upload-what">sent</span> to</label>
 	{else}
-	<label for="destination">It will be <span class="upload-what">sent</span> to</label>
+	<label for="destination">This photo will be <span class="upload-what">sent</span> to</label>
 	{/if}
 	<select name="send_to" id="send_to">
 		<option value="">...please tell me?</option>
@@ -185,6 +134,8 @@ Flickr website site so you can confirm that you're okay with
 
 	{/if}
 
+	</div>
+
 	<div class="upload-sect">
 	<span class="upload-opt">
 	<input type="submit" value="MAKE IT SO!" />
@@ -193,6 +144,9 @@ Flickr website site so you can confirm that you're okay with
 
 </form>
 
+</div>
+</div>
+
 {/if}
 
 <script type="text/javascript">
@@ -200,8 +154,16 @@ Flickr website site so you can confirm that you're okay with
 
 $(document).ready(function(){
 
+	$("#upload-details-button").click(function(){
+		$("#upload-details").show();
+		$("#upload-details-prompt").hide();
+		return false;
+	});
+
 	$("#upload-form").submit(function(){
 
+	alert("WTF");
+	return false;
 	/* TO DO: use parallel.flickr.api.js */
 
 		var data = new FormData();

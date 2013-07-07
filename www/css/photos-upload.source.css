@@ -1,0 +1,84 @@
+#upload-status {
+	       display:none;
+}
+
+#upload-details {
+    display:none;
+}
+
+#upload-form {
+	     margin-left:auto;
+	     margin-right:auto;
+}
+
+.upload-sect {
+	     line-height: 1.2em;
+	     padding: 1em;
+	     padding-top: 1.5em;
+}
+
+.upload-opt {
+	    display:block;
+	    margin-bottom:.6em;
+}
+
+.upload-opt label {
+    display: inline;
+}
+
+.upload-opt input[type=text] {
+	    font-size: 1.1em;
+	    size: 50;
+	    border: 2px solid #adadad;
+	    padding: .25em;
+}
+
+.upload-what {
+	     font-weight: 700;
+	     color:blue;
+}
+
+.upload-opt input[type=file] {
+	    border: 2px solid #adadad;
+	    padding: .25em;
+	    font-weight:700;
+	    color:blue;
+}
+
+.upload-opt input[type=submit] {
+	    border: 2px solid #adadad;
+	    padding: .5em;
+	    font-weight:700;
+	    color:blue;
+	    text-align:center;
+}
+
+.upload-opt select {
+	    border: 2px solid #adadad;
+	    padding: .25em;
+	    font-weight:700;
+	    color:blue;
+}
+
+@media (max-width: 480px) {
+
+    .upload-sect {
+	margin-bottom: 0px !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+    }
+    
+    .upload-opt {
+	margin-bottom:1em;
+    }
+
+    .upload-opt label {
+	display: block !important;
+	margin-bottom: .5em;
+    }
+
+    .upload-opt input[type=submit] {
+	margin-top:2em;
+    }
+
+}
