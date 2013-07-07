@@ -17,7 +17,7 @@
 {/if}
 
 {if !$photo|@flickr_photos_is_on_flickr}
-<div>This photo <span class="hey-you">is not Flickr</span>.</div>
+<div>This photo <span class="hey-you">is not on Flickr</span>.</div>
 {/if}
 
 </div>

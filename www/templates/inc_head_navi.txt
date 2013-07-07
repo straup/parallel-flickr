@@ -35,7 +35,7 @@
               <ul class="dropdown-menu">
                 <li><a href="{$cfg.abs_root_url}account">Settings</a></li>
 		{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
-  		<li><a href="{$cfg.abs_root_url}api/">api</a></li>
+  		<li><a href="{$cfg.abs_root_url}api/">API</a></li>
 		{/if}
                 <li><a href="{$cfg.abs_root_url}signout">sign out</a></li>
               </ul>
