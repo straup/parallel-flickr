@@ -11,7 +11,6 @@
 
 .photo-static {
     max-width: 670px;
-    float:left;
 }
 
 .photo img {
@@ -24,7 +23,6 @@
 }
 
 .photo_sidebar {
-    float:right;
     width:210px;
 }
 

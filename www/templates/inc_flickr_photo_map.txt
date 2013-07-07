@@ -9,55 +9,6 @@
 
 	{/if}
 
-	<div class="photo_map_blurb">
-
-	{if $photo.str_geoperms}
-
-	{if $place}
-
-	{if $photo.str_geoperms=='public'}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">is public</span>.
-	{elseif $photo.str_geoperms=='private'}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}<span> and its location <span class="hey-you">can only be seen by you</span>.
-	{else}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
-	{/if}
-
-	{else}
-
-	{if $photo.str_geoperms=='public'}
-	This photo was taken in <span id="geo_placename">a place with no name</span> and its location <span class="hey-you">is public</span>.
-	{elseif $photo.str_geoperms=='private'}
-	This photo was taken in <span id="geo_placename">a place with no name</span> and its location <span class="hey-you">can only be seen by you</span>.
-	{else}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else} and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
-	{/if}
-
-	{/if}
-
-	{if $photo.hasgeo}
-	<span id="geo_context">
-	{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
-
-	{if $photo.geocontext==1}
-	It was taken <a href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}/indoors/">indoors</a>.
-	{elseif $photo.geocontext==2} It was taken <a href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}/outdoors/">outdoors</a>.
-	{else}{/if}
-
-	{else}
-
-	{if $photo.geocontext==1}It was taken indoors.
-	{elseif $photo.geocontext==2} It was taken outdoors.
-	{else}{/if}
-
-	{/if}
-	</span>
-	{/if}
-
-	{/if}
-	{/if}
-
-	</div>
 </div>
 
 {/if}
