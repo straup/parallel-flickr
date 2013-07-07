@@ -125,7 +125,8 @@
 	</div>
 	<!-- photo_meta -->
 
-	{include file="inc_flickr_photo_map.txt"}
+	{* this is not working because ... uh? bootstraup maybe? *}
+	{if 0}{include file="inc_flickr_photo_map.txt"}{/if}
 
 	<br clear="all" />
 

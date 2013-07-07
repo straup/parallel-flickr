@@ -1,14 +1,12 @@
 {if "slippymaps"|@features_is_enabled and $cfg.user.id and $photo.hasgeo and $photo.can_view_geo}
 
-<div class="photo_map">
 
-     {if 0}
 	<div class="map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$photo.latitude|escape},{$photo.longitude|escape}" {if $nozoom}data-zoom="{$photo.accuracy-2}"{else}data-zoom="3" data-mousezoom="3,8,14"{/if} data-hash="false" data-interactive="false" id="map_{$photo.id|escape}">
-		<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}"><span class="marker_text">{$photo.latitude|string_format:"%.3f"|escape},{$photo.longitude|string_format:"%.3f"|escape}</span></div>
+	<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">
+	<span class="marker_text">{$photo.latitude|string_format:"%.3f"|escape},{$photo.longitude|string_format:"%.3f"|escape}</span>
 	</div>
 
-	{/if}
+	</div>
 
-</div>
 
 {/if}

@@ -2,6 +2,8 @@
 {capture assign="page_title"}{$owner.username} | places | {$facet_plural}{if $context} | {$context}{/if}{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 <h2>
 {if $is_own}
 Your most geotagged {$facet_plural|escape}{if $context}, {$context|escape}{/if} 
@@ -42,9 +44,9 @@ Your most geotagged {$facet_plural|escape}{if $context}, {$context|escape}{/if}
 
 <p style="font-size:small; margin-bottom:20px;">
 {if $is_own}
-You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}{if $context}/{$context|escape}/{/if}">{$locations.$woeid.name|escape}</a>.
+You have taken <span class="hey-you">{$count|escape} photos</span> in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}{if $context}/{$context|escape}/{/if}">{$locations.$woeid.name|escape}</a>.
 {else}
-{$owner.username|escape} has taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}{if $context}/{$context|escape}/{/if}">{$locations.$woeid.name|escape}</a>.
+{$owner.username|escape} has taken <span class="hey-you">{$count|escape} photos</span> in <a href="{$owner|@flickr_urls_photos_user}places/{$woeid|escape}{if $context}/{$context|escape}/{/if}">{$locations.$woeid.name|escape}</a>.
 {/if}
 </p>
 
@@ -92,5 +94,7 @@ You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_us
 
 {/if}
 {/foreach}
+
+</div>
 
 {include file="inc_foot.txt"}

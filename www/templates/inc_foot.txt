@@ -15,7 +15,6 @@
 	 
 	 </div>
 	 </div>
-	</body>
 
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/bootstrap.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmapl-standalone.min.js"></script>
@@ -25,7 +24,7 @@
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/sharkify.min.js"></script>
 	{/if}
 
-	{if "slippymap"|@features_is_enabled}
+	{if "slippymaps"|@features_is_enabled}
 	<script type="text/javascript">{literal}
 	$(document).ready(function(){
 		$("div.map").htmapl();
@@ -33,4 +32,5 @@
 	{/literal}</script>
 	{/if}
 
+	</body>
 </html>

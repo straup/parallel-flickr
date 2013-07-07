@@ -7,6 +7,10 @@
     margin-bottom:10px;
 }
 
+.map-place {
+    margin-bottom: 1.5em;
+}
+
 /* sudo finish this */
 /* http://jonraasch.com/blog/css-rounded-corners-in-all-browsers */
 
@@ -61,3 +65,6 @@
     }
 }
 
+@media (max-width: 480px) {
+
+}

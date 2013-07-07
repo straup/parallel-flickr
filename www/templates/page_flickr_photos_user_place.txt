@@ -1,10 +1,11 @@
 {capture assign="page_title"}{$owner.username} | photos from {$place.name}{if $context} | {$context}{/if}{/capture}
 {include file="inc_head.txt"}
 
-{if 0}
+<div class="container">
+
 {assign var="zoom" value=$place|@flickr_places_calculate_zoom}
 
-<div class="map place_map" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$place.latitude|escape},{$place.longitude|escape}" data-zoom="{$zoom|escape}" data-hash="false" data-interactive="false" id="map_{$photo.id|escape}" style="width:100%;">
+<div class="map map-place" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$place.latitude|escape},{$place.longitude|escape}" data-zoom="{$zoom|escape}" data-hash="false" data-interactive="false" id="map_{$photo.id|escape}" style="width:100%;">
 
 {foreach from=$photos item="photo"}
 	<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">
@@ -13,23 +14,20 @@
 {/foreach}
 
 </div>
-{/if}
-
-<div class="container">
 
 <h2>
 {if $is_own and $context=='indoors'}
-your indoor photos from {$place.name|escape}
+<a href="{$owner|@flickr_urls_photos_user}">Your</a> indoor photos from {$place.name|escape}
 {elseif $is_own and $context=='outdoors'}
-your outdoor photos from {$place.name|escape}
+<a href="{$owner|@flickr_urls_photos_user}">Your</a> outdoor photos from {$place.name|escape}
 {elseif $is_own}
-your photos from {$place.name|escape}
+<a href="{$owner|@flickr_urls_photos_user}">Your</a> photos from {$place.name|escape}
 {elseif $context=='indoors'}
-{$owner.username|escape}'s indoor photos from {$place.name|escape}
+<a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a>'s indoor photos from {$place.name|escape}
 {elseif $context=='outdoors'}
-{$owner.username|escape}'s outdoor photos from {$place.name|escape}
+<a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a>'s outdoor photos from {$place.name|escape}
 {else}
-{$owner.username|escape}'s photos from {$place.name|escape}
+<a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a>'s photos from {$place.name|escape}
 {/if}
 </h2>
 
@@ -62,26 +60,16 @@ your photos from {$place.name|escape}
 
 </ul>
 
-</div>
-
 {if $photos|@count}
 
 {include file="inc_flickr_photos_list.txt"}
 
+{elseif $error}
+	<p class="error label label-warning">Hrmph. There was a problem fetching photos!</p>
 {else}
-
-{if $error}
-	<p class="error">Hrmph. There was a problem fetching photos!</p>
-{else}
-
-{if $is_own}
-<p>You haven't taken any photos here!</p>
-{else}
-<p>{$owner.username|escape} hasn't taken any photos you can see here.</p>
+	<p class="notice label label-info">There aren't any photos to show you here!</p>
 {/if}
 
-{/if}
-
-{/if}
+</div>
 
 {include file="inc_foot.txt"}

@@ -6,19 +6,26 @@
 
 {* TO DO: check to see camera make starts with a vowel *}
 
+<div class="container">
+
 <h2>
 {if $is_own}
 {if $pagination.total_count==0}
-You've haven't taken any photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if} camera
+<a href="{$owner|@flickr_urls_photos_user}">You</a>'ve haven't taken any photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if} camera
 {elseif $pagination.total_count==1}
-You've taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
-{else}You've taken {$pagination.total_count|escape} photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}{/if}
+<a href="{$owner|@flickr_urls_photos_user}">You</a>'ve taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+{else}
+<a href="{$owner|@flickr_urls_photos_user}">You</a>'ve taken {$pagination.total_count|escape} photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+{/if}
+
 {else}
 {if $pagination.total_count==0}
-{$owner.username|escape} hasn't taken any photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+<a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> hasn't taken any photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
 {elseif $pagination.total_count==1}
-{$owner.username|escape} has taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
-{else}{$owner.username|escape} has taken {$pagination.total_count|escape} photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}{/if}
+<a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> has taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+{else}
+<a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> has taken {$pagination.total_count|escape} photos with a {$camera_make|escape}{if $camera_model} {$camera_model|escape}{/if}
+{/if}
 
 {/if}
 </h2>
@@ -29,20 +36,20 @@ You've taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_m
 
 {include file="inc_flickr_photos_list.txt"}
 
+{elseif $error}
+	<p class="error label label-warning">Hrmph. There was a problem fetching photos!</p>
 {else}
 
-{if $error}
-	<p class="error">Hrmph. There was a problem fetching photos!</p>
-{else}
-
+<p class="notice label label-info">
 {if $is_own}
-<p>You haven't taken any photos with that camera!</p>
+You haven't taken any photos with a {$camera_make|escape} !
 {else}
-<p>{$owner.username|escape} hasn't taken any photos with that camera that you can see.</p>
+{$owner.username|escape} hasn't taken any photos with that camera that you can see.
 {/if}
+</p>
 
 {/if}
 
-{/if}
+</div>
 
 {include file="inc_foot.txt"}
