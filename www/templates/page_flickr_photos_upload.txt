@@ -6,16 +6,17 @@
 
 <div class="container">
 <h2>Upload a photo</h2>
-</div>
 
 {if !$is_registered}
 
-<p>Sorry. This feature is only available to registered <q>backup</q> users of
+<p class="label label-info">Sorry. This feature is only available to registered <q>backup</q> users of
 the site.</p>
 
 {elseif !$can_upload}
 
-<p>Okay, you're almost ready to upload photos to Flickr. By default
+<p class="label label-info">Okay, you're almost ready to upload photos to Flickr.</p>
+
+<p>By default
 <strong>{$cfg.site_name|escape}</strong> only needs to have an authentication
 token for your Flickr account ({$cfg.user.username|escape}) with <q>read</q>
 permissions. In order to upload photos we'll need to bounce you back through the
@@ -28,7 +29,6 @@ Flickr website site so you can confirm that you're okay with
 
 <div id="upload-status"></div>
 
-<div class="container">
 <div class="span10 offset1">
 
 <form method="POST" enctype="multipart/form-data" id="upload-form">
@@ -143,11 +143,11 @@ Flickr website site so you can confirm that you're okay with
 	</div>
 
 </form>
-
-</div>
 </div>
 
 {/if}
+
+</div>
 
 <script type="text/javascript">
 {literal}
@@ -162,8 +162,6 @@ $(document).ready(function(){
 
 	$("#upload-form").submit(function(){
 
-	alert("WTF");
-	return false;
 	/* TO DO: use parallel.flickr.api.js */
 
 		var data = new FormData();
@@ -203,16 +201,23 @@ $(document).ready(function(){
 			if (rsp['stat'] == 'ok'){
 				if (rsp['photo']){
 					var link = '<a href="' + rsp['photo']['url'] + '">' + rsp['photo']['id'] + '</a>';
-					msg = 'Yay! Your photo has been successfull uploaded with ID '	+ link + '.';
+
+					msg = '<span class="label label-success">';
+					msg += 'Yay! Your photo has been successfull uploaded with ID '	+ link + '.';
+					msg += '</span>';
 				}
 
 				else {
-					msg = "Hrm... your upload succeeded by the server returned a message we don't understand";
+					msg = '<span class="label label-warning">';
+					msg += "Hrm... your upload succeeded by the server returned a message we don't understand";
+					msg += '</span>';
 				}
 			}
 
 			else {
-				msg = "Ack! There was a problem uploading your photo: " + rsp['error']['error'];	
+				msg = '<span class="label label-warning">';
+				msg += "Ack! There was a problem uploading your photo: " + rsp['error']['error'];	
+				msg += '</span>';
 			}
 
 			var status = '<p>' + msg + '</p>';
@@ -254,7 +259,7 @@ $(document).ready(function(){
 
 		$("#upload-form").hide();
 
-		$("#upload-status").html("Okee dokee...uploading your photo. Tasteful muzak plays.");
+		$("#upload-status").html('<span class="label label-info">Okee dokee...uploading your photo. Tasteful muzak plays.</span>');
 		$("#upload-status").show();
 
 		//  $('input[type=submit]').attr('disabled', 'disabled');

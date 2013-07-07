@@ -1,5 +1,5 @@
 {include file='inc_head.txt'}
 
-<h2 style="font-weight:700;font-size:12em;color:blue;">{$cfg.site_name|escape|replace:" ":"<br />"}</h2>
+
 
 {include file='inc_foot.txt'}
