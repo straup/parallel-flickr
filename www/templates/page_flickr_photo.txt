@@ -3,74 +3,99 @@
 {capture assign="extra_head"}
 {if $is_own}
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.geo.js"></script>
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/photo.geo.css" />
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/flickr.auth.js"></script>
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/photos-geo.source.css" />
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
 {/if}
 {/capture}
 {include file="inc_head.txt"}
 
-<div class="photo">
-<h2 class="photo_title" id="photo_title" contenteditable="true">{$photo_title|escape}</h2>
+<div class="photo_container">
+	<h2 class="photo_title" id="photo_title" contenteditable="true">{$photo_title|escape}</h2>
 
-{if !$photo|@flickr_photos_is_on_flickr}
-<img src="{$photo|@flickr_urls_photo_static}"  onerror="this.src=abs_root_url + 'images/missing-m.png';"/>
-{else}
-<a href="{$photo|@flickr_urls_photo_page_flickr}"><img src="{$photo|@flickr_urls_photo_static}" /></a>
-{/if}
+	<div class="photo">
 
-<div class="photo_cite">
-by <a href="{$owner|@flickr_urls_photos_user}">{if $is_own}you{else}{$owner.username|escape}{/if}</a> {if $photo.str_perms != 'public'}<span style="font-style:italic;"> &#8212; this photo can only be seen by {if $photo.str_perms=='private'}you{else}{$photo.str_perms|escape}{/if}</span>{/if}
+	{if !$photo|@flickr_photos_is_on_flickr}
+	<img src="{$photo|@flickr_urls_photo_static}"  onerror="this.src=abs_root_url + 'images/missing-m.png';"/>
+	{else}
+	<a href="{$photo|@flickr_urls_photo_page_flickr}"><img src="{$photo|@flickr_urls_photo_static}" /></a>
+	{/if}
 
-</div>
-</div>
+	</div>
 
-<div class="photo_sidebar">
+	<div class="photo_sidebar">
 
-{if $cfg.enable_feature_slippymaps}
-{include file="inc_flickr_photo_map.txt" show_nullisland=0}
-{/if}
+	{if $before|@count or $after|@count}
+	<div class="photo_navi">
 
-{if $before|@count or $after|@count}
-<div class="photo_navi">
+		<div class="photo_before">
+		{if $before|@count}
+		<a href="{$owner|@flickr_urls_photos_user}{$before.0.id|escape}" title="before: {$before.0.title|escape}"><img src="{$before.0|@flickr_urls_photo_thumb_flickr}" alt="{$before.0.title|escape}" onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
+		{else}
+		<img src="{$cfg.abs_root_url}images/youarehere.png" height="100" width="100" alt="you are here" />
+		{/if}
+		</div>
 
-<div class="photo_before">
-{if $before|@count}
-<a href="{$owner|@flickr_urls_photos_user}{$before.0.id|escape}" title="before: {$before.0.title|escape}"><img src="{$before.0|@flickr_urls_photo_thumb_flickr}" alt="{$before.0.title|escape}" onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
-{else}
-<img src="{$cfg.abs_root_url}images/youarehere.png" height="100" width="100" alt="you are here" />
-{/if}
-</div>
+		<div class="photo_after">
+		{if $after|@count}
+		<a href="{$owner|@flickr_urls_photos_user}{$after.0.id|escape}" title="after: {$after.0.title|escape}"><img src="{$after.0|@flickr_urls_photo_thumb_flickr}" alt="{$after.0.title|escape}"  onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
+		{else}
+		<img src="{$cfg.abs_root_url}images/youarehere.png" height="100" width="100" alt="you are here" />
+		{/if}
+		</div>
 
-<div class="photo_after">
-{if $after|@count}
-<a href="{$owner|@flickr_urls_photos_user}{$after.0.id|escape}" title="after: {$after.0.title|escape}"><img src="{$after.0|@flickr_urls_photo_thumb_flickr}" alt="{$after.0.title|escape}"  onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
-{else}
-<img src="{$cfg.abs_root_url}images/youarehere.png" height="100" width="100" alt="you are here" />
-{/if}
-</div>
+		<br clear="all" />
+	</div>
+	<!-- photo_navi -->
 
-</div>
+	<div class="photo_meta">
+	{if !$is_own}
 
-<br clear="all" />
-{/if}
+	<p>
+	{if $photo.str_perms=='public'}
+	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you">it is public</span>.
+	{else}
+	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you"> it can only be seen by {$photo.str_perms|escape}</span>.
+	{/if}
+	</p>
 
-{if $is_own}
-<div class="photo_meta">
-<h3>Details</h3>
+	{else}
 
-{if !$photo|@flickr_photos_is_on_flickr}<p>This photo is <strong>not on Flickr</strong>.</p>{/if}
-<ul>
-{if $is_own}<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a>.</li>{/if}
-{if $photo|@flickr_photos_is_on_flickr}<li>View <a href="{$photo|@flickr_urls_photo_page_flickr}" target="_flickr">photo on Flickr</a>.</li>{/if}
-{if $is_own and $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
+	<p>
+	{if $photo.str_perms=='public'}
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you">it is public</span>.
+	{elseif $photo.str_perms=='private'}
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you">it is private</span>.
+	{else}
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you">it can only be seen by {$photo.str_perms|escape}</span>.
+	{/if}
+
+	{if !$photo|@flickr_photos_is_on_flickr}	
+	This photo is <strong>not on Flickr</strong>.
+	{/if}
+	</p>
+
+	<ul>
+	{if $is_own}<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a>.</li>{/if}
+	{if $photo|@flickr_photos_is_on_flickr}<li>View <a href="{$photo|@flickr_urls_photo_page_flickr}" target="_flickr">photo on Flickr</a>.</li>{/if}
+	{if $is_own and $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
 {if $is_own and $photo.hasgeo}<li>{if $photo|@flickr_photos_is_on_flickr}Edit <a href="#" title="edit the geo data for this photo (keyboard shortcut: g)" id="edit_geo" geo:woeid="{$photo.woeid|escape}" geo:context="{$photo.geocontext|escape}">geo data</a>.{else}<span class="feature-disabled">Edit geo data.</span>{/if}</li>{/if}
-</ul>
+	</ul>
+	{/if}
+	</div>
 
-</div>
-{/if}
+	{if $cfg.user.id and $cfg.enable_feature_slippymaps}
+	{include file="inc_flickr_photo_map.txt" show_nullisland=0}
+	{/if}
 
+	<br clear="all" />
+	{/if}
+
+	</div>
+	<!-- photo_meta -->
+
+	<br clear="all" />
 </div>
 
 <script type="text/javascript">

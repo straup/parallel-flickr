@@ -1,5 +1,4 @@
 body {
-	text-align: center;
 	background-color: #fff;
 	margin: 0;
 	padding: 0;
@@ -97,4 +96,8 @@ button a {
 
 .feature-disabled:after {
     content:"..is currently disabled.";
+}
+
+.hey-you {
+    font-weight: 700;
 }
