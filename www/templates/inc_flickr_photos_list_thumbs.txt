@@ -1,0 +1,20 @@
+<div class="container">
+<ul class="thumbnails">
+{foreach from=$photos item="row"}
+	 <li class="thumbnail-li">
+	<div class="thumbnail">
+	{include file="inc_flickr_photo_static.txt" photo=$row}
+	</div>
+	{include file="inc_flickr_photo_static_caption.txt" photo=$row}
+	</li>
+{/foreach}
+</ul>
+</div>
+
+<div class="container">
+<div class="span8 offset2">
+{include file="inc_pagination.txt"}
+</div>
+</div>
+
+{if "keyboard_browse"|@features_is_enabled}{include file="inc_keyboard_browse.txt" class_name="photo"}{/if}

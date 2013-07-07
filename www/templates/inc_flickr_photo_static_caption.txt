@@ -1,0 +1,18 @@
+<div class="photo-caption">
+<div>
+{if $photo.title}
+<a href="{$photo|@flickr_urls_photo_page}" class="hey-you">{$photo.title|escape}</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.
+{else}
+<a href="{$photo|@flickr_urls_photo_page}" class="hey-you">This photo</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.
+{/if}
+</div>
+
+{if $photo.owner}
+<div>This photo is by <a href="{$photo.owner|@flickr_urls_photos_user}" class="hey-you">{$photo.owner.username|escape}</a>.</div>
+{/if}
+
+{if !$photo|@flickr_photos_is_on_flickr}
+<div>This photo <span class="hey-you">is not on Flickr</span>.</div>
+{/if}
+
+</div>

@@ -6,7 +6,7 @@
 </div>
 
 {if !$is_registered}
-<div class="container isnot_registered"><div class="offset1 span10">
+<div class="container isnot_registered"><div>
 
 {if $is_own}
 <p>These are only some of your Flickr photos. You're not

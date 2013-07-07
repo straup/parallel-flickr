@@ -117,6 +117,34 @@
 .photo_notfaved {
 }
 
+.thumbnail {
+    height: 320px;
+    width: 320px;
+}
+
+.thumbnail img {
+    max-width:320px;
+    max-height:320px;
+}
+
+.thumbnail .photo-static {
+    max-width:320px;
+    max-height:320px;
+}
+
+.thumbnail-li .photo-caption {
+    max-width:320px;
+    max-height:100px;
+    height: 100px;
+    width:320px;
+    font-size:11px;
+    overflow-y:hidden;
+}
+
+.thumbnail-li .photo-caption div {
+    display:inline;
+}
+
 @media (max-width: 480px) {
 
     h2 {
@@ -130,4 +158,27 @@
     .photo-caption div {
 	display: inline;
     }
+
+    .thumbnail {
+	height: 320px;
+	width: 320px;
+    }
+    
+    .thumbnail img {
+	max-width:320px;
+	max-height:320px;
+    }
+    
+    .thumbnail .photo-static {
+	max-width:320px;
+	max-height:320px;
+    }
+
+    .thumbnail-li .photo-caption {
+	max-width:320px;
+	max-height:100px;
+	height: 100px;
+	width:320px;
+    }
+
 }

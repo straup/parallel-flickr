@@ -41,9 +41,7 @@
 
 </div>
 
-{if $photos|@count}
-{include file="inc_flickr_photos_list.txt"}
-{/if}
+{include file="inc_flickr_photos_list.txt" photos=$photos}
 
 </div>
 
