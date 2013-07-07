@@ -1,13 +1,20 @@
 	</div>
 
-	<div id="footer"></div>
-
 	{if 'staff'|@auth_has_role && $cfg.admin_flags_show_notices}
 	<div style="padding: 2em;">{timings}</div>
 	{/if}
 
 	</div>
 
+	<div id="footer" class="navbar navbar-static-bottom">
+ 	<div class="container">
+
+	{if 0}{if "sharkify"|@features_is_enabled}
+	<div class="span1"><a href="#" onclick="sharkify_add();return false;">sharkify</a></div>
+	{/if}{/if}
+	 
+	 </div>
+	 </div>
 	</body>
 
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/bootstrap.min.js"></script>
