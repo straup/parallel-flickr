@@ -4,8 +4,11 @@
 {/capture}
 {include file="inc_head.txt"}
 
+<div class="container-fluid">
+<div class="row-fluid">
+
 {if $taken|@count}
-<div id="archives_taken" class="archives_list">
+<div class="span4 offset2">
 <h3>Taken</h3>
 
 <ul>
@@ -17,7 +20,7 @@
 {/if}
 
 {if $posted|@count}
-<div id="archives_posted" class="archives_list">
+<div class="span4">
 <h3>Posted</h3>
 <ul>
 {foreach from=$posted item="yyyy"}
@@ -27,6 +30,7 @@
 </div>
 {/if}
 
-<br clear="all" />
+</div>
+</div>
 
 {include file="inc_foot.txt"}

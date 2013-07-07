@@ -1,6 +1,6 @@
 <div class="photo-static">
 
-<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_static}" /></a>
+<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_static}" onerror="this.src=abs_root_url + 'images/missing-m.png';"/></a>
 
 {if $show_caption}
 <div class="photo-caption">
