@@ -1,59 +1,19 @@
 	</div>
 
-	<div id="footer">
+	<div id="footer"></div>
 
-{if $cfg.user.id}
-			you are signed in with your <strong>{$cfg.user.username|escape}</strong> account
-			|
-			<a href="{$cfg.abs_root_url}photos/me/">photos</a>
-			|
-			<a href="{$cfg.abs_root_url}photos/me/faves/">faves</a>
-			|
-{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
-			<a href="{$cfg.user|@flickr_urls_photos_user}places/">places</a>
-			|
-{/if}
-{if "solr"|@features_is_enabled and "cameras"|@features_is_enabled}
-			<a href="{$cfg.user|@flickr_urls_photos_user_cameras}">cameras</a>
-			|
-{/if}
-			<a href="{$cfg.user|@flickr_urls_photos_user_archives}">archives</a>
-			|
-{if "flickr_push"|@features_is_enabled and $cfg.flickr_push_enable_photos_friends}
-			<a
-			href="{$cfg.abs_root_url}photos/friends/">contacts</a>
-{/if}
-{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
-			|
-    			<a href="{$cfg.abs_root_url}api/">api</a>
-{/if}
-			|
-			<a href="{$cfg.abs_root_url}account/">settings</a>
-			|
-			<a href="{$cfg.abs_root_url}signout/">signout</a>
-{if 'sharkify'|@features_is_enabled}
-			...
-			<a href="#" onclick="sharkify_add();return false;">sharkify</a>
-{/if}
-{else}
-	{if signin|@features_is_enabled}
-			<a href="{$cfg.abs_root_url}signin/?redir={$smarty.server.REQUEST_URI|escape:'url'}">sign in with your flickr account</a>
+	{if 'staff'|@auth_has_role && $cfg.admin_flags_show_notices}
+	<div style="padding: 2em;">{timings}</div>
 	{/if}
-	{if 'sharkify'|@features_is_enabled}
-			...or 
-			<a href="#" onclick="sharkify_add();return false;">sharkify</a>
-	{/if}
-{/if}
 
 	</div>
 
-{if 'staff'|@auth_has_role && $cfg.admin_flags_show_notices}
-<div style="padding: 2em;">
-	{timings}
-</div>
-{/if}
+	</body>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmapl-standalone.min.js"></script>
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/parallel.flickr.api.min.js"></script>
+	{if 'sharkify'|@features_is_enabled}
+	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/sharkify.min.js"></script>
+	{/if}
 
-</div>
-
-</body>
 </html>

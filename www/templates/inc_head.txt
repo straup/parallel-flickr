@@ -5,28 +5,93 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="viewport" content="width=device-width" />
-	<link rel="stylesheet" type="text/css" media="all" href="/css/main.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link href="{$cfg.abs_root_url}css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="{$cfg.abs_root_url}css/bootstrap.responsive.min.css" rel="stylesheet" media="screen">
+	<!--<link rel="stylesheet" type="text/css" media="all" href="/css/main.css" /> -->
+
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmapl-standalone.min.js"></script>
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/parallel.flickr.api.min.js"></script>
-	{if 'sharkify'|@features_is_enabled}
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/sharkify.min.js"></script>
-	{/if}
 	<script type="text/javascript">
 	var abs_root_url='{$cfg.abs_root_url}';
 	</script>
+
+	{if 0}
+	<!--[if lt IE 9]>
+	<script src="{$cfg.abs_root}javascript/html5.js"></script>
+	<![endif]-->
+	{/if}
+
 	{$extra_head}
-</head>
-<body {if "api"|features_is_enabled}data-api-endpoint="{$cfg.api_abs_root_url}{$cfg.api_endpoint}" {if "api_site_tokens|@features_is_enabled"}data-api-site-token="{$site_token|escape}"{/if}{/if}>
+	</head>
+	<body data-abs-root-url="{$cfg.abs_root_url}" {if "api"|features_is_enabled}data-api-endpoint="{$cfg.api_abs_root_url}{$cfg.api_endpoint}" {if "api_site_tokens|@features_is_enabled"}data-api-site-token="{$site_token|escape}"{/if}{/if}>
 
-<div id="main">
+	<div id="main">
 
+    	<div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="{$cfg.abs_root_url}">{$cfg.site_name|escape}</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+	    {if $cfg.user.id}
+		<li><a href="{$cfg.abs_root_url}photos/me/">photos</a></li>
+		<li><a href="{$cfg.abs_root_url}photos/me/faves/">faves</a></li>
+		{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
+		<li><a href="{$cfg.user|@flickr_urls_photos_user}places/">places</a></li>
+		{/if}
+		{if "solr"|@features_is_enabled and "cameras"|@features_is_enabled}
+		<li><a href="{$cfg.user|@flickr_urls_photos_user_cameras}">cameras</a></li>
+		{/if}
+		<li><a href="{$cfg.user|@flickr_urls_photos_user_archives}">archives</a></li>
+	    {else}
+              <li{if $nav_tab == 'about'} class="active"{/if}><a href="{$cfg.abs_root_url}about">About</a></li>
+	    {/if}
+
+	{if 'sharkify'|@features_is_enabled}
+	 <li><a href="#" onclick="sharkify_add();return false;">sharkify</a></li>
+	 {/if}
+
+            </ul>
+
+            <ul class="nav pull-right">
+{if $cfg.user.id}
+            <li class="dropdown{if $nav_tab == 'account'} active{/if}">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello {$cfg.user.username|escape} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="{$cfg.abs_root_url}account">Settings</a></li>
+		{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
+  		<li><a href="{$cfg.abs_root_url}api/">api</a></li>
+		{/if}
+                <li><a href="{$cfg.abs_root_url}signout">Logout</a></li>
+              </ul>
+            </li>
+{else}
+	{if $cfg.enable_feature_signin}
+		{if $cfg.enable_feature_signup}
+			<li{if $nav_tab == 'signup'} class="active"{/if}><a href="{$cfg.abs_root_url}signup">Create New Account</a></li>
+		{/if}
+			<li{if $nav_tab == 'signin'} class="active"{/if}><a href="{$cfg.abs_root_url}signin">Sign In</a></li>
+	{/if}
+{/if}
+          </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    {if 0}
 	<div id="nav">
 	</div>
+    {/if}
 
 	<div id="content">
 
-{if $cfg.enable_feature_path_alias_redirects and $path_alias_conflict and $owner.id != $path_alias_other_user.id}
-{include file="inc_path_alias_conflict.txt"}
-{/if}
+	{if "path_alias_redirects"|@features_is_enabled and $path_alias_conflict and $owner.id != $path_alias_other_user.id}
+	{include file="inc_path_alias_conflict.txt"}
+	{/if}
