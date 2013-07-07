@@ -1,9 +1,0 @@
-{if $cfg.enable_feature_slippymaps}
-<script type="text/javascript">
-{literal}
-	$(document).ready(function(){
-		$("div.map").htmapl();
-	});
-{/literal}
-</script>
-{/if}

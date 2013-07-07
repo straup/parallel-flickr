@@ -65,8 +65,6 @@
 {include file="inc_keyboard_browse.txt" class_name="photo"}
 {/if}
 
-{include file="inc_flickr_photo_map_load.txt"}
-
 {/if}
 
 {include file="inc_foot.txt"}

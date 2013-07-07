@@ -60,6 +60,7 @@
 	{/if}
 	</p>
 
+	{* all stuff that is assuming $is_own=1 now *}
 	{else}
 
 	<p>
@@ -77,17 +78,27 @@
 	</p>
 
 	<ul>
-	{if $is_own}<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a>.</li>{/if}
+	<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a>.</li>
+
 	{if $photo|@flickr_photos_is_on_flickr}<li>View <a href="{$photo|@flickr_urls_photo_page_flickr}" target="_flickr">photo on Flickr</a>.</li>{/if}
-	{if $is_own and $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
-{if $is_own and $photo.hasgeo}<li>{if $photo|@flickr_photos_is_on_flickr}Edit <a href="#" title="edit the geo data for this photo (keyboard shortcut: g)" id="edit_geo" geo:woeid="{$photo.woeid|escape}" geo:context="{$photo.geocontext|escape}">geo data</a>.{else}<span class="feature-disabled">Edit geo data.</span>{/if}</li>{/if}
+
+	{if $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
+
+	{* can not edit geodata on not-flickr photos yet... *}
+
+	{if $photo.hasgeo}<li>
+	{if $photo|@flickr_photos_is_on_flickr}
+	Edit <a href="#" title="edit the geo data for this photo (keyboard shortcut: g)" id="edit_geo" geo:woeid="{$photo.woeid|escape}" geo:context="{$photo.geocontext|escape}">geo data</a>.
+	{else}
+	<span class="feature-disabled">Edit geo data.</span>
+	{/if}
+	</li>{/if}
+
 	</ul>
 	{/if}
 	</div>
 
-	{if $cfg.user.id and $cfg.enable_feature_slippymaps}
-	{include file="inc_flickr_photo_map.txt" show_nullisland=0}
-	{/if}
+	{include file="inc_flickr_photo_map.txt"}
 
 	<br clear="all" />
 	{/if}
@@ -183,7 +194,5 @@ $(document).ready(function(){
 
 });
 </script>
-
-{include file="inc_flickr_photo_map_load.txt"}
 
 {include file="inc_foot.txt"}

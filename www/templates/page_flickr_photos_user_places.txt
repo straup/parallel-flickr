@@ -93,6 +93,4 @@ You have taken {$count|escape} photos in <a href="{$owner|@flickr_urls_photos_us
 {/if}
 {/foreach}
 
-{include file="inc_flickr_photo_map_load.txt"}
-
 {include file="inc_foot.txt"}

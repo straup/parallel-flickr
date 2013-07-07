@@ -60,6 +60,4 @@ You've taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_m
 
 {/if}
 
-{include file="inc_flickr_photo_map_load.txt"}
-
 {include file="inc_foot.txt"}
