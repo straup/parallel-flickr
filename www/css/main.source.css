@@ -1,0 +1,100 @@
+body {
+	text-align: center;
+	background-color: #fff;
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}
+
+#main {}
+
+
+#footer {}
+
+#content {
+	 padding-top: 2em;
+	 margin-bottom:200px
+}
+
+h1 {
+	margin-top: 0;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+p.error {
+	background-color: #f99;
+}
+
+p.message {
+	background-color: #9f9;
+}
+
+.crying_cat_face {
+    float:right;
+    font-size: 10em;
+    color:#ccc;
+}
+
+th {
+    color:#999;
+    border-bottom: solid thin;
+    padding-bottom:10px;
+}
+
+td {
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+#path_alias_conflict {
+    font-size:small;
+    padding:15px;
+    background-color:#eee;
+    margin-bottom: 20px;
+}
+
+#path_alias_conflict_details {
+    display: none;
+}
+
+#path_alias_conflict_details ul li {
+    line-height:1.5em;
+    margin-bottom:5px;
+}
+
+.isnot_registered {
+    font-size:small;
+    font-style:italic;
+    margin-bottom: 20px;
+    max-width:640px;
+}
+
+#modal_flickr_auth {
+    font-size: small;
+}
+
+#modal_flickr_auth .buttons {
+    text-align:center;
+}
+
+#modal_flickr_auth .buttons button {
+    border: solid thin;
+    padding: 5px;
+}
+
+button a {
+    text-decoration: none;
+}
+
+.feature-disabled {
+    color:#666;
+    
+    text-decoration: line-through;
+}
+
+.feature-disabled:after {
+    content:"..is currently disabled.";
+}

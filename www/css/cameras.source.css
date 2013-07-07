@@ -1,0 +1,39 @@
+.camera_models {
+    margin-bottom: 25px;
+    font-size:small;
+}
+
+.camera_models ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.camera_models ul li {
+    list-style-type: none;
+    display:inline;
+}
+
+.camerafinder_widget {
+    border:solid thin;
+    min-height:110px;
+    max-height:110px;
+    width:25%;
+    float:left;
+    margin-right:10px;
+    margin-bottom:20px;
+    padding:25px;
+}
+
+.camerafinder_header {
+    margin-bottom: 10px;
+}
+
+.camerafinder_header img {
+    float:left;
+    margin-right:25px;
+}
+
+.camerafinder_header h3 {
+    font-weight:700;
+    margin: 0px;
+}

@@ -1,0 +1,96 @@
+.photo {
+    width: 670px;
+    max-width: 670px;
+    float:left;
+    margin-bottom:10%;
+}
+
+.photo_sidebar {
+    float:left;
+    /* border:solid thin; */
+    /* this can't be the correct way to do this... */
+    margin-top: 3em;
+    width:210px;
+    margin-bottom:10%;
+}
+
+.photo_before {
+    float: left;
+    margin-right: 10px;
+    width: 100px;
+    height: 100px;
+}
+
+.photo_after {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
+.photo_meta {
+    margin-top: 20px;
+    font-size: 11px;
+}
+
+.photo_meta ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.photo_meta ul li {
+    list-style-type: none;
+    line-height: 1.25em;
+}
+
+.photo_cite {
+    font-size:small;
+}
+
+.photo_when {
+    font-size:small;
+}
+
+.photo_exif {
+    width: 50%;
+}
+
+.photo_exif td {
+    padding: 5px;
+    font-size:small;
+}
+
+.photo_exif_tag {
+    border: solid thin;
+}
+
+.photos_user_photo {
+    margin-bottom: 30px;
+    color:#999;
+}
+
+.photo_title a {
+    color:#000;
+    text-decoration: none;
+}
+
+
+.photo_map {
+    float: left;
+    margin-bottom: 20px;
+}
+
+.photo_map_blurb {
+    width:200px;
+    font-size:11px;
+}
+
+.photo_faved {
+    text-shadow: 0.1em 0.1em 0.02em #fff !important;
+}
+
+.photo_faved:hover {
+    opacity:.8;
+}
+
+.photo_notfaved {
+}

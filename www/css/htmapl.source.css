@@ -1,0 +1,63 @@
+.map {
+    width: 210px;
+    height: 210px;
+    border: solid thin;
+    background-color: #ccc;
+    margin: 0;
+    margin-bottom:10px;
+}
+
+/* sudo finish this */
+/* http://jonraasch.com/blog/css-rounded-corners-in-all-browsers */
+
+.marker {
+    background-color: #0bbdff;
+    border:2px solid #000;
+    padding:5px;
+    font-size:11px;
+    font-weight:700;
+    color:#fff;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+}
+
+.marker_text {
+    display: none;
+    z-index:0;
+}
+
+.marker:hover {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -khtml-border-radius: 0px;
+    border-radius: 0px;
+}
+
+.marker:hover .marker_text {
+    display: block;
+    z-index:400;
+}
+
+/* http://prag.ma/code/htmapl/examples/flickr.html */
+
+.map-tile {
+    opacity: 0;
+}
+
+.map-tile-loaded {
+    -webkit-animation-name: 'fade-in';
+    -webkit-animation-timing-function: ease-in;
+    -webkit-animation-duration: 0.2s;
+}
+
+@-webkit-keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+

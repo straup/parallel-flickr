@@ -1,0 +1,65 @@
+/* rules for developer-only styles */
+
+.admin-timings-wrapper {
+	width:300px;
+	margin:0 auto;
+	padding:10px;
+
+	border-top-left-radius:10px;
+	-moz-border-radius-topleft:10px;
+	-webkit-border-top-left-radius:10px;
+
+	border-top-right-radius:10px;
+	-moz-border-radius-topright:10px;
+	-webkit-border-top-right-radius:10px;
+
+	border-bottom-left-radius:10px;
+	-moz-border-radius-bottomleft:10px;
+	-webkit-border-bottom-left-radius:10px;
+
+	border-bottom-right-radius:10px;
+	-moz-border-radius-bottomright:10px;
+	-webkit-border-bottom-right-radius:10px;
+
+	background-image: url("/images/stripes_bg.gif");
+}
+
+table.admin-timings {
+	margin:0;
+	background-color:white;
+	text-align:left;
+	width:100%;
+}
+
+table.admin-timings td,
+table.admin-timings th {
+	padding:6px 20px;
+	text-align:left;
+	font: normal 13px/1em Arial,sans-serif;
+	color: #383F41;
+}
+
+table.admin-timings td.tar {
+	text-align: right;
+}
+
+table.admin-timings tr:nth-child(2n+1) td {
+	background:#e9f0f0
+}
+
+.admin-section {
+	background-image: url("/images/stripes_bg.gif");
+	border-top: 1px solid #BECCCC;
+	border-bottom: 1px solid #BECCCC;
+	padding: 40px;
+	position: relative;
+	text-align: left;
+}
+
+pre.admin-debug {
+	background: none repeat scroll 0 0 #000000;
+	color: #00FF00;
+	font-size: 14px;
+	margin: 0;
+	padding: 1em;
+}
