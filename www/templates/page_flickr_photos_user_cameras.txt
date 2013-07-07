@@ -1,4 +1,7 @@
 {capture assign="page_title"}{$owner.username} | cameras{/capture}
+{capture assign="extra_head"}
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/cameras.source.css" />
+{/capture}
 {include file="inc_head.txt"}
 
 <h2>

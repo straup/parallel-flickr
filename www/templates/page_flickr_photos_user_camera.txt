@@ -1,4 +1,7 @@
 {capture assign="page_title"}{$owner.username} | cameras | {$camera_make}{if $camera_model} | {$camera_model}{/if}{/capture}
+{capture assign="extra_head"}
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/cameras.source.css" />
+{/capture}
 {include file="inc_head.txt"}
 
 {* TO DO: check to see camera make starts with a vowel *}
@@ -23,26 +26,8 @@ You've taken one photo with a {$camera_make|escape}{if $camera_model} {$camera_m
 {include file="inc_camera_models.txt"}
 
 {if $photos|@count}
-{foreach from=$photos item="row"}
 
-<div class="photos_user_photo">
-
-<div class="photo">
-<a href="{$row|@flickr_urls_photo_page}"><img src="{$row|@flickr_urls_photo_static}" /></a>
-<div class="photo_when">{$row.datetaken|@flickr_dates_verbosify_iso8601}</div>
-</div>
-
-<div class="photo_sidebar" style="margin-top:0px;">
-{include file="inc_flickr_photo_map.txt" photo=$row}
-</div>
-
-<br clear="all" />
-
-</div>
-
-{/foreach}
-
-{include file="inc_pagination.txt"}
+{include file="inc_flickr_photos_list.txt"}
 
 {else}
 
