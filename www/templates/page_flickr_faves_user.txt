@@ -1,22 +1,24 @@
 {capture assign="page_title"}{$owner.username|escape} | faves{if $by_owner} | {$by_owner.username|escape}{/if}{/capture}
 {capture assign="header"}
 {if $is_own and $by_owner}
-photos you've faved, by {$by_owner.username|escape}
+Photos you've faved, by {$by_owner.username|escape}
 {elseif $is_own}
-your faves
+Your faves
 {elseif $by_owner}
 {$by_owner.username|escape}'s photos, faved by {$owner.username|escape}
 {else}
-photos faved by {$owner.username|escape}
+Photos faved by {$owner.username|escape}
 {/if}
 {/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
 <h2>{$header|escape}</h2>
+</div>
 
 {if !$is_registered}
 
-<div class="isnot_registered">
+<div class="container isnot_registered">
 {if $is_own}
 There aren't any of your faves to show because your Flickr account is not registered to be backed up.
 {else}
@@ -26,26 +28,8 @@ show you because their (Flickr) account is not registered to be backed up.
 </div>
 
 {else}
-{foreach from=$photos item="row"}
 
-<div class="photos_user_photo">
-
-{if $row.canview}
-<a href="{$row|@flickr_urls_photo_page}"><img src="{$row|@flickr_urls_photo_static}" /></a>
-<div class="photo_why">by <a href ="{$row.owner|@flickr_urls_photos_user}">{$row.owner.username|escape}</a></div>
-{else}
-<img src="{$cfg.abs_root_url}images/fuzz.jpg" height="431" width="600" />
-<div class="photo_why">by [redacted]</div>
-{/if}
-</div>
-
-{/foreach}
-
-{include file="inc_pagination.txt"}
-
-{if $cfg.enable_keyboard_browse}
-{include file="inc_keyboard_browse.txt" class_name="photos_user_photo"}
-{/if}
+{include file="inc_flickr_photos_list.txt" photo=$photos}
 
 {/if}
 

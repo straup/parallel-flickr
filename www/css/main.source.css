@@ -21,6 +21,8 @@ h1 {
 
 h2 {
     margin-top: 0;
+    font-weight:100;
+    text-align:right;
 }
 
 p.error {
@@ -67,8 +69,6 @@ td {
 .isnot_registered {
     font-size:small;
     font-style:italic;
-    margin-bottom: 20px;
-    max-width:640px;
 }
 
 #modal_flickr_auth {

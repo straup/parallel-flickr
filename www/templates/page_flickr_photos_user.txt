@@ -1,43 +1,26 @@
 {capture assign="page_title"}{$owner.username} | photos{/capture}
 {include file="inc_head.txt"}
 
-<h2>{if $is_own}your photos{else}photos from {$owner.username|escape}{/if}</h2>
+<div class="container">
+<h2>{if $is_own}Your photos{else}Photos by {$owner.username|escape}{/if}</h2>
+</div>
 
 {if !$is_registered}
-<div class="isnot_registered">
+<div class="container isnot_registered"><div class="offset1 span10">
+
 {if $is_own}
-These are only some of your Flickr photos. You're not
+<p>These are only some of your Flickr photos. You're not
 a registered user of <strong>{$cfg.site_name|escape}</strong> so the photos you're seeing are
-only those that were faved by one or more the people whose photos are backed up here.
+only those that were faved by one or more the people whose photos are backed up here.</p>
 {else}
-These are only some of <strong>{$owner.username|escape}</strong>'s Flickr photos. They are a not
+<p>These are only some of <strong>{$owner.username|escape}</strong>'s Flickr photos. They are a not
 a registered user of <strong>{$cfg.site_name|escape}</strong> so the photos you're seeing are
-only those that were faved by one or more the people whose photos are backed up here.
-{/if}
-</div>
+only those that were faved by one or more the people whose photos are backed up here.</p>
 {/if}
 
-{foreach from=$photos item="row"}
+</div></div>
+{/if}
 
-<div class="photos_user_photo">
-
-<div class="photo">
-<a href="{$row|@flickr_urls_photo_page}"><img src="{$row|@flickr_urls_photo_static}" onerror="this.src=abs_root_url + 'images/missing-m.png';"/></a>
-<div class="photo_when">{$row.datetaken|@flickr_dates_verbosify_iso8601}</div>
-</div>
-
-<div class="photo_sidebar" style="margin-top:0px;">
-{include file="inc_flickr_photo_map.txt" photo=$row}
-</div>
-
-<br clear="all" />
-
-</div>
-
-{/foreach}
-
-{include file="inc_pagination.txt"}
-
-{if "keyboard_browse"|@features_is_enabled}{include file="inc_keyboard_browse.txt" class_name="photo"}{/if}
+{include file="inc_flickr_photos_list.txt" photo=$photos}
 
 {include file="inc_foot.txt"}

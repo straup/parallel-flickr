@@ -1,3 +1,0 @@
-{include file="inc_head.txt"}
-
-{include file="inc_foot.txt"}
