@@ -1,17 +1,21 @@
 {capture assign="page_title"}upload by email{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 <h2>Upload by email</h2>
 
 {if !$is_registered}
 
-<p>Sorry. This feature is only available to registered <q>backup</q> users of
+<p class="notice label label-info">Sorry. This feature is only available to registered <q>backup</q> users of
 the site.</p>
 
 {elseif !$can_upload}
 
-<p>Okay, you're almost ready to upload photos by email to Flickr. By default
-<strong>{$cfg.site_name|escape}</strong> only needs to have an authentication
+<p class="notice label label-info">Okay, you're almost ready to upload photos by
+ email to Flickr.</p>
+
+<p>By default <strong>{$cfg.site_name|escape}</strong> only needs to have an authentication
 token for your Flickr account ({$cfg.user.username|escape}) with <q>read</q>
 permissions. In order to upload photos we'll need to bounce you back through the
 Flickr website site so you can confirm that you're okay with
@@ -22,11 +26,11 @@ Flickr website site so you can confirm that you're okay with
 {else}
 
 {if $is_reset}
-<p class="confirm">Your upload by email address has been reset.</p>
+<p class="confirm label label-success">Your upload by email address has been reset.</p>
 {/if}
 
 {if $is_new}
-<p class="confirm">Your upload by email address has been created!</p>
+<p class="confirm label label-success">Your upload by email address has been created!</p>
 {/if}
 
 {if !$cfg.user.uploadbyemail_address|escape}
@@ -52,5 +56,7 @@ Flickr website site so you can confirm that you're okay with
 {/if}
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}
