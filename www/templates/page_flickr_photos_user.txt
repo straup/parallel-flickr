@@ -21,6 +21,6 @@ only those that were faved by one or more the people whose photos are backed up 
 </div></div>
 {/if}
 
-{include file="inc_flickr_photos_list.txt" photo=$photos}
+{include file="inc_flickr_photos_list.txt" photo=$photos stacked=1}
 
 {include file="inc_foot.txt"}

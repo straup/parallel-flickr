@@ -15,13 +15,13 @@
 
  <div class="row-fluid">
 	<h2 class="photo_title offset1" id="photo_title" contenteditable="true">{$photo_title|truncate:50:"..."|escape}</h2>
-	<div class="span6 offset1">
+	<div class="span7 offset1">
 	<div class="photo">
 	{include file="inc_flickr_photo_static.txt" show_caption=1}
 	</div>
 	</div>
 
-	<div class="span3 offset1">
+	<div class="span3">
 	{include file="inc_flickr_photo_sidebar.txt"}
 	</div>
 

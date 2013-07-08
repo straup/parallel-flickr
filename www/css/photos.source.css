@@ -160,25 +160,15 @@
     }
 
     .thumbnail {
-	height: 320px;
-	width: 320px;
+	height: auto !important;
+	min-height: none !important;
     }
-    
-    .thumbnail img {
-	max-width:320px;
-	max-height:320px;
-    }
-    
-    .thumbnail .photo-static {
-	max-width:320px;
-	max-height:320px;
+
+    .thumbnail-li {
+	padding-bottom: 1em !important;
     }
 
     .thumbnail-li .photo-caption {
-	max-width:320px;
-	max-height:100px;
-	height: 100px;
-	width:320px;
+	height: auto !important;
     }
-
 }

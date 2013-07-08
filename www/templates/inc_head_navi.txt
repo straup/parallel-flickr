@@ -31,13 +31,13 @@
             <ul class="nav pull-right">
 {if $cfg.user.id}
             <li class="dropdown{if $nav_tab == 'account'} active{/if}">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello {$cfg.user.username|escape} <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello <span class="hey-you">{$cfg.user.username|escape}</span> <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="{$cfg.abs_root_url}account">Settings</a></li>
 		{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
   		<li><a href="{$cfg.abs_root_url}api/">API</a></li>
 		{/if}
-                <li><a href="{$cfg.abs_root_url}signout">sign out</a></li>
+                <li><a href="{$cfg.abs_root_url}signout">Sign out</a></li>
               </ul>
             </li>
 {else}
