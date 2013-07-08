@@ -17,8 +17,6 @@
 
 <div class="api-sect">
 
-<h2>API keys</h2>
-
 <ul class="api-list-o-things">
 {foreach from=$keys item="row"}
 <li>

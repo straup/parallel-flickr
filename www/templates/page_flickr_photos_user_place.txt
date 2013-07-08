@@ -5,16 +5,6 @@
 
 {assign var="zoom" value=$place|@flickr_places_calculate_zoom}
 
-<div class="map map-place" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$place.latitude|escape},{$place.longitude|escape}" data-zoom="{$zoom|escape}" data-hash="false" data-interactive="false" id="map_{$photo.id|escape}" style="width:100%;">
-
-{foreach from=$photos item="photo"}
-	<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">
-		<span class="marker_text">{$photo.datetaken|@flickr_dates_verbosify_iso8601}</span>
-	</div>
-{/foreach}
-
-</div>
-
 <h2>
 {if $is_own and $context=='indoors'}
 <a href="{$owner|@flickr_urls_photos_user}">Your</a> indoor photos from {$place.name|escape}
@@ -30,6 +20,16 @@
 <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a>'s photos from {$place.name|escape}
 {/if}
 </h2>
+
+<div class="map map-place" data-provider="{$cfg.slippymap_provider|escape}" data-center="{$place.latitude|escape},{$place.longitude|escape}" data-zoom="{$zoom|escape}" data-hash="false" data-interactive="false" id="map_{$photo.id|escape}" style="width:100%;height:75px;">
+
+{foreach from=$photos item="photo"}
+	<div class="marker" data-location="{$photo.latitude|escape},{$photo.longitude|escape}">
+		<span class="marker_text">{$photo.datetaken|@flickr_dates_verbosify_iso8601}</span>
+	</div>
+{/foreach}
+
+</div>
 
 <ul class="place_hierarchy">
 

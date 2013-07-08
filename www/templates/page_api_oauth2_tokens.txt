@@ -15,8 +15,6 @@
 
 <div class="api-sect">
 
-<h2>Access tokens</h2>
-
 <ul class="api-list-o-things">
 {foreach from=$tokens item="row"}
 {assign var="perms" value=$row.perms}
