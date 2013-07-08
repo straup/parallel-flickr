@@ -1,5 +1,5 @@
 <div class="container">
-<ul class="thumbnails">
+<ul class="thumbnails" style="max-width:1100px;margin-left:auto;margin-right:auto;margin-top:2em;">
 {foreach from=$photos item="row"}
 	 <li class="thumbnail-li">
 	<div class="thumbnail">
@@ -10,11 +10,3 @@
 {/foreach}
 </ul>
 </div>
-
-<div class="container">
-<div class="span8 offset2">
-{include file="inc_pagination.txt"}
-</div>
-</div>
-
-{if "keyboard_browse"|@features_is_enabled}{include file="inc_keyboard_browse.txt" class_name="photo"}{/if}

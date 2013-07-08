@@ -1,5 +1,11 @@
-{if $stacked or $smarty.get.stacked}
+{if $is_own and $stacked or $smarty.get.stacked}
 {include file="inc_flickr_photos_list_stacked.txt photos=$photos}
 {else}
 {include file="inc_flickr_photos_list_thumbs.txt photos=$photos}
 {/if}
+
+<div class="container" style="text-align:center;margin-top:-3em;">
+{include file="inc_pagination.txt"}
+</div>
+
+{if "keyboard_browse"|@features_is_enabled}{include file="inc_keyboard_browse.txt" class_name="photo"}{/if}
