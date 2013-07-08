@@ -1,6 +1,8 @@
 {capture assign="page_title"}OAuth2 | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title="OAuth2"}
 
 <div class="api-sect">
@@ -16,5 +18,7 @@
 </div>
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

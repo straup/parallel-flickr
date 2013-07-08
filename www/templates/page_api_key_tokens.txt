@@ -1,6 +1,8 @@
 {capture assign="page_title"}Authed users | {$key.app_title} | {$key.api_key} | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {capture assign="token_count"}{$pagination.total_count}{/capture}
 
 {capture assign="subtitle"}
@@ -43,6 +45,8 @@
 {/if}
 
 {include file="inc_pagination.txt"}
+
+</div>
 
 </div>
 

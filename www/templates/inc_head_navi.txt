@@ -23,6 +23,9 @@
 		{if "uploads"|@features_is_enabled and "uploads_by_web"|@features_is_enabled and "uploads_by_api"|@features_is_enabled}
 		<li><a href="{$cfg.abs_root_url}photos/upload/">upload</a></li>
 		{/if}
+		{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
+  		<li><a href="{$cfg.abs_root_url}api/">API</a></li>
+		{/if}
 	    {else}
 	    {/if}
 
@@ -34,9 +37,6 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello <span class="hey-you">{$cfg.user.username|escape}</span> <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="{$cfg.abs_root_url}account">Settings</a></li>
-		{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
-  		<li><a href="{$cfg.abs_root_url}api/">API</a></li>
-		{/if}
                 <li><a href="{$cfg.abs_root_url}signout">Sign out</a></li>
               </ul>
             </li>

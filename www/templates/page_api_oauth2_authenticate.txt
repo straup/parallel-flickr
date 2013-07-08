@@ -1,6 +1,8 @@
 {capture assign="page_title"}Authorize the {$key.app_title} application | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {capture assign="title"}The application called {$key.app_title} would like to access your account{/capture}
 {include file="inc_api_header.txt" title=$title}
 
@@ -56,5 +58,7 @@ Okay, that's just weird. If you're seeing this it means that something very wron
 </div>
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

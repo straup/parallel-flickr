@@ -1,6 +1,8 @@
 {capture assign="page_title"}Your API keys | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {capture assign="key_count"}{$pagination.total_count}{/capture}
 
 {capture assign="subtitle"}
@@ -31,4 +33,7 @@
 </div>
 
 {include file="inc_pagination.txt"}
+
+</div>
+
 {include file="inc_foot.txt"}

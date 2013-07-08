@@ -1,6 +1,8 @@
 {capture assign="page_title"}API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {capture assign="title"}Application Programming Interface (API){/capture}
 {include file="inc_api_header.txt" title=$title}
 
@@ -51,5 +53,7 @@
 </div>
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

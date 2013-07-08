@@ -1,6 +1,8 @@
 {capture assign="page_title"}{$key.app_title} | {$key.api_key} | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title=$key.app_title}
 
 {if $smarty.get.success}
@@ -32,7 +34,7 @@
 	{$crumb_key|crumb_input}
 	<input type="hidden" name="done" value="1" />
 
-<table class="api-key-or-token">
+<table class="table api-key-or-token">
 	<tr>
 		<td>API Key</td><td class="api-credential">{$key.api_key|escape}</td>
 	</tr>
@@ -130,6 +132,8 @@
 </table>
 
 </form>
+
+</div>
 
 </div>
 

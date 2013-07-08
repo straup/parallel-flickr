@@ -1,6 +1,8 @@
 {capture assign="page_title"}Create a new API key | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title="Create a new API key"}
 
 {if $error}
@@ -26,7 +28,7 @@
 	<input type="hidden" name="description" value="{$description|escape}" />
 	<input type="hidden" name="callback" value="{$callback|escape}" />
 
-<table class="api-key-or-token">
+<table class="table api-key-or-token">
        <tr><td>Name</td><td>{$title|escape}</td></tr>
        <tr><td>Description</td><td>{$description|escape}</td></tr>
        <tr><td>Callback URL</td><td>{if $callback}{$callback|escape}{else}&#8212;{/if}</td></tr>
@@ -45,7 +47,7 @@
 	{$crumb_key|crumb_input}
 	<input type="hidden" name="done" value="1" />
 
-<table class="api-key-or-token">
+<table class="table api-key-or-token">
        <tr>
 	       <td>Name</td>
 	       <td><input type="text" value="{$title|escape}" name="title" placeholder="Your application's name" /></td>
@@ -71,5 +73,7 @@
 </div>
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

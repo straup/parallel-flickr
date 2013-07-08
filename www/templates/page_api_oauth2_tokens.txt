@@ -1,6 +1,8 @@
 {capture assign="page_title"}Authentication tokens | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {capture assign="token_count"}{$pagination.total_count}{/capture}
 
 {capture assign="subtitle"}
@@ -39,4 +41,7 @@
 </div>
 
 {include file="inc_pagination.txt"}
+
+</div>
+
 {include file="inc_foot.txt"}

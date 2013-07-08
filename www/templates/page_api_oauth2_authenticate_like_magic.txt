@@ -1,6 +1,8 @@
 {capture assign="page_title"}Authorize the {$key.app_title} application (like magic) | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title="Create a new access token for yourself"}
 
 {if $step==3}
@@ -45,7 +47,7 @@
 	{$crumb_key|crumb_input}
 	<input type="hidden" name="done" value="1" />
 
-<table class="api-key-or-token">
+<table class="table api-key-or-token">
 
        <tr>
         <td>Name</td>
@@ -84,5 +86,7 @@
 </div>
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

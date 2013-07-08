@@ -18,6 +18,7 @@
 	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/photos.source.css" />
 	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/htmapl.source.css" />
 	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/geo.source.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/api.source.css" />
 
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript">

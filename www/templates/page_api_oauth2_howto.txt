@@ -1,6 +1,8 @@
 {capture assign="page_title"}How to | OAuth2 | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title="OAuth2 How to"}
 
 <div class="api-sect">
@@ -149,6 +151,8 @@
     <!-- <li>A user may choose to define different permissions for an access token than those requested by an application. Permissions information is returned with an access token so applications should react accordingly.</li> -->
     <li>A user may choose to define an expiry date for an access token. This information is returned with an access token as a Unix timestamp. A value of <code>0</code> means that the token has no defined expiry date. <em>Returning expiry dates for access tokens is not part of the offical OAuth2 specification.</em></li>
 </ol>
+
+</div>
 
 </div>
 

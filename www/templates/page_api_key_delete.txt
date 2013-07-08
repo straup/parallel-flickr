@@ -1,6 +1,8 @@
 {capture assign="page_title"}{$key.app_title} | {$key.api_key} | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title=$key.app_title}
 
 {if $delete_rsp}
@@ -38,5 +40,7 @@
 <p>Actually, no <a href="{$cfg.abs_root_url}api/keys/{$key.api_key|escape}/">I don't want to do that</a>.</p>
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

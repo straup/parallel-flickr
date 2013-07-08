@@ -1,6 +1,8 @@
 {capture assign="page_title"}{$token.app.app_title} | Applications | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {capture assign="title"}Your auth token for the {$token.app.app_title} application{/capture}
 {capture assign="subtitle"}It was created {$token.created|date_format}{if $token.created != $token.last_modified} / It was last updated {$token.last_modified|date_format}{/if}{/capture}
 
@@ -30,7 +32,7 @@ OH NO! INVISIBLE ERROR CAT HISSES AT YOU...
 	{$crumb_key|crumb_input}
 	<input type="hidden" name="done" value="1" />
 
-<table class="api-key-or-token">
+<table class="table api-key-or-token">
 
 	{* application stuff (for the token) *}
 
@@ -103,6 +105,8 @@ OH NO! INVISIBLE ERROR CAT HISSES AT YOU...
 	</tr>
 
 </table>
+
+</div>
 
 </div>
 

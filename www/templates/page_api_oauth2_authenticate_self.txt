@@ -1,6 +1,8 @@
 {capture assign="page_title"}Authorize your {$key.app_title} API key | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title="Register ... for yourself"}
 
 {if $has_token}
@@ -63,7 +65,7 @@ Hrmph. There was a problem creating your auth token. The robots know this so far
 	<input type="hidden" name="api_key" value="{$key.api_key|escape}" />
 	<input type="hidden" name="self" value="1" />
 
-<table class="api-key-or-token">
+<table class="table api-key-or-token">
 
        <tr><td>Permissions</td>
        <td>
@@ -106,5 +108,7 @@ Hrmph. There was a problem creating your auth token. The robots know this so far
 {/if}
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

@@ -1,6 +1,8 @@
 {capture assign="page_title"}Revoke access for the {$token.app.app_title} application | Applications | API{/capture}
 {include file="inc_head.txt"}
 
+<div class="container">
+
 {include file="inc_api_header.txt" title="Revoke access for this token"}
 
 {if $delete_rsp}
@@ -30,5 +32,7 @@
 <p>Actually, no <a href="{$cfg.abs_root_url}api/oauth2/tokens/{$token.app.api_key|escape}/">I don't want to do that</a>.</p>
 
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}
