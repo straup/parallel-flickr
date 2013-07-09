@@ -26,12 +26,14 @@
 	{/if}
 
 	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr.min.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-photos.min.css" />
+
 	{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
 	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-api.min.css" />
 	{/if}
 
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.7.1.min.js"></script>
+
+	{* this is so deprecated - please refer to the 'data-abs-root-url' attribute below (20130708/straup) *}
 	<script type="text/javascript">
 	var abs_root_url='{$cfg.abs_root_url}';
 	</script>

@@ -32,9 +32,7 @@ js:
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar --js www/javascript/cwf.js --js www/javascript/photo.favorites.js --js www/javascript/flickr.auth.js  > www/javascript/cwf.bundle.min.js
 
 css:
-	cat www/css/parallel-flickr-main.source.css www/css/parallel-flickr-pagination.source.css | java -jar lib/yuicompressor/yuicompressor-2.4.7.jar --type css -o www/css/parallel-flickr.min.css
-
-	cat www/css/parallel-flickr-photos*.source.css | java -jar -Xmx64m -jar lib/yuicompressor/yuicompressor-2.4.7.jar --type css -o www/css/parallel-flickr-photos.min.css
+	cat www/css/parallel-flickr-main.source.css www/css/parallel-flickr-pagination.source.css www/css/parallel-flickr-photos*.source.css | java -jar lib/yuicompressor/yuicompressor-2.4.7.jar --type css -o www/css/parallel-flickr.min.css
 
 	cat www/css/parallel-flickr-admin.source.css | java -jar -Xmx64m -jar lib/yuicompressor/yuicompressor-2.4.7.jar --type css -o www/css/parallel-flickr-admin.min.css
 
