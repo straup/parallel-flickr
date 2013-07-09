@@ -95,13 +95,8 @@
 			api_output_error(999, $rsp['error']);
 		}
 
-		$photo = array(
-			'id' => $rsp['id'],
-			'url' => $rsp['url'],
-		);
-
 		$out = array(
-			'photo' => $photo
+			'photo' => $rsp['photo'],
 		);
 
 		api_output_ok($out);

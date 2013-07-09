@@ -7,5 +7,3 @@
 <div class="container" style="text-align:center;margin-top:-3em;">
 {include file="inc_pagination.txt"}
 </div>
-
-{if "keyboard_browse"|@features_is_enabled}{include file="inc_keyboard_browse.txt" class_name="photo"}{/if}

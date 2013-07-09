@@ -26,18 +26,18 @@
 		$map = flickr_photos_media_map();
 
 		if ($map[$photo['media']] == 'video'){
-			return not_okay("video does not contain EXIF data");
+			return array('ok' => 0, 'error' => 'video does not contain EXIF data');
 		}
 
 		$path = flickr_photos_path($photo, array('size' => 'o'));
 
 		if (! preg_match("/\.jpe?g$/i", $path)){
-			return not_okay("not a JPEG photo");
+			return array('ok' => 0, 'error' => 'not a JPEG photo');
 		}
 
-		# if (! storage_file_exists($path, array('boolean' => 1))){
-		# 	return not_okay("original photo not found");
-		# }
+		if (! storage_file_exists($path, array('boolean' => 1))){
+			return array('ok' => 0, 'error' => 'original photo not found');
+		}
 
 		# This is absolutely not awesome but it's what required to 
 		# support the S3 stuff... (20130629/straup)
@@ -48,22 +48,28 @@
 			return $rsp;
 		}
 
-		$tmpdir = sys_get_temp_dir();
-		$tmpfile = tempnam($tmpdir, "exif-{$photo['id']}");
+		try {
+			$tmpdir = sys_get_temp_dir();
+			$tmpfile = tempnam($tmpdir, "exif-{$photo['id']}");
 
-		$fh = fopen($tmpfile, 'w');
-		fwrite($fh, stream_get_contents($rsp['fh']));
-		fclose($fh);
+			$fh = fopen($tmpfile, 'w');
+			fwrite($fh, stream_get_contents($rsp['fh']));
+			fclose($fh);
 
-		$exif = exif_read_data($tmpfile);
-		unlink($tmpfile);
+			$exif = exif_read_data($tmpfile);
+			unlink($tmpfile);
+		}
+
+		catch (Exception $e){
+			return array('ok' => 0, 'error' => $e);
+		}
 
 		# abs_path is temporary (see above)
 		# $path = flickr_photos_path($photo, array('size' => 'o', 'abs_path' => 1));
 		# $exif = exif_read_data($path);
 
 		if (! $exif){
-			return not_okay("failed to read EXIF data");
+			return array('ok' => 0, 'error' => 'failed to read EXIF data');
 		}
 
 		# TO DO: expand EXIF tag values
@@ -87,7 +93,7 @@
 
 		ksort($exif);
 
-		return okay(array("rows" => $exif));
+		return array('ok' => 1, 'rows' => $exif);
 	}
 
 	#################################################################
