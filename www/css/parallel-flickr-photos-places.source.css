@@ -1,0 +1,62 @@
+.place_map {
+    width: 100% !important;
+    margin-bottom: 5px;
+}
+
+.place_map h2 {
+    background-color:#fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    width: auto !important;
+    border-bottom: solid thin;
+    border-right: solid thin;
+    opacity: .95;
+}
+
+.place_hierarchy {
+    padding: 0px;
+    margin: 0px;
+    font-size: small;
+    margin-bottom: 25px !important;
+    color:#ccc;
+}
+
+.place_hierarchy li {
+    display: inline;
+}
+
+.placetypes {
+    margin-bottom: 25px;
+}
+
+.placetypes ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.placetypes ul li {
+    list-style-type: none;
+    display:inline;
+}
+
+.other_places {
+    font-size:small;
+    margin-bottom: 50px;
+    margin-top: 40px;
+}
+
+.other_places ul {
+    padding: 0px;
+    margin: 0px;
+    width:30%;
+    margin-right: 3%;
+    float:left;
+}
+
+.other_places ul li {
+    list-style-type: none;
+    line-height: 1.5em;
+}
+

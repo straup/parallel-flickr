@@ -1,8 +1,7 @@
 {capture assign="page_title"}{$owner.username} | archives | {$context} | {$year} | {$months.$month|strtolower} | {$day}{/capture}
-{capture assign="extra_head"}
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/archives.source.css" />
-{/capture}
 {include file="inc_head.txt"}
+
+<div class="container">
 
 <h2>
 {if $is_own}
@@ -33,5 +32,7 @@
 </div>
 
 {include file="inc_flickr_photos_list.txt" photos=$photos}
+
+</div>
 
 {include file="inc_foot.txt"}

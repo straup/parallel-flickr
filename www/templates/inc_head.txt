@@ -11,24 +11,26 @@
 	<link href="{$cfg.abs_root_url}css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<link href="{$cfg.abs_root_url}css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 
-	{if 0}
+	{if $cfg.environment=='prod'}
 
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-main.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-pagination.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-photos.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-photos-archives.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-photos-cameras.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-photos-geo.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-photos-map.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-photos-upload.source.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-api.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr.min.css" />
+	{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-api.min.css" />
 
 	{/if}
+	{else}
 
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr.min.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-main.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-pagination.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-photos.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-photos-archives.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-photos-cameras.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-photos-geo.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-photos-map.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-photos-places.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-photos-upload.source.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-api.source.css" />
 
-	{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
-	<link rel="stylesheet" type="text/css" media="all" href="{$cfg.abs_root_url}css/parallel-flickr-api.min.css" />
 	{/if}
 
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.7.1.min.js"></script>

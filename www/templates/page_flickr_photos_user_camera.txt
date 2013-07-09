@@ -1,7 +1,4 @@
 {capture assign="page_title"}{$owner.username} | cameras | {$camera_make}{if $camera_model} | {$camera_model}{/if}{/capture}
-{capture assign="extra_head"}
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/cameras.source.css" />
-{/capture}
 {include file="inc_head.txt"}
 
 {* TO DO: check to see camera make starts with a vowel *}

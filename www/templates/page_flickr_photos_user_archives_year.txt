@@ -1,7 +1,4 @@
 {capture assign="page_title"}{$owner.username} | archives | {$context} | {$year}{/capture}
-{capture assign="extra_head"}
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/archives.source.css" />
-{/capture}
 {include file="inc_head.txt"}
 
 <div class="container">
