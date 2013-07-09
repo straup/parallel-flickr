@@ -11,7 +11,7 @@
  <div class="row-fluid">
  <div class="span5 offset2">
 
-<table class="photo_exif">
+<table class="table photo_exif">
 
 {foreach from=$exif item="value" key="tag"}
 	{if $tag=='COMPUTED' or $tag=='THUMBNAIL' or $tag == 'SectionsFound' or $tag=='MakerNote'}
@@ -20,9 +20,9 @@
 	<tr>
 		<td class="photo_exif_tag"><strong>{$tag|escape}</strong></td>
 		<td>
-		{if $cfg.enable_feature_solr}
-			{if $tag=='Make'}<a href="">{$value|escape}</a>
-			{elseif $tag=='Model'}<a href="">{$value|escape}</a>
+		{if "solr"|@features_is_enabled}
+			{if $tag=='Make'}<a href="{$photo.owner|@flickr_urls_photos_user}cameras/{$value|escape}/">{$value|escape}</a>
+			{elseif $tag=='Model'}<a href="{$photo.owner|@flickr_urls_photos_user}cameras/{$exif.Make|escape}/{$value|escape}/">{$value|escape}</a>
 			{else}{$value|escape}{/if}
 		{else}{$value|escape}{/if}
 	</tr>

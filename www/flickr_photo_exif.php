@@ -26,9 +26,15 @@
 	}
 
 	if ($photo['deleted']){
-		$GLOBALS['smarty']->display("page_photo_deleted.txt");
-		exit();
+		error_410();
 	}
+
+	# if (! flickr_photos_permissions_can_view_photo($photo, $GLOBALS['cfg']['user']['id'])){
+	# 	error_403();
+	# }
+
+	$owner = users_get_by_id($photo['user_id']);
+	$photo['owner'] = $owner;
 
 	$GLOBALS['smarty']->assign_by_ref("photo", $photo);
 
