@@ -1,9 +1,11 @@
 {capture assign="page_title"}photos from your contacts | with recent activity{if $update_type} | {$update_type}{/if}{/capture}
 {capture assign="extra_head"}
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp_activity.css" />
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/experimental-ffbp-activity.source.css" />
 <meta http-equiv="refresh" content="600" />
 {/capture}
 {include file="inc_head.txt"}
+
+<div class="container">
 
 <h2>Your contacts photos (with recent activity)</h2>
 
@@ -178,5 +180,7 @@ $(document).ready(function(){
 
 {/if}
 {/if}
+
+</div>
 
 {include file="inc_foot.txt"}

@@ -3,8 +3,8 @@
 {if !$new_subscription}
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.imageloader.min.js"></script>
-<script type="text/javascript" src="{$cfg.abs_root_url}javascript/ffbp.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.lightbox.ffbp.min.js"></script>
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/ffbp.min.js"></script>
 <script type="text/javascript">
 
 	var images = {literal}{{/literal}
@@ -28,7 +28,7 @@
 	
 </script>
 <link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.lightbox-0.5.css" />
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/ffbp.css" />
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/experimental-ffbp.source.css" />
 <meta http-equiv="refresh" content="600" />
 {else}
 <meta http-equiv="refresh" content="300" />
