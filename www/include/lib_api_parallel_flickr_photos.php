@@ -105,4 +105,35 @@
 
 	#################################################################
 
+	function api_parallel_flickr_photos_delete(){
+
+		api_output_error(999, "Why are you trying to call this");
+
+		$id = post_int32("id");
+
+		if (! $id){
+			api_output_error(999, "Missing photo ID");
+		}
+
+		$photo = flickr_photos_get_by_id($id);
+
+		if (! $photo){
+			api_output_error(999, "Invalid photo ID");
+		}
+
+		if ($photo['user_id'] != $GLOBALS['cfg']['user']['id']){
+			api_output_error(999, "Insufficient permissions");
+		}
+
+		$rsp = flickr_photos_delete_photo($photo);
+
+		if (! $rsp['ok']){
+			api_output_error(999, $rsp['error']);
+		}
+
+		api_output_ok();
+	}
+
+	#################################################################
+
 	# the end
