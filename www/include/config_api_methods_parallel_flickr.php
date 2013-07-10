@@ -12,7 +12,7 @@
 			"requires_perms" => 2,
 			"requires_crumb" => 1,
 			"crumb_ttl" => 300
-		)
+		),
 
 		"parallel.flickr.favorites.getList" => array(
 			"documented" => 0,

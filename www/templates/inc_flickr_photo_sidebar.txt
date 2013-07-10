@@ -121,6 +121,11 @@
 	</li>{/if}
 
 	</ul>
+
+	<ul>
+	<li><a href="#" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}">Delete this photo</a></li>
+	</ul>
+
 	{/if}
 	</div>
 	<!-- photo_meta -->

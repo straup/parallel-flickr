@@ -27,7 +27,7 @@
  </div>
 </div>
 
-
+{* TO DO: separate the JS that is specific to the page and the JS that is meant for the sidebar (20130709/straup) *}
 
 <script type="text/javascript">
 
@@ -110,6 +110,17 @@ $(document).ready(function(){
 
 {/literal}
 {/if}
+
+{* check to see if this is a not-flickr photo *}
+
+{literal}
+
+	$("#delete-photo").click(function(e){
+		alert("please write me...");
+	});
+
+{/literal}
+
 {/if}
 
 });
