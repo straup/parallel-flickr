@@ -1,4 +1,4 @@
-function parallel_flickr_api_call(method, args, onsuccess, onerroe){
+function parallel_flickr_api_call(method, args, onsuccess, onerror){
     
 	var endpoint = parallel_flickr_api_endpoint();
 

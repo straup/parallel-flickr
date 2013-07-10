@@ -107,8 +107,6 @@
 
 	function api_parallel_flickr_photos_delete(){
 
-		api_output_error(999, "Why are you trying to call this");
-
 		$id = post_int32("id");
 
 		if (! $id){
@@ -125,7 +123,9 @@
 			api_output_error(999, "Insufficient permissions");
 		}
 
-		$rsp = flickr_photos_delete_photo($photo);
+		api_output_ok();
+
+		# $rsp = flickr_photos_delete_photo($photo);
 
 		if (! $rsp['ok']){
 			api_output_error(999, $rsp['error']);
