@@ -33,6 +33,7 @@
 			"enabled" => 1,
 			"library" => "api_parallel_flickr_photos",
 			"requires_auth" => 1,
+			"requires_perms" => 1,
 			"requires_crumb" => 1,
 			"crumb_ttl" => 300
 		)

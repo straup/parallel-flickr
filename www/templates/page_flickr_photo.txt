@@ -116,7 +116,35 @@ $(document).ready(function(){
 {literal}
 
 	$("#delete-photo").click(function(e){
-		alert("please write me...");
+
+		var prompt = 'Are you sure you want to delete this photo?';
+
+		if (! confirm(prompt)){
+			return false;
+		}
+
+		var method = 'parallel.flickr.photos.delete';
+
+		var d = $("#delete-photo");
+		var crumb = d.attr("data-delete-crumb");
+
+		var args = {
+			'id': photo_id,
+			'crumb': crumb,
+		};
+
+		var onsuccess = function(rsp){
+			console.log(rsp);
+		};
+
+		var onerror = function(rsp){
+			console.log("ERROR");
+			console.log(rsp);
+		};
+
+		parallel_flickr_api_call(method, args, onsuccess, onerror);
+
+		// some kind of dialog...
 	});
 
 {/literal}

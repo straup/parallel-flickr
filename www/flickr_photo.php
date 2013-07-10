@@ -115,6 +115,12 @@
 		$has_write_token = flickr_users_has_token_perms($_flickr_user, 'write');
 
 		$GLOBALS['smarty']->assign('has_write_token', $has_write_token);
+
+		# Maybe? Not sure. Probably something like this...
+		# (20130710/straup)
+
+		$crumb = crumb_generate("api", "parallel.flickr.photos.delete");
+		$GLOBALS['smarty']->assign("delete_crumb", $crumb);
 	}
 
 	$GLOBALS['smarty']->display("page_flickr_photo.txt");

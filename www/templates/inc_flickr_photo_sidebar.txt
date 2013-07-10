@@ -123,7 +123,7 @@
 	</ul>
 
 	<ul>
-	<li><a href="#" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}">Delete this photo</a></li>
+	<li><a href="#" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}" data-delete-crumb="{$delete_crumb|escape}">Delete this photo</a></li>
 	</ul>
 
 	{/if}
