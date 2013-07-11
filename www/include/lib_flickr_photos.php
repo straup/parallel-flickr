@@ -362,14 +362,21 @@
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
+		$extras = array(
+			'deleted=0',
+		);
+
 		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
 			$str_perms = implode(",", $perms);
-			$extra = " AND perms IN ({$str_perms})";
+			$extras[] = "perms IN ({$str_perms})";
 		}
+
+		$extras = implode(" AND ", $extras);
 
 		# TO DO: INDEXES
 
-		$sql = "SELECT MIN(`{$more['context']}`) AS start, MAX(`{$more['context']}`) AS end FROM FlickrPhotos WHERE user_id = '{$enc_user}' {$extra}";
+		$sql = "SELECT MIN(`{$more['context']}`) AS start, MAX(`{$more['context']}`) AS end FROM FlickrPhotos WHERE user_id = '{$enc_user}' {$extras}";
+
 		$rsp = db_fetch_users($cluster_id, $sql);
 
 		if (! $rsp['ok']){
@@ -401,14 +408,20 @@
 		$enc_id = AddSlashes($photo['id']);
 		$enc_user = AddSlashes($photo['user_id']);
 
+		$extras = array(
+			# 'deleted=0',
+		);
+
 		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
 			$str_perms = implode(",", $perms);
-			$extra = " AND perms IN ({$str_perms})";
+			$extras[] = "perms IN ({$str_perms})";
 		}
+
+		$extras = implode(" AND ", $extras);
 
 		# TO DO: INDEXES
 
-		$sql = "SELECT * FROM FlickrPhotos WHERE user_id = '{$enc_user}' AND id < '{$enc_id}' {$extra} ORDER BY id DESC LIMIT 1";
+		$sql = "SELECT * FROM FlickrPhotos WHERE user_id = '{$enc_user}' AND id < '{$enc_id}' {$extras} ORDER BY id DESC LIMIT 1";
 		$rsp = db_fetch_users($cluster_id, $sql);
 
 		$before = $rsp['rows'];
