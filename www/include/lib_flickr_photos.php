@@ -22,7 +22,7 @@
 
 	#################################################################
 
-	function flickr_photos_get_by_id($id){
+	function flickr_photos_get_by_id($id, $more=array()){
 
 		$cache_key = "photo_{$id}";
 
@@ -32,7 +32,7 @@
 			return $cache['data'];
 		}
 
-		$lookup = flickr_photos_lookup_photo($id);
+		$lookup = flickr_photos_lookup_photo($id, $more);
 
 		if (! $lookup){
 			return;
@@ -62,13 +62,13 @@
 
 	#################################################################
 
-	function flickr_photos_update_photo(&$photo, $update){
+	function flickr_photos_update_photo(&$photo, $update, $more=array()){
 
 		$cache_key = "photo_{$photo['id']}";
 
 		#
 
-		$lookup = flickr_photos_lookup_photo($photo['id']);
+		$lookup = flickr_photos_lookup_photo($photo['id'], $more);
 
 		if (! $lookup){
 			return;
@@ -300,11 +300,67 @@
 			return $rsp;
 		}
 
+		$rsp = array('ok' => 1, 'deleted' => $now);
+
 		# TO DO: burn all the files
 
-		# TO DO: update solr
+		# Choose me:
+		# flickr_photos_delete_photo_files($photo);
+		# flickr_photos_purge_photo_files($photo);
+
+		if (features_is_enabled("solr")){
+			$solr_rsp = flickr_photos_search_delete_photo($photo);
+			$rsp['solr'] = $solr_rsp;
+		}
 
 		return $rsp;
+	}
+
+	#################################################################
+
+	function flickr_photos_delete_photo_files(&$photo){
+
+		$files = flickr_photos_files($photo);
+
+		foreach ($files as $f){
+
+			if (! storage_file_exists($f)){
+				continue;
+			}
+
+			# This function does not exist yet
+			# (20130711/straup)
+
+			# storage_rename_file($f);
+		}
+
+	}
+
+
+	#################################################################
+
+	function flickr_photos_purge_photo_files(&$photo){
+
+		$files = flickr_photos_files($photo);
+
+		foreach ($files as $f){
+
+			if (! storage_file_exists($f)){
+				continue;
+			}
+
+			# storage_delete_file($f);
+		}
+	}
+
+	#################################################################
+
+	# please rename me... 
+
+	function flickr_photos_files(&$photo){
+
+		$files = array();
+		return $files;
 	}
 
 	#################################################################

@@ -185,11 +185,17 @@
 
 	function solr_add($docs, $more=array()){
 
+		$defaults = array(
+			'commit' => 'on',
+		);
+
+		$more = array_merge($defaults, $more);
+
 		$url = $GLOBALS['cfg']['solr_endpoint'] . "update/json";
 
 		$params = array(
-			'commit' => 'true',
 			'wt' => 'json',
+			'commit' => $more['commit'],
 		);
 
 		$str_params = http_build_query($params);
@@ -209,13 +215,49 @@
 
 	#################################################################
 
-	# TO DO: solr_update (this is more complicated than it seems...)
+	# https://wiki.apache.org/solr/UpdateJSON
+
+	# See the way this is basically the same as solr_add ? Yeah.
+	# But let's just keep them separate and distinct, okay?
+	# (20130711/straup)
+
+	function solr_update($update, $more=array()){
+
+		$defaults = array(
+			'commit' => 'on',
+		);
+
+		$more = array_merge($defaults, $more);
+
+		$params = array(
+			'wt' => 'json',
+			'commit' => $more['commit'],
+		);
+
+		$url = $GLOBALS['cfg']['solr_endpoint'] . "update/json";
+
+		$str_params = http_build_query($params);
+		$url = implode("?", array($url, $str_params));
+
+		$body = json_encode($update);
+
+		$headers = array(
+			'Content-type' => 'application/json',
+		);
+
+		$http_rsp = http_post($url, $body, $headers);
+		return _solr_parse_response($http_rsp);
+	}
 
 	#################################################################
 
-	function solr_delete(){
+	function solr_delete($params, $more=array()){
 
-		# please write me
+		$update = array(
+			'delete' => $params,
+		);
+
+		return solr_update($update, $more);
 	}
 
 	#################################################################

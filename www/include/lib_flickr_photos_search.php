@@ -307,6 +307,18 @@
 
 	#################################################################
 
+	function flickr_photos_search_delete_photo(&$photo, $more=array()){
+
+		$params = array(
+			'id' => $photo['id'],
+		);
+
+		$rsp = solr_delete($params, $more);
+		return $rsp;
+	}
+
+	#################################################################
+
 	function _flickr_photos_search_perms_fq($owner_id=0, $viewer_id=0, $more=array()){
 
 		if (($owner_id) && ($owner_id == $viewer_id)){

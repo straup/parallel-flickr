@@ -42,7 +42,9 @@
 		$rsp = db_fetch($sql);
 		$row = db_single($rsp);
 
-		return ((! $row['deleted']) || ($more['allow_deleted'])) ? $row : null;
+		$row = ((! $row['deleted']) || ($more['allow_deleted'])) ? $row : null;
+
+		return $row;
 	}
 
 	#################################################################
