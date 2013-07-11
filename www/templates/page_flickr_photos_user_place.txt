@@ -65,9 +65,9 @@
 {include file="inc_flickr_photos_list.txt"}
 
 {elseif $error}
-	<p class="error label label-warning">Hrmph. There was a problem fetching photos!</p>
+	<p class="error alert alert-warning">Hrmph. There was a problem fetching photos!</p>
 {else}
-	<p class="notice label label-info">There aren't any photos to show you here!</p>
+	<p class="notice alert alert-info">There aren't any photos to show you here!</p>
 {/if}
 
 </div>

@@ -7,12 +7,12 @@
 
 {if !$is_registered}
 
-<p class="notice label label-info">Sorry. This feature is only available to registered <q>backup</q> users of
+<p class="notice alert alert-info">Sorry. This feature is only available to registered <q>backup</q> users of
 the site.</p>
 
 {elseif !$can_upload}
 
-<p class="notice label label-info">Okay, you're almost ready to upload photos by
+<p class="notice alert alert-info">Okay, you're almost ready to upload photos by
  email to Flickr.</p>
 
 <p>By default <strong>{$cfg.site_name|escape}</strong> only needs to have an authentication
@@ -26,11 +26,11 @@ Flickr website site so you can confirm that you're okay with
 {else}
 
 {if $is_reset}
-<p class="confirm label label-success">Your upload by email address has been reset.</p>
+<p class="confirm alert alert-success">Your upload by email address has been reset.</p>
 {/if}
 
 {if $is_new}
-<p class="confirm label label-success">Your upload by email address has been created!</p>
+<p class="confirm alert alert-success">Your upload by email address has been created!</p>
 {/if}
 
 {if !$cfg.user.uploadbyemail_address|escape}

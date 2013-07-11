@@ -9,12 +9,12 @@
 
 {if !$is_registered}
 
-<p class="label label-info">Sorry. This feature is only available to registered <q>backup</q> users of
+<p class="alert alert-info">Sorry. This feature is only available to registered <q>backup</q> users of
 the site.</p>
 
 {elseif !$can_upload}
 
-<p class="label label-info">Okay, you're almost ready to upload photos to Flickr.</p>
+<p class="alert alert-info">Okay, you're almost ready to upload photos to Flickr.</p>
 
 <p>By default
 <strong>{$cfg.site_name|escape}</strong> only needs to have an authentication
@@ -35,7 +35,7 @@ Flickr website site so you can confirm that you're okay with
 
       <div class="upload-sect">
         <span class="upload-opt">
-	<label for="photo"><span class="upload-what">Upload</span></label>
+	<alert for="photo"><span class="upload-what">Upload</span></alert>
 	<input type="file" name="photo" id="photo" data-crumb="{$crumb|escape}" />
 	</span>
 
@@ -43,7 +43,7 @@ Flickr website site so you can confirm that you're okay with
 	
       <div class="upload-sect">
         <span class="upload-opt">
-	<label for="perms">This photo will be able to be <span class="upload-what">seen</span> by</label>
+	<alert for="perms">This photo will be able to be <span class="upload-what">seen</span> by</alert>
 	<select name="perms" id="perms">
 		<option value="">just you</option>
 		<option value="p">anyone</option>
@@ -54,7 +54,7 @@ Flickr website site so you can confirm that you're okay with
 	</span>
 
         <span class="upload-opt">
-	<label for="perms">and its <span class="upload-what">location</span> data will be available to</label>
+	<alert for="perms">and its <span class="upload-what">location</span> data will be available to</alert>
 	<select name="geoperms" id="geoperms">
 		<option value="">only you</option>
 		<option value="p">anyone</option>
@@ -70,7 +70,7 @@ Flickr website site so you can confirm that you're okay with
 	<div class="upload-sect">
         <span class="upload-opt">
 	<span id="upload-details-prompt">
-	<label for="upload-details-button">Keep it simple for now or </label>
+	<alert for="upload-details-button">Keep it simple for now or </alert>
 	<button id="upload-details-button" class="upload-what">SWEAT THE DETAILS</button>
 	</span>
 
@@ -80,7 +80,7 @@ Flickr website site so you can confirm that you're okay with
 
 	<div class="upload-sect">
         <span class="upload-opt">
-	<label for="title"><span class="upload-what">Name</span> this photo</label>
+	<alert for="title"><span class="upload-what">Name</span> this photo</alert>
 	<input type="text" name="title" id="title" />
 	</span>
 
@@ -90,7 +90,7 @@ Flickr website site so you can confirm that you're okay with
 
 	{if "uploads_filtr"|@features_is_enabled}
         <span class="upload-opt">
-	<label for="filtr">This photo will be <span class="upload-what">filtr</span>-ed using</label>
+	<alert for="filtr">This photo will be <span class="upload-what">filtr</span>-ed using</alert>
 	<select name="filtr" id="filtr">
 		<option value="">nothing but its inate beauty</option>
 	{foreach from=$filtrs item="filtr"}
@@ -102,9 +102,9 @@ Flickr website site so you can confirm that you're okay with
 
 	<span class="upload-opt">
 	{if "uploads_filtr"|@features_is_enabled}
-	<label for="destination">and will be <span class="upload-what">sent</span> to</label>
+	<alert for="destination">and will be <span class="upload-what">sent</span> to</alert>
 	{else}
-	<label for="destination">This photo will be <span class="upload-what">sent</span> to</label>
+	<alert for="destination">This photo will be <span class="upload-what">sent</span> to</alert>
 	{/if}
 	<select name="send_to" id="send_to">
 		<option value="">...please tell me?</option>
@@ -127,7 +127,7 @@ Flickr website site so you can confirm that you're okay with
 		<option value="fl"{if $cfg.uploads_default_notifications=='flickr'} selected="true"{/if}>Flickr</option>
 	</select>
 
-	<label for="destination">will be told about your new upload.</label>
+	<alert for="destination">will be told about your new upload.</alert>
 	</span>
 
 	</div>
@@ -202,20 +202,20 @@ $(document).ready(function(){
 				if (rsp['photo']){
 					var link = '<a href="' + rsp['photo']['url'] + '">' + rsp['photo']['id'] + '</a>';
 
-					msg = '<span class="label label-success">';
+					msg = '<span class="alert alert-success">';
 					msg += 'Yay! Your photo has been successfull uploaded with ID '	+ link + '.';
 					msg += '</span>';
 				}
 
 				else {
-					msg = '<span class="label label-warning">';
+					msg = '<span class="alert alert-warning">';
 					msg += "Hrm... your upload succeeded by the server returned a message we don't understand";
 					msg += '</span>';
 				}
 			}
 
 			else {
-				msg = '<span class="label label-warning">';
+				msg = '<span class="alert alert-warning">';
 				msg += "Ack! There was a problem uploading your photo: " + rsp['error']['error'];	
 				msg += '</span>';
 			}
@@ -259,7 +259,7 @@ $(document).ready(function(){
 
 		$("#upload-form").hide();
 
-		$("#upload-status").html('<span class="label label-info">Okee dokee...uploading your photo. Tasteful muzak plays.</span>');
+		$("#upload-status").html('<span class="alert alert-info">Okee dokee...uploading your photo. Tasteful muzak plays.</span>');
 		$("#upload-status").show();
 
 		//  $('input[type=submit]').attr('disabled', 'disabled');

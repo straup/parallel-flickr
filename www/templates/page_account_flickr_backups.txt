@@ -9,31 +9,31 @@
 
 {if $update_rsp.ok}
 	{if $update_rsp.action=='start'}
-	<p class="confirm label label-success">Great! PuSH feeds for those backups have been updated.</p>
+	<p class="confirm alert alert-success">Great! PuSH feeds for those backups have been updated.</p>
 	{else}
-	<p class="confirm label label-success">Okay. PuSH feeds for those backups have been stopped.</p>
+	<p class="confirm alert alert-success">Okay. PuSH feeds for those backups have been stopped.</p>
 	{/if}
 {else}
 	{if $update_rsp.action=='start'}
-	<p class="error label label-warning">Ack! There was a problem setting up PuSH feeds for those backups: {$rsp.error|escape}</p>
+	<p class="error alert alert-warning">Ack! There was a problem setting up PuSH feeds for those backups: {$rsp.error|escape}</p>
 	{else}
-	<p class="error label label-warning">Ack! There was a problem disabling PuSH feeds for those backups: {$rsp.error|escape}</p>
+	<p class="error alert alert-warning">Ack! There was a problem disabling PuSH feeds for those backups: {$rsp.error|escape}</p>
 	{/if}
 {/if}
 
 {else}
 
 {if $update_rsp.ok}
-<p class="confirm label label-success">Okay! Your backups have been updated.</p>
+<p class="confirm alert alert-success">Okay! Your backups have been updated.</p>
 {else}
-<p class="error label label-warning">Ack! There was an error updating your backups: {$rsp.error|escape}</p>
+<p class="error alert alert-warning">Ack! There was an error updating your backups: {$rsp.error|escape}</p>
 {/if}
 
 {if $update_rsp.push_backup}
 {if $update_rsp.push_backup.ok}
-<p class="confirm label label-success">Also, push backups have been updated accordingly.</p>
+<p class="confirm alert alert-success">Also, push backups have been updated accordingly.</p>
 {else}
-<p class="error label label-warning">Hrmph...there was an error updating your push backup settings: {$rsp.push_backup.error|escape}</p>
+<p class="error alert alert-warning">Hrmph...there was an error updating your push backup settings: {$rsp.push_backup.error|escape}</p>
 {/if}
 {/if}
 
@@ -46,7 +46,7 @@
 
 {if $rsp.push_backup and !$rsp.push_backup.ok}
 {assign var="type_id" value=$rsp.type_id}
-<p class="error label label-warning">Hrmph... there was a problem creating a push feed for the {$map.$type_id|escape} backups: {$rsp.push_backup.error|escape}</p> 
+<p class="error alert alert-warning">Hrmph... there was a problem creating a push feed for the {$map.$type_id|escape} backups: {$rsp.push_backup.error|escape}</p> 
 {/if}
 
 {/foreach}

@@ -41,7 +41,7 @@
 
 {else}
 <div class="container">
-<p class="label label-warning error">There is no EXIf data for this photo. The robot squirrels report: {$error|escape}.</p>
+<p class="alert alert-warning error">There is no EXIf data for this photo. The robot squirrels report: {$error|escape}.</p>
 </div>
 
 {/if}
