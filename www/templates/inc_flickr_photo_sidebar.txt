@@ -123,11 +123,29 @@
 	</ul>
 
 	<ul>
-	<li><a href="#" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}" data-delete-crumb="{$delete_crumb|escape}">Delete this photo</a></li>
+	<li><a href="#delete-photo-confirm" role="button" class="btn" data-toggle="modal" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}" data-delete-crumb="{$delete_crumb|escape}">Delete this photo</a></li>
 	</ul>
+
+	<div id="delete-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Delete this photo?</h3>
+		</div>
+
+		<div class="modal-body">
+		{* show thumbnail here *}
+		<p>There is no undo.</p>
+		</div>
+
+		<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">No, thanks</button>
+		<button class="btn btn-primary" id="delete-photo-go">Yes please</button>
+		</div>
+	</div>
 
 	{/if}
 	</div>
+
 	<!-- photo_meta -->
 
 	{* this is not working because ... uh? bootstraup maybe? *}
