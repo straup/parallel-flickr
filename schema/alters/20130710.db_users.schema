@@ -1,0 +1,3 @@
+ALTER TABLE FlickrPhotos ADD deleted INT(11) UNSIGNED NOT NULL;
+CREATE INDEX `for_user` ON FlickrPhotos (`user_id`, `deleted`, `perms`, `dateupload`);
+CREATE INDEX `for_self` ON FlickrPhotos (`user_id`, `deleted`, `dateupload`);

@@ -28,6 +28,7 @@
 	);
 
 	$with = get_int64('with');
+
 	if ($with) {
 		$more['with'] = $with;
 	}

@@ -107,7 +107,7 @@
 
 	function api_parallel_flickr_photos_delete(){
 
-		$id = post_int32("id");
+		$id = post_int64("id");
 
 		if (! $id){
 			api_output_error(999, "Missing photo ID");
@@ -123,9 +123,9 @@
 			api_output_error(999, "Insufficient permissions");
 		}
 
-		api_output_ok();
+		# api_output_ok();
 
-		# $rsp = flickr_photos_delete_photo($photo);
+		$rsp = flickr_photos_delete_photo($photo);
 
 		if (! $rsp['ok']){
 			api_output_error(999, $rsp['error']);

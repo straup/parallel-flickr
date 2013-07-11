@@ -47,10 +47,14 @@
 
 	#################################################################
 
-	function flickr_photos_lookup_delete(&$lookup){
+	function flickr_photos_lookup_delete(&$lookup, $when=null){
+
+		if (! $when){
+			$when = time();
+		}
 
 		$update = array(
-			'deleted' => time(),
+			'deleted' => $when,
 		);
 
 		return flickr_photos_lookup_update($lookup, $update);

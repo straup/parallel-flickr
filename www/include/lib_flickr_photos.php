@@ -183,7 +183,9 @@
 		$cluster_id = $user['cluster_id'];
 		$enc_user = AddSlashes($user['id']);
 
-		$extra = array();
+		$extra = array(
+			'deleted=0',
+		);
 
 		if ($perms = flickr_photos_permissions_photos_where($user['id'], $more['viewer_id'])){
 			$str_perms = implode(",", $perms);
@@ -267,24 +269,17 @@
 
 	function flickr_photos_delete_photo(&$photo, $more=array()){
 
-		$lookup = flickr_photos_lookup_photo($id);
+		# Note how we're updating the photo record before
+		# the lookup record since the former relies on the
+		# latter for looking up cluster IDs by way of the
+		# user ID (20130710/straup)
 
-		if (! $lookup){
-			return array('ok' => 0, 'error' => 'invalid photo ID');
-		}
-
-		$rsp = flickr_photos_lookup_delete($lookup);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		$lookup = $rsp['lookup'];
+		$now = time();
 
 		# TO DO: burn all the metadata?
 
 		$update = array(
-			'deleted' => $lookup['deleted'],
+			'deleted' => $now,
 		);
 
 		$rsp = flickr_photos_update_photo($photo, $update);
@@ -293,7 +288,21 @@
 			return $rsp;
 		}
 
+		$lookup = flickr_photos_lookup_photo($photo['id']);
+
+		if (! $lookup){
+			return array('ok' => 0, 'error' => 'invalid photo ID');
+		}
+
+		$rsp = flickr_photos_lookup_delete($lookup, $now);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
 		# TO DO: burn all the files
+
+		# TO DO: update solr
 
 		return $rsp;
 	}
