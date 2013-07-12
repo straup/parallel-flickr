@@ -1,0 +1,9 @@
+ALTER TABLE OAuth2AccessTokens ADD api_key_role_id TINYINT(3) UNSIGNED NOT NULL;
+
+DROP INDEX `by_user_key` ON OAuth2AccessTokens;
+CREATE INDEX `by_user_key` ON OAuth2AccessTokens(`user_id`,`api_key_id`,`expires`, `api_key_role_id`);
+
+DROP INDEX `by_user` ON OAuth2AccessTokens;
+CREATE INDEX `by_user` ON OAuth2AccessTokens(`user_id`, `expires`, `api_key_role_id`);
+
+CREATE INDEX `by_role_created` ON ApiKeys (`role_id`, `created`);

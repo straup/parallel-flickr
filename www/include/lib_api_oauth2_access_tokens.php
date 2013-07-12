@@ -77,9 +77,15 @@
 
 		$enc_user = AddSlashes($user['id']);
 
-		$sql = "SELECT * FROM OAuth2AccessTokens WHERE user_id='{$enc_user}' AND (expires=0 OR expires > UNIX_TIMESTAMP(NOW())) ORDER BY created DESC";
-		$rsp = db_fetch_paginated($sql, $more);
+		$sql = "SELECT * FROM OAuth2AccessTokens WHERE user_id='{$enc_user}' AND (expires=0 OR expires > UNIX_TIMESTAMP(NOW()))";
 
+		if (features_is_enabled(array("api_site_keys", "api_site_tokens"))){
+			$sql .= " AND api_key_role_id=0";
+		}
+
+		$sql .= " ORDER BY created DESC";
+
+		$rsp = db_fetch_paginated($sql, $more);
 		return $rsp;		
 	}
 
@@ -89,9 +95,17 @@
 
 		$enc_key = AddSlashes($key['id']);
 
-		$sql = "SELECT * FROM OAuth2AccessTokens WHERE api_key_id='{$enc_key}' AND (expires=0 OR expires > UNIX_TIMESTAMP(NOW())) ORDER BY created DESC";
-		$rsp = db_fetch_paginated($sql, $more);
+		$sql = "SELECT * FROM OAuth2AccessTokens WHERE api_key_id='{$enc_key}' AND (expires=0 OR expires > UNIX_TIMESTAMP(NOW()))";
 
+		if (features_is_enabled(array("api_site_keys", "api_site_tokens"))){
+			# pretty sure we don't want to filter on this
+			# but just in case... (20130711/straup)
+			# $sql .= " AND api_key_role_id=0";
+		}
+
+		$sql .= " ORDER BY created DESC";
+
+		$rsp = db_fetch_paginated($sql, $more);
 		return $rsp;		
 	}
 
@@ -295,7 +309,7 @@
 		$cache = cache_get($cache_key);
 
 		if ($cache['ok']){
-			return $cache['data'];
+		#	return $cache['data'];
 		}
 
 		$site_key = api_keys_fetch_site_key();
@@ -339,6 +353,7 @@
 			'id' => $id,
 			'perms' => $perms,
 			'api_key_id' => $site_key['id'],
+			'api_key_role_id' => $site_key['role_id'],
 			'user_id' => $user_id,
 			'access_token' => $token,
 			'created' => $now,

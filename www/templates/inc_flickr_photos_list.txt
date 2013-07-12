@@ -1,4 +1,4 @@
-{if $is_own and $stacked or $smarty.get.stacked}
+{if $smarty.get.stacked}
 {include file="inc_flickr_photos_list_stacked.txt photos=$photos}
 {else}
 {include file="inc_flickr_photos_list_thumbs.txt photos=$photos}
