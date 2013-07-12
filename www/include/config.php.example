@@ -88,14 +88,16 @@
 
 	$GLOBALS['cfg']['api_require_ssl'] = 1;
 
-	$GLOBALS['cfg']['api_auth_type'] = 'oauth2';
-	$GLOBALS['cfg']['api_oauth2_require_authentication_header'] = 0;
-	$GLOBALS['cfg']['api_oauth2_allow_get_parameters'] = 0;
-
-	# API site keys (TTL is measured in seconds)
-
-	$GLOBALS['cfg']['enable_feature_api_site_keys'] = 1;
-	$GLOBALS['cfg']['enable_feature_api_site_tokens'] = 1;
+	# IMPORTANT: A NOTE ABOUT SITE KEYS
+	#
+	# THIS WORKS BUT THE CODE CONTAINS A BUG THAT WILL CAUSE WAY TOO
+	# MANY SITE KEYS (AND BY EXTENSION TOKENS) TO BE CREATED. THERE IS
+	# A PATCH TO FIX THIS BUT IT HASN'T BEEN MERGED IN TO MASTER YET.
+	# HOPEFULLY THAT WILL HAPPEN SHORTLY AND YOU WILL ONLY EVER SEE
+	# THIS NOTICE BY SPELUNKING THROUGH THE GIT LOGS  (20130712/straup)
+	
+	$GLOBALS['cfg']['enable_feature_api_site_keys'] = 0;
+	$GLOBALS['cfg']['enable_feature_api_site_tokens'] = 0;
 
 	$GLOBALS['cfg']['api_site_keys_ttl'] = 28800;		# 8 hours
 	$GLOBALS['cfg']['api_site_tokens_ttl'] = 28000;		# 8 hours

@@ -773,6 +773,8 @@ public OAuth2 API has been added to the codebase.
 It still needs to be properly documented here but all the code is part of
 parallel-flickr and available for playing with if you're so inclined.
 
+**IMPORTANT: A NOTE ABOUT SITE KEYS – THIS WORKS BUT THE CODE CONTAINS A BUG THAT WILL CAUSE WAY TOO MANY SITE KEYS (AND BY EXTENSION TOKENS) TO BE CREATED. THE FEATURE IS CURRENTLY DISABLED IN THE EXAMPLE CONFIG. THERE IS A PATCH TO FIX THIS BUT IT HASN'T BEEN MERGED IN TO MASTER YET. HOPEFULLY THAT WILL HAPPEN SHORTLY AND YOU WILL ONLY EVER SEE THIS NOTICE BY SPELUNKING THROUGH THE GIT LOGS  (20130712/straup)**
+
 ## Experimental stuff
 
 ### Uploading to parallel-flickr (but not necessarily Flickr)
