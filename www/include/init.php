@@ -204,6 +204,11 @@
 	loadlib('log');		# logging comes first, so that other modules can log during startup
 	loadlib('smarty');	# smarty comes next, since other libs register smarty modules
 	loadlib('utf8');	# make sure utf8/header stuff is present in case we need to take the site down
+	loadlib('db');
+
+	loadlib('features');
+	loadlib("flickr_backups");
+	loadlib("flickr_urls");
 
 	if (($GLOBALS['cfg']['site_disabled']) && (! $this_is_shell)){
 
@@ -218,11 +223,9 @@
 		exit();
 	}
 
-	loadlib('features');
 	loadlib('passwords');
 	loadlib('error');
 	loadlib('sanitize');
-	loadlib('db');
 	loadlib('dbtickets');
 	loadlib('cache');
 	loadlib('crypto');
@@ -235,8 +238,6 @@
 	loadlib('filter');
 
 	# TO DO: read from config (20130527/straup)
-
-	loadlib("flickr_backups");
 
 	loadlib('storage');
 	storagemaster_init();

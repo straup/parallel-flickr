@@ -41,10 +41,12 @@
               </ul>
             </li>
 {else}
-	{if $cfg.enable_feature_signin}
-		{if $cfg.enable_feature_signup}
+	{if !$cfg.site_disabled}
+	{if "signin"|@features_is_enabled}
+		{if "signup"|@features_is_enabled}
 			<li{if $nav_tab == 'signin'} class="active"{/if}><a href="{$cfg.abs_root_url}signin">sign in with flickr</a></li>
 		{/if}
+	{/if}
 	{/if}
 {/if}
           </ul>

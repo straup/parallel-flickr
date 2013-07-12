@@ -1,5 +1,7 @@
 {include file="inc_head.txt"}
 
-The site is currently disabled. This is not a feature.
+<div class="container">
+<p class="alert alert-info">The site is currently disabled. This is not a feature.</p>
+</div>
 
 {include file="inc_foot.txt"}
