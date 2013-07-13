@@ -121,7 +121,8 @@ CREATE TABLE `ApiKeys` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `by_key` (`api_key`),
   KEY `by_user` (`user_id`,`deleted`,`created`),
-  KEY `by_role` (`role_id`,`deleted`,`created`)
+  KEY `by_role` (`role_id`,`deleted`,`created`),
+  KEY `by_role` (`role_id`,`created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `OAuth2AccessTokens`;
@@ -130,6 +131,7 @@ CREATE TABLE `OAuth2AccessTokens` (
   `id` bigint(20) unsigned NOT NULL,
   `user_id` int(11) unsigned NOT NULL,
   `api_key_id` bigint(20) unsigned NOT NULL,
+  `api_key_role_id` tinyint(3) unsigned NOT NULL,
   `access_token` varchar(64) NOT NULL,
   `created` int(11) unsigned NOT NULL,
   `perms` tinyint(3) unsigned NOT NULL,
@@ -137,8 +139,8 @@ CREATE TABLE `OAuth2AccessTokens` (
   `expires` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `by_api_key` (`api_key_id`,`expires`,`created`),
-  KEY `by_user_key` (`user_id`,`api_key_id`,`expires`),
-  KEY `by_user` (`user_id`,`expires`),
+  KEY `by_user_key` (`user_id`,`api_key_id`,`expires`, `api_key_role_id`),
+  KEY `by_user` (`user_id`,`expires`, `api_key_role_id`),
   KEY `by_token` (`access_token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
