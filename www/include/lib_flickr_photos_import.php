@@ -183,6 +183,7 @@
 	
 		$root = "http://farm{$photo['farm']}.static.flickr.com/{$photo['server']}/{$photo['id']}";
 
+		$thumb = "{$root}_{$photo['secret']}_t.jpg";
 		$small = "{$root}_{$photo['secret']}_z.jpg";
 
 		$ext = ($photo["originalsecret"]) ? $photo["originalformat"] : "jpg";
@@ -213,6 +214,7 @@
 
 		$dirname = flickr_photos_dirname($photo);
 
+		$local_thumb = $dirname . basename($thumb);
 		$local_small = $dirname . basename($small);
 		$local_orig = $dirname . basename($orig);
 
@@ -228,8 +230,13 @@
 
 		$req = array();
 
+		$thumb_exists = storage_file_exists($local_thumb);
 		$small_exists = storage_file_exists($local_small);
 		$orig_exists = storage_file_exists($local_orig);
+
+		if (($more['force']) || (! $thumb_exists['ok'])){
+			$req[] = array($thumb, $local_thumb);
+		}
 
 		if (($more['force']) || (! $small_exists['ok'])){
 			$req[] = array($small, $local_small);
