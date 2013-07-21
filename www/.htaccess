@@ -195,7 +195,11 @@ RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|po
 
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])/([0-9][0-9])(/page([0-9]+))?/?$		flickr_photos_user_archives_month.php?path=$2&nsid=$3&context=$5&year=$6&month=$7&page=$9%{QUERY_STRING} [L]
 
-RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])/([0-9][0-9])/([0-9][0-9])(/page([0-9]+))?/?$		flickr_photos_user_archives_day.php?path=$2&nsid=$3&context=$5&year=$6&month=$7&day=$8&page=$10%{QUERY_STRING} [L]
+# Note the way we're passing $9 instead of $10 for pagination stuff - that's
+# because mod_rewrite doesn't allow for more than 10 backreferences so we have
+# to sort it out in code... (20130721/straup)
+
+RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/archives/(date-(taken|posted))/([0-9][0-9][0-9][0-9])/([0-9][0-9])/([0-9][0-9])(/page([0-9]+))?/?$		flickr_photos_user_archives_day.php?path=$2&nsid=$3&context=$5&year=$6&month=$7&day=$8&page=$9&%{QUERY_STRING} [L]
 
 # photo pages
 RewriteRule ^photos/(([0-9a-zA-Z-_]+)|([0-9]+@N[0-9]+))/(\d+)/?$	flickr_photo.php?path=$2&nsid=$3&id=$4&%{QUERY_STRING} [L]

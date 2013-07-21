@@ -122,11 +122,38 @@
 
 	</ul>
 
+	{if "photo_edit"|@features_is_enabled}
 	<ul>
-	<li><a href="#delete-photo-confirm" role="button" class="btn" data-toggle="modal" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}" data-delete-crumb="{$delete_crumb|escape}">Delete this photo</a></li>
-	</ul>
 
-	<div id="delete-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	{if "photo_edit_permissions"|@features_is_enabled}
+	<li>
+		<a href="#delete-photo-confirm" role="button" class="btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$edit_crumb|escape}">Edit photo permissions</a>
+
+		<div id="edit-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Update the permissions for this photo</h3>
+		</div>
+
+		<div class="modal-body">
+		<p>Permissions go here</p>
+		</div>
+
+		<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Actually, never mind</button>
+		<button class="btn btn-primary" id="edit-photo-go">Make it so</button>
+		</div>
+		</div>
+	</li>
+	{/if}
+
+
+	{if "photo_edit_delete"|@features_is_enabled}
+	<li>
+
+		<a href="#delete-photo-confirm" role="button" class="btn" data-toggle="modal" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}" data-delete-crumb="{$delete_crumb|escape}">Delete this photo</a>
+
+		<div id="delete-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		<h3 id="myModalLabel">Delete this photo?</h3>
@@ -141,10 +168,14 @@
 		<button class="btn" data-dismiss="modal" aria-hidden="true">No, thanks</button>
 		<button class="btn btn-primary" id="delete-photo-go">Yes please</button>
 		</div>
-	</div>
+		</div>
+	</li>
+	{/if}
+
+	</ul>
+	{/if}
 
 	{/if}
-	</div>
 
 	<!-- photo_meta -->
 

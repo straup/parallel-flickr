@@ -31,10 +31,20 @@
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 	$GLOBALS['smarty']->assign("is_own", $is_own);
 
+
 	$more = array(
 		'viewer_id' => $GLOBALS['cfg']['user']['id'],
-		'page' => get_int32("page"),
 	);
+
+	# because mod_rewrite doesn't allow for more than 10
+	# backreferences... (20130721/straup)
+
+	if ($page = get_str("page")){
+
+		if (preg_match("/page([0-9]+)/", $page, $m)){
+			$more['page'] = $m[1];
+		}
+	}
 
 	$user_context = get_str("context");
 	$user_context = ($user_context == 'posted') ? 'posted' : 'taken';

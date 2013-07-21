@@ -82,6 +82,12 @@
 
 		$photo = _flickr_photos_import_prepare_photo($user, $photo);
 
+		# TO DO: test me... (20130721/straup)
+
+		if (preg_match("/^\[redacted\]/", $photo['title'])){
+			return array('ok' => 1, 'notice' => 'photo is redacted, skipping');
+		}
+
 		# log_info("photo..." . var_export($photo, 1));
 
 		# TO DO: error handling...
