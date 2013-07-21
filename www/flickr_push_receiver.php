@@ -97,13 +97,15 @@
 		$photo_id = $m[1];
 		$update_type = (isset($e['flickr']['update@type'])) ? $e['flickr']['update@type'] : '';
 
-		# for debugging...
-		# $fh = fopen("/tmp/wtf.json", "a");
-		# fwrite($fh, "photo: {$photo_id} update: {$update_type}\n");
-		# fwrite($fh, "user: {$flickr_user['nsid']} author: {$e['flickr']['author_nsid']} bacup: {$is_backup_user}\n");
-		# fwrite($fh, "title {$e['media']['category']}\n");
-		# fwrite($fh, "\n---\n");
-		# fclose($fh);
+		/*
+		$fh = fopen("/tmp/wtf.json", "a");
+		fwrite($fh, "photo: {$photo_id} update: {$update_type}\n");
+		fwrite($fh, "user: {$flickr_user['nsid']} author: {$e['flickr']['author_nsid']} backup user: {$is_backup_user}\n");
+		fwrite($fh, "title {$e['title']}\n");
+		fwrite($fh, "tags {$e['media']['category']}\n");
+		fwrite($fh, "\n---\n");
+		fclose($fh);
+		*/
 
 		# See this: It's not ideal but there you go. The push stuff includes neither
 		# the author of a tag nor the description of the photo (I think) so we're going
@@ -119,6 +121,18 @@
 			if ($e['title'] == "flickr:push=ignore"){
 				continue;
 			}
+
+			else if (($update_type == 'description') && (preg_match("/^\[redacted\]/", $e['title']))){
+				continue;
+			}
+
+			# Please don't hardcode me... (20130721/straup)
+
+			else if (($update_type == 'photo_url') && ($flickr_user['nsid'] == '35034348999@N01')){
+				continue;
+			}
+
+			else {}
 		}
 
 		$photo = array(
