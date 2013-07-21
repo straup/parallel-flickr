@@ -365,8 +365,7 @@
 		$backups = flickr_backups_for_user($user);
 
 		if (! isset($backups['photos'])){
-
-			return not_okay("backups not registered");
+			return array("ok" => 0, "error" => "backups not registered");
 		}
 
 		#
@@ -391,8 +390,6 @@
 
 			$rsp = flickr_photos_import_get_recent($flickr_user['nsid'], $more);
 		}
-
-		#
 
 		if ($rsp['ok']){
 			$update['date_lastupdate'] = $start_time;

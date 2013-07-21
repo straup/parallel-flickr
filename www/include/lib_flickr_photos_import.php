@@ -72,23 +72,24 @@
 
 	function flickr_photos_import_photo($photo, $more=array()){
 
-		log_info("get ready to import a photo...");
+		log_info("get ready to import photo ID {$photo['id']}");
 
 		$user = flickr_users_ensure_user_account($photo['owner'], $photo['ownername']);
 
 		if ((! $user) || (! $user['id'])){
-			return not_okay("failed to retrieve user (photo owner)");
+			return array("ok" => 0, "error" => "failed to retrieve user (photo owner)");
 		}
 
 		$photo = _flickr_photos_import_prepare_photo($user, $photo);
-
-		# TO DO: test me... (20130721/straup)
+		# log_info("photo..." . var_export($photo, 1));
 
 		if (preg_match("/^\[redacted\]/", $photo['title'])){
+			log_info("photo ID {$photo['id']} is 'redacted' so skipping");
 			return array('ok' => 1, 'notice' => 'photo is redacted, skipping');
 		}
 
-		# log_info("photo..." . var_export($photo, 1));
+		# log_info("returning false for {$photo['id']}");
+		# return array('ok' => 0, 'error' => 'debugging');
 
 		# TO DO: error handling...
 
@@ -454,6 +455,8 @@
 		$pages = null;
 
 		$imported = 0;
+		$errors = 0;
+		$processed = 0;
 
 		# TO DO: capture dateupdate for each photo and return that
 		# if there's a fatal error so that the FlickrBackups database
@@ -498,16 +501,29 @@
 			# TO DO: date update stuff (see above)
 
 			foreach ($photos as $photo){
-				flickr_photos_import_photo($photo, $more);
-				$imported ++;
+				$rsp = flickr_photos_import_photo($photo, $more);
+				$processed ++;
+
+				if ($rsp['ok']){
+					$imported ++;
+				}
+
+				else {
+					$errors ++;
+				}
 			}
 
 			$args['page'] += 1;
 		}
 
-		return okay(array(
+		$ok = ($count_errors) ? 0 : 1;
+
+		return array(
+			'ok' => $ok,
 			'count_imported' => $imported,
-		));
+			'count_processed' => $processed,
+			'count_errors' => $errors,
+		);
 	}
 
 	#################################################################

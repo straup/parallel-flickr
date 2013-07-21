@@ -5,8 +5,6 @@
 
 	set_time_limit(0);
 
-	#
-
 	include("include/init.php");
 	loadlib("flickr_backups");
 	
@@ -21,4 +19,6 @@
 		dumper($rsp);
 	}
 
+	echo "done\n";
+	exit();
 ?>
