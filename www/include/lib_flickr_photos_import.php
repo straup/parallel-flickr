@@ -324,6 +324,7 @@
 		# fetch all the bits using http_multi()
 
 		if ($count = count($req)){
+			# dumper($req);
 			_flickr_photos_import_fetch_multi($req);
 		}
 
