@@ -192,6 +192,14 @@
 			$extra[] = "perms IN ({$str_perms})";
 		}
 
+		else if (isset($more['perms'])){
+
+			$enc_perms = AddSlashes($more['perms']);
+			$extra[] = "perms IN ({$enc_perms})";			
+		}
+
+		else {}
+
 		$extra = implode(" AND ", $extra);
 
 		if (strlen($extra)){

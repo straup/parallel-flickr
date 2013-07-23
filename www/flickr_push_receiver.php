@@ -122,7 +122,7 @@
 				continue;
 			}
 
-			else if (($update_type == 'description') && (preg_match("/^\[redacted\]/", $e['title']))){
+			else if (preg_match("/^\[redacted\]/", $e['title'])){
 				continue;
 			}
 

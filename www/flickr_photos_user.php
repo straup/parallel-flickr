@@ -27,6 +27,16 @@
 		'viewer_id' => $GLOBALS['cfg']['user']['id'],
 	);
 
+	if ($perms = get_str("perms")){
+
+		$perms_map = flickr_photos_permissions_map("string keys");
+		$str_perms = str_replace("-", " ", $perms);
+
+		if (isset($perms_map[$str_perms])){
+			$more['perms'] = $perms_map[$str_perms];
+		}
+	}
+
 	$with = get_int64('with');
 
 	if ($with) {
@@ -42,6 +52,16 @@
 	$GLOBALS['smarty']->assign_by_ref("photos", $photos);
 
 	$pagination_url = flickr_urls_photos_user($owner);
+
+	if (isset($more['perms'])){
+		$perms_map = flickr_photos_permissions_map();
+		$str_perms = $perms_map[$more['perms']];
+		$str_perms = str_replace(" ", "-", $str_perms);
+
+		$enc_perms = urlencode($str_perms);
+		$pagination_url .= "{$enc_perms}/"; 
+	}
+
 	$GLOBALS['smarty']->assign("pagination_url", $pagination_url);
 
 	$GLOBALS['smarty']->display("page_flickr_photos_user.txt");
