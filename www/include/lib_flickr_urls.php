@@ -60,10 +60,10 @@
 
 	#################################################################
 
-	function flickr_urls_photo_page(&$photo){
+	function flickr_urls_photo_page(&$photo, $abs_url=1){
 
 		$user = users_get_by_id($photo['user_id']);
-		$root = flickr_urls_photos_user($user);
+		$root = flickr_urls_photos_user($user, $abs_url);
 
 		return $root . $photo['id'] . "/";
 	}
@@ -110,11 +110,11 @@
 
 	#################################################################
 
-	function flickr_urls_photos_user(&$user){
+	function flickr_urls_photos_user(&$user, $abs_url=1){
 
 		$alias = flickr_urls_path_alias_for_user($user);
 
-		$root = $GLOBALS['cfg']['abs_root_url'];
+		$root = ($abs_url) ? $GLOBALS['cfg']['abs_root_url'] : '';
 		return $root . "photos/" . $alias . "/";
 	}
 

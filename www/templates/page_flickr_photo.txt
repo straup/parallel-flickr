@@ -3,9 +3,6 @@
 {capture assign="extra_head"}
 {if $is_own}
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.geo.js"></script>
-<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery.simplemodal.min.js"></script>
-<script type="text/javascript" src="{$cfg.abs_root_url}javascript/flickr.auth.js"></script>
-<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/jquery.simplemodal.css" />
 {/if}
 {/capture}
 {include file="inc_head.txt"}
@@ -66,8 +63,9 @@ $(document).ready(function(){
 			location.href = next;
 		}
 
-		// 'g'
+		// 'g' - disabled
 
+		/*
 		else if (e.keyCode == 71){
 
 			var el = $("#edit_geo");
@@ -76,77 +74,11 @@ $(document).ready(function(){
 				el.click();
 			}
 		}
+		*/
 
 		else {}
 	});
 {/literal}
-
-{if $is_own}
-{* ensure that the user has a flickr auth token with write perms *}
-{* at some point this will probably be abstracted but not yet... *}
-
-{if !$has_write_token}
-{literal}
-	$("#edit_geo").click(function(e){
-
-		var redir = photo_url;
-		redir += '#edit-geo';
-
-		flickr_auth_dialog_request_write_perms('geo', redir); 
-		return;
-	});
-{/literal}
-
-{else}
-{literal}
-
-	$("#edit_geo").click(function(e){
-		photo_geo_edit_meta(photo_id);
-	});
-
-	if (location.hash == '#edit-geo'){
-		$("#edit_geo").click();
-	}	
-
-{/literal}
-{/if}
-
-{* check to see if this is a not-flickr photo *}
-
-{literal}
-
-	$("#delete-photo-go").click(function(e){
-
-		var method = 'parallel.flickr.photos.delete';
-
-		var d = $("#delete-photo");
-		var crumb = d.attr("data-delete-crumb");
-
-		var args = {
-			'id': photo_id,
-			'crumb': crumb,
-		};
-
-		var onsuccess = function(rsp){
-			console.log(rsp);
-		};
-
-		var onerror = function(rsp){
-			console.log("ERROR");
-			console.log(rsp);
-		};
-
-		parallel_flickr_api_call(method, args, onsuccess, onerror);
-
-		$("#delete-photo-confirm").modal('hide');
-
-		// hide or disabled the delete button...
-		// some kind of dialog...
-	});
-
-{/literal}
-
-{/if}
 
 });
 </script>

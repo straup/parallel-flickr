@@ -1,0 +1,36 @@
+<div class="modal-body">
+	<p>When you first signed up and authorized this application with Flickr
+	you allowed it access your account with a <span class="hey-you">read-only</span> token.</p>
+
+	<p>
+	{if $action=='fave'}
+		In order to fave another users photos we need to bounce you back through Flickr again so that you can authorize us to access your account with a <span class="hey-you">write</span> token.
+
+	{elseif $action=='edit'}
+		In order to be able to edit your photos we need to bounce you back through Flickr again so that you can authorize us to access your account with a <span class="hey-you">write</span> token.   
+	{else}{/if}
+	</p>
+
+	<p>
+	You'll only have to do this once or until you revoke the token itself <a href="http://www.flickr.com/services/auth/list.gne">on Flickr</a>. Once you've approved the new token you will be sent back to this webpage.</p>
+
+</div>
+
+<div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">No thanks</button>
+	<button class="btn btn-primary" id="auth-write-request-go">Okay, this is something I want to do</button>
+</div>
+
+<script type="text/javascript">
+{literal}
+	$("#auth-write-request-go").click(function(e){
+		{/literal}var redir='{$redir|escape:"url"}';{literal}
+
+		var b = $("body");
+		var root = b.attr("data-abs-root-url");
+		var auth = root + "account/flickr/auth/?perms=write&redir=" + redir;
+		window.location.replace(auth);
+		return false;
+	});
+{/literal}
+</script>

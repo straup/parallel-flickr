@@ -105,6 +105,33 @@
 
 	#################################################################
 
+	function api_parallel_flickr_setPerms(){
+
+		api_output_error(999, "self destruct");
+
+		$photo = _api_parallel_flickr_photos_setPerms(array('is_own' => 1));
+
+		$perms = post_int32("perms");
+
+		# validate perms
+
+		$update = array(
+			'perms' => $perms,
+		);
+
+		# $rsp = flickr_photos_update_photo($photo, $update);
+
+		if (! $rsp['ok']){
+			api_output_error(999, $rsp['error']);
+		}
+
+		# is this photo on flickr ?
+
+		api_output_ok();
+	}
+
+	#################################################################
+
 	function api_parallel_flickr_photos_delete(){
 
 		$id = post_int64("id");
@@ -132,6 +159,35 @@
 		}
 
 		api_output_ok();
+	}
+
+	#################################################################
+
+	function _api_parallel_flickr_photos_get_photo($more=array()){
+
+		$defaults = array(
+			'is_own' => 0,
+		);
+
+		$more = array_merge($defaults, $more);
+
+		$id = post_int64("id");
+
+		if (! $id){
+			api_output_error(999, "Missing photo ID");
+		}
+
+		$photo = flickr_photos_get_by_id($id);
+
+		if (! $photo){
+			api_output_error(999, "Invalid photo ID");
+		}
+
+		if (($more['is_own'] && ($photo['user_id'] != $GLOBALS['cfg']['user']['id'])){
+			api_output_error(999, "Insufficient permissions");
+		}
+
+		return $photo;
 	}
 
 	#################################################################

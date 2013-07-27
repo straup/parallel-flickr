@@ -51,6 +51,7 @@
 	$perms_map = flickr_photos_permissions_map();
 	$photo['str_perms'] = $perms_map[$photo['perms']];
 
+	$GLOBALS['smarty']->assign_by_ref("perms_map", $perms_map);
 	$GLOBALS['smarty']->assign_by_ref("photo", $photo);
 
 	$owner = users_get_by_id($photo['user_id']);
@@ -112,15 +113,19 @@
 	if ($is_own){
 
 		$_flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
+
 		$has_write_token = flickr_users_has_token_perms($_flickr_user, 'write');
+		$has_delete_token = flickr_users_has_token_perms($_flickr_user, 'delete');
 
 		$GLOBALS['smarty']->assign('has_write_token', $has_write_token);
+		$GLOBALS['smarty']->assign('has_delete_token', $has_delete_token);
 
-		# Maybe? Not sure. Probably something like this...
-		# (20130710/straup)
+		$delete_crumb = crumb_generate("api", "parallel.flickr.photos.delete");
+		$GLOBALS['smarty']->assign("delete_crumb", $delete_crumb);
 
-		$crumb = crumb_generate("api", "parallel.flickr.photos.delete");
-		$GLOBALS['smarty']->assign("delete_crumb", $crumb);
+		$perms_crumb = crumb_generate("api", "parallel.flickr.photos.setPerms");
+		$GLOBALS['smarty']->assign("perms_crumb", $perms_crumb);
+
 	}
 
 	$GLOBALS['smarty']->display("page_flickr_photo.txt");

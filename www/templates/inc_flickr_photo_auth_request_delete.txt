@@ -1,0 +1,22 @@
+<div class="modal-body">
+	<p>PLEASE WRITE ME</p>
+</div>
+
+<div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">No thanks</button>
+	<button class="btn btn-primary" id="auth-write-request-go">Okay, this is something I want to do</button>
+</div>
+
+<script type="text/javascript">
+{literal}
+	$("#auth-write-request-go").click(function(e){
+		{/literal}var redir='{$redir|escape:"url"}';{literal}
+
+		var b = $("body");
+		var root = b.attr("data-abs-root-url");
+		var auth = root + "account/flickr/auth/?perms=delete&redir=" + redir;
+		window.location.replace(auth);
+		return false;
+	});
+{/literal}
+</script>

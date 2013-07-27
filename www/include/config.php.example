@@ -279,6 +279,13 @@
 		# ),
 	);
 
+	# Editing photos
+
+	$GLOBALS['cfg']['enable_feature_photo_edit'] = 0;
+	$GLOBALS['cfg']['enable_feature_photo_edit_permissions'] = 0;
+	$GLOBALS['cfg']['enable_feature_photo_edit_geo'] = 0;
+	$GLOBALS['cfg']['enable_feature_photo_edit_delete'] = 0;
+
 	#
 	# Things you may want to tweak (storage)
 	#

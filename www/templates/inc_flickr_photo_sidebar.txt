@@ -110,16 +110,6 @@
 
 	{if $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
 
-	{* can not edit geodata on not-flickr photos yet... *}
-
-	{if $photo.hasgeo}<li>
-	{if $photo|@flickr_photos_is_on_flickr}
-	Edit <a href="#" title="edit the geo data for this photo (keyboard shortcut: g)" id="edit_geo" geo:woeid="{$photo.woeid|escape}" geo:context="{$photo.geocontext|escape}">geo data</a>.
-	{else}
-	<span class="feature-disabled">Edit geo data.</span>
-	{/if}
-	</li>{/if}
-
 	</ul>
 
 	{if "photo_edit"|@features_is_enabled}
@@ -127,7 +117,7 @@
 
 	{if "photo_edit_permissions"|@features_is_enabled}
 	<li>
-		<a href="#delete-photo-confirm" role="button" class="btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$edit_crumb|escape}">Edit photo permissions</a>
+		<a href="#edit-photo-confirm" role="button" class="btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">Edit photo permissions</a>
 
 		<div id="edit-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
@@ -135,8 +125,25 @@
 		<h3 id="myModalLabel">Update the permissions for this photo</h3>
 		</div>
 
+		{if !$has_write_token}
+
+		{capture assign="redir"}{$photo|@flickr_urls_photo_page:"0"}#edit-perms{/capture}
+		{include file="inc_flickr_photo_auth_request_write.txt" redir=$redir action="edit"}
+
+		{else}
+
 		<div class="modal-body">
-		<p>Permissions go here</p>
+
+		<div>
+			<select name="perms" id="edit-photo-perms">
+			{foreach from=$perms_map item="label" key="id"}
+				<option value="{$id|escape}"{if $id==$photo.perms} selected="true"{/if}>{$label|escape}</option>
+			{/foreach}
+			</select>
+		</div>
+
+		{* TO DO: geo perms *}
+
 		</div>
 
 		<div class="modal-footer">
@@ -144,9 +151,55 @@
 		<button class="btn btn-primary" id="edit-photo-go">Make it so</button>
 		</div>
 		</div>
+
+		<script type="text/javascript">
+		{literal}
+
+		$("#edit-photo-go").click(function(e){
+
+			var method = 'parallel.flickr.photos.setPerms';
+
+			var e = $("#edit-photo");
+			var photo_id = e.attr("data-photo-id");
+			var crumb = e.attr("data-edit-crumb");
+
+			var perms = $("#edit-photo-perms");
+			perms = perms.val();
+
+			var args = {
+				'id': photo_id,
+				'crumb': crumb,
+				'perms': perms
+			};
+
+			var onsuccess = function(rsp){
+				console.log(rsp);
+			};
+
+			var onerror = function(rsp){
+				console.log("ERROR");
+				console.log(rsp);
+			};
+
+			parallel_flickr_api_call(method, args, onsuccess, onerror);
+
+			$("#delete-photo-confirm").modal('hide');
+
+			// hide or disabled the delete button...
+			// some kind of dialog...
+		});
+
+		{/literal}
+		</script>
+
+		{/if}
+
 	</li>
 	{/if}
 
+	{if $photo.has_geo and "photo_edit_geo"|@features_is_enabled}
+	<li class="feature-disabled">Edit geo</li>
+	{/if}
 
 	{if "photo_edit_delete"|@features_is_enabled}
 	<li>
@@ -154,6 +207,14 @@
 		<a href="#delete-photo-confirm" role="button" class="btn" data-toggle="modal" title="delete this photo" id="delete-photo" data-photo-id="{$photo.id|escape}" data-delete-crumb="{$delete_crumb|escape}">Delete this photo</a>
 
 		<div id="delete-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+		{if !$has_delete_token}
+
+		{capture assign="redir"}{$photo|@flickr_urls_photo_page:"0"}#delete{/capture}
+		{include file="inc_flickr_photo_auth_request_delete.txt" redir=$redir}
+
+		{else}
+
 		<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		<h3 id="myModalLabel">Delete this photo?</h3>
@@ -168,6 +229,44 @@
 		<button class="btn" data-dismiss="modal" aria-hidden="true">No, thanks</button>
 		<button class="btn btn-primary" id="delete-photo-go">Yes please</button>
 		</div>
+
+		<script type="text/javascript">
+		{literal}
+
+		$("#delete-photo-go").click(function(e){
+
+			var method = 'parallel.flickr.photos.delete';
+
+			var d = $("#delete-photo");
+			var crumb = d.attr("data-delete-crumb");
+
+			var args = {
+				'id': photo_id,
+				'crumb': crumb,
+			};
+
+			var onsuccess = function(rsp){
+				console.log(rsp);
+			};
+
+			var onerror = function(rsp){
+				console.log("ERROR");
+				console.log(rsp);
+			};
+
+			parallel_flickr_api_call(method, args, onsuccess, onerror);
+
+			$("#delete-photo-confirm").modal('hide');
+
+			// hide or disabled the delete button...
+			// some kind of dialog...
+		});
+
+		{/literal}
+		</script>
+
+		{/if}
+
 		</div>
 	</li>
 	{/if}
