@@ -174,16 +174,17 @@
 
 			var onsuccess = function(rsp){
 				console.log(rsp);
+
+				// UPDATE SIDEBAR TEXT
 			};
 
 			var onerror = function(rsp){
-				console.log("ERROR");
 				console.log(rsp);
 			};
 
 			parallel_flickr_api_call(method, args, onsuccess, onerror);
 
-			$("#delete-photo-confirm").modal('hide');
+			$("#edit-photo-confirm").modal('hide');
 
 			// hide or disabled the delete button...
 			// some kind of dialog...
