@@ -13,19 +13,19 @@
 	{if $photo.owner.id != $cfg.user.id}
 
 	{if $photo.str_perms=='public'}
-	This photo was taken by <a href="{$photo.owner|@flickr_urls_photos_user}">{$photo.owner.username|escape}</a> and <span class="hey-you" id="photo-perms">it is public</span>.
+	This photo was taken by <a href="{$photo.owner|@flickr_urls_photos_user}">{$photo.owner.username|escape}</a> and <span class="hey-you" id="photo-perms-caption">it is public</span>.
 	{else}
-	This photo was taken by <a href="{$photo.owner|@flickr_urls_photos_user}">{$photo.owner.username|escape}</a> and <span class="hey-you" id="photo-perms"> it can only be seen by {$photo.str_perms|escape}</span>.
+	This photo was taken by <a href="{$photo.owner|@flickr_urls_photos_user}">{$photo.owner.username|escape}</a> and <span class="hey-you" id="photo-perms-caption"> it can only be seen by {$photo.str_perms|escape}</span>.
 	{/if}
 
 	{else}
 
 	{if $photo.str_perms=='public'}
-	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$photo.owner|@flickr_urls_photos_user}public/">public</a></span>.
+	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it is <a href="{$photo.owner|@flickr_urls_photos_user}public/">public</a></span>.
 	{elseif $photo.str_perms=='private'}
-	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$photo.owner|@flickr_urls_photos_user}private/">private</a></span>.
+	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it is <a href="{$photo.owner|@flickr_urls_photos_user}private/">private</a></span>.
 	{else}
-	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it can only be seen by <a href="{$photo.owner|@flickr_urls_photos_user}{$photo.str_perms|replace:" ":"-"|escape}/">{$photo.str_perms|escape}</a></span>.
+	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it can only be seen by <a href="{$photo.owner|@flickr_urls_photos_user}{$photo.str_perms|replace:" ":"-"|escape}/">{$photo.str_perms|escape}</a></span>.
 	{/if}
 
 	{/if}

@@ -222,6 +222,7 @@
 				}
 
 				$("#photo-perms").html(seenby);
+				$("#photo-perms-caption").html(seenby);
 
 				setTimeout(function(){
 					$("#edit-photo-confirm").modal('hide');
