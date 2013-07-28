@@ -13,10 +13,11 @@
 
 {if $can_backup}
 	<li><a href="{$cfg.abs_root_url}account/flickr/backups/">Configure your Flickr backups</a></li>
-{/if}
 
 {if "uploads_by_email"|@features_is_enabled}
 	<li><a href="{$cfg.abs_root_url}account/uploadbyemail/">Configure your upload by email settings </a></li>
+{/if}
+
 {/if}
 
 </ul>
