@@ -113,11 +113,11 @@
 	</ul>
 
 	{if "photo_edit"|@features_is_enabled}
-	<ul>
+	<ul style="margin-top:2em; border-top:1px solid #ccc; padding-top:1em;">
 
 	{if "photo_edit_permissions"|@features_is_enabled}
 	<li>
-		<a href="#edit-photo-confirm" role="button" class="btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">Edit photo permissions</a>
+		<a href="#edit-photo-confirm" role="button" class="xxx-btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">Edit photo permissions</a>
 
 		<div id="edit-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
@@ -152,7 +152,7 @@
 		</div>
 
 		<div class="modal-footer" id="edit-photo-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Actually, never mind</button>
+			<button class="btn" data-dismiss="modal" id="edit-photo-dismiss" aria-hidden="true">Actually, never mind</button>
 			<button class="btn btn-primary" id="edit-photo-go">Make it so</button>
 		</div>
 
@@ -175,12 +175,35 @@
 			var args = {
 				'id': photo_id,
 				'crumb': crumb,
-				'perms': perms
+				'perms': perms,
 			};
 
 			var onsuccess = function(rsp){
-				console.log(rsp);
-				$("#edit-photo-body").html(rsp['stat']);
+
+				if (rsp['stat'] != 'ok'){
+
+					var err = '<p class="alert alert-error">';
+					err += 'Hrmmm. The API is reporting a problem updating your photo: ';
+					err += htmlspecialchars(rsp['error']['error']);
+					err += '</p>';
+
+					$("#edit-photo-body").html(err);
+
+					$("#edit-photo-progress").hide();
+					$("#edit-photo-body").show();
+
+					setTimeout(function(){
+						$("#edit-photo-confirm").modal('hide');
+					}, 8000);
+
+					return;
+				}
+
+				var feedback = '<p class="alert alert-success">';
+				feedback += 'Okay! Your photo permissions have been updated.';
+				feedback += '</p>';
+
+				$("#edit-photo-body").html(feedback);
 
 				$("#edit-photo-progress").hide();
 				$("#edit-photo-body").show();
@@ -195,13 +218,26 @@
 				}
 
 				$("#photo-perms").html(seenby);
+
+				setTimeout(function(){
+					$("#edit-photo-confirm").modal('hide');
+				}, 2000);
 			};
 
 			var onerror = function(rsp){
-				$("#edit-photo-body").html('BLARGH');
 
+				var err = '<p class="alert alert-error">';
+				err += 'Ack! There was a problem calling the API.';
+				err += '</p>';
+
+				$("#edit-photo-body").html(err);
 				$("#edit-photo-progress").hide();
 				$("#edit-photo-body").show();
+
+				setTimeout(function(){
+					$("#edit-photo-confirm").modal('hide');
+				}, 8000);
+
 			};
 
 			parallel_flickr_api_call(method, args, onsuccess, onerror);
