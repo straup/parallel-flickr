@@ -132,6 +132,51 @@
 			api_output_error(999, $rsp['error']);
 		}
 
+		if (flickr_photos_is_on_flickr($photo)){
+
+			$flickr_user = flickr_users_get_by_user_id($GLOBALS['cfg']['user']['id']);
+			$auth_token = $flickr_user['auth_token'];
+
+			$method = "flickr.photos.setPerms";
+
+			$is_public = 0;
+			$is_friend = 0;
+			$is_family = 0;
+
+			if ($perms==0){
+				$is_public = 1;
+			}
+
+			else if ($perms == 2){
+				$is_friend = 1;
+			}
+
+			else if ($perms == 3){
+				$is_family = 1;
+			}
+
+			else if ($perms == 4){
+				$is_friend = 1;
+				$is_family = 1;
+			}
+
+			else {}
+
+			$args = array(
+				'auth_token' => $auth_token,
+				'photo_id' => $photo['id'],
+				'is_public' => $is_public,
+				'is_friend' => $is_friend,
+				'is_family' => $is_family,
+			);
+
+			$rsp = flickr_api_call($method, $args);
+
+			if (! $rsp['ok']){
+				api_output_ok(998, "Perms set locally but Flickr API called failed: {$rsp['error']}");
+			}
+		}
+
 		# is this photo on flickr ?
 
 		$owner = users_get_by_id($GLOBALS['cfg']['user']['id']);
