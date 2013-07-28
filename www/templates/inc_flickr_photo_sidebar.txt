@@ -45,11 +45,11 @@
 
 	<p>
 	{if $photo.str_perms=='public'}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is public</span>.
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$owner|@flickr_urls_photos_user}public/">public</a></span>.
 	{elseif $photo.str_perms=='private'}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is private</span>.
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$owner|@flickr_urls_photos_user}private/">private</a></span>.
 	{else}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it can only be seen by {$photo.str_perms|escape}</span>.
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it can only be seen by <a href="{$owner|@flickr_urls_photos_user}{$photo.str_perms|replace:" ":"-"|escape}/">{$photo.str_perms|escape}</a></span>.
 	{/if}
 	</p>
 
@@ -210,11 +210,15 @@
 
 				var perms = rsp['permissions']['id'];
 				var label = rsp['permissions']['label'];
+				var url = rsp['permissions']['url'];
 
-				var seenby = "it can only be seen by " + htmlspecialchars(label);
+				// FIX ME... this is risky (20130728/straup)
+				var link = '<a href="' + url + '">' + htmlspecialchars(label) + '</a>';
+
+				var seenby = "it can only be seen by " + link;
 
 				if ((perms==0) || (perms==5)){
-					seenby = "it is " + label;
+					seenby = "it is " + link;
 				}
 
 				$("#photo-perms").html(seenby);

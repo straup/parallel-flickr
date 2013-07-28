@@ -1,18 +1,39 @@
 <div class="photo-caption">
 <div>
 {if $photo.title}
-<a href="{$photo|@flickr_urls_photo_page}" class="hey-you">{$photo.title|escape}</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.
+<a href="{$photo|@flickr_urls_photo_page}" class="hey-you">{$photo.title|truncate:60:"..."|escape}</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.
 {else}
 <a href="{$photo|@flickr_urls_photo_page}" class="hey-you">This photo</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.
 {/if}
 </div>
 
-{if $photo.owner}
-<div>This photo is by <a href="{$photo.owner|@flickr_urls_photos_user}" class="hey-you">{$photo.owner.username|escape}</a>.</div>
-{/if}
+
+<div>
+
+	{if $photo.owner.id != $cfg.user.id}
+
+	{if $photo.str_perms=='public'}
+	This photo was taken by <a href="{$photo.owner|@flickr_urls_photos_user}">{$photo.owner.username|escape}</a> and <span class="hey-you" id="photo-perms">it is public</span>.
+	{else}
+	This photo was taken by <a href="{$photo.owner|@flickr_urls_photos_user}">{$photo.owner.username|escape}</a> and <span class="hey-you" id="photo-perms"> it can only be seen by {$photo.str_perms|escape}</span>.
+	{/if}
+
+	{else}
+
+	{if $photo.str_perms=='public'}
+	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$photo.owner|@flickr_urls_photos_user}public/">public</a></span>.
+	{elseif $photo.str_perms=='private'}
+	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$photo.owner|@flickr_urls_photos_user}private/">private</a></span>.
+	{else}
+	<a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it can only be seen by <a href="{$photo.owner|@flickr_urls_photos_user}{$photo.str_perms|replace:" ":"-"|escape}/">{$photo.str_perms|escape}</a></span>.
+	{/if}
+
+	{/if}
 
 {if !$photo|@flickr_photos_is_on_flickr}
-<div>This photo <span class="hey-you">is not on Flickr</span>.</div>
+This photo <span class="hey-you">is not on Flickr</span>.
 {/if}
+
+</div>
 
 </div>

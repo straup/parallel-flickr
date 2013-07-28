@@ -55,6 +55,8 @@
 	$faves = flickr_faves_for_user($owner, $more);
 	$photos = array();
 
+	$perms_map = flickr_photos_permissions_map();
+
 	foreach ($faves['rows'] as $f){
 
 		$photo = flickr_photos_get_by_id($f['photo_id']);
@@ -66,6 +68,7 @@
 		}
 
 		$photo['owner'] = users_get_by_id($photo['user_id']);
+		$photo['str_perms'] = $perms_map[$photo['perms']];
 
 		# quick hack until perms are denormalized into the FlickrFaves table
 		$photo['canview'] = flickr_photos_permissions_can_view_photo($photo, $viewer['id']);

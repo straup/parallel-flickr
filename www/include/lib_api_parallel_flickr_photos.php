@@ -134,10 +134,18 @@
 
 		# is this photo on flickr ?
 
+		$owner = users_get_by_id($GLOBALS['cfg']['user']['id']);
+
+		$label = $perms_map[$perms];
+
+		# Please put me in a function... (20130728/straup)
+		$url = flickr_urls_photos_user($owner) . str_replace(" ", "-", $label) . "/";
+
 		$out = array(
 			'permissions' => array(
 				'id' => $perms,
-				'label' => $perms_map[$perms],
+				'label' => $label,
+				'url' => $url,
 			),
 		);
 

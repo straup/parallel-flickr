@@ -44,7 +44,16 @@
 	}
 
 	$rsp = flickr_photos_for_user($owner, $more);
-	$photos = $rsp['rows'];
+	$photos = array();
+
+	$perms_map = flickr_photos_permissions_map();
+
+	foreach ($rsp['rows'] as $row){
+		$row['owner'] = $owner;
+		$row['str_perms'] = $perms_map[$row['perms']];
+
+		$photos[] = $row;
+	}
 
 	flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
 

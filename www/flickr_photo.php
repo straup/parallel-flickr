@@ -48,13 +48,15 @@
 		error_403();
 	}
 
+	$owner = users_get_by_id($photo['user_id']);
+	$photo['owner'] = $owner;
+
 	$perms_map = flickr_photos_permissions_map();
 	$photo['str_perms'] = $perms_map[$photo['perms']];
 
 	$GLOBALS['smarty']->assign_by_ref("perms_map", $perms_map);
 	$GLOBALS['smarty']->assign_by_ref("photo", $photo);
 
-	$owner = users_get_by_id($photo['user_id']);
 	$GLOBALS['smarty']->assign_by_ref("owner", $owner);
 
 	$is_own = ($owner['id'] == $GLOBALS['cfg']['user']['id']) ? 1 : 0;
