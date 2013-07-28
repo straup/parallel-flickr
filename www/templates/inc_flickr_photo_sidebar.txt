@@ -29,9 +29,9 @@
 
 	<p>
 	{if $photo.str_perms=='public'}
-	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you">it is public</span>.
+	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you" id="photo-perms">it is public</span>.
 	{else}
-	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you"> it can only be seen by {$photo.str_perms|escape}</span>.
+	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you" id="photo-perms"> it can only be seen by {$photo.str_perms|escape}</span>.
 	{/if}
 	</p>
 
@@ -45,11 +45,11 @@
 
 	<p>
 	{if $photo.str_perms=='public'}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you">it is public</span>.
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is public</span>.
 	{elseif $photo.str_perms=='private'}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you">it is private</span>.
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is private</span>.
 	{else}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you">it can only be seen by {$photo.str_perms|escape}</span>.
+	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it can only be seen by {$photo.str_perms|escape}</span>.
 	{/if}
 	</p>
 
@@ -120,6 +120,7 @@
 		<a href="#edit-photo-confirm" role="button" class="btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">Edit photo permissions</a>
 
 		<div id="edit-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
 		<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		<h3 id="myModalLabel">Update the permissions for this photo</h3>
@@ -134,22 +135,27 @@
 
 		<div class="modal-body">
 
-		<div>
+			<div id="edit-photo-body">
 			<select name="perms" id="edit-photo-perms">
 			{foreach from=$perms_map item="label" key="id"}
 				<option value="{$id|escape}"{if $id==$photo.perms} selected="true"{/if}>{$label|escape}</option>
 			{/foreach}
 			</select>
-		</div>
+			</div>
+
+			<div class="progress progress-striped active" id="edit-photo-progress" style="display:none;">
+			<div class="bar" style="width: 100%;"></div>
+			</div>
 
 		{* TO DO: geo perms *}
 
 		</div>
 
-		<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Actually, never mind</button>
-		<button class="btn btn-primary" id="edit-photo-go">Make it so</button>
+		<div class="modal-footer" id="edit-photo-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Actually, never mind</button>
+			<button class="btn btn-primary" id="edit-photo-go">Make it so</button>
 		</div>
+
 		</div>
 
 		<script type="text/javascript">
@@ -174,20 +180,35 @@
 
 			var onsuccess = function(rsp){
 				console.log(rsp);
+				$("#edit-photo-body").html(rsp['stat']);
 
-				// UPDATE SIDEBAR TEXT
+				$("#edit-photo-progress").hide();
+				$("#edit-photo-body").show();
+
+				var perms = rsp['permissions']['id'];
+				var label = rsp['permissions']['label'];
+
+				var seenby = "it can only be seen by " + htmlspecialchars(label);
+
+				if ((perms==0) || (perms==5)){
+					seenby = "it is " + label;
+				}
+
+				$("#photo-perms").html(seenby);
 			};
 
 			var onerror = function(rsp){
-				console.log(rsp);
+				$("#edit-photo-body").html('BLARGH');
+
+				$("#edit-photo-progress").hide();
+				$("#edit-photo-body").show();
 			};
 
 			parallel_flickr_api_call(method, args, onsuccess, onerror);
 
-			$("#edit-photo-confirm").modal('hide');
-
-			// hide or disabled the delete button...
-			// some kind of dialog...
+			$("#edit-photo-body").hide();
+			$("#edit-photo-footer").hide();
+			$("#edit-photo-progress").show();
 		});
 
 		{/literal}

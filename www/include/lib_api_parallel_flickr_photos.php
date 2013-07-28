@@ -134,7 +134,14 @@
 
 		# is this photo on flickr ?
 
-		api_output_ok();
+		$out = array(
+			'permissions' => array(
+				'id' => $perms,
+				'label' => $perms_map[$perms],
+			),
+		);
+
+		api_output_ok($out);
 	}
 
 	#################################################################
