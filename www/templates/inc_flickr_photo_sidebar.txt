@@ -147,7 +147,7 @@
 			<div class="bar" style="width: 100%;"></div>
 			</div>
 
-		{* TO DO: geo perms *}
+			{* TO DO: geo perms *}
 
 		</div>
 
@@ -260,8 +260,63 @@
 	</li>
 	{/if}
 
-	{if $photo.has_geo and "photo_edit_geo"|@features_is_enabled}
-	<li class="feature-disabled">Edit geo</li>
+	{if $photo.hasgeo and "photo_edit_geo"|@features_is_enabled}
+
+	<li>
+		<a href="#edit-geo-confirm" role="button" class="xxx-btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-geo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">Edit geo data</a>
+
+		<div id="edit-geo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Update the permissions for this photo</h3>
+		</div>
+
+		{if !$has_write_token}
+
+		{capture assign="redir"}{$photo|@flickr_urls_photo_page:"0"}#edit-perms{/capture}
+		{include file="inc_flickr_photo_auth_request_write.txt" redir=$redir action="edit"}
+
+		{else}
+
+		<div class="modal-body">
+
+			<div id="edit-geo-map">
+			I AM A MAP
+			</div>
+
+			<div id="edit-geo-body">
+			<p>{$photo.latitude|escape},{$photo.longitude|escape} at zoom {$photo.accuracy|escape}</p>
+
+			<p>WOE ID: {$photo.woeid|escape} geo context: {$photo.geocontext|escape}</p>
+			</div>
+
+			<div class="progress progress-striped active" id="edit-geo-progress" style="display:none;">
+			<div class="bar" style="width: 100%;"></div>
+			</div>
+
+		</div>
+
+		<div class="modal-footer" id="edit-geo-footer">
+			<button class="btn" data-dismiss="modal" id="edit-geo-dismiss" aria-hidden="true">Actually, never mind</button>
+			<button class="btn btn-primary" id="edit-geo-go">Make it so</button>
+		</div>
+
+		</div>
+
+		<script type="text/javascript">
+		{literal}
+
+		$("#edit-geo-go").click(function(e){
+			alert('Please write me...');
+		});
+
+		{/literal}
+		</script>
+
+		{/if}
+
+	</li>
 	{/if}
 
 	{if "photo_edit_delete"|@features_is_enabled}
