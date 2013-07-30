@@ -81,11 +81,13 @@
 
 	{if $photo.hasgeo}
 
+	{if $is_own}
 	<span id="geo-latlon">
 	Its exact location is <span id="geo-coords" class="hey-you"
 	title="lat,lon if you're wondering">{$photo.latitude|escape},{$photo.longitude|escape}</span>
 	at zoom level {$photo.accuracy|escape}.
 	</span>
+	{/if}
 
 	<span id="geo_context">
 	{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
