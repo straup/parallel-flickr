@@ -481,7 +481,7 @@
 			$extras[] = "perms IN ({$str_perms})";
 		}
 
-		$extras = implode(" AND ", $extras);
+		$extras = (count($extras)) ? " AND " . implode(" AND ", $extras) : "";
 
 		# TO DO: INDEXES
 
@@ -492,7 +492,7 @@
 
 		# TO DO: INDEXES
 
-		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' AND id > '{$enc_id}' {$extra} ORDER BY id ASC LIMIT 1";
+		$sql = "SELECT * FROM FlickrPhotos WHERE user_id='{$enc_user}' AND id > '{$enc_id}' {$extras} ORDER BY id ASC LIMIT 1";
 		$rsp = db_fetch_users($cluster_id, $sql);
 
 		$after = $rsp['rows'];
