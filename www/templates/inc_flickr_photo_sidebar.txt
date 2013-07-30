@@ -60,26 +60,33 @@
 	{if $place}
 
 	{if $photo.str_geoperms=='public'}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">is public</span>.
+	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">is public</span>.
 	{elseif $photo.str_geoperms=='private'}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}<span> and its location <span class="hey-you">can only be seen by you</span>.
+	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}<span> and its location <span class="hey-you">can only be seen by you</span>.
 	{else}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
+	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
 	{/if}
 
 	{else}
 
 	{if $photo.str_geoperms=='public'}
-	This photo was taken in <span id="geo_placename">a place with no name</span> and its location <span class="hey-you">is public</span>.
+	This photo was taken in <span id="geo-placename" class="hey-you">a place with no name</span> and its location <span class="hey-you">is public</span>.
 	{elseif $photo.str_geoperms=='private'}
-	This photo was taken in <span id="geo_placename">a place with no name</span> and its location <span class="hey-you">can only be seen by you</span>.
+	This photo was taken in <span id="geo-placename" class="hey-you">a place with no name</span> and its location <span class="hey-you">can only be seen by you</span>.
 	{else}
-	This photo was taken in <span id="geo_placename">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else} and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
+	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else} and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
 	{/if}
 
 	{/if}
 
 	{if $photo.hasgeo}
+
+	<span id="geo-latlon">
+	Its exact location is <span id="geo-coords" class="hey-you"
+	title="lat,lon if you're wondering">{$photo.latitude|escape},{$photo.longitude|escape}</span>
+	at zoom level {$photo.accuracy|escape}.
+	</span>
+
 	<span id="geo_context">
 	{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
 
