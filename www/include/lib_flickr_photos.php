@@ -439,7 +439,7 @@
 
 		# TO DO: INDEXES
 
-		$sql = "SELECT MIN(`{$more['context']}`) AS start, MAX(`{$more['context']}`) AS end FROM FlickrPhotos WHERE user_id = '{$enc_user}' {$extras}";
+		$sql = "SELECT MIN(`{$more['context']}`) AS start, MAX(`{$more['context']}`) AS end FROM FlickrPhotos WHERE user_id = '{$enc_user}' AND {$extras}";
 
 		$rsp = db_fetch_users($cluster_id, $sql);
 
