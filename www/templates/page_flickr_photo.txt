@@ -2,6 +2,9 @@
 {capture assign="page_title"}{$owner.username} | {$photo_title}{/capture}
 {capture assign="extra_head"}
 {if $is_own}
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/leaflet.source.css" />
+<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}css/leaflet.ie.source.css" />
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/leaflet.min.js"></script>
 <script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.geo.js"></script>
 {/if}
 {/capture}

@@ -278,7 +278,7 @@
 
 		<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">Update the permissions for this photo</h3>
+		<h3 id="myModalLabel">Edit the location information for this photo</h3>
 		</div>
 
 		{if !$has_write_token}
@@ -290,20 +290,71 @@
 
 		<div class="modal-body">
 
-			<div id="edit-geo-map">
-			I AM A MAP
+			<div class="span12">
+			<div id="edit-geo-map" style="height:300px;width:100%;border:solid thin;"></div>
 			</div>
 
 			<div id="edit-geo-body">
-			<p>{$photo.latitude|escape},{$photo.longitude|escape} at zoom {$photo.accuracy|escape}</p>
+			<p><span id="edit-geo-coords">{$photo.latitude|escape},{$photo.longitude|escape}</span> at zoom <span id="edit-geo-zoom">{$photo.accuracy|escape}</span></p>
 
-			<p>WOE ID: {$photo.woeid|escape} geo context: {$photo.geocontext|escape}</p>
+			{if 0}
+			<select name="woeid" id="woeid">
+			</select>
+			{/if}
+
+
+			<div>
+			<select name="geocontext" id="geocontext">
+			{foreach from=$geocontext_map item="label" key="id"}
+				<option value="{$id|escape}"{if $photo.geocontext==$id} selected="true"{/if}>{$label|escape}</option>
+			{/foreach}
+			</select>
+			</div>
+
 			</div>
 
 			<div class="progress progress-striped active" id="edit-geo-progress" style="display:none;">
 			<div class="bar" style="width: 100%;"></div>
 			</div>
 
+			<script type="text/javascript">
+			{literal}
+
+			$(document).ready(function(){
+
+				var get_latlon = function(){
+					var coords = $("#edit-geo-coords");
+					coords = coords.html().split(',');
+					var lat = parseFloat(coords[0]);
+					var lon = parseFloat(coords[1]);
+					return [lat, lon];
+				};
+
+				var get_zoom = function(){
+					var zoom = $("#edit-geo-zoom");
+					zoom = parseInt(zoom.html());
+					return zoom;
+				};
+
+				var latlon = get_latlon();
+				var zoom = get_zoom();
+
+				var map = L.map('edit-geo-map');
+				map.setView(latlon, zoom);
+
+				var toner = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.jpg';
+
+				var base = L.tileLayer(toner, {
+					attribution: '',
+					maxZoom: 18,
+					minZoom: 1
+				});
+
+				base.addTo(map);
+			});
+
+			{/literal}
+			</script>
 		</div>
 
 		<div class="modal-footer" id="edit-geo-footer">

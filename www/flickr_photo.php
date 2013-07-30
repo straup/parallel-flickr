@@ -5,6 +5,7 @@
 	loadlib("flickr_photos");
 	loadlib("flickr_photos_metadata");
 	loadlib("flickr_photos_permissions");
+	loadlib("flickr_photos_geo");
 	loadlib("flickr_geo_permissions");
 
 	loadlib("flickr_users");
@@ -106,6 +107,11 @@
 		if ($place = flickr_places_get_by_woeid($photo['woeid'])){
 			$GLOBALS['smarty']->assign_by_ref("place", $place);
 		}
+	}
+
+	if (($is_own) && ($photo['hasgeo'])){
+		$context_map = flickr_photos_geo_context_map();
+		$GLOBALS['smarty']->assign_by_ref("geocontext_map", $context_map);
 	}
 
 	# check to see if the logged in user is the photo owner and has write perms
