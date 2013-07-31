@@ -1,6 +1,7 @@
 <?php
 
 	loadlib("youarehere_api");
+	loadlib("geo_utils");
 
 	#################################################################
 
@@ -17,7 +18,15 @@
 			api_output_error(999, "Missing latitude or longitude");
 		}
 
-		# validate lat, lon...
+		if (! geo_utils_is_valid_latitude($lat)){
+			api_output_error(999, "Invalid latitude");
+		}
+
+		if (! geo_utils_is_valid_longitude($lon)){
+			api_output_error(999, "Invalid longitude");
+		}
+
+		# sort out 'filter' type based on accuracy
 
 		$args = array(
 			'lat' => $lat,
