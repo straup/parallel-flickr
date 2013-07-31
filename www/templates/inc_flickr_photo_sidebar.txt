@@ -290,12 +290,13 @@
 
 		<div class="modal-body">
 
-			<div class="span12">
-			<div id="edit-geo-map" style="height:300px;width:100%;border:solid thin;"></div>
+			<div class="edit-geo-map-container span12">
+			<div id="edit-geo-map"></div>
+			<div id="edit-geo-map-crosshairs"></div>
 			</div>
 
 			<div id="edit-geo-body">
-			<p><span id="edit-geo-coords">{$photo.latitude|escape},{$photo.longitude|escape}</span> at zoom <span id="edit-geo-zoom">{$photo.accuracy|escape}</span></p>
+			<p><span id="edit-geo-coords" data-latitude="{$photo.latitude|escape}" data-longitude="{$photo.longitude|escape}">{$photo.latitude|escape},{$photo.longitude|escape}</span> at zoom <span id="edit-geo-zoom" data-accuracy="{$photo.accuracy|escape}">{$photo.accuracy|escape}</span></p>
 
 			{if 0}
 			<select name="woeid" id="woeid">
@@ -304,9 +305,16 @@
 
 
 			<div>
+			<label for="geocontext">This photo was taken</label>
 			<select name="geocontext" id="geocontext">
 			{foreach from=$geocontext_map item="label" key="id"}
-				<option value="{$id|escape}"{if $photo.geocontext==$id} selected="true"{/if}>{$label|escape}</option>
+				<option value="{$id|escape}"{if $photo.geocontext==$id} selected="true"{/if}>
+				{if $id==0}
+				somewhere but it's not really important
+				{else}
+				{$label|escape}
+				{/if}
+				</option>
 			{/foreach}
 			</select>
 			</div>
@@ -317,44 +325,6 @@
 			<div class="bar" style="width: 100%;"></div>
 			</div>
 
-			<script type="text/javascript">
-			{literal}
-
-			$(document).ready(function(){
-
-				var get_latlon = function(){
-					var coords = $("#edit-geo-coords");
-					coords = coords.html().split(',');
-					var lat = parseFloat(coords[0]);
-					var lon = parseFloat(coords[1]);
-					return [lat, lon];
-				};
-
-				var get_zoom = function(){
-					var zoom = $("#edit-geo-zoom");
-					zoom = parseInt(zoom.html());
-					return zoom;
-				};
-
-				var latlon = get_latlon();
-				var zoom = get_zoom();
-
-				var map = L.map('edit-geo-map');
-				map.setView(latlon, zoom);
-
-				var toner = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.jpg';
-
-				var base = L.tileLayer(toner, {
-					attribution: '',
-					maxZoom: 18,
-					minZoom: 1
-				});
-
-				base.addTo(map);
-			});
-
-			{/literal}
-			</script>
 		</div>
 
 		<div class="modal-footer" id="edit-geo-footer">
@@ -367,12 +337,92 @@
 		<script type="text/javascript">
 		{literal}
 
-		$("#edit-geo-go").click(function(e){
-			alert('Please write me...');
-		});
+		var reverse_geocode = function(){
+			var latlon = get_latlon();
+			var zoom = get_zoom();
 
-		{/literal}
-		</script>
+			var method = "parallel.flickr.geo.reverseGeocode";
+
+			var args = {
+				'latitude': latlon[0],
+				'longitude': latlon[1],
+				'accuracy': zoom,
+			};
+
+			var onsuccess = function(rsp){
+				console.log(rsp);
+			};
+
+			parallel_flickr_api_call(method, args, onsuccess);
+			console.log(method);
+			console.log(args);
+		};
+
+		var get_latlon = function(){
+			var coords = $("#edit-geo-coords");
+			coords = coords.html().split(',');
+			var lat = parseFloat(coords[0]);
+			var lon = parseFloat(coords[1]);
+			return [lat, lon];
+		};
+
+		var get_zoom = function(){
+			var zoom = $("#edit-geo-zoom");
+			zoom = parseInt(zoom.html());
+			return zoom;
+		};
+
+			$(document).ready(function(){
+
+				var update_coords = function(){
+					var centroid = map.getCenter();
+					var zoom = map.getZoom();
+
+					var lat = centroid['lat'];
+					var lon = centroid['lng'];
+
+					lat = lat.toFixed(6);
+					lon = lon.toFixed(6);
+
+					$("#edit-geo-coords").html(lat + "," + lon);
+					$("#edit-geo-zoom").html(zoom);
+				};
+
+				var latlon = get_latlon();
+				var zoom = get_zoom();
+
+				var args = {
+					'attributionControl': false
+				};
+
+				var map = L.map('edit-geo-map', args);
+				map.setView(latlon, zoom);
+
+				map.on('move', update_coords);
+
+				var toner = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.jpg';
+
+				var base = L.tileLayer(toner, {
+					attribution: '',
+					maxZoom: 18,
+					minZoom: 1
+				});
+
+				base.addTo(map);
+
+				$("#edit-geo-map-crosshairs").dblclick(function(e){
+					var offset = (e.shiftKey) ? -1 : 1;
+					map.setZoom(map.getZoom() + offset);
+				});
+			});
+
+			$("#edit-geo-go").click(function(e){
+				console.log("click");
+				reverse_geocode();
+			});
+
+			{/literal}
+			</script>
 
 		{/if}
 

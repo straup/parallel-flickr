@@ -21,6 +21,13 @@
 			"requires_auth" => 1,
 		),
 
+		"parallel.flickr.geo.reverseGeocode" => array(
+			"documented" => 0,
+			"enabled" => 1,
+			"library" => "api_parallel_flickr_geo",
+			"requires_auth" => 1,
+		),
+
 		"parallel.flickr.photos.getList" => array(
 			"documented" => 0,
 			"enabled" => 1,
