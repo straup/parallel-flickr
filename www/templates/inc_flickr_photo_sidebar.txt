@@ -298,11 +298,12 @@
 			<div id="edit-geo-body">
 			<p><span id="edit-geo-coords" data-latitude="{$photo.latitude|escape}" data-longitude="{$photo.longitude|escape}">{$photo.latitude|escape},{$photo.longitude|escape}</span> at zoom <span id="edit-geo-zoom" data-accuracy="{$photo.accuracy|escape}">{$photo.accuracy|escape}</span></p>
 
-			{if 0}
-			<select name="woeid" id="woeid">
+			<div>
+			<label for="woeid">This photo was taken in</label>
+			<select name="woeid" id="woeid" data-woeid="{$photo.woeid|escape}">
+				<option value="0">A place with no name</option>
 			</select>
-			{/if}
-
+			</div>
 
 			<div>
 			<label for="geocontext">This photo was taken</label>
@@ -338,8 +339,11 @@
 		{literal}
 
 		var reverse_geocode = function(){
+
 			var latlon = get_latlon();
 			var zoom = get_zoom();
+
+			var woeid = get_woeid();
 
 			var method = "parallel.flickr.geo.reverseGeocode";
 
@@ -350,12 +354,41 @@
 			};
 
 			var onsuccess = function(rsp){
-				console.log(rsp);
+
+				var features = rsp['features'];
+
+				if (features.length==0){
+					// feedback goes here
+					return;
+				}
+
+				var list = $("#woeid");
+
+				for (i in features){
+
+					var f = features[i];
+					var props = f['properties'];
+
+					var id = props['woe_id'];
+					var name = props['name'];
+
+					var item = '<option id="' + id;
+
+					if (id==woeid){
+						item += ' selected="true"';
+					}
+
+					item += '">' + name + '</option>';
+
+					list.append(item);
+				}
+
+				// feedback goes here
 			};
 
 			parallel_flickr_api_call(method, args, onsuccess);
-			console.log(method);
-			console.log(args);
+
+			// feedback goes here...
 		};
 
 		var get_latlon = function(){
@@ -372,57 +405,67 @@
 			return zoom;
 		};
 
-			$(document).ready(function(){
+		var get_geocontext = function(){
 
-				var update_coords = function(){
-					var centroid = map.getCenter();
-					var zoom = map.getZoom();
+		};
 
-					var lat = centroid['lat'];
-					var lon = centroid['lng'];
+		var get_woeid = function(){
+			var woe = $("#woeid");
+			var id = woe.attr("data-woeid");
+			return id;
+		};
 
-					lat = lat.toFixed(6);
-					lon = lon.toFixed(6);
+		$(document).ready(function(){
 
-					$("#edit-geo-coords").html(lat + "," + lon);
-					$("#edit-geo-zoom").html(zoom);
-				};
+			var update_coords = function(){
+				var centroid = map.getCenter();
+				var zoom = map.getZoom();
 
-				var latlon = get_latlon();
-				var zoom = get_zoom();
+				var lat = centroid['lat'];
+				var lon = centroid['lng'];
 
-				var args = {
-					'attributionControl': false
-				};
+				lat = lat.toFixed(6);
+				lon = lon.toFixed(6);
 
-				var map = L.map('edit-geo-map', args);
-				map.setView(latlon, zoom);
+				$("#edit-geo-coords").html(lat + "," + lon);
+				$("#edit-geo-zoom").html(zoom);
+			};
 
-				map.on('move', update_coords);
+			var latlon = get_latlon();
+			var zoom = get_zoom();
 
-				var toner = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.jpg';
+			var args = {
+				'attributionControl': false
+			};
 
-				var base = L.tileLayer(toner, {
-					attribution: '',
-					maxZoom: 18,
-					minZoom: 1
-				});
+			var map = L.map('edit-geo-map', args);
+			map.setView(latlon, zoom);
 
-				base.addTo(map);
+			map.on('move', update_coords);
 
-				$("#edit-geo-map-crosshairs").dblclick(function(e){
-					var offset = (e.shiftKey) ? -1 : 1;
-					map.setZoom(map.getZoom() + offset);
-				});
+			var toner = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.jpg';
+
+			var base = L.tileLayer(toner, {
+				attribution: '',
+				maxZoom: 18,
+				minZoom: 1
 			});
 
-			$("#edit-geo-go").click(function(e){
-				console.log("click");
-				reverse_geocode();
-			});
+			base.addTo(map);
 
-			{/literal}
-			</script>
+			$("#edit-geo-map-crosshairs").dblclick(function(e){
+				var offset = (e.shiftKey) ? -1 : 1;
+				map.setZoom(map.getZoom() + offset);
+			});
+		});
+
+		$("#edit-geo-go").click(function(e){
+
+			reverse_geocode();
+		});
+
+		{/literal}
+		</script>
 
 		{/if}
 
