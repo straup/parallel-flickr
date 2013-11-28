@@ -91,6 +91,7 @@
 		$ttl = $GLOBALS['cfg']['api_site_keys_ttl'];
 
 		$key = api_keys_get_site_key();
+
 		$now = time();
 
 		# TO DO: error handling/reporting...
@@ -129,12 +130,15 @@
 
 		$enc_role = AddSlashes($role);
 
-		$sql = "SELECT * FROM ApiKeys WHERE role_id='{$enc_role}' AND deleted=0";
+		# Note the LIMIT 1 - this is a big and should not be necessary...
+		# (20130911/straup)
+
+		$sql = "SELECT * FROM ApiKeys WHERE role_id='{$enc_role}' AND deleted=0 ORDER BY CREATED DESC LIMIT 1";
 		$rsp = db_fetch($sql);
 
 		$row = db_single($rsp);
 
-		if ($rsp['ok']){
+		if (($rsp['ok']) && ($row)){
 			cache_set($cache_key, $row);
 		}
 
