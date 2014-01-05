@@ -30,8 +30,8 @@
 
 	{/if}
 
-{if !$photo|@flickr_photos_is_on_flickr}
-This photo <span class="hey-you">is not on Flickr</span>.
+{if $photo|@flickr_photos_is_on_flickr}
+This photo <a href="{$photo|@flickr_urls_photo_page_flickr}" class="hey-you" target="_flickr">is also on Flickr</a>.
 {/if}
 
 </div>

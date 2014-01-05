@@ -37,12 +37,7 @@
 
 	{* all stuff that is assuming $is_own=1 now *}
 	{else}
-
-
-	{if !$photo|@flickr_photos_is_on_flickr}	
-	<p>This photo is <strong>not on Flickr</strong>.</p>
-	{/if}
-
+	
 	<p>
 	{if $photo.str_perms=='public'}
 	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$owner|@flickr_urls_photos_user}public/">public</a></span>.
