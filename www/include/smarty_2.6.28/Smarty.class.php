@@ -20,17 +20,17 @@
  *
  * For questions, help, comments, discussion, etc., please join the
  * Smarty mailing list. Send a blank e-mail to
- * smarty-discussion-subscribe@googlegroups.com 
+ * smarty-discussion-subscribe@googlegroups.com
  *
  * @link http://www.smarty.net/
  * @copyright 2001-2005 New Digital Group, Inc.
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
  * @package Smarty
- * @version 2.6.26
+ * @version 2.6.28
  */
 
-/* $Id: Smarty.class.php 3163 2009-06-17 14:39:24Z monte.ohrt $ */
+/* $Id: Smarty.class.php 4660 2012-09-24 20:05:15Z uwe.tews@googlemail.com $ */
 
 /**
  * DIR_SEP isn't used anymore, but third party apps might
@@ -465,7 +465,7 @@ class Smarty
      *
      * @var string
      */
-    var $_version              = '2.6.26';
+    var $_version              = '2.6.28';
 
     /**
      * current template inclusion depth
@@ -1058,7 +1058,7 @@ class Smarty
         } else {
             // var non-existant, return valid reference
             $_tmp = null;
-            return $_tmp;   
+            return $_tmp;
         }
     }
 
@@ -1090,7 +1090,8 @@ class Smarty
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
-        trigger_error("Smarty error: $error_msg", $error_type);
+        $msg = htmlentities($error_msg);
+        trigger_error("Smarty error: $msg", $error_type);
     }
 
 
@@ -1103,20 +1104,7 @@ class Smarty
      */
     function display($resource_name, $cache_id = null, $compile_id = null)
     {
-        $GLOBALS['timings']['smarty_start_output'] = microtime_ms();
         $this->fetch($resource_name, $cache_id, $compile_id, true);
-    }
-
-    /**
-     * ensures a template has been compiled (added by Cal)
-     *
-     * @param string $resource_name
-     * @param string $cache_id
-     * @param string $compile_id
-     */
-    function compile_only($resource_name, $cache_id = null, $compile_id = null)
-    {
-        $this->fetch($resource_name, $cache_id, $compile_id, false, false);
     }
 
     /**
@@ -1127,10 +1115,10 @@ class Smarty
      * @param string $compile_id
      * @param boolean $display
      */
-    function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false, $execute = true)
+    function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false)
     {
         static $_cache_info = array();
-        
+
         $_smarty_old_error_level = $this->debugging ? error_reporting() : error_reporting(isset($this->error_reporting)
                ? $this->error_reporting : error_reporting() & ~E_NOTICE);
 
@@ -1273,17 +1261,13 @@ class Smarty
             if ($this->_is_compiled($resource_name, $_smarty_compile_path)
                     || $this->_compile_resource($resource_name, $_smarty_compile_path))
             {
-                if ($execute){
-                    include($_smarty_compile_path);
-                }
+                include($_smarty_compile_path);
             }
             $_smarty_results = ob_get_contents();
             ob_end_clean();
 
-            if ($execute){
-                foreach ((array)$this->_plugins['outputfilter'] as $_output_filter) {
-                    $_smarty_results = call_user_func_array($_output_filter[0], array($_smarty_results, &$this));
-                }
+            foreach ((array)$this->_plugins['outputfilter'] as $_output_filter) {
+                $_smarty_results = call_user_func_array($_output_filter[0], array($_smarty_results, &$this));
             }
         }
 
@@ -1425,23 +1409,9 @@ class Smarty
      * @param string $compile_path
      * @return boolean
      */
-
     function _compile_resource($resource_name, $compile_path)
     {
-        $start = microtime_ms();
-        $ret = $this->_compile_resource_real($resource_name, $compile_path);
-        $end = microtime_ms();
 
-        $GLOBALS['timings']['smarty_comp_count']++;
-        $GLOBALS['timings']['smarty_comp_time'] += $end-$start;
-
-        log_notice("smarty", "Compiling $resource_name", $end-$start);
-
-        return $ret;
-    }
-
-    function _compile_resource_real($resource_name, $compile_path)
-    {
         $_params = array('resource_name' => $resource_name);
         if (!$this->_fetch_resource_info($_params)) {
             return false;
@@ -1964,10 +1934,10 @@ class Smarty
     {
         return eval($code);
     }
-    
+
     /**
      * Extracts the filter name from the given callback
-     * 
+     *
      * @param callback $function
      * @return string
      */
@@ -1982,7 +1952,7 @@ class Smarty
 			return $function;
 		}
 	}
-  
+
     /**#@-*/
 
 }

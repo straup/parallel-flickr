@@ -6,7 +6,7 @@
 	$GLOBALS['timings']['smarty_comp_count']	= 0;
 	$GLOBALS['timings']['smarty_comp_time']	= 0;
 
-	define('FLAMEWORK_SMARTY_DIR', FLAMEWORK_INCLUDE_DIR.'/smarty_2.6.26/');
+	define('FLAMEWORK_SMARTY_DIR', FLAMEWORK_INCLUDE_DIR.'/smarty_2.6.28/');
 	require(FLAMEWORK_SMARTY_DIR . 'Smarty.class.php');
 
 	$GLOBALS['smarty'] = new Smarty();
