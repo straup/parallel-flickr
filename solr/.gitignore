@@ -1,1 +1,4 @@
-solr.xml
+*~
+data/index/*
+data/tlog/*
+*.pyc
