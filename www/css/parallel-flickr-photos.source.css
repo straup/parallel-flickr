@@ -61,9 +61,18 @@
 }
 
 .photo-caption {
-    margin-top:1em;
-    font-size:small;
+    margin-top:3em;
 }
+
+.photo-caption ul {
+    margin: 0;
+    padding: 0;
+}
+
+.photo-caption li {
+    display: inline;
+}
+
 
 .photo_exif {
     width: 50%;

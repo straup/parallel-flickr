@@ -1,8 +1,9 @@
 <div class="container">
+
 <div class="thumbnails">
 
 {foreach from=$photos item="row" name="photos"}
-<div class="col-sm-4 col-md-4 col-thumbnail-{$smarty.foreach.photos.index|escape}" style="height:500px !important;">
+<div class="col-sm-4 col-md-4 col-thumbnail-parallel-flickr col-thumbnail-{$smarty.foreach.photos.index|escape}">
 
 	<div class="thumbnail">
 	{include file="inc_flickr_photo_static.txt" photo=$row}
@@ -13,4 +14,5 @@
 {/foreach}
 
 </div>
+
 </div>

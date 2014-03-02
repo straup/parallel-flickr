@@ -5,3 +5,9 @@
 .thumbnail img {
     border: 10px solid #000;
 }
+
+/* */
+
+.col-thumbnail-parallel-flickr {
+    height: 500px !important;
+}

@@ -1,5 +1,5 @@
 <div class="photo-caption">
-<ul class="list-inline">
+<ul>
 
 {if $photo.title}
 <li><a href="{$photo|@flickr_urls_photo_page}" class="hey-you">{$photo.title|truncate:60:"..."|escape}</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.</li>
@@ -18,11 +18,11 @@
 	{else}
 
 	{if $photo.str_perms=='public'}
-	<li><a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it is <a href="{$photo.owner|@flickr_urls_photos_user}public/">public</a></span>.</li>
+	<li><a href="{$photo.owner|@flickr_urls_photos_user}" class="hey-you">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it is <a href="{$photo.owner|@flickr_urls_photos_user}public/">public</a></span>.</li>
 	{elseif $photo.str_perms=='private'}
-	<li><a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it is <a href="{$photo.owner|@flickr_urls_photos_user}private/">private</a></span>.</li>
+	<li><a href="{$photo.owner|@flickr_urls_photos_user}" class="hey-you">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it is <a href="{$photo.owner|@flickr_urls_photos_user}private/">private</a></span>.</li>
 	{else}
-	<li><a href="{$photo.owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it can only be seen by <a href="{$photo.owner|@flickr_urls_photos_user}{$photo.str_perms|replace:" ":"-"|escape}/">{$photo.str_perms|escape}</a></span>.</li>
+	<li><a href="{$photo.owner|@flickr_urls_photos_user}" class="hey-you">You</a> took this photo and <span class="hey-you" id="photo-perms-caption">it can only be seen by <a href="{$photo.owner|@flickr_urls_photos_user}{$photo.str_perms|replace:" ":"-"|escape}/">{$photo.str_perms|escape}</a></span>.</li>
 	{/if}
 
 	{/if}
