@@ -29,7 +29,7 @@ php_value track_errors 1
 php_value last_modified off
 php_value short_open_tag on
 
-php_flag display_errors on
+php_flag display_errors off
 
 # See also: $GLOBALS['cfg']['uploads_by_email_maxbytes']
 # I would like to find a way to sync these two things...

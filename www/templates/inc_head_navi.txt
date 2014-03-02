@@ -47,9 +47,13 @@
 
 	     <a href="#" class="dropdown-toggle" data-toggle="dropdown">this is <span class="hey-you">{$cfg.site_name|escape}</span>  <b class="caret"></b></a>
               <ul class="dropdown-menu">
-			<li{if $nav_tab == 'signin'} class="active"{/if}><a href="{$cfg.abs_root_url}signin">sign in with flickr</a></li>
+	      <li><a href="#">This menu item left intentionally blank</a></li>
+	      {if 0}
+			<li><a href="{$cfg.abs_root_url}signin">sign in with flickr</a></li>
+	      {/if}
 	     </ul>
 	    </li>
+
 	{/if}
 	{/if}
 
