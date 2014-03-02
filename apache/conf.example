@@ -1,0 +1,62 @@
+<VirtualHost *:80>
+	ServerName parallel-flickr.com
+	DocumentRoot /usr/local/parallel-flickr/www
+
+	RewriteEngine On
+	RewriteCond %{HTTPS} off
+	RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+	<Directory /usr/local/parallel-flickr/www>
+		Options FollowSymLinks Indexes
+		AllowOverride All
+
+		Require all granted
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	LogLevel warn
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+<VirtualHost *:443>
+	ServerName parallel-flickr.com
+	DocumentRoot /usr/local/parallel-flickr/www
+
+	SSLEngine   on
+
+	SSLCertificateFile		/usr/local/ssl/parallel-flickr.crt
+	SSLCertificatekeyFile		/usr/local/ssl/parallel-flickr.key
+	SSLCertificateChainFile		/usr/local/ssl/chain.crt
+
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+	<Directory /usr/local/parallel-flickr/www>
+		Options FollowSymLinks Indexes
+		AllowOverride All
+
+		Require all granted
+	</Directory>
+
+	Alias /static/ /usr/local/parallel-flickr-static/
+
+	<Directory /usr/local/parallel-flickr-static/>
+		Options None
+		AllowOverride None
+		Require all granted
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	LogLevel warn
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
