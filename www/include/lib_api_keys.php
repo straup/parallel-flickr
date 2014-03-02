@@ -70,6 +70,16 @@
 
 	#################################################################
 
+	function api_keys_get_keys($args=array()){
+
+		$sql = "SELECT * FROM ApiKeys FORCE INDEX (by_role_created) WHERE role_id=0 ORDER BY created DESC";
+		$rsp = db_fetch_paginated($sql, $args);
+
+		return $rsp;
+	}
+
+	#################################################################
+
 	# See this. It's called '_fetch_site_key' while the function below
 	# it is called '_get_site_key'. It's a (possibly annoying but) important
 	# distinction. The former is the one that retrieves a row from the
@@ -81,6 +91,7 @@
 		$ttl = $GLOBALS['cfg']['api_site_keys_ttl'];
 
 		$key = api_keys_get_site_key();
+
 		$now = time();
 
 		# TO DO: error handling/reporting...
@@ -90,7 +101,8 @@
 			$key = ($rsp['ok']) ? $rsp['key'] : null;
 		}
 
-		else if ($key['created'] < ($now - $ttl)){
+		else if ($now >= ($key['created'] + $ttl)){
+
 			$delete_rsp = api_keys_delete_site_key($key);
 			$create_rsp = api_keys_create_site_key();
 
@@ -118,16 +130,46 @@
 
 		$enc_role = AddSlashes($role);
 
-		$sql = "SELECT * FROM ApiKeys WHERE role_id='{$enc_role}' AND deleted=0";
+		# Note the LIMIT 1 - this is a big and should not be necessary...
+		# (20130911/straup)
+
+		$sql = "SELECT * FROM ApiKeys WHERE role_id='{$enc_role}' AND deleted=0 ORDER BY CREATED DESC LIMIT 1";
 		$rsp = db_fetch($sql);
 
 		$row = db_single($rsp);
 
-		if ($rsp['ok']){
+		if (($rsp['ok']) && ($row)){
 			cache_set($cache_key, $row);
 		}
 
 		return $row;
+	}
+
+	#################################################################
+
+	function api_keys_get_site_keys($more=array()){
+
+		$defaults = array(
+			'ensure_active' => 1,
+		);
+
+		$more = array_merge($defaults, $more);
+
+		$map = api_keys_roles_map('string keys');
+		$role = $map['site'];
+
+		$enc_role = AddSlashes($role);
+
+		$sql = "SELECT * FROM ApiKeys WHERE role_id='{$enc_role}'";
+
+		if ($more['ensure_active']){
+			$sql .= " AND deleted=0";
+		}
+
+		$sql .= " ORDER BY created DESC";
+
+		$rsp = db_fetch_paginated($sql, $more);
+		return $rsp;
 	}
 
 	#################################################################
