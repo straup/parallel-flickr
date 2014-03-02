@@ -1,12 +1,16 @@
 <div class="container">
-<ul class="thumbnails" style="max-width:1100px;margin-left:auto;margin-right:auto;margin-top:2em;">
-{foreach from=$photos item="row"}
-	 <li class="thumbnail-li">
+<div class="thumbnails">
+
+{foreach from=$photos item="row" name="photos"}
+<div class="col-sm-4 col-md-4 col-thumbnail-{$smarty.foreach.photos.index|escape}" style="height:500px !important;">
+
 	<div class="thumbnail">
 	{include file="inc_flickr_photo_static.txt" photo=$row}
 	</div>
 	{include file="inc_flickr_photo_static_caption.txt" photo=$row}
-	</li>
+
+</div>
 {/foreach}
-</ul>
+
+</div>
 </div>
