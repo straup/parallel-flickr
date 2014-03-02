@@ -8,10 +8,6 @@
 
 	<div id="footer" class="navbar navbar-static-bottom">
  	<div class="container">
-
-	{if 0}{if "sharkify"|@features_is_enabled}
-	<div class="span1"><a href="#" onclick="sharkify_add();return false;">sharkify</a></div>
-	{/if}{/if}
 	 
 	 </div>
 	 </div>
@@ -19,10 +15,6 @@
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/bootstrap.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmapl-standalone.min.js"></script>
 	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/parallel.flickr.api.min.js"></script>
-
-	{if "sharkify"|@features_is_enabled}
-	<script type="text/javascript" src="{$cfg.abs_root_url}javascript/sharkify.min.js"></script>
-	{/if}
 
 	{if "slippymaps"|@features_is_enabled}
 	<script type="text/javascript">{literal}

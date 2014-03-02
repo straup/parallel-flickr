@@ -1,15 +1,19 @@
-    	<div class="navbar navbar-static-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="{$cfg.abs_root_url}">{$cfg.site_name|escape}</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
+<nav class="navbar navbar navbar-default navbar-static-top" role="navigation">
+
+	  <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-head-collapse">
+	            <span class="sr-only">Toggle navigation</span>
+		    <span class="icon-bar"></span>
+      		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+	      </button>
+    	      <a class="navbar-brand" href="{$cfg.abs_root_url}">{$cfg.site_name|escape}</a>
+          </div>
+
+	<div class="collapse navbar-collapse navbar-head-collapse">
+
 	    {if $cfg.user.id}
+	     <ul class="nav navbar-nav navbar-left">
 		<li><a href="{$cfg.abs_root_url}photos/me/">photos</a></li>
 		<li><a href="{$cfg.abs_root_url}photos/me/faves/">faves</a></li>
 		{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
@@ -26,12 +30,12 @@
 		{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
   		<li><a href="{$cfg.abs_root_url}api/">API</a></li>
 		{/if}
+		</ul>
 	    {else}
 	    {/if}
 
-            </ul>
+	     <ul class="nav navbar-nav navbar-right">
 
-            <ul class="nav pull-right">
 {if $cfg.user.id}
             <li class="dropdown{if $nav_tab == 'account'} active{/if}">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello <span class="hey-you">{$cfg.user.username|escape}</span> <b class="caret"></b></a>
@@ -50,7 +54,7 @@
 	{/if}
 {/if}
           </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
+
+	</div>
+
+</nav>

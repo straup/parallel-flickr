@@ -9,15 +9,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<link href="{$cfg.abs_root_url}css/bootstrap.min.css" rel="stylesheet" media="screen">
-	<link href="{$cfg.abs_root_url}css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 
 	{if $cfg.environment=='prod'}
 
 	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr.min.css" />
+
 	{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
 	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-api.min.css" />
-
 	{/if}
+
 	{else}
 
 	<link rel="stylesheet" type="text/css" media="screen" href="{$cfg.abs_root_url}css/parallel-flickr-main.source.css" />
