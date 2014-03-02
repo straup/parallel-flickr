@@ -43,8 +43,10 @@
 	$more['context'] = $user_context;
 
 	$rsp = flickr_photos_archives_for_user_and_year($owner, $year, $more);
-	$photos = $rsp['rows'];
+	flickr_photos_utils_inflate_photo_rows($rsp['rows']);
 
+	$photos = $rsp['rows'];
+	
 	flickr_photos_utils_assign_can_view_geo($photos, $GLOBALS['cfg']['user']['id']);
 
 	$years = flickr_photos_archives_years_for_user($owner, $more);
