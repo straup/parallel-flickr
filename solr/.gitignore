@@ -1,4 +1,2 @@
 *~
-data/index/*
-data/tlog/*
-*.pyc
+data/*
