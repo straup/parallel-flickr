@@ -42,6 +42,8 @@
 	$more['context'] = $user_context;
 
 	$rsp = flickr_photos_archives_for_user_and_month($owner, $year, $month, $more);
+	flickr_photos_utils_inflate_photo_rows($rsp['rows']);
+
 	$photos = $rsp['rows'];
 
 	$months = dates_utils_months();

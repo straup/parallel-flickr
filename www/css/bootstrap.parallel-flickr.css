@@ -1,3 +1,8 @@
+.navbar-default {
+    background-color: #fff !important;
+    border: none !important;
+}
+
 .thumbnail {
     border: none !important;
 }
@@ -7,6 +12,10 @@
 }
 
 /* */
+
+.parallel-flickr-nav-menu {
+    margin-right: 2em !important;
+}
 
 .col-thumbnail-parallel-flickr {
     height: 500px !important;

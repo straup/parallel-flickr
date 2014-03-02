@@ -7,13 +7,17 @@
       		    <span class="icon-bar"></span>
 		    <span class="icon-bar"></span>
 	      </button>
-    	      <a class="navbar-brand" href="{$cfg.abs_root_url}">{$cfg.site_name|escape}</a>
+    	      {if 0}<a class="navbar-brand" href="{$cfg.abs_root_url}">{$cfg.site_name|escape}</a>{/if}
           </div>
 
 	<div class="collapse navbar-collapse navbar-head-collapse">
 
-	    {if $cfg.user.id}
-	     <ul class="nav navbar-nav navbar-left">
+	     <ul class="nav navbar-nav navbar-right parallel-flickr-nav-menu">
+
+	{if $cfg.user.id}
+            <li class="dropdown{if $nav_tab == 'account'} active{/if}">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello <span class="hey-you">{$cfg.user.username|escape}</span> <b class="caret"></b></a>
+              <ul class="dropdown-menu">
 		<li><a href="{$cfg.abs_root_url}photos/me/">photos</a></li>
 		<li><a href="{$cfg.abs_root_url}photos/me/faves/">faves</a></li>
 		{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
@@ -30,29 +34,26 @@
 		{if "api"|@features_is_enabled and $cfg.user|@flickr_backups_is_registered_user}
   		<li><a href="{$cfg.abs_root_url}api/">API</a></li>
 		{/if}
-		</ul>
-	    {else}
-	    {/if}
 
-	     <ul class="nav navbar-nav navbar-right">
-
-{if $cfg.user.id}
-            <li class="dropdown{if $nav_tab == 'account'} active{/if}">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello <span class="hey-you">{$cfg.user.username|escape}</span> <b class="caret"></b></a>
-              <ul class="dropdown-menu">
                 <li><a href="{$cfg.abs_root_url}account">Settings</a></li>
                 <li><a href="{$cfg.abs_root_url}signout">Sign out</a></li>
               </ul>
             </li>
-{else}
+	{else}
+
 	{if !$cfg.site_disabled}
 	{if "signin"|@features_is_enabled}
-		{if "signup"|@features_is_enabled}
+            <li class="dropdown">
+
+	     <a href="#" class="dropdown-toggle" data-toggle="dropdown">this is <span class="hey-you">{$cfg.site_name|escape}</span>  <b class="caret"></b></a>
+              <ul class="dropdown-menu">
 			<li{if $nav_tab == 'signin'} class="active"{/if}><a href="{$cfg.abs_root_url}signin">sign in with flickr</a></li>
-		{/if}
+	     </ul>
+	    </li>
 	{/if}
 	{/if}
-{/if}
+
+	{/if}
           </ul>
 
 	</div>

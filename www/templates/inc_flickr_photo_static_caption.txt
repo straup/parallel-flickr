@@ -2,12 +2,12 @@
 <ul>
 
 {if $photo.title}
-<li><a href="{$photo|@flickr_urls_photo_page}" class="hey-you">{$photo.title|truncate:60:"..."|escape}</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.</li>
+<li><a href="{$photo|@flickr_urls_photo_page}" class="hey-you">{$photo.title|truncate:60:"..."|escape}</a> was taken <a href="{$photo.owner|@flickr_urls_photos_user}archives/date-taken/{$photo.datetaken|@date_format:"%Y/%m/%d/"|escape}">{$photo.datetaken|@flickr_dates_verbosify_iso8601}</a>.</li>
 {else}
-<li><a href="{$photo|@flickr_urls_photo_page}" class="hey-you">This photo</a> was taken {$photo.datetaken|@flickr_dates_verbosify_iso8601}.</li>
+<li><a href="{$photo|@flickr_urls_photo_page}" class="hey-you">This photo</a> was taken <a href="{$photo.owner|@flickr_urls_photos_user}archives/date-taken/{$photo.datetaken|@date_format:"%Y/%m/%d/"|escape}">{$photo.datetaken|@flickr_dates_verbosify_iso8601}</a>.</li>
 {/if}
 
-	{if $photo.owner.id != $cfg.user.id}
+	{if !$cfg.user.id or $photo.owner.id != $cfg.user.id}
 
 	{if $photo.str_perms=='public'}
 	<li>This photo was taken by <a href="{$photo.owner|@flickr_urls_photos_user}">{$photo.owner.username|escape}</a> and <span class="hey-you" id="photo-perms-caption">it is public</span>.</li>
