@@ -1,0 +1,7 @@
+.thumbnail {
+    border: none !important;
+}
+
+.thumbnail img {
+    border: 10px solid #000;
+}
