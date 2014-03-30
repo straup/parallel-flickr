@@ -1,6 +1,6 @@
 <div class="photo-static">
 
-<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_size:$photo_size}" onerror="this.src=abs_root_url + 'images/missing-m.png';" class="img-responsive" /></a>
+<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_size:$photo_size}" onerror="this.src=abs_root_url + 'images/missing-m.png';" class="img-responsive img-{$photo_size|escape}" /></a>
 
 {if $show_caption}{include file="inc_flickr_photo_static_caption.txt"}{/if}
 

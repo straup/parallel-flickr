@@ -16,3 +16,26 @@
 </div>
 
 </div>
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+
+	$(".img-sq").hover(function(){
+
+		var el = $(this);
+		var src = el.attr("src");
+
+		if (! src.match("_(sq|n)\.jpg")){
+			return;
+		}
+
+		var sq = "_sq";
+		var th = "_n";
+
+		src = (src.match("_sq\.jpg")) ? src.replace(sq, th) : src.replace(th, sq);
+		el.attr("src", src);
+	});
+});
+{/literal}
+</script>

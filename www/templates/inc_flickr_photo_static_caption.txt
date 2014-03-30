@@ -27,8 +27,10 @@
 
 	{/if}
 
+{if 0}
 {if $photo|@flickr_photos_is_on_flickr}
 <li>This photo <a href="{$photo|@flickr_urls_photo_page_flickr}" class="hey-you" target="_flickr">is also on Flickr</a>.</li>
+{/if}
 {/if}
 
 </ul>
