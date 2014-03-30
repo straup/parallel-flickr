@@ -630,4 +630,15 @@
 
 	#################################################################
 
+	# Please cache me...
+
+	function flickr_photos_size(&$photo, $sz, $axis){
+		$more = array('abs_path' => 1, "size" => $sz);
+		$path = flickr_photos_path($row, array('abs_path' => 1, 'size' => 'z'));
+		$info = getimagesize($path);
+		return ($axis=='h') ? $info[1] : $info[0];
+	}
+
+	#################################################################
+
 	# the end

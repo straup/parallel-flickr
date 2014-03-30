@@ -61,11 +61,13 @@ function photo_redraw(force){
     ph = $(ph[0]);
 
     var iid = ph.attr("id");
-    console.log(iid);
 
     var i = $('#' + iid);
     var r = i.attr('data-allow-redraw');
-    
+
+    // console.log(i);
+    // console.log(r);
+
     if (r == 'no'){
 	return;
     }
@@ -79,6 +81,8 @@ function photo_redraw(force){
     var w = $(window);
     var w_top = w.scrollTop();
 
+    // console.log("w: " + w_top + " i:" + i_top);
+
     if ((w_top < i_top) || (force)){
 
 	var i_h = i.height();
@@ -87,7 +91,7 @@ function photo_redraw(force){
 	// console.log("I: " + i_h);
 	// console.log("W: " + w_h);
 
-	var viewport = (w_h - i_top) * .8;
+	var viewport = (w_h - i_top) * .85;
 
 	// console.log('viewport is ' + viewport);
 	// console.log('height is ' + h_lg);
@@ -105,13 +109,21 @@ function photo_redraw(force){
 	else {
 	    // console.log("NO");
 	}
+
+	/*
+	var w = i.width();
+
+	if (w > 200){
+	    var wid = iid.replace("photo", "wrapper");
+	    var wr = $("#" + wid);
+	    wr.css('max-width', w + 'px');
+	}
+	*/
+
     }
     
     if (! i.is(':visible')){
 	i.removeAttr('style');
 	i.show();
     }
-    
-    // $('#' + bid).hide();
-    // $('#' + sid).show();
 };

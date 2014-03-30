@@ -446,12 +446,14 @@
 				minZoom: 1
 			});
 
+			/*
 			base.addTo(map);
 
 			$("#edit-geo-map-crosshairs").dblclick(function(e){
 				var offset = (e.shiftKey) ? -1 : 1;
 				map.setZoom(map.getZoom() + offset);
 			});
+			*/
 		});
 
 		$("#edit-geo-go").click(function(e){

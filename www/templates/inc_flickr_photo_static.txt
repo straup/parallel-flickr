@@ -1,6 +1,6 @@
 <div class="photo-static">
 
-<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_size:$photo_size}" onerror="this.src=abs_root_url + 'images/missing-m.png';" class="img img-responsive img-{$photo_size|escape}" id="photo-{$photo.id|escape}" data-allow-redraw="yes" /></a>
+<a href="{$photo|@flickr_urls_photo_page}"><img src="{$photo|@flickr_urls_photo_size:$photo_size}" onerror="this.src=abs_root_url + 'images/missing-m.png';" class="img img-responsive img-{$photo_size|escape}" id="photo-{$photo.id|escape}" data-allow-redraw="yes" data-height-lg="{$photo|@flickr_photos_size:$photo_size:"h"}" data-height-lg="{$photo|@flickr_photos_size:$photo_size:"w"}"/></a>
 
 {if $show_caption}{include file="inc_flickr_photo_static_caption.txt"}{/if}
 
