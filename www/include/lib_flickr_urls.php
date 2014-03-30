@@ -38,6 +38,12 @@
 
 	#################################################################
 
+	function flickr_urls_photo_size(&$photo, $sz){
+		return flickr_urls_photo_static($photo, array('size' => $sz));
+	}
+
+	#################################################################
+
 	function flickr_urls_photo_thumb(&$photo){
 		return flickr_urls_photo_static($photo, array('size' => 't'));
 	}

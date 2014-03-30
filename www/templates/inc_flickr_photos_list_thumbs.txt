@@ -6,7 +6,7 @@
 <div class="col-sm-4 col-md-4 col-thumbnail-parallel-flickr col-thumbnail-{$smarty.foreach.photos.index|escape}">
 
 	<div class="thumbnail">
-	{include file="inc_flickr_photo_static.txt" photo=$row}
+	{include file="inc_flickr_photo_static.txt" photo=$row photo_size="sq"}
 	</div>
 	{include file="inc_flickr_photo_static_caption.txt" photo=$row}
 
