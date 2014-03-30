@@ -1,9 +1,6 @@
-<div class="photo_sidebar">
-
-	{if $before|@count or $after|@count}
-	<div class="photo_navi">
-
-		<div class="photo_before">
+{if $before|@count or $after|@count}
+<div class="row" style="margin: 0 auto;max-width:640px;margin-bottom:3em;" id="wrapper-{$photo.id|escape}">
+		<div class="photo_before pull-left">
 		{if $before|@count}
 		<a href="{$owner|@flickr_urls_photos_user}{$before.0.id|escape}" title="before: {$before.0.title|truncate:30:"..."|escape}"><img src="{$before.0|@flickr_urls_photo_size:"sq"}" height="100" width="100" alt="{$before.0.title|escape}" onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
 		{else}
@@ -11,7 +8,7 @@
 		{/if}
 		</div>
 
-		<div class="photo_after">
+		<div class="photo_after pull-left">
 		{if $after|@count}
 		<a href="{$owner|@flickr_urls_photos_user}{$after.0.id|escape}" title="after: {$after.0.title|truncate:30:"..."|escape}"><img src="{$after.0|@flickr_urls_photo_size:"sq"}" alt="{$after.0.title|escape}"  height="100" width="100" onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
 		{else}
@@ -19,109 +16,31 @@
 		{/if}
 		</div>
 
-		<br clear="all" />
-	</div>	
-	<!-- photo_navi -->
-	{/if}
+</div>	
+{/if}
 
-	<div class="photo_meta">
-	{if !$is_own}
+{if $is_own}
 
-	<p>
-	{if $photo.str_perms=='public'}
-	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you" id="photo-perms">it is public</span>.
-	{else}
-	This photo was taken by <a href="{$owner|@flickr_urls_photos_user}">{$owner.username|escape}</a> and <span class="hey-you" id="photo-perms"> it can only be seen by {$photo.str_perms|escape}</span>.
-	{/if}
-	</p>
-
-	{* all stuff that is assuming $is_own=1 now *}
-	{else}
+<div class="row col-md-4 col-md-offset-2">
 	
-	<p>
-	{if $photo.str_perms=='public'}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$owner|@flickr_urls_photos_user}public/">public</a></span>.
-	{elseif $photo.str_perms=='private'}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it is <a href="{$owner|@flickr_urls_photos_user}private/">private</a></span>.
-	{else}
-	<a href="{$owner|@flickr_urls_photos_user}">You</a> took this photo and <span class="hey-you" id="photo-perms">it can only be seen by <a href="{$owner|@flickr_urls_photos_user}{$photo.str_perms|replace:" ":"-"|escape}/">{$photo.str_perms|escape}</a></span>.
-	{/if}
-	</p>
-
-	<p>
-
-	{if $photo.str_geoperms}
-
-	{if $place}
-
-	{if $photo.str_geoperms=='public'}
-	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">is public</span>.
-	{elseif $photo.str_geoperms=='private'}
-	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}<span> and its location <span class="hey-you">can only be seen by you</span>.
-	{else}
-	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else}{$place.name|escape}{/if}</span> and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
-	{/if}
-
-	{else}
-
-	{if $photo.str_geoperms=='public'}
-	This photo was taken in <span id="geo-placename" class="hey-you">a place with no name</span> and its location <span class="hey-you">is public</span>.
-	{elseif $photo.str_geoperms=='private'}
-	This photo was taken in <span id="geo-placename" class="hey-you">a place with no name</span> and its location <span class="hey-you">can only be seen by you</span>.
-	{else}
-	This photo was taken in <span id="geo-placename" class="hey-you">{if $cfg.enable_feature_solr and $cfg.enable_feature_places}<a	href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}">{$place.name|escape}</a>{else} and its location <span class="hey-you">can only be seen by {$photo.str_geoperms|escape} and you</span>.
-	{/if}
-
-	{/if}
-
-	{if $photo.hasgeo}
-
-	{if $is_own}
-	<span id="geo-latlon">
-	Its exact location is <span id="geo-coords" class="hey-you"
-	title="lat,lon if you're wondering">{$photo.latitude|escape},{$photo.longitude|escape}</span>
-	at zoom level {$photo.accuracy|escape}.
-	</span>
-	{/if}
-
-	<span id="geo_context">
-	{if "solr"|@features_is_enabled and "places"|@features_is_enabled}
-
-	{if $photo.geocontext==1}
-	It was taken <a href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}/indoors/">indoors</a>.
-	{elseif $photo.geocontext==2} It was taken <a href="{$owner|@flickr_urls_photos_user}places/{$place.woeid|escape}/outdoors/">outdoors</a>.
-	{else}{/if}
-
-	{else}
-
-	{if $photo.geocontext==1}It was taken indoors.
-	{elseif $photo.geocontext==2} It was taken outdoors.
-	{else}{/if}
-
-	{/if}
-	</span>
-	{/if}
-
-	{/if}
-	{/if}
-
-	</p>
-
 	<ul>
-	<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a>.</li>
+	<li>View <a href="{$photo|@flickr_urls_photo_original}">original photo</a></li>
 
-	{if $photo|@flickr_photos_is_on_flickr}<li>View <a href="{$photo|@flickr_urls_photo_page_flickr}" target="_flickr">photo on Flickr</a>.</li>{/if}
+	{if $photo|@flickr_photos_is_on_flickr}<li>View <a href="{$photo|@flickr_urls_photo_page_flickr}" target="_flickr">photo on Flickr</a></li>{/if}
 
-	{if $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a>.</li>{/if}
+	{if $photo.hasexif}<li>View <a href="{$photo|@flickr_urls_photo_page}exif/">exif data</a></li>{/if}
 
 	</ul>
 
+	</div>
+
+	<div class="row col-md-4">
+
 	{if "photo_edit"|@features_is_enabled}
-	<ul style="margin-top:2em; border-top:1px solid #ccc; padding-top:1em;">
+	<ul>
 
 	{if "photo_edit_permissions"|@features_is_enabled}
-	<li>
-		<a href="#edit-photo-confirm" role="button" class="xxx-btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">Edit photo permissions</a>
+	<li>Edit <a href="#edit-photo-confirm" role="button" class="xxx-btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-photo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">photo permissions</a>
 
 		<div id="edit-photo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
@@ -266,8 +185,7 @@
 
 	{if $photo.hasgeo and "photo_edit_geo"|@features_is_enabled}
 
-	<li>
-		<a href="#edit-geo-confirm" role="button" class="xxx-btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-geo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">Edit geo data</a>
+	<li>Edit <a href="#edit-geo-confirm" role="button" class="xxx-btn" data-toggle="modal" title="edit the permissions for this photo" id="edit-geo" data-photo-id="{$photo.id|escape}" data-edit-crumb="{$perms_crumb|escape}">geo data</a>
 
 		<div id="edit-geo-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
@@ -498,6 +416,25 @@
 		<button class="btn btn-primary" id="delete-photo-go">Yes please</button>
 		</div>
 
+		{/if}
+
+		</div>
+	</li>
+	{/if}
+
+	</ul>
+	{/if}
+
+
+	<!-- photo_meta -->
+
+	{* this is not working because ... uh? bootstraup maybe? *}
+	{if 0}{include file="inc_flickr_photo_map.txt"}{/if}
+
+</div>
+	{/if}
+
+{if $is_own}
 		<script type="text/javascript">
 		{literal}
 
@@ -532,23 +469,4 @@
 
 		{/literal}
 		</script>
-
-		{/if}
-
-		</div>
-	</li>
-	{/if}
-
-	</ul>
-	{/if}
-
-	{/if}
-
-	<!-- photo_meta -->
-
-	{* this is not working because ... uh? bootstraup maybe? *}
-	{if 0}{include file="inc_flickr_photo_map.txt"}{/if}
-
-	<br clear="all" />
-
-</div>
+{/if}
