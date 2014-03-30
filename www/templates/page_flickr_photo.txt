@@ -16,7 +16,7 @@
 	<h2 class="photo_title offset1" id="photo_title" contenteditable="true">{$photo_title|truncate:50:"..."|escape}</h2>
 	<div class="span7 offset1">
 	<div class="photo">
-	{include file="inc_flickr_photo_static.txt" show_caption=1 photo_size="z"}
+	{include file="inc_flickr_photo_static.txt" show_caption=1 photo_size="h"}
 	</div>
 	</div>
 
@@ -43,47 +43,25 @@ var places_is_enabled=0;
 
 var next = {if $after|@count}'{$owner|@flickr_urls_photos_user}{$after.0.id|escape}'{else}null{/if};
 var prev = {if $before|@count}'{$owner|@flickr_urls_photos_user}{$before.0.id|escape}'{else}null{/if};
+</script>
+
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.shortcuts.js"></script>
+<script type="text/javascript">
 
 {literal}
-
 $(document).ready(function(){
-
-	$(document).keydown(function(e){
-
-		if (e.keyCode == 13){
-			// 
-		}
-
-		// left arrow
-
-		else if ((e.keyCode == 37) && (prev)){
-			location.href = prev;
-		}
-
-		// right arrow
-
-		else if ((e.keyCode == 39) && (next)){
-			location.href = next;
-		}
-
-		// 'g' - disabled
-
-		/*
-		else if (e.keyCode == 71){
-
-			var el = $("#edit_geo");
-
-			if (el){			
-				el.click();
-			}
-		}
-		*/
-
-		else {}
-	});
-{/literal}
-
+	photo_shortcuts_init(prev, next);
 });
+{/literal}
+</script>
+
+<script type="text/javascript" src="{$cfg.abs_root_url}javascript/photo.redraw.js"></script>
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+	photo_redraw_init();
+});
+{/literal}
 </script>
 
 {include file="inc_foot.txt"}
