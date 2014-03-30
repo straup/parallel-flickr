@@ -1,3 +1,7 @@
+body{
+    font-size: 1.75em !important;
+}
+
 .navbar-default {
     background-color: #fff !important;
     border: none !important;
@@ -19,4 +23,8 @@
 
 .col-thumbnail-parallel-flickr {
     height: 500px !important;
+}
+
+.photo-controls ul li {
+    list-style-type: none !important;
 }
