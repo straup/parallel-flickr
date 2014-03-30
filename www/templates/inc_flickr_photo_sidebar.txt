@@ -5,7 +5,7 @@
 
 		<div class="photo_before">
 		{if $before|@count}
-		<a href="{$owner|@flickr_urls_photos_user}{$before.0.id|escape}" title="before: {$before.0.title|truncate:30:"..."|escape}"><img src="{$before.0|@flickr_urls_photo_thumb}" alt="{$before.0.title|escape}" onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
+		<a href="{$owner|@flickr_urls_photos_user}{$before.0.id|escape}" title="before: {$before.0.title|truncate:30:"..."|escape}"><img src="{$before.0|@flickr_urls_photo_size:"sq"}" height="100" width="100" alt="{$before.0.title|escape}" onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
 		{else}
 		<img src="{$cfg.abs_root_url}images/youarehere.png" height="100" width="100" alt="you are here" />
 		{/if}
@@ -13,7 +13,7 @@
 
 		<div class="photo_after">
 		{if $after|@count}
-		<a href="{$owner|@flickr_urls_photos_user}{$after.0.id|escape}" title="after: {$after.0.title|truncate:30:"..."|escape}"><img src="{$after.0|@flickr_urls_photo_thumb}" alt="{$after.0.title|escape}"  onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
+		<a href="{$owner|@flickr_urls_photos_user}{$after.0.id|escape}" title="after: {$after.0.title|truncate:30:"..."|escape}"><img src="{$after.0|@flickr_urls_photo_size:"sq"}" alt="{$after.0.title|escape}"  height="100" width="100" onerror="this.src=abs_root_url + 'images/missing-n.png'; this.height=100; this.width=100;"/></a>
 		{else}
 		<img src="{$cfg.abs_root_url}images/youarehere.png" height="100" width="100" alt="you are here" />
 		{/if}
