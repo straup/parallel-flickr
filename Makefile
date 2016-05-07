@@ -1,16 +1,21 @@
-it: clean
-so: all
+htusers:
+	htpasswd -c -B apache/.htusers mapzen
 
-all: todo js css templates
+setup:
+	ubuntu/setup-ubuntu.sh
+	ubuntu/setup-flamework.sh
+	ubuntu/setup-certified.sh
+	sudo ubuntu/setup-certified-ca.sh
+	sudo ubuntu/setup-certified-certs.sh
+	ubuntu/setup-apache.sh
+	bin/configure_secrets.php .
+	ubuntu/setup-db.sh flickr flickr
 
-todo:
-	touch TODO.txt
-	echo "# This file was generated automatically by grep-ing for 'TO DO' in the source code." > ./TODO.txt
-	echo "# This file is meant as a pointer to the actual details in the files themselves." >> TODO.txt
-	echo "# This file was created "`date` >> TODO.txt
-	echo "" >> TODO.txt
-	grep -n -r -e "TO DO" www >> TODO.txt
-	grep -n -r -e "TO DO" bin >> TODO.txt
+setup-offline:
+	ubuntu/setup-redis-server.sh
+	ubuntu/setup-gearmand.sh
+	ubuntu/setup-logstash.sh
+	ubuntu/setup-supervisor.sh
 
 js:
 
@@ -43,6 +48,3 @@ templates:
 
 secret:
 	php -q ./bin/generate_secret.php
-
-clean:
-	rm -f ./TODO.txt
